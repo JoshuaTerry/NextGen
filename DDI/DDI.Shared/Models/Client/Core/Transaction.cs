@@ -65,5 +65,7 @@ namespace DDI.Shared.Models.Client.Core
         
         public ICollection<EntityTransaction> EntityTransactions { get; set; }
 
+        public override string DisplayName => $"{TransactionNumber}-{LineNumber}";
+
     }
 }

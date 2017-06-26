@@ -4,6 +4,7 @@ var accountId;
 
 $(document).ready(function () {
 
+
     $('.editbusinessunit').addClass('disabled');
 
     accountId = sessionStorage.getItem('ACCOUNT_ID');
@@ -30,9 +31,17 @@ $(document).ready(function () {
 
         sessionStorage.removeItem('FISCAL_YEAR_ID');
 
-        $('.tabscontainer').tabs("option", "active", 1);;
+        $('.tabscontainer').tabs("option", "active", 1);
 
     }
+
+    $('.copyaccount').click(function (e) {
+
+        e.preventDefault();
+
+        CopyAccount();
+
+    });
 
 });
 
@@ -45,25 +54,27 @@ function LoadAccountActivityAndBudgetTab(id) {
             { dataField: 'PeriodNumber', caption: 'Period Number', visible: false },
             { dataField: 'PeriodName', caption: 'Period Name' },
 
-            { dataField: 'BeginningBalance', caption: 'Beginning Balance', format: 'currency', visible: false},
-            { dataField: 'Debits', caption: 'Debits', format: 'currency' },
-            { dataField: 'Credits', caption: 'Credits', format: 'currency' },
-            { dataField: 'Activity', caption: 'Activity', format: 'currency' },
-            { dataField: 'EndingBalance', caption: 'Ending Balance', format: 'currency' },
+            {
+                dataField: 'BeginningBalance', caption: 'Beginning Balance', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'Debits', caption: 'Debits', format: { type: 'currency', precision: 2 } },
+            { dataField: 'Credits', caption: 'Credits', format: { type: 'currency', precision: 2 } },
+            {
+                dataField: 'Activity', caption: 'Activity', format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'EndingBalance', caption: 'Ending Balance', format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
 
-            { dataField: 'PriorBeginningBalance', caption: 'Prior Beginning Balance', format: 'currency', visible: false },
-            { dataField: 'PriorDebits', caption: 'Prior Debits',  format: 'currency', visible: false },
-            { dataField: 'PriorCredits', caption: 'Prior Credits',  format: 'currency', visible: false },
-            { dataField: 'PriorActivity', caption: 'Prior Activity',  format: 'currency', visible: false },
-            { dataField: 'PriorEndingBalance', caption: 'Prior Ending Balance',  format: 'currency', visible: false },
+            { dataField: 'PriorBeginningBalance', caption: 'Prior Beginning Balance', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'PriorDebits', caption: 'Prior Debits', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'PriorCredits', caption: 'Prior Credits', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'PriorActivity', caption: 'Prior Activity', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'PriorEndingBalance', caption: 'Prior Ending Balance', format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
 
-            { dataField: 'WorkingBudget', caption: dataActivity.Data.WorkingBudgetName, allowEditing: true, format: 'currency' },
-            { dataField: 'FixedBudget', caption: dataActivity.Data.FixedBudgetName, allowEditing: true, format: 'currency'},
-            { dataField: 'WhatIfBudget', caption: dataActivity.Data.WhatIfBudgetName, allowEditing: true, format: 'currency', visible: false },
+            { dataField: 'WorkingBudget', caption: dataActivity.Data.WorkingBudgetName, allowEditing: true, format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'FixedBudget', caption: dataActivity.Data.FixedBudgetName, allowEditing: true, format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'WhatIfBudget', caption: dataActivity.Data.WhatIfBudgetName, allowEditing: true, format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
 
-            { dataField: 'WorkingBudgetVariance', caption: 'Working Budget Variance', allowEditing: true, format: 'currency' },
-            { dataField: 'FixedBudgetVariance', caption: 'Fixed Budget Variance', allowEditing: true, format: 'currency', visible: false},
-            { dataField: 'WhatIfBudgetVariance', caption: 'What-If Budget Variance', allowEditing: true, format: 'currency', visible: false}
+            { dataField: 'WorkingBudgetVariance', caption: 'Working Budget Variance', allowEditing: true, format: { type: 'currency', precision: 2 }, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'FixedBudgetVariance', caption: 'Fixed Budget Variance', allowEditing: true, format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } },
+            { dataField: 'WhatIfBudgetVariance', caption: 'What-If Budget Variance', allowEditing: true, format: { type: 'currency', precision: 2 }, visible: false, customizeText: function (cellInfo) { return NegativeCellText(cellInfo) } }
         ];
 
         $('.activitytitle').empty();
@@ -80,11 +91,26 @@ function LoadAccountActivityAndBudgetTab(id) {
 
 }
 
+function NegativeCellText(cellInfo) {
+
+    if (cellInfo.value < 0) {
+
+        var text = cellInfo.valueText.replace('-', '');
+        return '(' + text + ')';
+
+    } else {
+
+        return cellInfo.valueText;
+
+    }
+
+}
+
+
 //summary tab section
 
 var segmentLevelArray = [];
 var segmentLevels;
-var segmentLevel;
 var groupLevels;
 var group1Data = [];
 var saveGroupId;
@@ -96,7 +122,7 @@ var group2Id;
 var group3Id;
 var group4Id;
 var category = '0';
-var editMode = '';
+var entryMode = '';
 var activityTotal = 0;
 var summaryContainer = '.accountsummarycontainer';
 
@@ -196,7 +222,7 @@ function LoadSummaryTabContinued() {
 
     $('.editaccount').click(function (e) {
         e.preventDefault();
-        AccountEditMode();
+        AccountentryMode();
     });
 
     $('.saveaccount').unbind('click');
@@ -207,12 +233,11 @@ function LoadSummaryTabContinued() {
 
     $('.cancelsaveaccount').click(function (e) {
         e.preventDefault();
-        if (editMode === 'add') {
+        if (entryMode === 'add') {
             ClearAccountFields();
             AccountAddMode();
         }
         else {
-            $('.accountsegmentscontainer').hide();
             AccountDisplayMode();
         }
     });
@@ -266,7 +291,6 @@ function RetrieveLedgerSettings() {
 
                     $('.editgroup' + i).click(function (e) {
                         e.preventDefault();
-                        var test = $(this).attr('class');
                         groupLevel = $(this).attr('class').substring(9, 10);
                         groupId = '.Group' + groupLevel + 'Id';
                         groupPrompt = '.group' + groupLevel + 'prompt';
@@ -312,14 +336,6 @@ function RetrieveLedgerSettings() {
                 //segments
                 segmentLevels = data.Data.NumberOfSegments;
 
-                for (i = (segmentLevels + 1); i <= 10; i++) {
-                    $('.segmentgroup' + i).hide();
-                }
-
-                for (i = 1; i <= segmentLevels; i++) {
-                    $('.segmentgroup' + i).show();
-                    $('.segment' + i + 'prompt').html(data.Data.SegmentLevels[i - 1].Name + ':');
-                }
                 RetrieveSegmentLevels()
             }
         }
@@ -341,7 +357,15 @@ function RetrieveSegmentLevels() {
                 var segmentId;
                 var parentSegmentId;
 
+                for (i = (segmentLevels + 1); i <= 10; i++) {
+                    $('.segmentgroup' + i).hide();
+                }
+
                 for (var i = 1; i <= segmentLevels; i++) {
+
+                    $('.segmentgroup' + i).show();
+
+                    $('.segment' + i + 'prompt').html(data.Data[i - 1].Name + ':');
 
                     $('.editsegment' + i).click(function (e) {
                         e.preventDefault();
@@ -400,7 +424,12 @@ function RetrieveSegmentLevels() {
                 }
                 else {
                     LoadSegmentDropDowns();
-                    AccountDisplayMode();
+                    if (entryMode === "copy") {
+                        AccountCopyMode();
+                    }
+                    else {
+                        AccountDisplayMode();
+                    }
                 }
             }
         }
@@ -409,9 +438,12 @@ function RetrieveSegmentLevels() {
 
 }
 
+// edit modes
+
 function AccountDisplayMode() {
-    editMode = 'display';
-    $('.accountsegmentscontainer').hide();
+    entryMode = 'display';
+    HideButtons();
+    DisableSegments();
     $('.editaccountbutton').show();
     $('.saveaccountbuttons').hide();
     $(summaryContainer).find('.editable').each(function () {
@@ -425,18 +457,24 @@ function AccountDisplayMode() {
 }
 
 function AccountAddMode() {
-    editMode = 'add';
+    entryMode = 'add';
     MaskFields();
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
-    $('.accountsegmentscontainer').show();
+    ShowButtons();
+    EnableSegments();
 }
 
-function AccountEditMode() {
-    editMode = 'edit';
+function AccountentryMode() {
+    entryMode = 'edit';
     if (activityTotal === 0) {
-        $('.accountsegmentscontainer').show();
+        EnableSegments();
     }
+    else {
+        DisableSegments();
+    }
+    ShowButtons();
+
     $('.editaccountbutton').hide();
     $('.saveaccountbuttons').show();
 
@@ -458,6 +496,42 @@ function AccountEditMode() {
         $('.accountnumberlookup').removeAttr("disabled");
         $('.accountselectionsearch').css('visibility', 'visible');
     }
+
+}
+
+function AccountCopyMode() {
+    entryMode = 'add';
+
+    accountId = null;
+
+    EnableSegments();
+    ShowButtons();
+
+    $('.editaccountbutton').hide();
+    $('.saveaccountbuttons').show();
+
+    MaskFields();
+
+    $(summaryContainer).find('.editable').each(function () {
+
+        $(this).prop('disabled', false);
+
+    });
+
+    if (category < 4) {
+        $('.BeginningBalance').removeAttr("disabled");
+        $('.accountnumberlookup').attr('disabled', true);
+        $('.accountselectionsearch').css('visibility', 'hidden');
+    }
+    else {
+        $('.BeginningBalance').attr('disabled', true);
+        $('.accountnumberlookup').removeAttr("disabled");
+        $('.accountselectionsearch').css('visibility', 'visible');
+    }
+
+    $('.BeginningBalance').val(0);
+    $('.Activity').val(0);
+    $('.EndingBalance').val(0);
 
 }
 
@@ -491,10 +565,14 @@ function GroupChange(element) {
             if (category < 4) {
                 $('.BeginningBalance').removeAttr("disabled");
                 $('.accountnumberlookup').attr('disabled', true);
+                $('.closingaccountgroup').find(".hidaccountid").val(null);
+                $('.closingaccountgroup').find(".accountnumber").val('');
+                $('.closingaccountgroup').find(".accountdescription").html('');
                 $('.accountselectionsearch').css('visibility', 'hidden');
             }
             else {
                 $('.BeginningBalance').attr('disabled', true);
+                $('.BeginningBalance').val('0.00');
                 $('.accountnumberlookup').removeAttr("disabled");
                 $('.accountselectionsearch').css('visibility', 'visible');
             }
@@ -520,7 +598,24 @@ function GroupChange(element) {
 
 // end group section
 
+
 // segment section
+
+function EnableSegments() {
+    $('.accountsegmentscontainer').find('.segmentselect').each(function () {
+
+        $(this).prop('disabled', false);
+
+    });
+}
+
+function DisableSegments() {
+    $('.accountsegmentscontainer').find('.segmentselect').each(function () {
+
+        $(this).prop('disabled', true);
+
+    });
+}
 
 // load non linked drop downs for adds
 function InitSegmentDropDowns() {
@@ -549,7 +644,6 @@ function LoadSegmentDropDowns() {
             }
             if (accountSegmentArray[i].Id != null) {
                 $('.segment' + (i + 1) + 'code').html(accountSegmentArray[i].Segment.Code);
-                $('.segment' + (i + 1) + 'name').html(accountSegmentArray[i].Segment.Name);
             }
         }
         else {
@@ -570,8 +664,10 @@ function LoadSegmentDropDown(segmentLevel, parentId, initialId) {
 }
 
 function StoreSegmentData(element, data) {
+
     var dropdownlevel = element.substring(8, 9);
     segmentData[parseInt(dropdownlevel) - 1] = data.Data;
+
 }
 
 function SegmentChange(element) {
@@ -590,7 +686,6 @@ function SegmentChange(element) {
         segmentCode = '';
     }
     $('.segment' + level + 'code').html(segmentCode);
-    $('.segment' + level + 'name').html(segmentName);
 
     BuildAccountNumber();
 
@@ -600,14 +695,12 @@ function SegmentChange(element) {
             if (segmentLevelArray[i - 1].IsLinked === true && parentVal != null) {
                 PopulateDropDown('.Segment' + i + 'Id', 'fiscalyears/' + fiscalYearId + '/segments/' + parentVal + '/level/' + (parseInt(level) + 1), '', null, null, SegmentChange, StoreSegmentData);
                 $('.segment' + i + 'code').html('');
-                $('.segment' + i + 'name').html('');
             }
         }
         else {
             if (segmentLevelArray[i - 1].IsLinked === true) {
                 $('.Segment' + i + 'Id').empty();
                 $('.segment' + i + 'code').html('');
-                $('.segment' + i + 'name').html('');
             }
         }
     }
@@ -642,7 +735,7 @@ function SaveAccount() {
 
     var fields = GetAccountFields();
 
-    if (editMode === 'add') {
+    if (entryMode === 'add') {
         var action = 'POST';
         var route = 'accounts'
     }
@@ -658,22 +751,25 @@ function SaveAccount() {
             if ($('.Activity').val() === '' || $('.Activity').val() === null) {
                 $('.Activity').val(0);
             }
-            $('.EndingBalance').val(parseFloat($('.BeginningBalance').val()) + parseFloat($('.Activity').val()));
-            sessionStorage.setItem('ACCOUNT_ID', data.Data.Id);
+            CalcEndingBalance();
             accountId = data.Data.Id;
             AccountDisplayMode();
         }
 
     },
         function () {
-            if (editMode === 'add') {
+            if (entryMode === 'add') {
                 AccountAddMode();
             }
             else {
-                AccountEditMode();
+                AccountentryMode();
             }
         }
     );
+}
+
+function CalcEndingBalance() {
+    $('.EndingBalance').val(parseFloat($('.BeginningBalance').val()) + parseFloat($('.Activity').val()));
 }
 
 function GetAccountFields() {
@@ -752,13 +848,61 @@ function ClearAccountFields() {
 
     $(summaryContainer + ' input[type="text"]').val('');
     $(summaryContainer + ' input[type="number"]').val('');
-    $(summaryContainer + ' .segmentname').html('');
     $(summaryContainer + ' .segmentcode').html('');
     $(summaryContainer + ' select').val(0);
     $(summaryContainer + ' input:checkbox').prop('checked', false);
     $(summaryContainer).find(".accountdescription").html('');
     $(summaryContainer).find(".accountnumber").val('');
     $(summaryContainer).find(".hidaccountid").val('');
+}
+
+function HideButtons() {
+    $(summaryContainer).find('.newbuttoninline.hidebuttons').each(function () {
+
+        $(this).css('visibility', 'hidden');
+
+    });
+    $(summaryContainer).find('.editbuttoninline.hidebuttons').each(function () {
+
+        $(this).css('visibility', 'hidden');
+
+    });
+}
+
+function ShowButtons() {
+    var buttonClasses = '';
+    var buttonClass = '';
+    var level = 0;
+
+    $(summaryContainer).find('.newbuttoninline.hidebuttons').each(function () {
+        buttonClasses = $(this).attr('class');
+        buttonClass = buttonClasses.split(" ")[0];
+        if (buttonClass.indexOf('newgroup') > -1) {
+            level = parseInt(buttonClass.substring(8, 9));
+            if (level <= groupLevels) {
+                $(this).css('visibility', 'visible');
+            }
+        }
+        else {
+            $(this).css('visibility', 'visible');
+        }
+
+    });
+    $(summaryContainer).find('.editbuttoninline.hidebuttons').each(function () {
+
+        buttonClasses = $(this).attr('class');
+        buttonClass = buttonClasses.split(" ")[0];
+        if (buttonClass.indexOf("editgroup") > -1) {
+            level = parseInt(buttonClass.substring(9, 10));
+            if (level <= groupLevels) {
+                $(this).css('visibility', 'visible');
+            }
+        }
+        else {
+            $(this).css('visibility', 'visible');
+        }
+
+    });
 }
 
 
@@ -802,7 +946,7 @@ function NewGroupModal(groupLevel, parentId, groupName) {
 
             CloseModal(modal);
 
-            if (editMode != 'display') {
+            if (entryMode != 'display') {
                 LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
             }
             else {
@@ -862,7 +1006,7 @@ function EditGroupModal(groupLevel, groupId, parentId, groupName) {
 
             CloseModal(modal);
 
-            if (editMode != 'display') {
+            if (entryMode != 'display') {
                 LoadGroupDropDown(groupLevel, parentId, data.Data.Id)
             }
 
@@ -937,8 +1081,10 @@ function NewSegmentModal(segmentLevel, parentId, segmentName) {
 
             CloseModal(modal);
 
-            if (editMode != 'display') {
+            if (entryMode != 'display') {
                 LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
+                $('.segment' + segmentLevel + 'code').html(data.Data.Code);
+                BuildAccountNumber();
             }
 
         });
@@ -988,8 +1134,10 @@ function EditSegmentModal(segmentLevel, segmentId, parentId, segmentName) {
 
             CloseModal(modal);
 
-            if (editMode != 'display') {
+            if (entryMode != 'display') {
                 LoadSegmentDropDown(segmentLevel, parentId, data.Data.Id);
+                $('.segment' + segmentLevel + 'code').html(data.Data.Code);
+                BuildAccountNumber();
             }
 
         });
@@ -1029,4 +1177,27 @@ function GetAccountSegmentItemsToSave(modal, parentId, level) {
 }
 
 //end segments modal section
+
+// COPY ACCOUNT
+
+function CopyAccount() {
+
+    if (accountId === null || accountId === '') {
+        DisplayErrorMessage('Error', 'You cannot copy a new account until it is saved.');
+        return;
+    }
+
+    if (entryMode === 'edit') {
+        DisplayErrorMessage('Error', 'You cannot copy an account while editing.');
+        return;
+    }
+
+    $('.tabscontainer').tabs("option", "active", 1);
+
+    entryMode = 'copy';
+    LoadSummaryTab(accountId);
+
+}
+
+// END COPY ACCOUNT
 

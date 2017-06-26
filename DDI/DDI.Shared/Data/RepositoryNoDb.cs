@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using DDI.Shared.Interfaces;
+using DDI.Shared.Enums.Core;
 
 namespace DDI.Shared.Data
 {
@@ -24,6 +25,7 @@ namespace DDI.Shared.Data
          
         private IList<T> _entities = null;
         private IEnumerable<IEntity> _typedEntities = null;
+        private ISQLUtilities _utilities;
 
         #endregion Private Fields
 
@@ -58,7 +60,7 @@ namespace DDI.Shared.Data
 
         IQueryable IRepository.Entities => Entities;
 
-        public ISQLUtilities Utilities => null;
+        public ISQLUtilities Utilities => _utilities;
 
         /// <summary>
         /// A property name or comma delimited list of property names to return via the GetModifiedProperties method.
@@ -75,6 +77,7 @@ namespace DDI.Shared.Data
         public RepositoryNoDb(IQueryable<T> dataSource)
         {
             Entities = dataSource;
+            _utilities = new SQLUtilitiesNoDb();
         }
 
         #region Public Methods
@@ -297,5 +300,29 @@ namespace DDI.Shared.Data
         }
 
         #endregion Public Methods
+
+        #region Nested Classes
+
+        private class SQLUtilitiesNoDb : ISQLUtilities
+        {
+            private static long _dummySequenceValue = 1;
+
+            public int ExecuteSQL(string sql, params object[] parameters)
+            {
+                return 0;
+            }
+
+            public long GetNextSequenceValue(DatabaseSequence sequence)
+            {
+                return _dummySequenceValue++;
+            }
+
+            public void SetNextSequenceValue(DatabaseSequence sequence, long newValue)
+            {
+                _dummySequenceValue = newValue;
+            }
+        }
+
+        #endregion
     }
 }

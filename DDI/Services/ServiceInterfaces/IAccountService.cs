@@ -12,5 +12,9 @@ namespace DDI.Services.ServiceInterfaces
     {
         IDataResponse<AccountActivitySummary> GetAccountActivity(Guid accountId);
         IDataResponse<List<AccountActivityDetail>> GetAccountActivityDetail(Guid id);
+        IDataResponse<Account> Copy(Guid sourceId, string destNumber);
+        IDataResponse<Account> ValidateAccountNumber(Guid fiscalYearId, string accountNumber);
+
+        IDataResponse<Account> Merge(Guid sourceAccountId, Guid destinationAccountId);
     }
 }
