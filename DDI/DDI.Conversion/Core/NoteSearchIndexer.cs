@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DDI.Business.Core;
-using DDI.Data;
 using DDI.Search;
 using DDI.Search.Models;
 using DDI.Search.Statics;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 
 namespace DDI.Conversion.Core

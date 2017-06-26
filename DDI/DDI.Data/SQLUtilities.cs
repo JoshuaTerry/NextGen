@@ -35,6 +35,16 @@ namespace DDI.Data
             return _context.Database.SqlQuery<Int64>($"SELECT NEXT VALUE FOR {GetSequenceName(sequence)};").FirstOrDefault();
         }
         
+        /// <summary>
+        /// Execute a SQL statement.
+        /// </summary>
+        /// <param name="sql">SQL statement.</param>
+        /// <param name="parameters">Optional parameters.</param>
+        public int ExecuteSQL(string sql, params object[] parameters)
+        {
+            return _context.Database.ExecuteSqlCommand(sql, parameters);
+        }
+
         private string GetSequenceName(DatabaseSequence sequence)
         {
             switch(sequence)
