@@ -545,11 +545,11 @@ namespace DDI.Business.GL
             if (!allowPriorPeriod)
             {
                 if (year.Status == FiscalYearStatus.Closed)
-                    throw new ValidationException(UserMessagesGL.FiscalPeriodClosed, year.Name);
+                    throw new ValidationException(UserMessagesGL.FiscalYearClosed, year.Name);
 
 
                 if (prd.Status == FiscalPeriodStatus.Closed)
-                    throw new ValidationException(UserMessagesGL.FiscalYearClosed, prd.PeriodNumber.ToString(), year.Name);
+                    throw new ValidationException(UserMessagesGL.FiscalPeriodClosed, prd.PeriodNumber.ToString(), year.Name);
             }
 
             return year;

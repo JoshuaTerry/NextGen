@@ -82,6 +82,13 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
+        [Route("api/v1/accounts/fiscalyear/{fiscalYearId}/account/{accountnumber}")]
+        public IHttpActionResult ValidateAccountNumber(Guid fiscalYearId, string accountnumber)
+        {
+            return FinalizeResponse(Service.ValidateAccountNumber(fiscalYearId, accountnumber));
+        }
+
+        [HttpGet]
         [Route("api/v1/accounts/{id}", Name = RouteNames.Account + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
@@ -147,7 +154,6 @@ namespace DDI.WebApi.Controllers.GL
             return base.Post(item);
         }
 
-        [HttpPost]
         [Route("api/v1/accounts/{sourceAccountId}/merge/{destinationAccountId}", Name = RouteNames.AccountMerge + RouteVerbs.Post)]
         public IHttpActionResult Post(Guid sourceAccountId, Guid destinationAccountId)
         {
