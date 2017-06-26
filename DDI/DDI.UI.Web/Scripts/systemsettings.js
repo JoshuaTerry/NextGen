@@ -2752,12 +2752,11 @@ function LoadChartAccountsSectionSettings() {
     var ledgerid;
 
     var container = $('<div>').addClass('chartsettingscontainer onecolumn');
-
-    CreateBasicFieldBlock('Ledger: ', '<select>', 'chartLedgerId', container, true); 
-    //var selectledgergroup = $('<div>');
-    //$('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
-    //var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
-    //$(selectledgergroup).append('<br />').append('<br />').appendTo(container);
+    
+    var selectledgergroup = $('<div>');
+    $('<label>').text('Select Ledger: ').appendTo(selectledgergroup);
+    var selectledgername = $('<select>').addClass('chartLedgerId').appendTo(selectledgergroup);
+    $(selectledgergroup).append('<br />').append('<br />').appendTo(container);
 
     PopulateDropDown('.chartLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
         //update on change  (not working so added .change logic below
@@ -2774,8 +2773,7 @@ function LoadChartAccountsSectionSettings() {
     var capitalizeheadersgroup = $('<div>').addClass('fieldblock');
     var capitalizeheaderscheckbox = $('<input>').attr('type', 'checkbox').addClass('capitalizeheaders').appendTo(capitalizeheadersgroup);
     $('<span>').text('Capitalize account group descriptions').appendTo(capitalizeheadersgroup);
-    $(capitalizeheadersgroup).append('<br />').appendTo(container);
-    //CreateBasicFieldBlock('Capitalize Account Groups: ', '<input type="checkbox">', 'chartLedgerId', container, true); 
+    $(capitalizeheadersgroup).append('<br />').appendTo(container); 
 
     var grouplevelsgroup = $('<div>');
     $('<label>').text('Number of account groups: ').appendTo(grouplevelsgroup);
