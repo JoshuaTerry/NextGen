@@ -2980,6 +2980,7 @@ function LoadFiscalYearSectionSettings() {
     $('.fiscalyearcontainer').remove();
 
     var container = $('<div>');
+
     var selectledgergroup = $('<div style="margin-bottom: 20px;">');
     var selectledgername = $('<h2>').text('Ledger: ');
 

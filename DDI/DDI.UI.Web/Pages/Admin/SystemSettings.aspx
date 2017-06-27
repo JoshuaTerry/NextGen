@@ -11,6 +11,17 @@
 
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
+        <li class="fiscalyearmenu"><a href="#">Close Fiscal Year</a></li>
+        <li class="fiscalyearmenu"><a href="#">Reopen Fiscal Year</a></li>
+        <li class="fiscalyearmenu"><a href="#">Reclose Fiscal Year</a></li>
+        <li class="fiscalyearmenu"><a href="#">Create New Fiscal Year</a></li>
+        <li class="menu-break fiscalperiodmenu"></li>
+        <li class="fiscalperiodmenu"><a href="#">Close Fiscal Period</a></li>
+        <li class="fiscalperiodmenu"><a href="#">Reopen Fiscal Period</a></li>
+
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="systemsettings">
