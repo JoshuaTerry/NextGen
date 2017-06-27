@@ -80,6 +80,10 @@ function PopulateDropDown(element, route, selectedValue) {
 
 function PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
 
+    if ($.type(element) === "string" && element.indexOf('.') != 0) {
+        element = '.' + element;
+    }
+
     ClearElement(element);
 
     AddDefaultOption(element, defaultText, defaultValue);
