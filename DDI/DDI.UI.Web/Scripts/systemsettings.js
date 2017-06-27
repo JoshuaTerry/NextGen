@@ -3107,10 +3107,20 @@ function LoadFundAccountingSectionSettings() {
      
     $('.gridcontainer').empty();
     var container = $('<div>').addClass('fundsettingscontainer onecolumn').appendTo('.gridcontainer');
-    
-    CreateBasicFieldBlock('Ledger: ', '<select>', 'FundLedgerId', container, false); 
+    var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
+    var fiscalYearid = $('<input>').attr('type', 'hidden').addClass('hidFiscalId').appendTo(container);
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'fundLedgerId', container, true);  
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'selectfiscalyear', container, true); 
     CreateBasicFieldBlock('Fund: ', '<select>', 'selectfund', container, true); 
+    PopulateDropDown('.fundLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', null, function () {
+        $('.hidLedgerId').val($('.fundLedgerId').val());
+        PopulateLedgers(); 
+
+    }, null);
+
+    //$(container).find('.fundLedgerId').change(function () { PopulateLedgers(); });
+   // $(container).find('.selectfiscalyear').change(function () { PopulateFundFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val() ); });
+    
 
     var accordions = $('<div>').addClass('accordions');
     var accountrevenuegroup = $('<div>').addClass('accountrevenuecontainer');
@@ -3119,144 +3129,176 @@ function LoadFundAccountingSectionSettings() {
     $(accordions).appendTo($('.gridcontainer'));
 
     /* FUND BALANCE ACCOUNT */
-    //CreateBasicFieldBlock('Fund Balance Aaccount: ', '<select>', 'selectfundbalanceaccount', selectfundbalanceaccountgroup, true); 
-    var selectfundbalanceaccountgroup = $('<div>');
-    var selectfundbalanceaccountname = $('<label>').text('Fund balance account: ');
-    $('<div>').addClass('selectfundbalanceaccount').appendTo(selectfundbalanceaccountname);
-    $(selectfundbalanceaccountname).appendTo(selectfundbalanceaccountgroup);
-    $(selectfundbalanceaccountgroup).appendTo(accountrevenuegroup);
-    $(accountrevenuegroup).append('<br />').appendTo(accordions);
-
-    /* CLOSING REVENUE ACCOUNT */
-    var selectclosingrevenueaccountgroup = $('<div>');
-    var selectclosingrevenueaccountname = $('<label>').text('Closing Revenue Account: ');
-    $('<div>').addClass('selectclosingrevenueaccount').appendTo(selectclosingrevenueaccountname);
-    $(selectclosingrevenueaccountname).appendTo(selectclosingrevenueaccountgroup);
-    $(selectclosingrevenueaccountgroup).appendTo(accountrevenuegroup);
-    $(accountrevenuegroup).append('<br />').appendTo(accordions);
-
-    /* CLOSING EXPENSE ACCOUNT */
-    var selectclosingexpenseaccountgroup = $('<div>').addClass('twocolumn');
-    var selectclosingexpenseaccountname = $('<label>').text('Closing Expense Account: ');
-    $('<div>').addClass('selectclosingexpenseaccount').appendTo(selectclosingexpenseaccountname);
-    $(selectclosingexpenseaccountname).appendTo(selectclosingexpenseaccountgroup);
-    $(selectclosingexpenseaccountgroup).appendTo(accountrevenuegroup);
-    $(accountrevenuegroup).append('<br />').appendTo(accordions);
-
-    /* SAVE & CANCEL */
-    var errorgroup = $('<div>').addClass('fieldblock');
-    $('<label>').text('').addClass('validateerror fundsettingerror').append('<br />').appendTo(errorgroup);
-    $(errorgroup).append('<br />').appendTo(accountrevenuegroup).appendTo(container);
-
-    CreateSaveAndCancelButtons('SaveFundSetting', function (e) {
-
-        e.preventDefault();
-        fundid = $('.selectfund').val();
-        var item = null;
-        fiscalyearid = $('.selectfiscalyear').val();
-        var item = {
-            FundBalanceAccountId: $('.selectfundbalanceaccount> .hidaccountid').val(),
-            ClosingRevenueAccountId: $('.selectclosingrevenueaccount > .hidaccountid').val(),
-            ClosingExpenseAccountId: $('.selectclosingexpenseaccount > .hidaccountid').val(),
-        };
-
-        MakeServiceCall('PATCH', 'fund/' + $('.selectfund').val(), JSON.stringify(item), function () {
-
-            LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
-            DisplaySuccessMessage('Success', 'Setting saved successfully.');
-            LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
-        }, null);
-
-
-    },
-
-    'cancel', function (e) {
-        e.preventDefault();
-
-        LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
-    },
-
-   accountrevenuegroup);
     
-    MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnitId + '?fields=all', null, function (data) {
-        var ledger = data.Data[0];
-        $('.FundLedgerId').val(ledger.Id);
-        $('.FundLedgerId').text(ledger.Code);
-       
-        fundid = $('.selectfund').val();
+    var selectfundbalanceaccountgroup = $('<div>');
+    CreateBasicFieldBlock('Fund Balance Account: ', '<div>', 'selectfundbalanceaccount', selectfundbalanceaccountgroup, true); 
+    $(selectfundbalanceaccountgroup).appendTo(accordions);
+   // var selectfundbalanceaccountname = $('<label>').text('Fund balance account: ');
+   // $('<div>').addClass('selectfundbalanceaccount').appendTo(selectfundbalanceaccountname);
+   // $(selectfundbalanceaccountname).appendTo(selectfundbalanceaccountgroup);
+   // $(selectfundbalanceaccountgroup).appendTo(accountrevenuegroup);
+   // $(accountrevenuegroup).append('<br />').appendTo(accordions);
 
-        //fiscalyearid = ledger.DefaultFiscalYearId;
-        fiscalyear = ledger.DefaultFiscalYearId;
-        PopulateDropDown('.selectfiscalyear', 'fiscalyears/ledger/' + ledger.Id + '?fields=all', '', '', ledger.DefaultFiscalYearId, null, function () {
-            fiscalyearid = $('.selectfiscalyear').val();
-            PopulateFundBusinessFromFiscalYear(fiscalyearid, ledger);
+   // /* CLOSING REVENUE ACCOUNT */
+    var selectclosingrevenueaccountgroup = $('<div>');
+    CreateBasicFieldBlock('Closing Revenue Account: ', '<div>', 'selectfundbalanceaccount', selectclosingrevenueaccountgroup, true);
+    $(selectclosingrevenueaccountgroup).appendTo(accordions);
+   // var selectclosingrevenueaccountname = $('<label>').text('Closing Revenue Account: ');
+   // $('<div>').addClass('selectclosingrevenueaccount').appendTo(selectclosingrevenueaccountname);
+   // $(selectclosingrevenueaccountname).appendTo(selectclosingrevenueaccountgroup);
+   // $(selectclosingrevenueaccountgroup).appendTo(accountrevenuegroup);
+   // $(accountrevenuegroup).append('<br />').appendTo(accordions);
+
+   // /* CLOSING EXPENSE ACCOUNT */
+    var selectclosingexpenseaccountgroup = $('<div>').addClass('twocolumn');
+    CreateBasicFieldBlock('Closing Expense Account: ', '<div>', 'selectclosingexpenseaccountname', selectclosingexpenseaccountgroup, true);
+    $(selectclosingexpenseaccountgroup).appendTo(accordions);
+   // var selectclosingexpenseaccountname = $('<label>').text('Closing Expense Account: ');
+   // $('<div>').addClass('selectclosingexpenseaccount').appendTo(selectclosingexpenseaccountname);
+   // $(selectclosingexpenseaccountname).appendTo(selectclosingexpenseaccountgroup);
+   // $(selectclosingexpenseaccountgroup).appendTo(accountrevenuegroup);
+   // $(accountrevenuegroup).append('<br />').appendTo(accordions);
+
+   // /* SAVE & CANCEL */
+   // var errorgroup = $('<div>').addClass('fieldblock');
+   // $('<label>').text('').addClass('validateerror fundsettingerror').append('<br />').appendTo(errorgroup);
+   // $(errorgroup).append('<br />').appendTo(accountrevenuegroup).appendTo(container);
+
+   // CreateSaveAndCancelButtons('SaveFundSetting', function (e) {
+
+   //     e.preventDefault();
+   //     fundid = $('.selectfund').val();
+   //     var item = null;
+   //     fiscalyearid = $('.selectfiscalyear').val();
+   //     var item = {
+   //         FundBalanceAccountId: $('.selectfundbalanceaccount> .hidaccountid').val(),
+   //         ClosingRevenueAccountId: $('.selectclosingrevenueaccount > .hidaccountid').val(),
+   //         ClosingExpenseAccountId: $('.selectclosingexpenseaccount > .hidaccountid').val(),
+   //     };
+
+   //     MakeServiceCall('PATCH', 'fund/' + $('.selectfund').val(), JSON.stringify(item), function () {
+
+   //         LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
+   //         DisplaySuccessMessage('Success', 'Setting saved successfully.');
+   //         LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
+   //     }, null);
+
+
+   // },
+
+   // 'cancel', function (e) {
+   //     e.preventDefault();
+
+   //     LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.fundLedgerId').val(), $('.selectfund').val())
+   // },
+
+   //accountrevenuegroup);
+    
+   // MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnitId + '?fields=all', null, function (data) {
+   //     var ledger = data.Data[0];
+   //     $('.fundLedgerId').val(ledger.Id);
+   //     $('.fundLedgerId').text(ledger.Code);
+       
+   //     fundid = $('.selectfund').val();
+
+   //     //fiscalyearid = ledger.DefaultFiscalYearId;
+   //     fiscalyear = ledger.DefaultFiscalYearId;
+   //     PopulateDropDown('.selectfiscalyear', 'fiscalyears/ledger/' + ledger.Id + '?fields=all', '', '', ledger.DefaultFiscalYearId, null, function () {
+   //         fiscalyearid = $('.selectfiscalyear').val();
+   //         PopulateFundBusinessFromFiscalYear(fiscalyearid, ledger);
 
            
-            $('.selectfiscalyear').unbind('change');
-            $('.selectfiscalyear').change(function (e) {
+   //         $('.selectfiscalyear').unbind('change');
+   //         $('.selectfiscalyear').change(function (e) {
 
-                //fiscalyear = $('.selectfiscalyear').val();
-                PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), ledger);
+   //             //fiscalyear = $('.selectfiscalyear').val();
+   //             PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), ledger);
                 
-                    PopulateFundDueFromFund($('.selectfund').val());
+   //                 PopulateFundDueFromFund($('.selectfund').val());
                
-                $('.accountnumber').val("");
+   //             $('.accountnumber').val("");
 
-            });
+   //         });
 
-            $('.selectfund').unbind('change');
+   //         $('.selectfund').unbind('change');
 
-            $('.selectfund').change(function (e) {
+   //         $('.selectfund').change(function (e) {
 
-                e.preventDefault();
-                var fundid = $('.selectfund').val();
-                LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
-                PopulateFundDueFromFund(fundid);
+   //             e.preventDefault();
+   //             var fundid = $('.selectfund').val();
+   //             LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
+   //             PopulateFundDueFromFund(fundid);
 
-            });
+   //         });
 
-        });
+   //     });
 
 
+
+   // }, null);
+  
+   // /* BUSINESS UNIT & FUND DUE ACCORDION */
+   // var businessunitdue = $('<div>').addClass('businessunitduecontainer');
+   // var funddue = $('<div>').addClass('fundduecontainer');
+
+   // var header = $('<h1>').text('Business Unit Due From/Due to Accounts ').appendTo($(accordions));
+   // $(businessunitdue).appendTo($(accordions));
+
+   // var header = $('<h1>').text('Fund Due From/Due to Accounts ').appendTo($(accordions));
+   // $(funddue).appendTo($(accordions));
+
+   // $(accordions).appendTo($('.gridcontainer'));
+
+   // LoadAccordions();
+}
+
+function PopulateLedgers() {
+    var ledgerid = $('.hidLedgerId').val();
+
+    MakeServiceCall('GET', 'ledgers/' + ledgerid, null, function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+
+                $('.hidLedgerId').val(data.Data.Id);
+                PopulateDropDown('.selectfiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null, function () {
+                    $('.hidFiscalId').val($('.selectfiscalyear').val());
+                    var fiscalId = $('.hidFiscalId').val();
+                    var ledgerId = $('.hidLedgerId').val();
+                    PopulateFundFromFiscalYear(fiscalId, ledgerId);
+                    //$('.hidLedgerId').val($('.fundLedgerId').val());
+
+                }, null);
+                 
+
+            }
+        }
 
     }, null);
-  
-    /* BUSINESS UNIT & FUND DUE ACCORDION */
-    var businessunitdue = $('<div>').addClass('businessunitduecontainer');
-    var funddue = $('<div>').addClass('fundduecontainer');
-
-    var header = $('<h1>').text('Business Unit Due From/Due to Accounts ').appendTo($(accordions));
-    $(businessunitdue).appendTo($(accordions));
-
-    var header = $('<h1>').text('Fund Due From/Due to Accounts ').appendTo($(accordions));
-    $(funddue).appendTo($(accordions));
-
-    $(accordions).appendTo($('.gridcontainer'));
-
-    LoadAccordions();
+        
 }
 
 /* POPULATING FUND FROM FISCAL YEAR GRID */
-function PopulateFundFromFiscalYear(fiscalyear, ledger, fundid) {
+function PopulateFundFromFiscalYear(fiscalyear, ledger) {
     
     PopulateDropDown('.selectfund', 'fund/' + fiscalyear + '/fiscalyear', '', '', '', function () {
 
         fundid = $('.selectfund').val();
-        LoadFundGLAccountSelector($('.selectfiscalyear').val(), ledger, fundid);
+        //LoadFundGLAccountSelector($('.selectfiscalyear').val(), ledger, fundid);
 
-        PopulateFundDueFromFund(fundid);
+        //PopulateFundDueFromFund(fundid);
 
-        $('.selectfund').unbind('change');
-        $('.selectfund').change(function (e) {
-            LoadFundGLAccountSelector($('.selectfiscalyear').val(), ledger, fundid);
+        //$('.selectfund').unbind('change');
+        //$('.selectfund').change(function (e) {
+        //    LoadFundGLAccountSelector($('.selectfiscalyear').val(), ledger, fundid);
            
-            PopulateFundDueFromFund(fundid);
+        //    PopulateFundDueFromFund(fundid);
 
-        });
+        //});
 
     }, null);
 
-    LoadFundGLAccountSelector($('.selectfiscalyear').val(), ledger, fundid);
+    //LoadFundGLAccountSelector($('.selectfiscalyear').val(), ledger, fundid);
 
 }
 /*POPULATE FUND ACCOUNT SELECTOR*/
