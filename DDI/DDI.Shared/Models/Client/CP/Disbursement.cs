@@ -48,9 +48,9 @@ namespace DDI.Shared.Models.Client.CP
         [MaxLength(128)]
         public string FinalComment { get; set; }
 
-        public Guid? CheckFromId { get; set; }
-        [ForeignKey("CheckFromId")]
-        public CheckFrom CheckFrom { get; set; }
+        public Guid? CheckFormId { get; set; }
+        [ForeignKey("CheckFormId")]
+        public CheckForm CheckForm { get; set; }
 
         public bool IsImmediate { get; set; }
         public bool IsManual { get; set; }

@@ -243,6 +243,11 @@
     <Compile Include="Controllers\Core\RolesController.cs" />
     <Compile Include="Controllers\Core\SavedEntityMappingController.cs" />
     <Compile Include="Controllers\Core\SectionPreferencesController.cs" />
+    <Compile Include="Controllers\CP\BankAccountController.cs" />
+    <Compile Include="Controllers\CP\DisbursementController.cs" />
+    <Compile Include="Controllers\CP\EFTInfoController.cs" />
+    <Compile Include="Controllers\CP\PaymentMethodController.cs" />
+    <Compile Include="Controllers\CP\ReceiptController.cs" />
     <Compile Include="Controllers\CRM\TagGroupsController.cs" />
     <Compile Include="Controllers\CRM\TagsController.cs" />
     <Compile Include="Controllers\Core\UserRolesController.cs" />

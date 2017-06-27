@@ -223,7 +223,7 @@
     <Compile Include="Models\Client\Core\SavedEntityMapping.cs" />
     <Compile Include="Models\Client\Core\SavedEntityMappingField.cs" />
     <Compile Include="Models\Client\CP\BankAccount.cs" />
-    <Compile Include="Models\Client\CP\CheckFrom.cs" />
+    <Compile Include="Models\Client\CP\CheckForm.cs" />
     <Compile Include="Models\Client\CP\Disbursement.cs" />
     <Compile Include="Models\Client\CP\DisbursementLine.cs" />
     <Compile Include="Models\Client\CP\Reconciliation.cs" />

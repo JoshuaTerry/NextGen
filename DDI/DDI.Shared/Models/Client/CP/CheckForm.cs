@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.CP
 {
-    [Table("CheckFrom")]
-    public class CheckFrom : AuditableEntityBase
+    [Table("CheckForm")]
+    public class CheckForm : AuditableEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

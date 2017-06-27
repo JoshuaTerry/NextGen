@@ -1,16 +1,11 @@
-﻿using DDI.Data;
-using DDI.Services;
-using DDI.Services.Search;
-using DDI.Services.Security;
+﻿using DDI.Services.Security;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
-using DDI.WebApi.Helpers;
 using DDI.WebApi.Models.BindingModels;
 using DDI.WebApi.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

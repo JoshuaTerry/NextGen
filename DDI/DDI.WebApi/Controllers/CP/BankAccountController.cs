@@ -1,28 +1,26 @@
 ﻿using DDI.Shared;
-using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
 
-namespace DDI.WebApi.Controllers.CRM
+namespace DDI.WebApi.Controllers.CP
 {
-    [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
-    public class EducationLevelsController : GenericController<EducationLevel>
+    [Authorize]
+    public class BankAccountController : GenericController<BankAccount>
     {
-        public EducationLevelsController(IService<EducationLevel> service) : base(service) { }
-
-        protected override string FieldsForList => FieldLists.CodeFields;
+        public BankAccountController(IService<BankAccount> service) : base(service) { }
 
         [HttpGet]
-        [Route("api/v1/educationlevels", Name = RouteNames.EducationLevel)]
+        [Route("api/v1/bankaccounts", Name = RouteNames.BankAccount)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.EducationLevel, limit, offset, orderBy, fields);
+            return base.GetAll(RouteNames.BankAccount, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/educationlevels/{id}", Name = RouteNames.EducationLevel + RouteVerbs.Get)]
+        [Route("api/v1/bankaccounts/{id}", Name = RouteNames.BankAccount + RouteVerbs.Get)]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -30,15 +28,15 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/educationlevels", Name = RouteNames.EducationLevel + RouteVerbs.Post)]
-        public IHttpActionResult Post([FromBody] EducationLevel entityToSave)
+        [Route("api/v1/bankaccounts", Name = RouteNames.BankAccount + RouteVerbs.Post)]
+        public IHttpActionResult Post([FromBody] BankAccount entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/educationlevels/{id}", Name = RouteNames.EducationLevel + RouteVerbs.Patch)]
+        [Route("api/v1/bankaccounts/{id}", Name = RouteNames.BankAccount + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -46,11 +44,10 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/educationlevels/{id}", Name = RouteNames.EducationLevel + RouteVerbs.Delete)]
+        [Route("api/v1/bankaccounts/{id}", Name = RouteNames.BankAccount + RouteVerbs.Delete)]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
         }
-
     }
 }

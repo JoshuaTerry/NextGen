@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Web.Http;
-using DDI.Services.ServiceInterfaces;
+﻿using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Enums.CRM;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {

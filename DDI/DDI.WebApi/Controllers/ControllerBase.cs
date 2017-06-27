@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Web.Http;
-using System.Web.Http.Routing;
-using DDI.Logger;
+﻿using DDI.Logger;
 using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Helpers;
@@ -11,6 +6,11 @@ using DDI.Shared.Models;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Web.Http;
+using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Controllers
 {

@@ -1,17 +1,16 @@
-﻿using DDI.Shared.Models.Client.GL;
+﻿using DDI.Shared;
+using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Routing;
-using System.Linq;
-using DDI.Services.GL;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.GL
 {
-    
+
     [Authorize]
     public class LedgerController : GenericController<Ledger>
     {

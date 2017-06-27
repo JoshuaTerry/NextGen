@@ -1,17 +1,15 @@
-﻿using DDI.Services;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Shared;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using System.Web.Routing;
-using DDI.Shared.Helpers;
-using System.Text.RegularExpressions;
 
 namespace DDI.WebApi.Controllers.CRM
 {
