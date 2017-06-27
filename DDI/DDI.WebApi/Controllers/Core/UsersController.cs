@@ -2,6 +2,7 @@
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
+using DDI.Shared.Statics;
 using DDI.WebApi.Models.BindingModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -69,26 +70,33 @@ namespace DDI.WebApi.Controllers.General
             };
         }
 
+        //[HttpGet]
+        //[Route("api/v1/users")]
+        //public IHttpActionResult Get()
+        //{
+        //    try
+        //    {
+        //        var results = userService.GetAll();
+
+        //        if (results == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        return Ok(results);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        base.Logger.LogError(ex);
+        //        return InternalServerError(new Exception(ex.Message));
+        //    }
+        //}
+
         [HttpGet]
-        [Route("api/v1/users")]
-        public IHttpActionResult Get()
+        [Route("api/v1/users", Name = RouteNames.User)]
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            try
-            {
-                var results = userService.GetAll();
-
-                if (results == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(results);
-            }
-            catch (Exception ex)
-            {
-                base.Logger.LogError(ex);
-                return InternalServerError(new Exception(ex.Message));
-            }
+            return base.GetAll(RouteNames.User, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
@@ -224,7 +232,7 @@ namespace DDI.WebApi.Controllers.General
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return InternalServerError(new Exception("A valid Username is Required."));
             }
 
             var user = new User()

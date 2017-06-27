@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DDI.Shared.Models.Client.Security
 {
@@ -15,6 +12,7 @@ namespace DDI.Shared.Models.Client.Security
         public Guid Id { get; set; }
 
         [MaxLength(128)]
+        [Required]
         public string Name { get; set; }
         [NotMapped]
         public string DisplayName => Name;
