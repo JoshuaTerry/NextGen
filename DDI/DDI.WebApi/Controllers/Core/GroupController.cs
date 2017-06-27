@@ -1,3 +1,4 @@
+using DDI.Logger;
 using DDI.Services;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
@@ -16,10 +17,11 @@ namespace DDI.WebApi.Controllers.Core
 {
     [Authorize]
     public class GroupController : GenericController<Group>
-    {
+    { 
         protected override string FieldsForAll => FieldListBuilder
             .Include(p => p.DisplayName)
-            .Include(p => p.Roles);
+            .Include(p => p.Roles)
+            .Include(p => p.Users);
 
         protected override string FieldsForSingle => FieldListBuilder
             .Include(p => p.DisplayName)
@@ -29,7 +31,8 @@ namespace DDI.WebApi.Controllers.Core
         {
             return new Expression<Func<Group, object>>[]
             {
-                n => n.Roles
+                n => n.Roles,
+                n => n.Users
             };
         }
         public GroupController(IService<Group> service) : base(service) { }
@@ -75,6 +78,30 @@ namespace DDI.WebApi.Controllers.Core
             }
         }
 
+        [HttpGet]
+        [Route("api/v1/group/{groupId}/users")]
+        public IHttpActionResult GetUsersByGroup(Guid groupId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                var search = new PageableSearch(offset, limit, orderBy);
+                var group = Service.GetById(groupId);
+                var users = group.Data.Users.ToList();
+
+                var response = new DataResponse<List<User>>
+                {
+                    Data = users,
+                    IsSuccessful = true
+                };
+
+                return FinalizeResponse<User>(response, "", search, ConvertFieldList(fields, FieldsForList));
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString);
+                return InternalServerError();
+            }
+        }
         [HttpPost]
         [Route("api/v1/groups")]
         public IHttpActionResult Post([FromBody] Group entityToSave)
@@ -84,12 +111,11 @@ namespace DDI.WebApi.Controllers.Core
 
         [HttpPost]
         [Route("api/v1/groups/{groupId}/roles/")]
-        public IHttpActionResult AddRolesToGroup(Guid groupId, [FromBody] JObject roles, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        public IHttpActionResult UpdateGroupRoles(Guid groupId, [FromBody] JObject roles)
         {
             try
-            {
-                var search = new PageableSearch(offset, limit, orderBy);
-                var response = Service.AddRolesToGroup(groupId, roles);
+            { 
+                var response = Service.UpdateGroupRoles(groupId, roles);
                 return FinalizeResponse(response);
             }
             catch (Exception ex)
@@ -110,34 +136,33 @@ namespace DDI.WebApi.Controllers.Core
         [Route("api/v1/groups/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
-            {
-                try
-                {
-                    var response = Service.DeleteGroup(id);
-                    return Ok(response);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex.ToString);
-                    return InternalServerError();
-                }
-            }
-        }
-
-        [HttpPatch]
-        [Route("api/v1/groups/remove/{groupId}/role/{roleId}")]
-        public IHttpActionResult RemoveRolesFromGroup(Guid groupId, Guid roleId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
-        {
             try
             {
-                var response = Service.RemoveRolesFromGroup(groupId, roleId);
-                return FinalizeResponse(response);
+                var entity = Service.GetById(id);
+
+                if (entity.Data == null)
+                {
+                    return NotFound();
+                }
+
+                if (!entity.IsSuccessful)
+                {
+                    return BadRequest(string.Join(",", entity.ErrorMessages));
+                }
+
+                var response = Service.Delete(entity.Data);
+                if (!response.IsSuccessful)
+                {
+                    return BadRequest(string.Join(", ", response.ErrorMessages));
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString);
-                return InternalServerError();
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
             }
-        }
+        }         
     }
 }

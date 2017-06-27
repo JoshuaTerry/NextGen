@@ -1,277 +1,151 @@
-﻿var currentGroup = null;
-
+﻿
 $(document).ready(function () {
 
-    LoadGroupsGrid();
-    LoadRolesTagBox();
-    NewGroupModal();
+    $('.groupnav').click(function (e) {
 
-    LoadUsersGrid();
-    NewUserModal();
+        e.preventDefault();
 
-    PopulateDropDown('.ConstituentId', 'constituents', '', '');
-    PopulateDropDown($('.user-DefaultBusinessUnitId'), 'businessunits', null);
-    PopulateDropDown($('.user-GroupId'), 'groups', null);
-    
+        ShowGroupSection();
 
+    });
+
+    $('.usernav').click(function (e) {
+
+        e.preventDefault();
+
+        ShowUsersSection();
+
+    });
+
+    ShowGroupSection();
 
 });
 
+function ShowGroupSection() {
 
+    $('li').removeClass('selected');
 
-/* GROUPS TAB */
-function LoadGroupsGrid() {
+    $('.groupscontainer').show();
+    $('.userscontainer').hide();
 
-    var columns = [
-        { dataField: 'DisplayName', caption: 'Group Name' }
-    ];
+    $('.groupnav').parent().addClass('selected');
 
-    CustomLoadGrid('groupgrid', '.groupstable', columns, 'groups', '', EditGroup, DeleteGroup, null); 
-
-}
-
-
-function LoadRolesTagBox() {
-
-    DisplayTagBox('roles', 'rolestagbox', '.gp-rolesdropdowncontainer', null, false);
-
-}
-
-
-function NewGroupModal() {
-
-    $('.newgroupmodal').click(function (e) {
+    $('.cancelgroup').click(function (e) {
 
         e.preventDefault();
 
-        modal = $('.groupmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 400,
-            resizable: false,
-            beforeClose: function (e) {
+        LoadGroup($('.hidgroupid').val());
 
-                $('.rolesmodal, .rolesgriditems').hide();
+    });
 
-                $('.gp-Name').val("");
+    LoadGroups();
 
-            }
-        });
+    $('.hidgroupid').val('');
+    $('.groupdetailscontainer').hide();
+    $('.groupselectcontainer ul li').removeClass('selected');
 
-        $('.savegroupbutton').val('Next...');
+    // Add roles link
+    $('.addroles').unbind('click');
+    $('.addroles').click(function (e) {
 
-        $('.savegroupbutton').unbind('click');
+        e.preventDefault();
 
-        $('.savegroupbutton').click(function (e) {
+        AddRolesModal();
 
-            $('.savegroupbutton').val('Save');
+    });
 
-            var item = {
-                Name: $('.gp-Name').val()
-            };
+}
 
-            MakeServiceCall('POST', 'groups/', JSON.stringify(item), function (data) {
+function ClearGroupFields() {
 
-                id = data.Data.Id;
+    $('.hidgroupid').val('');
+    $('.gp-Name').val('');
 
-                LoadGroup(id);
+    $(this).parent().find('li').removeClass('selected');
 
-                PopulateDropDown($('.user-GroupId'), 'groups', null);
+    $('.groupdetailscontainer').show();
+    $('.newlinkcontainer').hide();
+    $('.accordions').hide();
 
-                $('.hidgroupid').val(id);
+}
 
-                $('.rolesgriditems').show();
+function LoadGroups() {
 
-                $('.addrolesbutton').unbind('click');
+    $('.groupselectcontainer').show();
 
-                $('.addrolesbutton').click(function (e) {
+    MakeServiceCall('GET', 'groups', null, function (data) {
 
-                    $('.rolesmodal').show();
+        $('.groupselectcontainer').html('');
+        var groups = $('<ul>');
 
-                    $('.saverolesbutton').click(function (e) {
+        var newgroup = $('<div>').html('<img src="../../Images/New_16.png" /> New Group').addClass('newgroup').click(function () {
 
-                        AddRolesToGroup(id);
+            ClearGroupFields();
 
+            $('.savegroup').unbind('click');
+            $('.savegroup').click(function () {
+                SaveGroup(null);
 
-                    });
-
-                    $('.savegroupbutton').unbind('click');
-
-                    $('.savegroupbutton').click(function (e) {
-
-                        var item = {
-                            Name: $('.gp-Name').val()
-                        };
-
-                        MakeServiceCall('PATCH', 'groups/' + id, JSON.stringify(item), function (data) {
-
-                            LoadGroup(id);
-
-                            CloseModal(modal);
-
-                            LoadGroupsGrid();
-
-                            PopulateDropDown($('.user-GroupId'), 'groups', null);
-
-                            $('.gp-Name').val("");
-
-                        });
-
-                    });
-
-                    $('.cancelrolesmodal').click(function (e) {
-
-                        e.preventDefault();
-
-                        $('.rolesmodal').hide();
-
-                        $('.rolestagbox').dxTagBox('instance').reset();
-
-
-                    });
-                });
-
-                LoadGroupsGrid();
+                $('.newlinkcontainer').show();
+                $('.accordions').show();
             });
 
-        });
+        }).prependTo($('.groupselectcontainer'));
 
+        $.map(data.Data, function(item) {
 
-        $('.cancelgroupmodal').click(function (e) {
+            var group = $('<li>').html(item.DisplayName).click(function () {
+                // Select the group
+                $('.hidgroupid').val(item.Id);
+                LoadGroup(item.Id);
 
-            e.preventDefault();
+                $('.savegroup').unbind('click');
+                $('.savegroup').click(function () {
+                    SaveGroup(item.Id);
+                });
 
-            CloseModal(modal);
+                $(this).parent().find('li').removeClass('selected');
+                $(this).addClass('selected');
 
-            $('.rolesmodal, .rolesgriditems').hide();
+                $('.groupdetailscontainer').show();
+                $('.newlinkcontainer').show();
+                $('.accordions').show();
+            });
 
-            $('.rolestagbox').dxTagBox('instance').reset();
+            var delImg = $('<img>').attr('src', '../../Images/erase-16.png').click(function () {
 
-            $('.gp-Name').val("");
+                ConfirmModal('Are you sure you want to delete this Group?', function () {
 
-        });
+                    MakeServiceCall('DELETE', 'groups/' + item.Id, null, function () {
 
-    });
+                        ClearGroupFields();
 
-}
+                        DisplaySuccessMessage("Delete successful.");
 
-function EditGroup(id) {
-    
-    LoadGroup(id);
+                        LoadGroups();
 
-    $('.hidgroupid').val(id);
+                    }, null);
 
-    modal = $('.groupmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 400,
-        resizable: false,
-        beforeClose: function (e) {
+                }, function () { return; });
 
-            $('.rolesmodal, .rolesgriditems').hide();
+            }).appendTo($(group));
 
-            $('.gp-Name').val("");
+            if ($('.hidgroupid').val() == item.Id) {
+                $(group).addClass('selected');
+                LoadGroup(item.Id);
+            }
 
-        }
-    });
-
-    $('.rolesgriditems').show();
-
-    $('.groupmodal').show();
-
-    $('.savegroupbutton').val('Save');
-    
-    $('.savegroupbutton').unbind('click');
-
-    $('.savegroupbutton').click(function (e) {
-
-        var item = {
-            Name: $('.gp-Name').val()
-        };
-
-        MakeServiceCall('PATCH', 'groups/' + id, JSON.stringify(item), function (data) {
-
-            LoadGroup(id);
-
-            CloseModal(modal);
-
-            LoadGroupsGrid();
-
-            PopulateDropDown($('.user-GroupId'), 'groups', null);
-
-            $('.rolestagbox').dxTagBox('instance').reset();
-
-            $('.gp-Name').val("");
+            $(groups).append($(group));
 
         });
 
-    });
+        $('.groupselectcontainer').append($(groups));
 
-    $('.addrolesbutton').unbind('click');
-
-    $('.addrolesbutton').click(function (e) {
-
-        $('.rolesmodal').show();
-
-        $('.saverolesbutton').click(function (e) {
-
-            AddRolesToGroup(id);
-
-
-        });
-
-        $('.cancelrolesmodal').click(function (e) {
-
-            e.preventDefault();
-
-            $('.rolesmodal').hide();
-
-            $('.rolestagbox').dxTagBox('instance').reset();
-            
-
-        });
-
-    });
-
-    $('.cancelgroupmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-        $('.rolesmodal, .rolesgriditems').hide();
-
-        $('.rolestagbox').dxTagBox('instance').reset();
-
-        $('.gp-Name').val("");
-
-    });
-
-}
-
-
-function DeleteGroup(id) {
-
-    MakeServiceCall('DELETE', 'groups/' + id, null, function (data) {
-
-        DisplaySuccessMessage('Success', 'Group deleted successfully.');
-
-        LoadGroupsGrid();
-
-    }, function (xhr, status, err) {
-        DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-
-    });
-
+    }, null)
 
 }
 
 function LoadGroup(id) {
-
-    var columns = [
-        { dataField: 'DisplayName', caption: 'Roles' }
-    ];
 
     MakeServiceCall('GET', 'groups/' + id, null, function (data) {
 
@@ -279,271 +153,563 @@ function LoadGroup(id) {
 
     });
 
-    CustomLoadGrid('rolesgrid', '.rolesgridcontainer', columns, 'group/' + id + '/roles', '', null, DeleteRole, null); 
-
-}
-
-function DeleteRole(role) {
-
-    var groupid = $('.hidgroupid').val();
-    
-    MakeServiceCall('PATCH', '/groups/remove/' + groupid + '/role/' + role, null, function (data) {
-
-        DisplaySuccessMessage('Success', 'Role successfully removed from Group.');
-
-        LoadGroup(groupid);
-
-
-    });
-
-}
-
-function AddRolesToGroup(id) {
-
-    var values = $('.rolestagbox').dxTagBox('instance').option('values');
-    if (values != null)
-    {
-        var items = "{ item: " + JSON.stringify(values) + " }";
-
-        MakeServiceCall('POST', 'groups/' + id + '/roles/', items, function (data) {
-
-            DisplaySuccessMessage('Success', 'Roles successfully added to Group.');
-
-            $('.rolesmodal').hide();
-
-            $('.rolestagbox').dxTagBox('instance').reset();
-            EditGroup(id);
-
-        }, function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-
-        });
-    }
-}
-
-
-/* END GROUPS TAB */
-
-
-/* USERS TAB */
-function LoadUsersGrid() {
-
     var columns = [
-        { dataField: 'FullName', caption: 'Full Name' },
-        { dataField: 'Email', caption: 'Email Address' },
-        { caption: 'Active', cellTemplate: function (container, options) {
-                var type = 'Yes';
-
-                if (options.data.IsActive != '1') {
-                    type = 'No';
-                }
-                $('<label>').text(type).appendTo(container);
-            }
-        }
+        { dataField: 'DisplayName', caption: 'Name' }
     ];
 
-    CustomLoadGrid('usergrid', 'usersgridcontainer', columns, 'users?fields=all', null, EditUser, null);
+    // Roles in Group Grid
+    LoadGrid('grouprolesgridcontainer', 'rolesgrid', columns, 'group/' + id + '/roles', null, null, 'gp-', null, null, null, false, false, false, null);
+
+    // Users in Group Grid    
+    LoadGrid('groupusersgridcontainer', 'groupusersgrid', columns, 'group/' + id + '/users', null, null, null, null, null, null, false, false, false, null);
 }
 
-function NewUserModal() {
+function SaveGroup(id) {
 
-    $('.newusermodal').click(function (e) {
+    var item = {
+        Name: $('.gp-Name').val()
+    }
 
-        e.preventDefault();
+    if (id) {
 
-        $('.user-editonly1').hide();
-        $('.user-editonly2').hide();
+        MakeServiceCall('PATCH', 'groups/' + id, JSON.stringify(item), function (data) {
 
-        modal = $('.usermodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 400,
-            resizable: false,
-            beforeClose: function (e) {}
-        });
+            DisplaySuccessMessage("Save successful.");
 
-        
-        $('.submituser').val('Next...');
+            LoadGroups();
 
-        $('.submituser').unbind('click');
+        }, null);
 
-        $('.submituser').click(function (e) {
+    }
+    else {
 
-            var item = {
-                UserName: $(modal).find('.user-UserName').val(),
-                Email: $(modal).find('.user-Email').val()
-            }
+        MakeServiceCall('POST', 'groups/', JSON.stringify(item), function (data) {
 
-            
-            MakeServiceCall('POST', 'users', JSON.stringify(item), function (data) {
+            DisplaySuccessMessage("Save successful.");
 
-                CloseModal(modal);
-                EditUser(data.Data.Id);
+            $('.hidgroupid').val(data.Data.Id);
 
-            }, null);
+            LoadGroups();
 
-        });
+        }, null);
 
+    }
 
-        $('.cancelusermodal').click(function (e) {
-
-            e.preventDefault();
-
-            CloseModal(modal);
-        });
-    });
 }
 
+function AddRolesModal() {
 
-// USER SETTINGS 
-function EditUser(id) {
+    var groupid = $('.hidgroupid').val();
 
-
-    LoadUser(id);
-
-
-    modal = $('.usermodal').dialog({
+    modal = $('.rolesmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 400,
-        resizable: false
+        width: 500,
+        resizable: false,
+        beforeClose: function (e) {
+            ClearFields('.modalcontent');
+        }
     });
 
-
-    $('.user-editonly1').show();
-    $('.user-editonly2').show();
-
-    $('.cancelusermodal').click(function (e) {
+    $(modal).find('.cancelmodal').click(function (e) {
 
         e.preventDefault();
 
         CloseModal(modal);
 
-        LoadUsersGrid()
+    });
+
+    $(modal).find('.saveroles').unbind('click');
+
+    $(modal).find('.saveroles').click(function () {
+        
+        var roleIds = []
+
+        $(modal).find('.roleselection input[type="checkbox"]').each(function (i, v) {
+            if ($(v).prop('checked')) {
+                roleIds.push($(v).attr('id'));
+            }
+        });
+
+        var item = {
+            roles: roleIds
+        }
+
+        MakeServiceCall('POST', 'groups/' + groupid + '/roles', JSON.stringify(item), function () {
+            DisplaySuccessMessage("Save successful.");
+
+            CloseModal(modal);
+
+            LoadGroup(groupid);
+        }, null);
 
     });
 
-    $('submituser').val('Save');
+    MakeServiceCall('GET', 'roles', null, function (data) {
 
-    $('.submituser').unbind('click');
+        $('.roleselection div').empty();
 
-    $('.submituser').click(function () {
+        var cid = 0;
+        var concon = $('<div>').addClass('twocolumn');
+        var left = $('<div>').appendTo($(concon));
+        var right = $('<div>').appendTo($(concon));
 
-        var buIds = $('.tagBoxBusinessUnits').dxTagBox('instance').option('values');
+        // display all roles
+        $.map(data.Data, function (item) {
 
-        var item = {
-            FullName: $(modal).find('.user-FullName').val(),
-            UserName: $(modal).find('.user-UserName').val(),
-            Email: $(modal).find('.user-Email').val(),
-            DefaultBusinessUnitId: $(modal).find('.user-DefaultBusinessUnitId').val(),
-            ConstituentId: $(modal).find('.rs-Constituent1Id').val(),
-            GroupId: $(modal).find('.user-GroupId').val(),
-            BusinessUnitIds: buIds,
-            IsActive: true
-        }
+            var field = $('<div>').addClass('fieldblock');
+            var role = $('<input>').attr('type', 'checkbox').attr('id', item.Id).appendTo($(field));
+            var label = $('<label>').attr('for', item.Id).text(item.DisplayName).appendTo($(field));
 
-        MakeServiceCall('PATCH', 'users/' + id, JSON.stringify(item), function (data) {
+            if (cid === 0) {
 
-            if (data.Data) {
+                $(field).appendTo($(left));
 
-                DisplaySuccessMessage('Success', 'User saved successfully.');
-                CloseModal(modal);
-                LoadUsersGrid();
+                cid = 1;
             }
+            else {
 
-        }, function (xhr, status, err) {
+                $(field).appendTo($(right));
 
-            DisplayErrorMessage('Error', 'An error occurred while saving the User.');
+                cid = 0;
+            }
+            
+
+            $(modal).find('.roleselection').append($(concon));
 
         });
+
+        // check selected roles
+        if (groupid) {
+
+            MakeServiceCall('GET', 'group/' + groupid + '/roles', null, function (data) {
+
+                $(modal).find('input[type="checkbox"]').prop('checked', false);
+
+                $.each(data.Data, function (i, v) {
+
+                    $(modal).find('#' + v.Id).prop('checked', true);
+
+                });
+
+            }, null);
+
+        }
         
+
+    }, null);
+
+}
+
+function ShowUsersSection() {
+
+    $('li').removeClass('selected');
+
+    $('.userscontainer').show();
+    $('.groupscontainer').hide();
+
+    $('.usernav').parent().addClass('selected');
+
+    MaskFields();
+
+    $('.canceluser').click(function (e) {
+
+        e.preventDefault();
+
+        LoadGroup($('.hiduserid').val());
+
+    });
+
+    LoadUsers();
+
+    $('.hiduserid').val('');
+    $('.userdetailscontainer').hide();
+    $('.userselectcontainer ul li').removeClass('selected');
+
+    $('.managegroups').unbind('click');
+    $('.managegroups').click(function (e) {
+
+        e.preventDefault();
+
+        LoadUserGroupsModal();
+
+    });
+
+    $('.managebu').unbind('click');
+    $('.managebu').click(function (e) {
+
+        e.preventDefault();
+
+        LoadUserBusinessUnitsModal();
+
     });
 
 }
 
+function LoadUsers() {
+
+    $('.userselectcontainer').show();
+    
+    PopulateDropDown('.user-DefaultBusinessUnitId', 'businessunits', null, null, null, null, null);
+
+    MakeServiceCall('GET', 'users', null, function (data) {
+
+        $('.userselectcontainer').html('');
+        var users = $('<ul>');
+
+        var newuser = $('<div>').html('<img src="../../Images/New_16.png" /> New User').addClass('newuser').click(function () {
+
+            $('.hiduserid').val('');
+            $('.rs-Constituent1Id').val('');
+            $('.user-FullName').val('');
+            $('.userdetailscontainer input[type="text"').val('');
+            $('.userdetailscontainer select').val('');
+            $('.user-IsActive').prop('checked', true);
+
+            $('.saveuser').unbind('click');
+            $('.saveuser').click(function () {
+                SaveUser(null);
+
+                $('.newlinkcontainer').show();
+            });
+
+            $(this).parent().find('li').removeClass('selected');
+
+            $('.userdetailscontainer').show();
+            $('.newlinkcontainer').hide();
+            $('.userextendeddetails').hide();
+
+        }).prependTo($('.userselectcontainer'));
+
+        $.map(data.Data, function (item) {
+
+            var user = $('<li>').text(item.DisplayName).click(function () {
+                // Select the user
+                $('.hiduserid').val(item.Id);
+                LoadUser(item.Id);
+
+                $('.saveuser').unbind('click');
+                $('.saveuser').click(function () {
+                    SaveUser(item.Id);
+                });
+
+                $(this).parent().find('li').removeClass('selected');
+                $(this).addClass('selected');
+
+                $('.userdetailscontainer').show();
+                $('.newlinkcontainer').show();
+            });
+
+            if ($('.hiduserid').val() == item.Id) {
+                $(user).addClass('selected');
+                LoadUser(item.Id);
+            }
+
+            $(users).append($(user));
+
+        });
+
+        $('.userselectcontainer').append($(users));
+
+    }, null)
+
+}
 
 function LoadUser(id) {
 
     MakeServiceCall('GET', 'users/' + id, null, function (data) {
+        
+        $('.user-UserName').val(data.Data.UserName);
+        $('.user-FullName').val(data.Data.FullName);
+        $('.user-Email').val(data.Data.Email);
+        $('.user-PhoneNumber').val(data.Data.PhoneNumber);
+        $('.user-DefaultBusinessUnitId').val(data.Data.DefaultBusinessUnitId);
 
-        if (data.Data) {
-            if (data && data.Data && data.IsSuccessful) {
+        if (data.Data.Constituent) {
+            $('.rs-Constituent1Information').val(data.Data.Constituent.ConstituentNumber + ": " + data.Data.Constituent.Name + ", " + data.Data.Constituent.PrimaryAddress);
+            $('.rs-Constituent1Id').val(data.Data.ConstituentId);
+        }
+        else {
+            $('.rs-Constituent1Information').val('');
+            $('.rs-ConstituentId').val('');
+        }
+        
+        $('.user-IsActive').prop('checked', data.Data.IsActive);
 
-                $(modal).find('.user-Id').val(data.Data.Id);
-                $(modal).find('.user-FullName').val(data.Data.FullName);
-                $(modal).find('.user-UserName').val(data.Data.UserName);
-                $(modal).find('.user-Email').val(data.Data.Email);
-                $(modal).find('.user-DefaultBusinessUnitId').val(data.Data.DefaultBusinessUnitId);
-                $(modal).find('.rs-Constituent1Id').val(data.Data.ConstituentId);
-                $(modal).find('.user-IsActive').prop('checked', data.Data.IsActive);
+        $('.userextendeddetails').show();
 
-                if (data.Data.Constituent != null) {
-                    var constituentLabel = data.Data.Constituent.ConstituentNumber + ": " + data.Data.Constituent.Name + ", " + data.Data.Constituent.PrimaryAddress;
-                    $(modal).find('.rs-Constituent1Information').val(constituentLabel);
-                }
-                else {
-                    $(modal).find('.rs-Constituent1Information').empty();
-                }
+        LoadUserGroups();
 
-                LoadBusinessUnits('tagBoxBusinessUnits', 'user-BusinessUnits', 'businessunits', '/users/' + data.Data.UserName + '/businessunit');
+        LoadUserBusinessUnits();
 
-                if (data.Data.Groups.length > 0) {
-                    $(data.Data.Groups).each(function (i, group) {
+    }, null);
 
-                        $(modal).find('.user-GroupId').val(group.Id);
-                        
-                    });
-                }
+}
+
+function LoadUserGroups() {
+    
+    var columns = [
+        { dataField: 'DisplayName', caption: 'Name' }
+    ];
+
+    LoadGrid('usergroupsgridcontainer', 'usergroupsgrid', columns, 'users/' + $('.hiduserid').val() + '/groups', null, null, null, null, null, null, false, false, false, null);
+
+}
+
+function LoadUserGroupsModal() {
+
+    var userid = $('.hiduserid').val();
+
+    modal = $('.usergroupsmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 550,
+        resizable: false,
+        beforeClose: function (e) {
+            ClearFields('.modalcontent');
+        }
+    });
+
+    $(modal).find('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $(modal).find('.saveusergroups').unbind('click');
+
+    $(modal).find('.saveusergroups').click(function () {
+
+        var groupIds = []
+
+        $(modal).find('.usergroupsselection input[type="checkbox"]').each(function (i, v) {
+            if ($(v).prop('checked')) {
+                groupIds.push($(v).attr('id'));
             }
+        });
+
+        var item = {
+            groups: groupIds
         }
 
-    }, null);
+        MakeServiceCall('PATCH', 'users/' + userid + '/groups', JSON.stringify(item), function () {
+            DisplaySuccessMessage("Save successful.");
 
-}
+            CloseModal(modal);
 
-function LoadBusinessUnits(tagBox, container, routeForAllOptions, routeForSelectedOptions, disabled) {
-    if ($.type(container) === "string" && container.indexOf('.') != 0)
-        container = '.' + container;
+            LoadUser(userid);
+        }, null);
 
-    $(container).html('');
+    });
 
-    var selectedItems = [];
+    MakeServiceCall('GET', 'groups', null, function (data) {
 
-    MakeServiceCall('GET', routeForSelectedOptions, null, function (data) {
-        data.Data.forEach(function (item) {
-            selectedItems.push(item.Id);
+        $('.usergroupsselection div').empty();
+
+        var cid = 0;
+        var concon = $('<div>').addClass('twocolumn');
+        var left = $('<div>').appendTo($(concon));
+        var right = $('<div>').appendTo($(concon));
+
+        // display all groups
+        $.map(data.Data, function (item) {
+
+            var field = $('<div>').addClass('fieldblock');
+            var role = $('<input>').attr('type', 'checkbox').attr('id', item.Id).appendTo($(field));
+            var label = $('<label>').attr('for', item.Id).text(item.DisplayName).appendTo($(field));
+
+            if (cid === 0) {
+
+                $(field).appendTo($(left));
+
+                cid = 1;
+            }
+            else {
+
+                $(field).appendTo($(right));
+
+                cid = 0;
+            }
+
+
+            $(modal).find('.usergroupsselection').append($(concon));
+
         });
-        DisplaySelectedBusinessUnits(routeForAllOptions, tagBox, container, selectedItems, disabled);
+
+        // check selected groups
+        if (userid) {
+
+            MakeServiceCall('GET', 'users/' + userid + '/groups', null, function (data) {
+
+                $(modal).find('input[type="checkbox"]').prop('checked', false);
+
+                $.each(data.Data, function (i, v) {
+
+                    $(modal).find('#' + v.Id).prop('checked', true);
+
+                });
+
+            }, null);
+
+        }
+
+
     }, null);
 
 }
 
-function DisplaySelectedBusinessUnits(routeForAllOptions, tagBox, container, selectedItems, disabled) {
+function LoadUserBusinessUnits() {
 
-    var tagBoxControl = $('<div>').addClass(tagBox); // will probably have to apply this to the tagbox itself...
+    var columns = [
+        { dataField: 'DisplayName', caption: 'Name' }
+    ];
 
-    MakeServiceCall('GET', routeForAllOptions, null, function (data) {
-        $(tagBoxControl).dxTagBox({
-            items: data.Data,
-            value: selectedItems,
-            displayExpr: 'DisplayName',
-            valueExpr: 'Id',
-            showClearButton: true,
-            disabled: disabled,
-            height: data.length,
-            scrollbar: true
+    LoadGrid('userbugridcontainer', 'userbugrid', columns, 'users/' + $('.hiduserid').val() + '/businessunit', null, null, null, null, null, null, false, false, false, null);
+
+}
+
+function LoadUserBusinessUnitsModal() {
+
+    var userid = $('.hiduserid').val();
+
+    modal = $('.userbusinessunitsmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false,
+        beforeClose: function (e) {
+            ClearFields('.modalcontent');
+        }
+    });
+
+    $(modal).find('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $(modal).find('.saveuserbu').unbind('click');
+
+    $(modal).find('.saveuserbu').click(function () {
+
+        var buIds = []
+
+        $(modal).find('.userbuselection input[type="checkbox"]').each(function (i, v) {
+            if ($(v).prop('checked')) {
+                buIds.push($(v).attr('id'));
+            }
+        });
+
+        var item = {
+            businessUnits: buIds
+        }
+
+        MakeServiceCall('PATCH', 'users/' + userid + '/businessunits', JSON.stringify(item), function () {
+            DisplaySuccessMessage("Save successful.");
+
+            CloseModal(modal);
+
+            LoadUser(userid);
+        }, null);
+
+    });
+
+    MakeServiceCall('GET', 'businessunits', null, function (data) {
+
+        $('.userbuselection div').empty();
+
+        var cid = 0;
+        var concon = $('<div>').addClass('twocolumn');
+        var left = $('<div>').appendTo($(concon));
+        var right = $('<div>').appendTo($(concon));
+
+        // display all business units
+        $.map(data.Data, function (item) {
+
+            var field = $('<div>').addClass('fieldblock');
+            var role = $('<input>').attr('type', 'checkbox').attr('id', item.Id).appendTo($(field));
+            var label = $('<label>').attr('for', item.Id).text(item.DisplayName).appendTo($(field));
+
+            if (cid === 0) {
+
+                $(field).appendTo($(left));
+
+                cid = 1;
+            }
+            else {
+
+                $(field).appendTo($(right));
+
+                cid = 0;
+            }
+
+
+            $(modal).find('.userbuselection').append($(concon));
 
         });
 
-        $(tagBoxControl).appendTo(container);
+        // check selected business unit
+        if (userid) {
+
+            MakeServiceCall('GET', 'users/' + userid + '/businessunit', null, function (data) {
+
+                $(modal).find('input[type="checkbox"]').prop('checked', false);
+
+                $.each(data.Data, function (i, v) {
+
+                    $(modal).find('#' + v.Id).prop('checked', true);
+
+                });
+
+            }, null);
+
+        }
+
+
     }, null);
 
 }
 
+function SaveUser(id) {
 
-/* END USERS TAB */
+    var item = {
+        Id: id,
+        UserName: $('.user-UserName').val(),
+        FullName: $('.user-FullName').val(),
+        Email: $('.user-Email').val(),
+        PhoneNumber: $('.user-PhoneNumber').val(),
+        ConstituentId: $('.user-ConstituentId').val(),
+        DefaultBusinessUnitId: $('.user-DefaultBusinessUnitId').val(),
+        IsActive: $('.user-IsActive').prop('checked')
+    }
 
+    if (id) {
 
+        MakeServiceCall('POST', 'users/' + id, JSON.stringify(item), function (data) {
 
+            DisplaySuccessMessage("Save successful.");
 
+            LoadUsers();
 
+        }, null);
+
+    }
+    else {
+
+        MakeServiceCall('POST', 'users/', JSON.stringify(item), function (data) {
+
+            DisplaySuccessMessage("Save successful.");
+
+            $('.hiduserid').val(data.Data.Id);
+
+            LoadUsers();
+
+        }, null);
+
+    }
+
+}
