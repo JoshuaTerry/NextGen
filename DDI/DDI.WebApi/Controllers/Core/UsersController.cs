@@ -1,4 +1,5 @@
-﻿using DDI.Services.Security;
+﻿using DDI.Services.Search;
+using DDI.Services.Security;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
@@ -70,28 +71,7 @@ namespace DDI.WebApi.Controllers.General
             };
         }
 
-        //[HttpGet]
-        //[Route("api/v1/users")]
-        //public IHttpActionResult Get()
-        //{
-        //    try
-        //    {
-        //        var results = userService.GetAll();
-
-        //        if (results == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        return Ok(results);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        base.Logger.LogError(ex);
-        //        return InternalServerError(new Exception(ex.Message));
-        //    }
-        //}
-
+        
         [HttpGet]
         [Route("api/v1/users", Name = RouteNames.User)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
