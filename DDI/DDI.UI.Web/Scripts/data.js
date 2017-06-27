@@ -185,45 +185,49 @@ function LoadGrid(container, gridClass, columns, getRoute, saveRoute, selected, 
     var refreshGrid = function () {
         LoadGridData(container, gridClass, columns, getRoute, selected, newlink, showFilter, showGroup, onComplete);
     }
-    
-    columns.push({
-        width: '100px',
-        alignment: 'center',
-        allowResizing: false,
-        cellTemplate: function (container, options) {
-            if (editModalClass) {
-                // Add button for edit
 
-                $('<a/>')
-                    .addClass('actionbuttons')
-                    .addClass('editbutton')
-                    .attr('title', 'Edit')
-                    .click(function (e) {
-                        e.preventDefault();
+    if (editModalClass || showDelete) {
 
-                        EditEntity(saveRoute, prefix, options.data.Id, editModalClass, modalWidth, refreshGrid);
-                    })
-                    .appendTo(container);
+        columns.push({
+            width: '100px',
+            alignment: 'center',
+            allowResizing: false,
+            cellTemplate: function (container, options) {
+                if (editModalClass) {
+                    // Add button for edit
+
+                    $('<a/>')
+                        .addClass('actionbuttons')
+                        .addClass('editbutton')
+                        .attr('title', 'Edit')
+                        .click(function (e) {
+                            e.preventDefault();
+
+                            EditEntity(saveRoute, prefix, options.data.Id, editModalClass, modalWidth, refreshGrid);
+                        })
+                        .appendTo(container);
+                }
+
+                if (showDelete) {
+                    // Add button for delete
+
+                    $('<a/>')
+                        .addClass('actionbuttons')
+                        .addClass('deletebutton')
+                        .attr('title', 'Delete')
+                        .click(function (e) {
+                            e.preventDefault();
+
+                            ConfirmModal('Are you sure you want to delete this item?', function () {
+                                DeleteEntity(saveRoute, options.data.Id, refreshGrid);
+                            }, null);
+                        })
+                        .appendTo(container);
+                }
             }
+        });
 
-            if (showDelete) {
-                // Add button for delete
-
-                $('<a/>')
-                    .addClass('actionbuttons')
-                    .addClass('deletebutton')
-                    .attr('title', 'Delete')
-                    .click(function (e) {
-                        e.preventDefault();
-
-                        ConfirmModal('Are you sure you want to delete this item?', function () {
-                            DeleteEntity(saveRoute, options.data.Id, refreshGrid);
-                        }, null);
-                    })
-                    .appendTo(container);
-            }
-        }
-    });
+    }
 
     LoadGridData(container, gridClass, columns, getRoute, selected, newlink, showFilter, showGroup, onComplete);
 
@@ -330,40 +334,45 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
 
     var datagrid = $('<div>').addClass(grid);
 
-    if (editMethod) {
-        columns.push({
-            width: '100px',
-            alignment: 'center',
-            cellTemplate: function(container, options) {
-                $('<a/>')
-                    .addClass('editthing')
-                    .text('Edit')
-                    .click(function(e) {
-                        e.preventDefault();
+    if (editMethod || deleteMethod) {
 
-                        editMethod(options.data.Id);
-                    })
-                    .appendTo(container);
-            }
-        });
-    }
-
-    if (deleteMethod) {
         columns.push({
             width: '100px',
             alignment: 'center',
             cellTemplate: function (container, options) {
-                $('<a/>')
-                    .addClass('editthing')
-                    .text('Delete')
-                    .click(function (e) {
-                        e.preventDefault();
 
-                        deleteMethod(options.data.Id);
-                    })
-                    .appendTo(container);
+                if (editMethod) {
+                    
+                    $('<a/>')
+                        .addClass('actionbuttons')
+                        .addClass('editbutton')
+                        .attr('title', 'Edit')
+                        .click(function (e) {
+                            e.preventDefault();
+
+                            editMethod(options.data.Id);
+                        })
+                        .appendTo(container);
+                }
+
+                if (deleteMethod) {
+
+                    $('<a/>')
+                        .addClass('actionbuttons')
+                        .addClass('deletebutton')
+                        .attr('title', 'Delete')
+                        .click(function (e) {
+                            e.preventDefault();
+
+                            deleteMethod(options.data.Id);
+                        })
+                        .appendTo(container);
+
+                }
+
             }
         });
+
     }
 
     var actualData = data;
