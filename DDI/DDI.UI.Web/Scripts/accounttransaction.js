@@ -13,7 +13,8 @@ function GetPeriodDescription(periodNumber)
 
 $(document).ready(function () {
 
-    LoadTransactionGrid(sessionStorage.getItem("ACCOUNT_ID"));
+   // LoadTransactionGrid(sessionStorage.getItem("ACCOUNT_ID")); accountId
+    LoadTransactionGrid(accountId);
 
 });
 
