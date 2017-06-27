@@ -3496,7 +3496,7 @@ function LoadGLFormatSectionSettings() {
 
     $('.gridcontainer').empty();
 
-    var container = $('<div>').addClass('twocolumn');
+    var container = $('<div>').addClass('onecolumn');
 
     var glaccountformat = '';
     CreateBasicFieldBlock('Ledger: ', '<select>', 'glf-ledgerselect', container, true);

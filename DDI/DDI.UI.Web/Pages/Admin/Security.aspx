@@ -70,6 +70,7 @@
 
             <!-- Users Tab -->
             <div id="tab-users">
+                <div class="newlinkcontainer"><a href="#" class="newusermodal newlink">New User</a></div>
                 <div class="usersgridcontainer">
                     <div class="usergrid"></div>
                 </div>
@@ -82,45 +83,65 @@
         </div>
     </div>
 
-    <div class="usermodal" title="New User" style="display: none;">
+    <div class="usermodal" title="User Maintenance" style="display: none;">
         <div class="modalcontent">
+
+            <div class="user-editonly1" style="display: none;">
+
+                <div class="fieldblock">
+                    <label>Full Name</label>
+                    <input type="text" class="user-FullName" maxlength="256" />
+                </div>
+
+            </div>
+
+            <div class="fieldblock">
+                <label>User Name</label>
+                <input type="text" class="user-UserName required" maxlength="256" />
+            </div>
 
             <div class="fieldblock">
                 <label>Email</label>
-                <input type="email" name="email" class="user-Email" />
+                <input type="email" name="email" class="user-Email" maxlength="256" />
             </div>
 
-            <div class="fieldblock">
-                <label>Password</label>
-                <input type="password" name="password" class="user-Password" />
-            </div>
+            <div class="user-editonly2" style="display: none;">
 
-            <div class="fieldblock">
-                <label>Confirm Password</label>
-                <input type="password" name="confirmpassword" class="user-ConfirmPassword" />
-            </div>
 
-            <div class="fieldblock">
-                <label>Default Business Unit:</label>
-                <select class="user-DefaultBusinessUnitId"></select>
-            </div>
-
-            <div class="fieldblock">
-                <div class="businessUnits">
+                <div class="fieldblock">
+                    <label>Default Business Unit</label>
+                    <select class="user-DefaultBusinessUnitId"></select>
                 </div>
-            </div>
 
-            <div class="fieldblock">
-                 <div class="fieldblock">
-                    <input type="hidden" class="rs-Constituent1Id" />
-                    <label>Constituent</label>
-                    <input type="text" class="rs-Constituent1Information constituentlookup" maxlength="128" />
+                <div class="fieldblock">
+                    <label>Business Units</label>
+                    <div class="tagselect user-BusinessUnits"></div>
                 </div>
+
+                <div class="fieldblock">
+                    <label>Group</label>
+                    <select class="user-GroupId"></select>
+                </div>
+
+                <div class="fieldblock">
+                    <div class="fieldblock">
+                        <input type="hidden" class="rs-Constituent1Id" />
+                        <label>Constituent</label>
+                        <input type="text" class="rs-Constituent1Information constituentlookup" />
+                    </div>
+                </div>
+
+                <div class="fieldblock">
+                    <label>Active</label>
+                    <input type="checkbox" class="user-IsActive" />
+                </div>
+
             </div>
 
+            
             <div class="modalbuttons">
-                <input type="button" class="savebutton" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
+                <input type="button" class="submituser" value="Save" />
+                <a href ="#" class="cancelusermodal">Cancel</a>
             </div>
 
         </div>
