@@ -302,7 +302,10 @@
             <div class="modalcontent">
 
                 <div class="fileuploadcontainer">
-
+                    <div class="fieldblock">
+                        <label>Description</label>
+                        <input type="text" class="fu-description" maxlength="256" />
+                    </div>
                     <span class="btn btn-success fileinput-button">
                         <i class="glyphicon glyphicon-plus"></i>
                         <span>Select files...</span>

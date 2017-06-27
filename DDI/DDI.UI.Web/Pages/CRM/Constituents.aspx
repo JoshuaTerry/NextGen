@@ -6,6 +6,7 @@
     <script type="text/javascript" src="..\..\Scripts\Notes.js"></script>
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\attachments.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
@@ -514,7 +515,7 @@
             <!--Attachments Tab -->
             <div id="tab-attachments" class="scrollable">
                 <h1>Attachments</h1>
-                <div class="gridattachments"></div>
+                <div class="attachments"></div>
             </div>
             
             

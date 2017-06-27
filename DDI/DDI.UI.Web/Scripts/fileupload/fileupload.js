@@ -6,6 +6,7 @@ function InitializeFileUploader(url, callback) {
 
     $('#file_upload').fileupload({
         url: url,
+        headers: GetApiHeaders(),
         sequentialUploads: true,
         dropZone: $('.fileuploadcontainer'),
         disableImageResize: true,

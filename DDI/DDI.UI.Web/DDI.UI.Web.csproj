@@ -102,6 +102,7 @@
     <Content Include="CSS\security.css" />
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Images\trashcan-11.png" />
+    <Content Include="Pages\Common\ViewDocument.aspx" />
     <Content Include="Pages\Common\Notes.aspx" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\GL\AccountDetails.aspx" />
@@ -343,6 +344,13 @@
     <Compile Include="Code\ApiRoleProvider.cs" />
     <Compile Include="Code\ApiUserProvider.cs" />
     <Compile Include="Code\CustomSiteMapProvider.cs" />
+    <Compile Include="Pages\Common\ViewDocument.aspx.cs">
+      <DependentUpon>ViewDocument.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Common\ViewDocument.aspx.designer.cs">
+      <DependentUpon>ViewDocument.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Common\Notes.aspx.cs">
       <DependentUpon>Notes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
