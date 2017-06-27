@@ -101,6 +101,7 @@
     <Compile Include="CRM\DataSources\RelationshipCategoryDataSource.cs" />
     <Compile Include="CRM\DataSources\PrefixDataSource.cs" />
     <Compile Include="CRM\DataSources\GenderDataSource.cs" />
+    <Compile Include="GL\PostingLogicTest.cs" />
     <Compile Include="GL\DataSources\AccountBalanceDataSource.cs" />
     <Compile Include="GL\DataSources\AccountDataSource.cs" />
     <Compile Include="GL\DataSources\AccountGroupDataSource.cs" />

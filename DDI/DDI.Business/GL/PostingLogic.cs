@@ -165,7 +165,7 @@ namespace DDI.Business.GL
                     }
                     if (period.Status == FiscalPeriodStatus.Closed && tran.IsAdjustment == false)
                     {
-                        throw new InvalidOperationException(string.Format(UserMessagesGL.FiscalYearClosed, period.PeriodNumber, year.Name));
+                        throw new InvalidOperationException(string.Format(UserMessagesGL.FiscalPeriodClosed, period.PeriodNumber, year.Name));
                     }
                 }
 
