@@ -83,7 +83,7 @@
 
                         <div class="fieldblock">
                             <label>Name</label>
-                            <label class="editable FormattedName" maxlength="255"></label>
+                            <label class="editable FormattedName"></label>
                         </div>
 
                         <div class="fieldblock">
