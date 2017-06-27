@@ -2579,13 +2579,20 @@ function LoadAccountingSettingsSectionSettings() {
 
     $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
 
+
+    // Audit Link
+    $('<a>').text('Audit History').attr('href', '#').attr('type', 'hidden').addClass('newauditmodal').prependTo($('.gridcontainer'));
+
+
     // Select the ledger
     CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer, true);
 
-    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
+    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '<Please Select>', '', '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
+        ShowAuditData($('.hidLedgerId').val());
         LoadAccountingSettings($('.hidLedgerId').val());
+
 
     }, null);
 
@@ -2600,20 +2607,6 @@ function LoadAccountingSettingsSectionSettings() {
 
     // disable or enable approvals for journals
     CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer, false);
-
-    // if approval is enabled: load users and select who can approve
-    $('.as-approval').change(function () {
-
-        if (this.checked) {
-
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
-            // PopulateDropDown(); // users with permissions to post approvals
-
-        } else {
-
-            $('.as-approvedusers').parent().remove();
-        }
-    });
 
     CreateSaveAndCancelButtons('saveAccountingSettings', function (e) {
 
@@ -2644,6 +2637,8 @@ function LoadAccountingSettingsSectionSettings() {
     acctsettingscontainer);
 }
 
+
+
 function LoadAccountingSettings(id) {
 
     MakeServiceCall('GET', 'ledgers/' + id, null, function (data) {
@@ -2654,12 +2649,6 @@ function LoadAccountingSettings(id) {
         $('.as-approval').prop('checked', data.Data.ApproveJournals);
 
         PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null);
-
-        if (data.Data.ApproveJournals && !($('.as-approvedusers').length > 0)) {
-
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
-            // PopulateDropDown(); // users with permissions to post approvals
-        }
 
     }, null);
 }
@@ -3927,5 +3916,7 @@ function SendCustomField(method, route, data, modal) {
 
     }, null);
 }
+
 /* END CUSTOM FIELDS */
+
 
