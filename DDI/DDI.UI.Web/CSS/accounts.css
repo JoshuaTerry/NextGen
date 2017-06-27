@@ -1,46 +1,150 @@
-﻿body {  }
+﻿body {
+}
 
 
-div.accounts { width: 90%; margin: 10px auto 0 auto; }
-div.accounts div.tabscontainer { width: 100%; }
+div.accounts {
+    width: 90%;
+    margin: 10px auto 0 auto;
+}
 
-.as-accounts { margin-top: 10px; width: 90%; margin: 10px auto 0 auto; background-color: white; padding: 20px; }
-.as-accounts h1 { margin-bottom: 10px; }
-.as-accounts div.gridContainer { width: 100%; margin: 0 auto; }
+    div.accounts div.tabscontainer {
+        width: 100%;
+    }
+
+.as-accounts {
+    margin-top: 10px;
+    width: 90%;
+    margin: 10px auto 0 auto;
+    background-color: white;
+    padding: 20px;
+}
+
+    .as-accounts h1 {
+        margin-bottom: 10px;
+    }
+
+    .as-accounts div.gridContainer {
+        width: 100%;
+        margin: 0 auto;
+    }
 /* gl summary widths*/
 
-span.summaryleftprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
+div.inlinecontainer {
+    width: 100%;
+    display: inline;
+    vertical-align: top;
+    margin-top: 1%;
+}
+
+span.summaryleftprompts label {
+    width: 9%;
+    display: inline-block;
+    margin: 5px 0 5px 12px;
+}
+
 span.summaryleftinput input,
-span.summaryleftinput select {width: 30%; display: inline-block; margin: 5px 0 5px 0}
+span.summaryleftinput select {
+    width: 30%;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
 
-span.summaryrightprompts label {width: 9%; display: inline-block; margin: 5px 0 5px 20px; }
+span.summaryrightprompts label {
+    width: 9%;
+    display: inline-block;
+    margin: 5px 0 5px 10px;
+}
+
 span.summaryrightinput input,
-span.summaryrightinput select {width: 13%; display: inline-block; margin: 5px 0 5px 0}
-span.summaryrightcheckbox {width: 16px; display: inline-block; margin: 5px 0 5px 0}
+span.summaryrightinput select {
+    width: 13%;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
 
-span.summarysegmentprompt label {width: 9%; display: inline-block; margin: 5px 0 5px 0}
-span.summarysegmentinput select {width: 20%; display: inline-block; margin: 5px 0 5px 0}
-.segmentcode {display: none;}
-.segmentname {margin-left: 5px;}
+span.summaryrightcheckbox {
+    width: 16px;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
 
-div.inlinecontainer {width: 100%; display: inline; vertical-align: top; margin-top: 1%;}
+span.summarysegmentprompt label {
+    width: 9%;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
 
-.accountsegmentscontainer {display: none;}
-.hidebuttons {display: none;}
-.activeadjust {margin: 0 0 0 -3px;}
+span.summarysegmentinput select {
+    width: 30%;
+    display: inline-block;
+    margin: 5px 0 5px 0
+}
 
-.invisible {visibility: hidden;}
+.segmentcode {
+    display: none;
+}
 
-.accountselectorprompt {width: 9%; display: inline-block; margin: 5px 0 5px 10px; }
-.accountgroup {visibility: hidden;}
-.accountsearch {vertical-align: middle; margin-left: 5px; width: 16px;}
+.segmentgroup {
+    display: none;
+}
 
-.fiscalyearselectioncontainr { float: right; }
+.hidebuttons {
+    visibility: hidden;
+}
 
-.newbuttoninline { background-color: white; border: solid 1px black; background-image: url('../../Images/New_16.png'); width: 16px; height: 16px; vertical-align: middle; }
-.editbuttoninline { background-color: white; border: solid 1px black; background-image: url('../../Images/Edit_16Old.png'); width: 16px; height: 16px; vertical-align: middle; }
+.invisible {
+    visibility: hidden;
+}
 
-.newaccountlinkcontainer { text-align: right; margin-bottom: 10px; }
+.accountselectorprompt {
+    width: 9%;
+    display: inline-block;
+    margin: 5px 0 5px 10px;
+}
 
+.accountgroup {
+    visibility: hidden;
+}
 
+.accountsearch {
+    vertical-align: middle;
+    margin-left: 5px;
+    width: 16px;
+}
 
+.activeadjust {
+    margin: 0 0 0 -4px;
+}
+
+.fiscalyearselectioncontainr {
+    float: right;
+}
+
+.newbuttoninline {
+    background-color: white;
+    border: solid 1px black;
+    background-image: url('../../Images/New_16.png');
+    width: 16px;
+    height: 16px;
+    margin: -1px 0 0 0;
+    vertical-align: middle;
+}
+
+.editbuttoninline {
+    background-color: white;
+    border: solid 1px black;
+    background-image: url('../../Images/Edit_16Old.png');
+    width: 16px;
+    height: 16px;
+    margin: -1px 0 0 0;
+    vertical-align: middle;
+}
+
+.newaccountlinkcontainer {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.dx-popup-content {
+    overflow: scroll
+}

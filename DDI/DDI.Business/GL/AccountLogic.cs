@@ -12,6 +12,7 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
+using System.Reflection;
 
 namespace DDI.Business.GL
 {
@@ -96,7 +97,79 @@ namespace DDI.Business.GL
                     }
                 }
             }
+        }
 
+        
+        public IDataResponse<Account> MergeAccounts(Guid sourceAccountId, Guid destinationAccountId)
+        {
+            DataResponse<Account> response = new DataResponse<Account>(); ;
+
+            try
+            {
+                var sourceAccount = UnitOfWork.GetById<Account>(sourceAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments);
+                var destinationAccount = UnitOfWork.GetById<Account>(destinationAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments);
+
+                response.Data = destinationAccount;
+
+                if (sourceAccount.FiscalYearId != destinationAccount.FiscalYearId)
+                    throw new InvalidOperationException("Source and Destination Account must have the same Fiscal Year.");
+
+                // Update budgets
+                MergeAccountBudgets(sourceAccount, destinationAccount);
+
+                //Delete the Account Segments
+                sourceAccount.AccountSegments.ToList().ForEach(s => UnitOfWork.Delete(s));
+
+                //Create Merge Record
+                CreateMergeRecord(sourceAccount, destinationAccount);
+
+                //Delete Source Account
+                UnitOfWork.Delete(sourceAccount);
+
+                //Update Destination Account
+                UnitOfWork.Update(destinationAccount);
+
+                UnitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+            }
+
+            return response;
+        }
+
+        //Merge Budgets for 2 different Accounts
+        internal void MergeAccountBudgets(Account source, Account destination)
+        {
+            // Add the Beginning Account Balance
+            destination.BeginningBalance += source.BeginningBalance;
+
+            // Add the source Budget Amounts to Destination Budget Amounts
+            var destinationBudgets = destination.Budgets.ToList();
+            var sourceBudgets = source.Budgets.ToList();
+            var amountProperties = typeof(PeriodAmountList).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.Name.StartsWith("Amount") && p.CanWrite).ToList();
+
+            // Get each amount from the source PeriodAmountList and add them to the destination PeriodAmountList
+            foreach (var budget in sourceBudgets)
+            {
+                var dbudget = destinationBudgets.FirstOrDefault(b => b.BudgetType == budget.BudgetType)?.Budget;
+                amountProperties.ForEach(p => p.SetValue(dbudget, (decimal)p.GetValue(budget.Budget) + (decimal)p.GetValue(dbudget)));
+               
+                UnitOfWork.Update(dbudget);
+            }
+        }
+       
+        //Create a Merge Record for merging 2 accounts
+        internal void CreateMergeRecord(Account source, Account destintation)
+        {
+            var merge = new LedgerAccountMerge();
+            merge.FiscalYear = destintation.FiscalYear;
+            merge.FromAccount = GetLedgerAccount(source);
+            merge.ToAccount = GetLedgerAccount(destintation);
+            UnitOfWork.Insert(merge);
         }
 
         /// <summary>
@@ -272,8 +345,7 @@ namespace DDI.Business.GL
 
             
             foreach (var entry in segmentLevels.OrderBy(p => p.SortOrder > 0 ? p.SortOrder : 100 + p.Level) // Order the segments by sort order, or if zero by their level - although sort order takes precedence.
-                                               .Zip(Enumerable.Range(0, keys.Length), 
-                                                    (segmentLevel, n) => new { Index = n, Level = segmentLevel.Level }) // Assign a numeric order (0 thru n - 1) to the levels (1 - n)
+                                               .Select((segmentLevel, Index) => new { Index, Level = segmentLevel.Level }) // Assign a numeric order (0 thru n - 1) to the levels (1 - n)
                                                .Join(account.AccountSegments, outer => outer.Level, 
                                                      accountSegment => accountSegment.Level, 
                                                      (outer, accountSegment) => new { Index = outer.Index, Segment = accountSegment.Segment})) // Join with account.AccountSegments
@@ -282,7 +354,7 @@ namespace DDI.Business.GL
             }
 
             // Return the sort key.
-            return string.Join(" ", keys);
+            return string.Join(" ", keys).Trim();
         }
 
         /// <summary>
@@ -342,6 +414,24 @@ namespace DDI.Business.GL
             Ledger ledger = UnitOfWork.GetReference(ledgerAccount, p => p.Ledger);
             year = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetFiscalYearForBusinessUnit(year, ledger.BusinessUnitId.Value);
             return GetAccount(ledgerAccount, year);
+        }
+
+
+        /// <summary>
+        /// Get a specific account for specfied fiscal year.
+        /// </summary>
+        /// <param name="ledgerAccountId">Ledger account Id</param>
+        /// <param name="year">Fiscal year</param>
+        /// <param name="anyBusinessUnit">TRUE if fiscal year can be in another business unit.</param>
+        public Account GetAccount(Guid? ledgerAccountId, FiscalYear year, bool anyBusinessUnit = false)
+        {
+            if (ledgerAccountId == null)
+            {
+                return null;
+            }
+
+            LedgerAccount ledgerAccount = UnitOfWork.GetById<LedgerAccount>(ledgerAccountId.Value, p => p.LedgerAccountYears.First().Account);
+            return GetAccount(ledgerAccount, year, anyBusinessUnit);
         }
 
         /// <summary>
@@ -743,6 +833,47 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
+        /// Get the list of next year accounts for a G/L account.  Next year accounts include a factor (0 &lt x &lt= 1) that must be multiplied by the balance or activity figures. 
+        /// </summary>
+        /// <returns></returns>
+        public List<MappedAccount> GetNextYearAccounts(Account account, FiscalYear nyear = null)
+        {
+            var list = new List<MappedAccount>();
+
+            if (nyear == null)
+            {
+                nyear = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetNextFiscalYear(UnitOfWork.GetReference(account, p => p.FiscalYear), true);
+                if (nyear == null)
+                {
+                    return list;
+                }
+            }
+
+            // Look in NextYearAccounts collection.
+            foreach (var entry in UnitOfWork.GetEntities<AccountPriorYear>(p => p.Account).Where(p => p.PriorAccountId == account.Id))
+            {
+                if (!list.Any(p => p.Account.Id == entry.Account.Id))
+                {
+                    list.Add(new MappedAccount() { Account = entry.Account, Factor = entry.Percentage / 100m });
+                }
+            }
+
+            LedgerAccount ledgerAccount = GetLedgerAccount(account);
+
+            // Get the account in the next year.
+            foreach (var entry in UnitOfWork.GetEntities<LedgerAccountYear>(p => p.FiscalYear, p => p.Account)
+                                            .Where(p => p.LedgerAccountId == ledgerAccount.Id && p.FiscalYearId == nyear.Id))
+            {
+                if (entry.Account != null && !list.Any(p => p.Account.Id == entry.Account.Id))
+                {
+                    list.Add(new MappedAccount() { Account = entry.Account, Factor = 1m });
+                }
+            }
+
+            return list;
+        }
+
+        /// <summary>
         /// Get calculated account activity for an account.
         /// </summary>
         public AccountActivitySummary GetAccountActivity(Account account)
@@ -922,6 +1053,98 @@ namespace DDI.Business.GL
             return summary;
         }
         		
+
+        /// <summary>
+        /// Get the specific or default closing account for a G/L account.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public Account GetClosingAccount(Account account)
+        {
+            if (account.ClosingAccountId != null && account.ClosingAccount == null)
+            {
+                UnitOfWork.LoadReference(account, p => p.ClosingAccount);
+            }
+            return account.ClosingAccount ?? GetDefaultClosingAccount(account);
+        }
+
+        /// <summary>
+        /// Get the default closing account for a G/L account.
+        /// </summary>
+        public Account GetDefaultClosingAccount(Account account)
+        {
+            Account closeAcct = null;
+
+            // Get the fund
+            Fund fund = UnitOfWork.GetBusinessLogic<FundLogic>().GetFund(account);
+            if (fund == null)
+            {
+                return closeAcct;
+            }
+
+            // Revenue/Expense accounts:
+            if (account.FiscalYear == null)
+            {
+                UnitOfWork.LoadReference(account, p => p.FiscalYear);
+            }
+
+            if (account.Category == AccountCategory.Revenue || account.Category == AccountCategory.Expense)
+            {
+                // Determine the closing account based on category.  Final default is the fund's balance account.
+                if (account.Category == AccountCategory.Revenue)
+                {
+                    closeAcct = GetAccount(fund.ClosingRevenueLedgerAccountId, account.FiscalYear);
+                }
+                else if (account.Category == AccountCategory.Expense)
+                {
+                    closeAcct = GetAccount(fund.ClosingExpenseLedgerAccountId, account.FiscalYear);
+                }
+                if (closeAcct == null)
+                {
+                    closeAcct = GetAccount(fund.FundBalanceLedgerAccountId, account.FiscalYear);
+                }
+            }
+            else
+            {
+                if ((AccountIsEquivalent(account, fund.ClosingExpenseLedgerAccountId) || AccountIsEquivalent(account, fund.ClosingRevenueLedgerAccountId))
+                     &&
+                    !AccountIsEquivalent(account, fund.FundBalanceLedgerAccountId))
+                {
+                    closeAcct = GetAccount(fund.FundBalanceLedgerAccountId, account.FiscalYear);
+                }
+            }
+
+            return closeAcct;
+        }
+
+        /// <summary>
+        /// Determines if an account is equivalent to another Account, LedgerAccountYear, or LedgerAccount.
+        /// </summary>
+        /// <param name="account">Account entity.</param>
+        /// <param name="id">Id of another Account, LedgerAccountYear, or LedgerAccount.</param>
+        /// <returns>True if equivalent.</returns>
+        public bool AccountIsEquivalent(Account account, Guid? id)
+        {
+            if (id == null)
+            {
+                return false;
+            }
+
+            Guid idValue = id.Value;
+
+            if (account.Id == idValue)
+            {
+                return true;
+            }
+
+            if (account.LedgerAccountYears == null)
+            {
+                UnitOfWork.LoadReference(account, p => p.LedgerAccountYears);
+            }
+
+            return account.LedgerAccountYears.Any(p => p.Id == idValue || p.LedgerAccountId == idValue);
+        }
+
         #endregion
 
         #region Private Methods

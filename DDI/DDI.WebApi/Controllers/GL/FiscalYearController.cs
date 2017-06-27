@@ -136,6 +136,13 @@ namespace DDI.WebApi.Controllers.GL
             return base.Post(entityToSave);
         }
 
+        [HttpPost]
+        [Route("api/v1/fiscalyears/{sourceFiscalYearId}/copy", Name = RouteNames.FiscalYear + RouteVerbs.Post + RouteNames.Copy)]
+        public IHttpActionResult Copy(Guid sourceFiscalYearId, [FromBody] FiscalYearTemplate newFiscalYear)
+        {
+            return FinalizeResponse(((FiscalYearService)Service).CopyFiscalYear(sourceFiscalYearId, newFiscalYear), FieldsForSingle);
+        }
+
         [HttpPatch]
         [Route("api/v1/fiscalyears/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Patch)]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)

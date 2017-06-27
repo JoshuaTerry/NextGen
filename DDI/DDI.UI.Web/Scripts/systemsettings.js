@@ -2593,10 +2593,10 @@ function LoadAccountingSettingsSectionSettings() {
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer, true);
 
     // transaction posted automatially
-    CreateBasicFieldBlock('Post transactions automatically when saved or approved: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer, false);
+    CreateBasicFieldBlock('Post Transactions Automatically: ', '<input type="checkbox">', 'as-postedtransaction', acctsettingscontainer, false);
 
     // how many days in advance recurring journals will be processed
-    CreateBasicFieldBlock('Number of days before recurring journals post:', '<input type="text">', 'as-daysinadvance', acctsettingscontainer, false, 30, 3);
+    CreateBasicFieldBlock('Number of days before recurring journals post:', '<input type="text">', 'as-daysinadvance', acctsettingscontainer, false, 3);
 
     // disable or enable approvals for journals
     CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer, false);
@@ -2681,11 +2681,11 @@ function LoadBudgetSectionSettings() {
 
     $(container).find('.budgetLedgerId').change(function () { GetBudgetSetting(); });
          
-    CreateBasicFieldBlock('Working Budget Name: ', '<input>', 'workingBudgetName', container, true, 150, 128);
+    CreateBasicFieldBlock('Working Budget Name: ', '<input>', 'workingBudgetName', container, true, 128);
 
-    CreateBasicFieldBlock('Fixed Budget Name: ', '<input>', 'fixedBudgetName', container, true, 150, 128);
+    CreateBasicFieldBlock('Fixed Budget Name: ', '<input>', 'fixedBudgetName', container, true, 128);
 
-    CreateBasicFieldBlock('What If Budget Name: ', '<input>', 'whatifBudgetName', container, true, 150, 128);
+    CreateBasicFieldBlock('What If Budget Name: ', '<input>', 'whatifBudgetName', container, true, 128);
      
     var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
     CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {
@@ -3121,31 +3121,14 @@ function LoadFiscalPeriods(info) {
 function LoadFundAccountingSectionSettings() {
 
 
-    var fund = '';
-    var container = $('<div>').addClass('fundsettingscontainer onecolumn');
-
-    /* FISCAL YEAR */
+    var fund = ''; 
+     
     $('.gridcontainer').empty();
-    var container = $('<div>').appendTo('.gridcontainer');
-    var header = $('<div>');
-    $('<label>').text('Setting for ').appendTo(header);
-    var fundnamedisplay = $('<label>').addClass('FundLedgerId').appendTo(header);
-    $('<hr>').addClass('').appendTo(header);
-    $(header).append('<br />').appendTo(container);
-
-    /* FUND */
-    var selectfiscalyeargroup = $('<div>').addClass('twocolumn');
-    var selectfiscalyearname = $('<label>').text('Fiscal Year: ');
-    $('<select>').addClass('selectfiscalyear').appendTo(selectfiscalyearname);
-    $(selectfiscalyearname).appendTo(selectfiscalyeargroup);
-    $(selectfiscalyeargroup).append('<br />').append('<br />').appendTo(container);
-
-    /* ACCOUNT/REVENUE/EXPENSE ACCORDION */
-    var selectfundgroup = $('<div>');
-    var selectfundname = $('<label>').text('Fund: ').addClass('required');
-    $('<select>').addClass('selectfund').appendTo(selectfundname).attr('required', 'required');
-    $(selectfundname).appendTo(selectfundgroup);
-    $(selectfundgroup).appendTo(container);
+    var container = $('<div>').addClass('fundsettingscontainer onecolumn').appendTo('.gridcontainer');
+    
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'FundLedgerId', container, false); 
+    CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'selectfiscalyear', container, true); 
+    CreateBasicFieldBlock('Fund: ', '<select>', 'selectfund', container, true); 
 
     var accordions = $('<div>').addClass('accordions');
     var accountrevenuegroup = $('<div>').addClass('accountrevenuecontainer');
@@ -3154,6 +3137,7 @@ function LoadFundAccountingSectionSettings() {
     $(accordions).appendTo($('.gridcontainer'));
 
     /* FUND BALANCE ACCOUNT */
+    //CreateBasicFieldBlock('Fund Balance Aaccount: ', '<select>', 'selectfundbalanceaccount', selectfundbalanceaccountgroup, true); 
     var selectfundbalanceaccountgroup = $('<div>');
     var selectfundbalanceaccountname = $('<label>').text('Fund balance account: ');
     $('<div>').addClass('selectfundbalanceaccount').appendTo(selectfundbalanceaccountname);
@@ -3320,8 +3304,8 @@ function PopulateFundDueFromFund(fundid) {
               { dataField: 'DisplayName', caption: 'Fund' },
               { dataField: 'FromLedgerAccount.AccountNumber', caption: 'Due From Account' },
               { dataField: 'FromLedgerAccount.Name', caption: 'Description' },
-             { dataField: 'ToLedgerAccount.AccountNumber', caption: 'Due To Account' },
-         { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
+              { dataField: 'ToLedgerAccount.AccountNumber', caption: 'Due To Account' },
+              { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
     ];
     //LoadGrid('.fundduecontainer', 'fundduegrid', fundduecolumns, 'funds/' + fundid + '/fundfromto', 'funds', null, 'fn-',
     //   '.fundduemodal', '', 250, false, false, false, null);
@@ -3414,7 +3398,7 @@ function EditBusinessUnit(bufromtoid) {
                DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
                CloseModal(modal);
                PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
-                             
+              // PopulateFundFromFiscalYear(fiscalyear, $('.FundLedgerId').val(), fundid);
                $('.bus-FromLedgerAccount').empty();
                $('.bus-ToLedgerAccount').empty();
               
@@ -3512,7 +3496,7 @@ function LoadGLFormatSectionSettings() {
 
     $('.gridcontainer').empty();
 
-    var container = $('<div>').addClass('twocolumn');
+    var container = $('<div>').addClass('onecolumn');
 
     var glaccountformat = '';
     CreateBasicFieldBlock('Ledger: ', '<select>', 'glf-ledgerselect', container, true);
@@ -3636,7 +3620,7 @@ function LoadGLFormatSectionSettings() {
                                 glaccountformat = '';
                             }
                             $('.AccountFormat').remove();
-                            $('<span>').addClass('AccountFormat').text('Example3: ' + glaccountformat).appendTo($('.glformatcontainer'));
+                            $('<span>').addClass('AccountFormat').text('Example: ' + glaccountformat).appendTo($('.glformatcontainer'));
                         }, null);       
                     });
             }

@@ -20,7 +20,10 @@ namespace DDI.Shared.Models.Client.Security
 
         public DateTime? LastModifiedOn { get; set; }
 
-        public void AssignPrimaryKey() { }
+        public void AssignPrimaryKey()
+        {
+            Id = Helpers.GuidHelper.NewGuid();
+        }
 
     }
 }

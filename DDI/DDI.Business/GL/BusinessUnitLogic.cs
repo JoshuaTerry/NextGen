@@ -54,7 +54,14 @@ namespace DDI.Business.GL
             if (IsMultiple)
             {
                 User user = UserHelper.GetCurrentUser(UnitOfWork);
-                return UnitOfWork.GetReference(user, p => p.DefaultBusinessUnit);
+                if (user?.DefaultBusinessUnitId != null)
+                {
+                    return UnitOfWork.GetById<BusinessUnit>(user.DefaultBusinessUnitId.Value);
+                }
+                else
+                {
+                    return null;
+                }
             }
 
             return UnitOfWork.FirstOrDefault<BusinessUnit>(p => p.BusinessUnitType == BusinessUnitType.Organization);

@@ -101,7 +101,12 @@ namespace DDI.Shared.Enums.Core
 
         // CRM:  200000 - 209999
 
+        // Special:  9999XX
 
+        [TransactionType("G/L closing balance", ModuleType = ModuleType.GeneralLedger)]
+        ClosingBalance = 999998,
+        [TransactionType("G/L beginning balance", ModuleType = ModuleType.GeneralLedger)]
+        BeginningBalance = 999999,
 
     }
 }
