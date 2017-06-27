@@ -1,6 +1,8 @@
 ﻿
 $(document).ready(function () {
 
+    Resize();
+
     $('.groupnav').click(function (e) {
 
         e.preventDefault();
@@ -19,7 +21,22 @@ $(document).ready(function () {
 
     ShowGroupSection();
 
+    $(window).resize(function () {
+        Resize();
+    });
+
 });
+
+function Resize() {
+
+    var windowHeight = $(window).height();
+    var header = $('header').height();
+    var adjustedHeight = (windowHeight - header) - 160;
+
+    $('.groupselectcontainer ul').height(adjustedHeight);
+    $('.userselectcontainer ul').height(adjustedHeight);
+
+}
 
 function ShowGroupSection() {
 
@@ -140,6 +157,8 @@ function LoadGroups() {
         });
 
         $('.groupselectcontainer').append($(groups));
+
+        Resize();
 
     }, null)
 
@@ -410,6 +429,8 @@ function LoadUsers() {
         });
 
         $('.userselectcontainer').append($(users));
+
+        Resize();
 
     }, null)
 

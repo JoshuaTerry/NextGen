@@ -1,4 +1,5 @@
-﻿using DDI.Services.Security;
+﻿using DDI.Services.Search;
+using DDI.Services.Security;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
@@ -75,7 +76,8 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
-                var results = userService.GetAll();
+                var search = PageableSearch.Max;
+                var results = userService.GetAll(null, search);
 
                 if (results == null)
                 {
