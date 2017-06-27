@@ -102,9 +102,6 @@ function LoadGroups() {
             $('.savegroup').unbind('click');
             $('.savegroup').click(function () {
                 SaveGroup(null);
-
-                $('.newlinkcontainer').show();
-                $('.accordions').show();
             });
 
         }).prependTo($('.groupselectcontainer'));
@@ -197,6 +194,9 @@ function SaveGroup(id) {
 
             LoadGroups();
 
+            $('.newlinkcontainer').show();
+            $('.accordions').show();
+
         }, null);
 
     }
@@ -209,6 +209,9 @@ function SaveGroup(id) {
             $('.hidgroupid').val(data.Data.Id);
 
             LoadGroups();
+
+            $('.newlinkcontainer').show();
+            $('.accordions').show();
 
         }, null);
 
