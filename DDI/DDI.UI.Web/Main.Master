@@ -556,7 +556,7 @@
 
                  <div class="fieldblock">
                     <label>Primary Contact</label>
-                    <select class="nd-PrimaryContact"></select>
+                    <select class="nd-PrimaryContact constituentlookup"></select>
                 </div>
 
             </div>
@@ -564,8 +564,8 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Person Responsible</label>
-                    <select class="nd-PersonResponsible"></select>
+                    <label>User Responsible</label>
+                    <select class="nd-UserResponsible"></select>
                 </div>
 
                 <div class="fieldblock">
