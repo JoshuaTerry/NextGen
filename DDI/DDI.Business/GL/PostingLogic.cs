@@ -60,15 +60,22 @@ namespace DDI.Business.GL
 
         #region Public Methods
 
+        /// <summary>
+        /// Post a set of transactions.
+        /// </summary>
+        /// <param name="transToPost">Enumerable set of Transaction entities.</param>
         public void PostTransaction(IEnumerable<Transaction> transToPost)
         {
             DateTime postDt = DateTime.Now;
+
+            // Get the list of transaction numbers to be posted.
             IList<Int64> tranNums = transToPost.Select(p => p.TransactionNumber).Distinct().OrderBy(p => p).ToList();            
 
             using (IUnitOfWork uow = Factory.CreateUnitOfWork())
             {
                 try
                 {
+                    // Post each transction number separately.
                     foreach (var transactionNumber in tranNums)
                     {
                         uow.BeginTransaction();
@@ -91,6 +98,10 @@ namespace DDI.Business.GL
             }
         }
 
+        /// <summary>
+        /// Post transactions for a specific transaction number.
+        /// </summary>
+        /// <param name="transactionNumber"></param>
         public void PostTransaction(Int64 transactionNumber)
         {
             DateTime postDt = DateTime.Now;
@@ -122,10 +133,17 @@ namespace DDI.Business.GL
 
         #region Private Methods
 
+        /// <summary>
+        /// Main logic for posting a Transction entity.
+        /// </summary>
+        /// <param name="uow">Unit of work having an active DB transaction</param>
+        /// <param name="tran">Transaction to post</param>
+        /// <param name="postDate">Post date</param>
         private void PostTransaction(IUnitOfWork uow, Transaction tran, DateTime postDate)
         {            
             if (tran.Amount != 0m)
             {
+                // Validation
                 FiscalYear year = GetFiscalYear(tran.FiscalYearId);
 
                 if (tran.TransactionDate == null)
@@ -139,7 +157,7 @@ namespace DDI.Business.GL
                     throw new InvalidOperationException(string.Format(UserMessagesGL.NoFiscalPeriodForDate, tran.TransactionDate.ToShortDateString(), year.Name));
                 }
 
-                if (false && year.Ledger.PriorPeriodPostingMode == PriorPeriodPostingMode.Prohibit)
+                if (year.Ledger.PriorPeriodPostingMode == PriorPeriodPostingMode.Prohibit)
                 {
                     if (year.Status == FiscalYearStatus.Closed && tran.IsAdjustment == false)
                     {

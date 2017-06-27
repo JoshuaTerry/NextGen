@@ -20,8 +20,10 @@ namespace DDI.Shared.Models.Client.Core
         [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
+        [Index("IX_TransactionNumber", Order = 1, IsUnique = true)]
         public Int64 TransactionNumber { get; set; }
 
+        [Index("IX_TransactionNumber", Order = 2, IsUnique = true)]
         public int LineNumber { get; set; }
 
         public TransactionType TransactionType { get; set; }

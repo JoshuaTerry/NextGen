@@ -16,7 +16,11 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Index("IX_TransactionNumber", Order = 1, IsUnique = true)]
         public Int64 TransactionNumber { get; set; }
+
+        [Index("IX_TransactionNumber", Order = 2, IsUnique = true)]
+        public int LineNumber { get; set; }
 
         public Guid? LedgerAccountYearId { get; set; }
         [ForeignKey(nameof(LedgerAccountYearId))]
@@ -34,9 +38,7 @@ namespace DDI.Shared.Models.Client.GL
         public DateTime? TransactionDate { get; set; }
 
         [DecimalPrecision(14, 2)]
-        public decimal Amount { get; set; } 
-        
-        public int LineNumber { get; set; }
+        public decimal Amount { get; set; }         
 
         [MaxLength(255)]
         public string Description { get; set; }
