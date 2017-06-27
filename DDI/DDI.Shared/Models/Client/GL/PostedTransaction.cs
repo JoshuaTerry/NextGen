@@ -1,11 +1,10 @@
-﻿using DDI.Shared.Enums.GL;
+﻿using DDI.Shared.Attributes.Models;
+using DDI.Shared.Enums.Core;
+using DDI.Shared.Enums.GL;
+using DDI.Shared.Models.Client.Core;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Shared.Attributes.Models;
-using System.Collections.Generic;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Enums.Core;
 
 namespace DDI.Shared.Models.Client.GL
 {

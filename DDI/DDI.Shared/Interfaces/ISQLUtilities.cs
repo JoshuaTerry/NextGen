@@ -1,6 +1,6 @@
 ﻿
-using System;
 using DDI.Shared.Enums.Core;
+using System;
 
 namespace DDI.Shared
 {

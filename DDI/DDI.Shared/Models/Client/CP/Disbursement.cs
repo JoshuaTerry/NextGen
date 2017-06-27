@@ -2,7 +2,6 @@
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Client.GL;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,7 +15,7 @@ namespace DDI.Shared.Models.Client.CP
         public override Guid Id { get; set; }
 
         public DisbursementType DisbursementType { get; set; }
-
+        [Column(TypeName = "date")]
         public DateTime? DisbursementDate { get; set; }
 
         public Guid BankAccountId { get; set; }
@@ -35,7 +34,7 @@ namespace DDI.Shared.Models.Client.CP
 
         [MaxLength(128)]
         public string PayeeLegacyKey { get; set; }
-
+        [Column(TypeName = "date")]
         public DateTime? VoidDate { get; set; }
 
         public DisbursementStatus DisbursementStatus { get; set; }
@@ -44,6 +43,7 @@ namespace DDI.Shared.Models.Client.CP
         public string VoidComment { get; set; }
         [MaxLength(128)]
         public string FinalPayee { get; set; }
+        [Column(TypeName = "date")]
         public DateTime? FinalDate { get; set; }
         [MaxLength(128)]
         public string FinalComment { get; set; }
@@ -55,6 +55,7 @@ namespace DDI.Shared.Models.Client.CP
         public bool IsImmediate { get; set; }
         public bool IsManual { get; set; }
         public EFTInfo EFTInfo { get; set; }
+        [Column(TypeName = "date")]
         public DateTime? ClearDate { get; set; }
     }
 }

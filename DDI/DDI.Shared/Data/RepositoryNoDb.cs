@@ -1,10 +1,8 @@
-﻿using DDI.Shared;
-using DDI.Shared.Models;
+﻿using DDI.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DDI.Shared.Interfaces;
 
 namespace DDI.Shared.Data
 {
