@@ -269,7 +269,6 @@ namespace DDI.WebApi.Controllers.General
                     return NotFound();
                 }
 
-                //UserManager.Update(user);
                 var response = Service.Update(user);
                 return Ok(response);
             }
@@ -414,7 +413,6 @@ namespace DDI.WebApi.Controllers.General
 
                 if (ModelState.IsValid)
                 {
-                    // No ModelState errors are available to send, so just return an empty BadRequest.
                     return BadRequest();
                 }
 
