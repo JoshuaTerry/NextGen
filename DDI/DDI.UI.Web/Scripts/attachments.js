@@ -30,63 +30,52 @@
             dataField: 'File.Extension', caption: 'Type', alignment: 'center', width: '50px'
         },
         {
-            dataField: 'File.Size', caption: 'Size', alignment: 'center'
+            dataField: 'File.Size', caption: 'Size', alignment: 'center', width: '100px'
         },
         {
-            width: '65px',
-            alignment: 'center',
+            width: '85px',
+            alignment: 'left',
             cellTemplate: function (container, options) {
                 $('<a/>')
+                    .addClass('actionbuttons')
+                    .addClass('viewbutton')
                     .addClass('viewlink')
-                    .text('View')
                     .attr('href','../../Pages/Common/ViewDocument.aspx?Id=' + options.data.FileId)
                     .appendTo(container);
-            }
-        },
-        {
-            width: '70px',
-            alignment: 'center',
-            cellTemplate: function (container, options) {
                 $('<a/>')
+                    .addClass('actionbuttons')
+                    .addClass('deletebutton')
                     .addClass('deleteLink')
-                    .text('Delete')
                     .click(function (e) {
                         e.preventDefault();
 
                         DeleteAttachment(container.parent(), options.data.Id, gridcontainername, entityId, noteId, entityType);
                     })
                     .appendTo(container);
-            }
-        }
-         
-    ];
 
-    if (noteId == null)
-    {
-        columns.push(
-            {
-                width: '70px',
-                alignment: 'center',
-                cellTemplate: function (container, options) {
-                    if (options.data.NoteId != null){
-                    $('<a/>')
-                        .addClass('notelink')
-                        .text('Note')
-                        .click(function (e) {
-                            e.preventDefault();
+                if (noteId == null) {
 
-                            ViewNoteDetail(container, gridcontainername, entityId, options.data.NoteId, entityType);
-                        })
+                    if (options.data.NoteId != null) {
+                        $('<a/>')
+                            .addClass('actionbuttons')
+                            .addClass('notebutton')
+                            .addClass('notelink')
+                            .click(function (e) {
+                                e.preventDefault();
+
+                                ViewNoteDetail(container, gridcontainername, entityId, options.data.NoteId, entityType);
+                            })
                             .appendTo(container);
                     }
-                }
-            }
-        );
-    }
 
-    CustomLoadGrid(container, gridcontainername, columns, route , false, false, false, false
-      
-    );
+                }
+
+            }
+        }
+    ];
+
+
+    CustomLoadGrid(container, gridcontainername, columns, route , false, false, false, false );
 }
 
 function CreateAddFileUploadLink(container, gridcontainername, entityId, noteId, entityType) {
