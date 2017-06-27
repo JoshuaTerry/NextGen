@@ -70,8 +70,8 @@ namespace DDI.WebApi.Controllers.General
                 c => c.Groups
             };
         }
+         
 
-        
         [HttpGet]
         [Route("api/v1/users", Name = RouteNames.User)]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
