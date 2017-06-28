@@ -30,6 +30,8 @@ $(document).ready(function () {
 
         e.preventDefault();
 
+        ClearContextMenu();
+
         $('.customfieldmodallink').remove();
 
         $('.gridcontainer').html('');
@@ -47,6 +49,14 @@ $(document).ready(function () {
     });
 
 });
+
+function ClearContextMenu() {
+    $('.utilitymenu').find('li').each(function (){
+        $(this).remove();
+    })
+    $('.utilitynav').hide();
+}
+
 
 function LoadSettingsGrid(grid, container, columns, route) {
 
@@ -2978,6 +2988,7 @@ function LoadFiscalYearSectionSettings() {
 
     $('.gridcontainer').empty();
     $('.fiscalyearcontainer').remove();
+    PopulateFiscalYearContextMenu();
 
     var container = $('<div>');
 
@@ -3116,6 +3127,34 @@ function LoadFiscalPeriods(info) {
 
     });
 
+}
+
+function PopulateFiscalYearContextMenu() {
+    var um = $('.utilitymenu')
+    um.append('<li class="fiscalyearmenu"><a href="#">Close Fiscal Year</a></li>');
+    um.append('<li class="fiscalyearmenu"><a href="#">Reopen Fiscal Year</a></li>');
+    um.append('<li class="fiscalyearmenu"><a href="#">Reclose Fiscal Year</a></li>');
+    um.append('<li class="fiscalyearmenu"><a href="#">Create New Fiscal Year</a></li>');
+    um.append('<li class="menu-break fiscalperiodmenu"></li>');
+    um.append('<li class="fiscalperiodmenu"><a href="#">Close Fiscal Period</a></li>');
+    um.append('<li class="fiscalperiodmenu"><a href="#">Reopen Fiscal Period</a></li>');
+    $('.utilitynav').show();
+    $('.utilitynav').unbind('click');
+    $('.utilitynav').click(function (e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        toolbox = $(this).find('.utilitymenu');
+        //if (toolbox.css('display') === 'none') {
+        //    toolbox.css('display', '');
+        //}
+        //else {
+        //    toolbox.css('display', 'none');
+        //}
+        toolbox.toggle();
+
+    });
 }
 
 /* GENERAL LEDGER FUND SETTINGS */
