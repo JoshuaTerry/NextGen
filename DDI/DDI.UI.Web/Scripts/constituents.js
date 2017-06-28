@@ -260,6 +260,8 @@ function DisplayConstituentData() {
 
         LoadAlternateIDTable();
 
+        LoadAttachmentsTab(id)
+
         LoadRelationshipsTab();
 
         LoadInvestmentsGrid();
@@ -1025,6 +1027,11 @@ function RelationshipLinkClicked(id) {
 
     GetConstituentData($('.hidconstituentid').val());
 
+}
+
+function LoadAttachmentsTab(id) {
+    container = $('.attachments');
+    LoadAttachments(container, "contituentsgrid", id, null, NoteEntity[0]);
 }
 
 function LoadRelationshipsTab() {

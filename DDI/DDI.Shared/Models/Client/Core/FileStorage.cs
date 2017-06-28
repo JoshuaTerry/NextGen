@@ -26,5 +26,8 @@ namespace DDI.Shared.Models.Client.Core
 
         [NotMapped]
         public override string DisplayName => $"{Name}.{Extension}";
+
+        [NotMapped]
+        public string FileType { get; set; }
     }
 }

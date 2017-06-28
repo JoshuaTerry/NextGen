@@ -22,6 +22,8 @@ a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-ev
 .actionbuttons { margin-right: 10px; }
 .actionbuttons.editbutton { float: none; background: url('../../Images/edit-16.png') no-repeat; width: 16px; height: 16px; }
 .actionbuttons.deletebutton { display: inline-block; background: url('../../Images/erase-16.png') no-repeat; width: 16px; height: 16px; }
+.actionbuttons.viewbutton { display: inline-block; background: url('../../Images/Note_16.png') no-repeat; width: 16px; height: 16px; }
+.actionbuttons.notebutton { display: inline-block; background: url('../../Images/Messaging-Note-icon.png') no-repeat; width: 16px; height: 16px; }
 
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }

@@ -67,6 +67,8 @@
   <ItemGroup>
     <Compile Include="Audit\AuditService.cs" />
     <Compile Include="Core\ConfigurationService.cs" />
+    <Compile Include="Core\AttachmentService.cs" />
+    <Compile Include="Core\IAttachmentService.cs" />
     <Compile Include="Core\IConfigurationService.cs" />
     <Compile Include="CRM\ConstituentAddressService.cs" />
     <Compile Include="CRM\ConstituentTypeService.cs" />
