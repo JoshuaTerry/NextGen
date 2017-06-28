@@ -48,6 +48,7 @@ $(document).ready(function () {
 
 });
 
+
 function LoadSettingsGrid(grid, container, columns, route) {
 
     if (container.indexOf('.') != 0)
@@ -2980,6 +2981,7 @@ function LoadFiscalYearSectionSettings() {
     $('.fiscalyearcontainer').remove();
 
     var container = $('<div>');
+
     var selectledgergroup = $('<div style="margin-bottom: 20px;">');
     var selectledgername = $('<h2>').text('Ledger: ');
 
@@ -3496,7 +3498,7 @@ function LoadGLFormatSectionSettings() {
 
     $('.gridcontainer').empty();
 
-    var container = $('<div>').addClass('twocolumn');
+    var container = $('<div>').addClass('onecolumn');
 
     var glaccountformat = '';
     CreateBasicFieldBlock('Ledger: ', '<select>', 'glf-ledgerselect', container, true);
