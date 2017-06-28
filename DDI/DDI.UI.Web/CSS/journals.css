@@ -69,3 +69,24 @@ div.tagscontainer { height: 50vh }
 .searchresults div.scrollable { width: 100%; }
 
 
+/* journal entry items */
+
+.journaltabs { width: 90%; margin: 0 auto; display: block; }
+.journaltabs h1, .journaltabs h3 { margin-bottom: 10px; }
+
+span.leftprompt label { width: 35%; display: inline-block; }
+
+span.leftinput input,
+span.leftinput select { width: 50%; display: inline-block; }
+
+span.journalcolumn { width: 30%; display: inline-block; margin: 5px 0 5px 0; vertical-align: top; }
+
+div.inlinecontainer { width: 100%; display: inline; vertical-align: top; margin-top: 1%; }
+
+.journalbody div.threecolumn > div { margin-right: 0.5%; }
+.journalbody div.fieldblock label.inline { width: auto; }
+
+.expirationselection label { width: 10%; }
+.expirationselection input[type="text"] { width: 150px; display: inline-block; }
+
+

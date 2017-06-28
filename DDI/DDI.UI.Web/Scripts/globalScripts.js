@@ -1774,7 +1774,13 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancel
 // END DYNAMIC MARKUP
 
 function MaskFields() {
-    $('.date').mask('00/00/0000');
+    $('.date.editable').each(function () {
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($.datepicker.formatDate('mm/dd/yy', new Date($(this).val())));
+        }
+    })
+    $('.date.editable').mask('00/00/0000');
+
     $('.time').mask('00:00:00');
     $('.datetime').mask('00/00/0000 00:00:00');
     $('.money').mask("#0.00", { reverse: true });
@@ -1794,14 +1800,29 @@ function MaskFields() {
 
 function FormatFields() {
     $(".decimal").each(function () {
-        $(this).val(parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val(parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        }
     });
     $(".money").each(function () {
-        $(this).val('$' + parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val('$' + parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        }
     });
-    $(".date").val($.datepicker.formatDate('D M dd, yy', new Date()));
+    $("input.date").each(function () {
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($.datepicker.formatDate('D M dd, yy', new Date($(this).val())));
+        }
+    });
+    $("label.date").each(function () {
+        if ($(this).html() != null && $(this).html() != '') {
+            $(this).html($.datepicker.formatDate('D M dd, yy', new Date($(this).html())));
+        }
+    });
     $(".percent").each(function () {
-        $(this).val($(this).val() + '%');
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($(this).val() + '%');
+        }
     });
 }
 

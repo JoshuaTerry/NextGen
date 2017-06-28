@@ -4,6 +4,7 @@
 
     <script type="text/javascript" src="../../Scripts/gljournals.js"></script>
     <script type="text/javascript" src="../../Scripts/data.js"></script>
+    <script type="text/javascript" src="../../Scripts/attachments.js"></script>
       <link rel="stylesheet" href="../../CSS/Journals.css" />
     
     

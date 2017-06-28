@@ -170,8 +170,8 @@ function DisplayJournals(id) {
 
 function addnewjournal() {
 
-   // sessionStorage.setItem("ID", id);
-    location.href = "../Admin/SystemSettings.aspx";
+    sessionStorage.setItem("JOURNAL_ID", '');
+    location.href = "JournalEntry.aspx";
 
 }
 

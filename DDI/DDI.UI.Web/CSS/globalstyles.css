@@ -1,4 +1,4 @@
-﻿body { margin: 0px; padding: 0px; font-size: 12px; font-family: Arial; background-color: #c2ddf4; min-width: 1000px; }
+﻿body { margin: 0px; padding: 0px; font-size: 1em; font-family: Arial; background-color: #c2ddf4; min-width: 1000px; }
 
 h1, h2, h3 { margin: 0px; padding: 0px; }
 h1 {  }
@@ -14,8 +14,8 @@ a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-ev
 .floatleft {float: left}
 .floatright {float: right}
 
-.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
-.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
+.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; color: #0f75b4 !important; }
+.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; color: #0f75b4 !important; }
 .editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; }
 .newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; }
 
@@ -34,6 +34,12 @@ label.validateerror { color: red; font-size: 10px; font-style: italic; font-weig
 input:disabled,
 select:disabled { border: solid 1px transparent; border-top: solid 1px #666666; background-color: #eeeeee; color: #333333; }
 select:disabled::-ms-expand { display: none; }
+input.inline,
+select.inline { display: inline-block; }
+
+.bold { font-weight: bold; }
+
+textarea { width: 95%; }
 
 .readonly { border: solid 1px transparent; background-color: #eeeeee; color: #333333; margin-bottom: 10px; }
 
@@ -97,13 +103,15 @@ div.fieldblock input,
 div.fieldblock select { width: 100%; }
 div.fieldblock input { height: 15px; }
 div.fieldblock select { height: 21px; }
-div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; display: inline-block; }
+div.fieldblock input[type="checkbox"],
+div.fieldblock input[type="radio"] { width: 25px; display: inline-block; }
 div.fieldblock.range {  }
 div.fieldblock.range input { display: inline-block; width: 25%; }
 div.fieldblock.checkbox label { display: inline-block; }
 div.fieldblock.inline { display: inline-block; }
 div.fieldblock.inline label { display: inline-block }
-div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px; display: inline-block; }
+div.fieldblock.inline input[type="checkbox"],
+div.fieldblock.inline input[type="radio"] { vertical-align: sub; width: 15px; display: inline-block; }
 
 .datepair {  }
 .datepair input.date { width: auto; display: inline-block; }
