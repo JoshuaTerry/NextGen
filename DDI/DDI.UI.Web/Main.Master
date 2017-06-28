@@ -553,10 +553,11 @@
                     <label>Contact Date</label>
                     <input type="text" class="nd-ContactDate datepicker" />
                 </div>
-
-                 <div class="fieldblock">
+            
+                <div class="fieldblock">
+                    <input type="hidden" class="rs-Constituent1Id" />
                     <label>Primary Contact</label>
-                    <select class="nd-PrimaryContact constituentlookup"></select>
+                    <input type="text" class="rs-Constituent1Information constituentlookup" />
                 </div>
 
             </div>

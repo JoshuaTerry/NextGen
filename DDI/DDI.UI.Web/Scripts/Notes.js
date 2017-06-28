@@ -140,6 +140,7 @@ function LoadNoteDetails(id) {
         PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
         PopulateDropDown('.nd-NoteCode', 'notecodes', '', '', data.Data.NoteCodeId);
         PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '', data.Data.ContactMethodId);
+        PopulateDropDown('.nd-UserResponsible', 'users', '', '', data.Data.UserResponsibleId);
 
         $('.nd-Title').val(data.Data.Title),
         $('.nd-Description').val(data.Data.Text),
@@ -147,11 +148,18 @@ function LoadNoteDetails(id) {
         $('.nd-AlertEndDate').val(FormatJSONDate(data.Data.AlertEndDate)),
         $('.nd-ContactDate').val(FormatJSONDate(data.Data.ContactDate)),
         $('.nd-NoteCode').val(data.Data.NoteCode),
-        $('.nd-UserResponsible').val(data.Data.UserResponsibleId),
         $('.nd-CreatedBy').text(data.Data.CreatedBy),
         $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
         $('.nd-CreatedOn').text(FormatJSONDate(data.Data.CreatedOn)),
         $('.nd-UpdatedOn').text(FormatJSONDate(data.Data.LastModifiedOn))
+
+        if (data.Data.PrimaryContact != null) {
+            var constituentLabel = data.Data.PrimaryContact.ConstituentNumber + ": " + data.Data.PrimaryContact.Name + ", " + data.Data.PrimaryContact.PrimaryAddress;
+            $('.rs-Constituent1Information').val(constituentLabel);
+        }
+        else {
+            $(modal).find('.rs-Constituent1Information').empty();
+        }
 
 
     }, function (xhr, status, err) {
@@ -172,6 +180,7 @@ function GetNoteDetailsToSave(modal) {
         ContactDate: $(modal).find('.nd-ContactDate').val(),
         NoteCodeId: $(modal).find('.nd-NoteCode').val(),
         UserResponsibleId: $(modal).find('.nd-UserResponsible').val(),
+        PrimaryContactId: $(modal).find('.rs-Constituent1Id').val(),
         ParentEntityId: currentEntity.Id,
         EntityType: NoteEntity[0],
         ContactMethodId: $(modal).find('.nd-ContactMethod').val(),
@@ -269,7 +278,7 @@ function ClearNoteTopicTagBox(modal) {
 function StyleAndSetupIndividualTags(topic, DeleteFunction) { 
 
     var t = $('<div>').addClass('dx-tag-content').attr('id', topic.Id).appendTo($('.noteTopicSelect')); 
-    $('<span>').text(topic.Name).appendTo($(t));
+    $('<span>').text(topic.DisplayName).appendTo($(t));
     $('<div>').addClass('dx-tag-remove-button')
         .click(DeleteFunction)
         .appendTo($(t));
