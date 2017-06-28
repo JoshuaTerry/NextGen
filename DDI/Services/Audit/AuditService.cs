@@ -49,11 +49,12 @@ namespace DDI.Services
         public IDataResponse<List<dynamic>> GetAllFlat(Guid[] ids, DateTime start, DateTime end, IPageable search = null)
         {
             var response = new DataResponse<List<dynamic>>();
+            var stringArray = Array.ConvertAll(ids, x => x.ToString());
             try
             {
                 var results = _uow.GetRepository<ChangeSet>().Entities
                                  .Where(c => c.Timestamp >= start && c.Timestamp <= end)
-                                 .Join(_uow.GetRepository<ObjectChange>().Entities.Where(o => ids.Contains<Guid>(Guid.Parse(o.EntityId))),
+                                 .Join(_uow.GetRepository<ObjectChange>().Entities.Where(o => stringArray.Contains(o.EntityId)),
                                          cs => cs.Id,
                                          oc => oc.ChangeSetId,
                                          (cs, oc) => new { cs, oc })
