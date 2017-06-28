@@ -70,11 +70,8 @@ namespace DDI.Services.GL
 
         public  IDataResponse Delete(Guid attachmentId)
         {
-            var attachment = UnitOfWork.GetEntities<Attachment>().Where(a => a.Id == attachmentId).FirstOrDefault();
-            var fileStorage = UnitOfWork.GetEntities<FileStorage>().Where(s => s.Id == attachment.FileId).FirstOrDefault();
-
-            attachment.File = fileStorage;
-            
+            var attachment = UnitOfWork.GetById<Attachment>(attachmentId, a=> a.File);
+                      
             return base.Delete(attachment);
         }
     }

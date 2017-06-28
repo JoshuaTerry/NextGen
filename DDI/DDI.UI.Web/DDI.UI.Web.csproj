@@ -104,7 +104,6 @@
     <Content Include="CSS\systemsettings.css" />
     <Content Include="Images\edit-16.png" />
     <Content Include="Images\erase-16.png" />
-    <Content Include="Images\eye-icon.png" />
     <Content Include="Images\Messaging-Note-icon.png" />
     <Content Include="Images\trashcan-11.png" />
     <Content Include="Pages\Common\ViewDocument.aspx" />
