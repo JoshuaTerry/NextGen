@@ -35,6 +35,7 @@ $(document).ready(function () {
 
     }
 
+    $('.copyaccount').unbind('click');
     $('.copyaccount').click(function (e) {
 
         e.preventDefault();
