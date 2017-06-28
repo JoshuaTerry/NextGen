@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.GL;
+using DDI.Business.Helpers;
 using DDI.Shared;
 using DDI.Shared.Enums.Core;
+using DDI.Shared.Extensions;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
 
@@ -129,6 +133,220 @@ namespace DDI.Business.Core
         {
             transaction.Amount = -transaction.Amount;
             SwapGLAccounts(transaction);
+        }
+
+        /// <summary>
+        /// Create a duplicate of an existing transaction.  (A new line number will need to be assigned.)
+        /// </summary>
+        /// <returns></returns>
+        public Transaction Duplicate(Transaction tran)
+        {
+            return new Transaction()
+            {
+                Amount = tran.Amount,
+                CreditAccount = tran.CreditAccount,
+                CreditAccountId = tran.CreditAccountId,
+                DebitAccount = tran.DebitAccount,
+                DebitAccountId = tran.DebitAccountId,
+                Description = tran.Description,
+                FiscalYear = tran.FiscalYear,
+                FiscalYearId = tran.FiscalYearId,
+                IsAdjustment = tran.IsAdjustment,
+                TransactionNumber = tran.TransactionNumber,
+                Status = tran.Status,
+                TransactionDate = tran.TransactionDate,
+                TransactionType = tran.TransactionType,
+            };
+        }
+
+        public void SaveTransactions(IList<Transaction> transactions, IEntity entity)
+        {
+            string entityType = LinkedEntityHelper.GetEntityTypeName(entity.GetType());
+            string entityLineType = null;
+            IList<EntityTransaction> existingTrans, existingLineTrans;
+
+            // Ensure transaction list and entity are not null.
+            if (transactions == null)
+            {
+                throw new ArgumentNullException(nameof(transactions));
+            }
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            // See if the transactions are numbered.  If so, all must be numbered.
+            bool hasTranNumbers = transactions.Any(p => p.TransactionNumber > 0);
+            if (hasTranNumbers && !transactions.All(p => p.TransactionNumber > 0))
+            {
+                throw new InvalidOperationException("If some transactions have numbers, all transactions must have numbers.");
+            }
+
+            // See if transactions have line numbers.  If so, all must have line numbers.
+            bool hasLineNumbers = transactions.Any(p => p.LineNumber > 0);
+            if (hasLineNumbers && !transactions.All(p => p.LineNumber > 0))
+            {
+                throw new InvalidOperationException("If some transactions have line numbers, all transactions must have line numbers.");
+            }
+
+            using (IUnitOfWork innerUOW = Factory.CreateUnitOfWork())
+            {
+
+                try
+                {
+                    innerUOW.BeginTransaction(System.Data.IsolationLevel.RepeatableRead);
+
+                    // Get list of existing pending entity transactions
+                    existingTrans = innerUOW.GetEntities<EntityTransaction>(p => p.Transaction)
+                                                  .Where(p => p.EntityType == entityType && p.ParentEntityId == entity.Id && p.Relationship == EntityTransactionRelationship.Owner && p.Transaction.Status == TransactionStatus.Pending)
+                                                  .ToList();
+
+                    if (transactions.Any(p => p.EntityLine != null))
+                    {
+                        entityLineType = LinkedEntityHelper.GetEntityTypeName(transactions.First(p => p.EntityLine != null).EntityLine.GetType());
+                        Guid[] lineIds = transactions.Where(p => p.EntityLine != null).Select(p => p.Id).ToArray();
+                        existingLineTrans = innerUOW.GetEntities<EntityTransaction>(p => p.Transaction)
+                                      .Where(p => p.EntityType == entityLineType && p.ParentEntityId != null &&
+                                                  lineIds.Contains(p.ParentEntityId.Value) &&
+                                                  p.Relationship == EntityTransactionRelationship.OwnerLine &&
+                                                  p.Transaction.Status == TransactionStatus.Pending)
+                                      .ToList();
+                    }
+                    else
+                    {
+                        existingLineTrans = null;
+                    }
+
+                    // Number the transactions
+                    if (!hasTranNumbers)
+                    {
+                        Int64 transactionNumber;
+                        if (existingTrans.Count > 0)
+                        {
+                            transactionNumber = existingTrans.Max(p => p.Transaction.TransactionNumber);
+                        }
+                        else
+                        {
+                            // Need to get a new transaction number.
+                            transactionNumber = UnitOfWork.GetRepository<Transaction>().Utilities.GetNextSequenceValue(DatabaseSequence.TransactionNumber);
+                        }
+                        transactions.ForEach(p => p.TransactionNumber = transactionNumber);
+                    }
+
+                    // Assign line numbers
+                    if (!hasLineNumbers)
+                    {
+                        foreach (var group in transactions.GroupBy(p => p.TransactionNumber))
+                        {
+                            int lineNumber = 0;
+                            group.ForEach(p => p.LineNumber = ++lineNumber);
+                        }
+                    }
+
+                    foreach (var tran in transactions)
+                    {
+                        bool lineItemLinked = false;
+
+                        EntityTransaction existing = existingTrans.FirstOrDefault();
+                        if (existing != null)
+                        {
+                            // There's an existing "Pending" transction, so just update it.
+                            Transaction other = existing.Transaction;
+                            other.Amount = tran.Amount;
+                            other.CreatedBy = tran.CreatedBy;
+                            other.CreatedOn = tran.CreatedOn;
+                            other.CreditAccount = tran.CreditAccount;
+                            other.CreditAccountId = tran.CreditAccountId;
+                            other.DebitAccount = tran.DebitAccount;
+                            other.DebitAccountId = tran.DebitAccountId;
+                            other.Description = tran.Description;
+                            other.FiscalYear = tran.FiscalYear;
+                            other.FiscalYearId = tran.FiscalYearId;
+                            other.IsAdjustment = tran.IsAdjustment;
+                            other.LineNumber = tran.LineNumber;
+                            other.PostDate = tran.PostDate;
+                            other.Status = tran.Status;
+                            other.TransactionDate = tran.TransactionDate;
+                            other.TransactionNumber = tran.TransactionNumber;
+                            other.TransactionType = tran.TransactionType;
+                            tran.Id = other.Id;
+
+                            // The EntityTransaction is valid and doesn't need to be updated.
+                            existingTrans.Remove(existing);
+
+                            if (existingLineTrans != null && tran.EntityLine != null)
+                            {
+                                // If there's an entity line, see if there's an EntityTransaction that points to this transaction.  If so, point it to the line item.
+                                EntityTransaction existingLineTran = existingLineTrans.FirstOrDefault(p => p.TransactionId == other.Id);
+                                if (existingLineTran != null)
+                                {
+                                    existingLineTran.ParentEntityId = tran.EntityLine.Id;
+                                    lineItemLinked = true;
+                                    existingLineTrans.Remove(existingLineTran);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // No existing "Pending" transaction, so we need to create a new one.
+                            tran.AssignPrimaryKey();
+                            innerUOW.Insert(tran);
+
+                            // Create an EntityTransaction
+                            EntityTransaction entityTran = new EntityTransaction()
+                            {
+                                EntityType = entityType,
+                                ParentEntityId = entity.Id,
+                                Relationship = EntityTransactionRelationship.Owner,
+                                TransactionId = tran.Id
+                            };
+                            innerUOW.Insert(entityTran);
+                        }
+
+                        // If there's a line item, it may need to be linked to the transaction unless an existing one was already linked above.
+                        if (tran.EntityLine != null && !lineItemLinked)
+                        {
+                            EntityTransaction entityTran = new EntityTransaction()
+                            {
+                                EntityType = entityLineType,
+                                ParentEntityId = tran.EntityLine.Id,
+                                Relationship = EntityTransactionRelationship.OwnerLine,
+                                TransactionId = tran.Id
+                            };
+                            innerUOW.Insert(entityTran);
+                        }
+
+                    } // each tran
+
+                    // First, any remaining pending EntityTransactions for the line items must be deleted.
+                    if (existingLineTrans != null)
+                    {
+                        foreach (var entry in existingLineTrans)
+                        {
+                            innerUOW.Delete(entry);
+                        }
+                    }
+                    // Next, any remaining pending EntityTransactions for the entity itself must be deleted, along with the pending transaction.
+                    foreach (var entry in existingTrans)
+                    {
+                        if (entry.Transaction != null)
+                        {
+                            innerUOW.Delete(entry.Transaction);
+                        }
+                        innerUOW.Delete(entry);
+                    }
+
+                    // Finally, commit the transaction.
+                    innerUOW.CommitTransaction();
+                }
+                catch
+                {
+                    innerUOW.RollbackTransaction();
+                    throw;
+                }
+            } // Using inner unit of work.
+
         }
 
         #endregion

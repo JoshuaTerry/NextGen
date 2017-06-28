@@ -69,5 +69,8 @@ namespace DDI.Shared.Models.Client.Core
 
         public override string DisplayName => $"{TransactionNumber}-{LineNumber}";
 
+        [NotMapped]
+        public IEntity EntityLine { get; set; } // For relating a transaction to an entity line item.
+
     }
 }

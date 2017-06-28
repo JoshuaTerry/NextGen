@@ -260,7 +260,19 @@ namespace DDI.Business.GL
             }
 
             var dates = GetCachedPeriodDates(year);
-            return dates.FirstOrDefault(p => p.StartDate <= date && p.EndDate >= date).PeriodNumber;            
+
+            int periodNumber = 0;
+            if (year.Status == FiscalYearStatus.Closed)
+            {
+                // If fiscal year is closed and the date corresponds to an adjustment period, use the adjustment period.
+                periodNumber = dates.FirstOrDefault(p => p.IsAdjustmentPeriod == true && p.StartDate <= date && p.EndDate >= date).PeriodNumber;
+            }
+            if (periodNumber == 0)
+            {
+                periodNumber = dates.FirstOrDefault(p => p.StartDate <= date && p.EndDate >= date).PeriodNumber;
+            }
+
+            return periodNumber;
         }
 
         /// <summary>
@@ -689,6 +701,7 @@ namespace DDI.Business.GL
             public int PeriodNumber;
             public DateTime? StartDate;
             public DateTime? EndDate;
+            public bool IsAdjustmentPeriod;
 
             public static implicit operator Period(FiscalPeriod fp)
             {
@@ -696,7 +709,8 @@ namespace DDI.Business.GL
                 {
                     PeriodNumber = fp.PeriodNumber,
                     StartDate = fp.StartDate,
-                    EndDate = fp.EndDate
+                    EndDate = fp.EndDate,
+                    IsAdjustmentPeriod = fp.IsAdjustmentPeriod
                 };
             }                        
         }

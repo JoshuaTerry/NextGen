@@ -488,7 +488,35 @@ namespace DDI.Business.GL
         {
             return GetLedgerAccountYear(account, year?.Id);
         }
-		
+
+        /// <summary>
+        /// Get the default LedgerAccountYear for a LedgerAccount Id based on a fiscal year.
+        /// </summary>
+        public LedgerAccountYear GetLedgerAccountYear(Guid? ledgerAccountId, FiscalYear year)
+        {
+            if (year == null)
+            {
+                return null;
+            }
+            return GetLedgerAccountYear(ledgerAccountId, year.Id);
+        }
+
+        /// <summary>
+        /// Get the default LedgerAccountYear for a LedgerAccount Id based on a fiscal year.
+        /// </summary>
+        public LedgerAccountYear GetLedgerAccountYear(Guid? ledgerAccountId, Guid? fiscalYearId)
+        {
+            if (ledgerAccountId == null)
+            {
+                return null;
+            }
+
+            return
+                UnitOfWork.FirstOrDefault<LedgerAccountYear>(p => p.LedgerAccountId == ledgerAccountId && p.FiscalYearId == fiscalYearId && p.IsMerge == false)
+                    ??
+                UnitOfWork.FirstOrDefault<LedgerAccountYear>(p => p.LedgerAccountId == ledgerAccountId && p.FiscalYearId == fiscalYearId);
+        }
+
         public string GetAccountNumber(LedgerAccount ledgerAccount, FiscalYear year)
         {
             if (ledgerAccount == null)

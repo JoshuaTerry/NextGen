@@ -28,7 +28,7 @@
         public static string GLAccountNumberInvalid => "Invalid G/L account \"{0}\".";
         public static string GLAccountSegmentInvalid => "Account segment is not specified or invalid.";
         public static string GLAccountNoSegments => "Account has no account segments.";
-
+        public static string GLAccountNotInFiscalYear => "Account {0} not defined in fiscal year {1}.";
 
         public static string SegmentLevelsNotEditable => "Segment level settings cannot be modified once accounts have been defined.";
         public static string SegmentLevelMissing => "Segment level {0} is not defined.";
@@ -59,6 +59,7 @@
         public static string AdjustmentPeriodDates => "Adjustment period for fiscal year {0} must start and end on {1}.";
         public static string FiscalPeriodStartDate => "Period {0} in fiscal year {1} must start on {2}.";
         public static string NoFiscalPeriodForDate => "No fiscal period defined for {0} in fiscal year {1}.";
+        public static string NoFiscalYearForDate => "No fiscal year defined for {0}.";
 
         public static string FundNoFiscalYear => "Fund has no fiscal year.";
         public static string FundNoFundSegment => "No fund segment specified for fund.";
@@ -74,15 +75,19 @@
         public static string UnitFromToWrongUnit => "Business unit from/to has a mismatch between its business unit and fiscal year.";
         public static string UnitFromToDFAccountWrongLedger => "Business unit from/to has a \"due from\" account in the wrong ledger.";
         public static string UnitFromToDTAccountWrongLedger => "Business unit from/to has a \"due to\" account in the wrong ledger.";
+        public static string NoUnitFromTo => "No due to / due from accounts defined for business unit {0} and offsetting business unit {1}.";
 
         public static string FundFromToNoFundAccounting => "Fund from/to cannot be validated if fund accounting is disabled.";
         public static string FundFromToNoFiscalYear => "Fund unit from/to has no fiscal year.";
         public static string FundFromToWrongFiscalYear => "Fund unit from/to is not in the same fiscal year as its fund segment.";
         public static string FundFromToDFAccountWrongFund => "Fund from/to has a \"due from\" account in the wrong fund.";
         public static string FundFromToDTAccountWrongFund => "Fund from/to has a \"due to\" account in the wrong fund.";
+        public static string NoFundFromTo => "No due to / due from accounts defined for fund {0} and offsetting fund {1}.";
 
         public static string NewJournalNoFiscalYear => "A valid fiscal year must be specified when creating a new one-time journal.";
         public static string NewJournalNoBusinessUnit => "A valid business unit must be specified when creating a recurring or template journal.";
+        public static string JournalNoTransactionDate => "{0} has no transaction date.";
+        public static string JournalTransactionDateClosed => "Journal transaction date of {0} is for a closed fiscal period.";
 
         public static string TransactionNoTranDate => "Transaction #{0} has no transaction date.";
         public static string TransactionCantGetFund => "Cannot determine fund for transaction #{0}.";

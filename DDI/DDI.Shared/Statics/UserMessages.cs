@@ -18,6 +18,8 @@ namespace DDI.Shared.Statics
         public static string CodeIsNotUnique => "The {0} code must be unique.";
         public static string InvalidCode => "Invalid {0} code {1}";
         public static string TranDateInvalid => "A valid transaction date is required.";
+        public static string EntityAlreadyPosted => "{0} has already been posted and cannot be updated.";
+        public static string EntityAlreadyReversed => "{0} has already been reversed.";
 
     }
 }
