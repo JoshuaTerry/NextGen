@@ -391,7 +391,7 @@ function LoadConstituentTypesSectionSettings() {
 
 
     var header = $('<h1>').text('Constituent Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -601,7 +601,7 @@ function LoadConstituentTypeSettingsGrid() {
     ];
 
 
-    CustomLoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes?fields=all', null, EditConstituentType, DeleteConstituentType);
+    CustomLoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes?fields=all', '', EditConstituentType, DeleteConstituentType,null);
 
 }
 
@@ -663,16 +663,19 @@ function EditConstituentType(id) {
 function DeleteConstituentType(id) {
 
     MakeServiceCall('DELETE', 'constituenttypes/' + id, null, function (data) {
+      
+        DisplaySuccessMessage('Success', 'Constituent Type deleted successfully.');
 
-        if (data.Data) {
-            DisplaySuccessMessage('Success', 'Constituent Type deleted successfully.');
+        LoadConstituentTypeSettingsGrid();
 
-            LoadConstituentTypeSettingsGrid();
-        }
-
-    }, null);
-
+    }, 
+        
+         function (xhr, status, err) {
+             DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Type.');
+    }
+);
 }
+
 
 function LoadConstituentType(id) {
 
@@ -717,7 +720,7 @@ function LoadContactInformationSectionSettings() {
 
 
     var header = $('<h1>').text('Address Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newaddresstypemodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newaddresstypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -775,7 +778,7 @@ function LoadContactInformationSectionSettings() {
     LoadAddressTypeSettingsGrid();
 
     header = $('<h1>').text('Contact Categories').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newcontactcategorymodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newcontactcategorymodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -838,7 +841,7 @@ function LoadContactInformationSectionSettings() {
     LoadContactCategorySettingsGrid();
 
     header = $('<h1>').text('Contact Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newcontacttypemodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newcontacttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -2000,7 +2003,7 @@ function LoadRelationshipSectionSettings() {
     var type = $('<div>').addClass('relationshiptypecontainer');
 
     var header = $('<h1>').text('Relationship Categories').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -2057,7 +2060,7 @@ function LoadRelationshipSectionSettings() {
     LoadRelationshipCategorySettingsGrid();
 
     header = $('<h1>').text('Relationship Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -3496,7 +3499,7 @@ function LoadGLFormatSectionSettings() {
 
     $('.gridcontainer').empty();
 
-    var container = $('<div>').addClass('onecolumn');
+    var container = $('<div>').addClass('twocolumn');
 
     var glaccountformat = '';
     CreateBasicFieldBlock('Ledger: ', '<select>', 'glf-ledgerselect', container, true);
