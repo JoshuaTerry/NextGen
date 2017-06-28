@@ -174,10 +174,10 @@ function LoadGroup(id) {
     ];
 
     // Roles in Group Grid
-    LoadGrid('grouprolesgridcontainer', 'rolesgrid', columns, 'group/' + id + '/roles', null, null, 'gp-', null, null, null, false, false, false, null);
+    LoadGrid('grouprolesgridcontainer', 'rolesgrid', columns, 'groups/' + id + '/roles', null, null, 'gp-', null, null, null, false, false, false, null);
 
     // Users in Group Grid    
-    LoadGrid('groupusersgridcontainer', 'groupusersgrid', columns, 'group/' + id + '/users', null, null, null, null, null, null, false, false, false, null);
+    LoadGrid('groupusersgridcontainer', 'groupusersgrid', columns, 'groups/' + id + '/users', null, null, null, null, null, null, false, false, false, null);
 }
 
 function SaveGroup(id) {
@@ -304,7 +304,7 @@ function AddRolesModal() {
         // check selected roles
         if (groupid) {
 
-            MakeServiceCall('GET', 'group/' + groupid + '/roles', null, function (data) {
+            MakeServiceCall('GET', 'groups/' + groupid + '/roles', null, function (data) {
 
                 $(modal).find('input[type="checkbox"]').prop('checked', false);
 
@@ -590,7 +590,7 @@ function LoadUserBusinessUnits() {
         { dataField: 'DisplayName', caption: 'Name' }
     ];
 
-    LoadGrid('userbugridcontainer', 'userbugrid', columns, 'users/' + $('.hiduserid').val() + '/businessunit', null, null, null, null, null, null, false, false, false, null);
+    LoadGrid('userbugridcontainer', 'userbugrid', columns, 'users/' + $('.hiduserid').val() + '/businessunits', null, null, null, null, null, null, false, false, false, null);
 
 }
 
