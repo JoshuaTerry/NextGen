@@ -1,5 +1,4 @@
-﻿using DDI.Services.Search;
-using DDI.Services.Security;
+﻿using DDI.Services.Security;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Models.Client.Security;
@@ -70,7 +69,7 @@ namespace DDI.WebApi.Controllers.General
                 c => c.Groups
             };
         }
-         
+
 
         [HttpGet]
         [Route("api/v1/users", Name = RouteNames.User)]
@@ -150,7 +149,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/users/{id}/businessunit")]
+        [Route("api/v1/users/{id}/businessunits")]
         public IHttpActionResult GetBusinessUnitsByUserId(Guid id)
         {
             try

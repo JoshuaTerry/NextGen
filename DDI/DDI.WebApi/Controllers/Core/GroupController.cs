@@ -79,7 +79,7 @@ namespace DDI.WebApi.Controllers.Core
         }
 
         [HttpGet]
-        [Route("api/v1/group/{groupId}/users")]
+        [Route("api/v1/groups/{groupId}/users")]
         public IHttpActionResult GetUsersByGroup(Guid groupId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
