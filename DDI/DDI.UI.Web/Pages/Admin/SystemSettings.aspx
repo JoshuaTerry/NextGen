@@ -1317,7 +1317,7 @@
         </div>
     </div>
 
-    <div class="closefiscalyearmodal" title="Fiscal Year Close" style="display: none;">
+    <div class="closefiscalyearmodal" title="" style="display: none;">
 
         <div class="modalcontent">
 

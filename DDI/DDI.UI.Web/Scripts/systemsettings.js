@@ -3164,7 +3164,7 @@ function PopulateFiscalYearContextMenu() {
     $('.reopenfiscalyear').click(function (e) {
 
         e.preventDefault();
-        ReopenFiscalYearModal();
+        CloseFiscalYearModal('Reopen');
 
     });
 
@@ -3202,13 +3202,18 @@ function PopulateFiscalYearContextMenu() {
 }
 
 function CloseFiscalYearModal(option) {
-    var year = '';
+    var fiscalYearId = '';
     var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
-    info = dataGrid.getSelectedRowsData();
-    if (info) {
-        selectedRow = info[0];
-        year = selectedRow.text();
+    if (!dataGrid) {
+        DisplayErrorMessage('Error', 'You must select a ledger first.');
+        return;
     }
+    info = dataGrid.getSelectedRowsData();
+    if (info.length > 0) {
+        selectedRow = info[0];
+        fiscalYearId = selectedRow.Id;
+    }
+    $('.closefiscalyearmodal').prop('title', option + ' Fiscal Year' );
     $('.selectfiscalyearlabel').html('Fiscal Year to ' + option);
 
     modal = $('.closefiscalyearmodal').dialog({
@@ -3235,16 +3240,33 @@ function CloseFiscalYearModal(option) {
     });
 
     $('.closefiscalyearprogresslabel').html('Please wait... Now loading fiscal years');
-    PopulateDropDown('.fc-FiscalYear', 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name', '', year, '', CloseFiscalYearContinue(model, option));
+    PopulateDropDown('.fc-FiscalYear', 'fiscalyears/ledger/' + $('.LedgerId').val() + '?fields=Id,DisplayName', '', '', fiscalYearId, '', function () {
+        CloseFiscalYearContinue(modal, option)
+    })
 
 }
 
-function CloseFiscalYearContinue(model, option) {
+function CloseFiscalYearContinue(element, data) {
     $('.closefiscalyearprogresslabel').html('');
 }
 
 function CloseFiscalYear(modal, option) {
-    $('.closefiscalyearprogresslabel').html('Please wait... Now closing fiscal year');
+    if ($('.fc-FiscalYear').val() === '') {
+        DisplayErrorMessage('Error', 'You must select a fiscal year first.');
+        return;
+    }
+    $('.closefiscalyearprogresslabel').html('Please wait... Now processing fiscal year');
+    switch (option) {
+        case 'Close':
+            CloseFiscalYear()
+            break
+        case 'Reopen':
+            ReopenFiscalYear
+            break
+        case 'Reclose':
+            break
+    }
+
     CloseModal(modal);
 }
 
