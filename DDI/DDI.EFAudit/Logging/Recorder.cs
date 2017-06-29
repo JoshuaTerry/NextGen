@@ -11,6 +11,7 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Reflection;
+using DDI.Shared.Helpers;
 
 namespace DDI.EFAudit.Logging
 {
@@ -62,7 +63,7 @@ namespace DDI.EFAudit.Logging
             if (user != null && user is IEntity)
             {
                 var ddiUser = user as IEntity;
-                _set.User = user;
+                _set.UserId = ddiUser.Id;
                 _set.UserName = ddiUser.DisplayName;
                 _set.Timestamp = timestamp;
             }

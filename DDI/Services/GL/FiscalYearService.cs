@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using DDI.Business.GL;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
+using DDI.Shared.Enums.GL;
+using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics.GL;
+using Newtonsoft.Json.Linq;
 
 namespace DDI.Services.GL
 {
@@ -49,6 +52,29 @@ namespace DDI.Services.GL
             var response = GetIDataResponse(() => results);
             response.TotalResults = results.Count;
 
+            return response;
+        }
+
+        /// <summary>
+        /// Create a new fiscal year via the "copy" POST route.
+        /// </summary>
+        /// <param name="sourceFiscalYearId">Id of existing fiscal year</param>
+        /// <param name="newYearTemplate">A FiscalYearTemplate object.</param>        
+        public IDataResponse<FiscalYear> CopyFiscalYear(Guid sourceFiscalYearId, FiscalYearTemplate newYearTemplate)
+        {
+            var response = new DataResponse<FiscalYear>();
+
+            try
+            {
+                Guid id = UnitOfWork.GetBusinessLogic<ClosingLogic>().CreateNewFiscalYear(sourceFiscalYearId, newYearTemplate.Name, newYearTemplate.StartDate.Date, newYearTemplate.CopyInactiveAccounts);
+
+                response.Data = UnitOfWork.GetById<FiscalYear>(id, IncludesForSingle);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                return ProcessIDataResponseException(ex);
+            }
             return response;
         }
 
@@ -102,6 +128,45 @@ namespace DDI.Services.GL
                     Status = Shared.Enums.GL.FiscalPeriodStatus.Open
                 });
             }
+        }
+
+        protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
+        {
+            if (entity is FiscalYear)
+            {
+                var year = (FiscalYear)entity;
+
+                // Operations based on FiscalYear.Status
+                if (string.Compare(name, nameof(FiscalYear.Status), true) == 0)
+                {
+                    // To re-close a fiscal year, set status to "reclose"
+                    if (token.ToString().ToLower() == "reclose")
+                    {
+                        var closingLogic = UnitOfWork.GetBusinessLogic<ClosingLogic>();
+                        closingLogic.RecloseFiscalYear(year.Id);
+                    }
+                    else
+                    {
+                        // To close or re-open a fiscal year, change the status.
+                        var status = EnumHelper.ConvertToEnum<FiscalYearStatus>(token, year.Status);
+                        if (status != year.Status)
+                        {
+                            var closingLogic = UnitOfWork.GetBusinessLogic<ClosingLogic>();
+                            if (status == FiscalYearStatus.Closed)
+                            {
+                                closingLogic.CloseFiscalYear(year.Id); // Changing to Closed will close the fiscal year.
+                            }
+                            else if (status == FiscalYearStatus.Open || status == FiscalYearStatus.Reopened)
+                            {
+                                closingLogic.ReopenFiscalYear(year.Id); // Changing to Open or Reopened will re-open the period.
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+            }
+            return base.ProcessJTokenUpdate(entity, name, token);
         }
     }
 }

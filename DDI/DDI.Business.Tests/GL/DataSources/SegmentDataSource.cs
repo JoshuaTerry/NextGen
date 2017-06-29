@@ -35,7 +35,8 @@ namespace DDI.Business.Tests.GL.DataSources
                     AddSegment(segments, year, 1, "1501", "Accounts Receivable");
                     AddSegment(segments, year, 1, "2002", "Accounts Payable");
                     AddSegment(segments, year, 1, "3001", "Capital");
-                    AddSegment(segments, year, 1, "3002", "Retained Earnings");
+                    AddSegment(segments, year, 1, "3002", "Accumulated Revenue");
+                    AddSegment(segments, year, 1, "3003", "Accumulated Expense");
                     AddSegment(segments, year, 1, "4001", "Sales");
                     AddSegment(segments, year, 1, "5001", "Office Supplies");
 
@@ -84,6 +85,9 @@ namespace DDI.Business.Tests.GL.DataSources
                     segment2 = AddSegment(segments, year, 2, "380", "Temp Restricted Funds");
                     segment3 = AddSegment(segments, year, 3, "50", "General Fund", segment2);
                     AddSegment(segments, year, 4, "02", "Accumulated Revenue", segment3);
+
+                    segment3 = AddSegment(segments, year, 3, "90", "NCE Fund", segment2);
+                    AddSegment(segments, year, 4, "01", "Accumulated Revenue", segment3);
 
                     segment2 = AddSegment(segments, year, 2, "390", "Perm Restricted Funds");
                     segment3 = AddSegment(segments, year, 3, "50", "General Fund", segment2);

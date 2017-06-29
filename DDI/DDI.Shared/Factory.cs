@@ -1,5 +1,6 @@
 ﻿using System;
 using DDI.Shared.Data;
+using DDI.Shared.Helpers;
 using DDI.Shared.Interfaces;
 
 namespace DDI.Shared
@@ -68,6 +69,8 @@ namespace DDI.Shared
             {
                 _repositoryFactoryType = typeof(RepositoryFactoryNoDb);
             }
+            UnitOfWorkNoDb.ClearRepositories();
+            GuidHelper.GenerateSequentialGuids = true;
             _isForTesting = true;
         }
 

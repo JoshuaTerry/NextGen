@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DDI.Shared;
+using DDI.Shared.Enums.GL;
 using DDI.Shared.Models.Client.GL;
 
 namespace DDI.Business.Tests.GL.DataSources
@@ -15,6 +16,41 @@ namespace DDI.Business.Tests.GL.DataSources
         public const decimal TOTAL_DEBITS = 5000m;
         public const decimal TOTAL_CREDITS = 3000m;
         public const string ACCOUNT_NUMBER = "01-100-10-01";
+
+        public static IList<AccountBalance> CalculateDataSourceForTransactions(IUnitOfWork uow)
+        {
+            var balances = new List<AccountBalance>();
+
+            // Build the AccountBalances "view" data
+            foreach (var tran in uow.Where<PostedTransaction>(p => p.PostedTransactionType != PostedTransactionType.BeginBal && p.PostedTransactionType != PostedTransactionType.EndBal))
+            {
+                string dbcr = tran.Amount > 0m ? "DB" : "CR";
+
+                var balance = balances.FirstOrDefault(p => p.Id == tran.LedgerAccountYear.Account.Id && p.PeriodNumber == tran.PeriodNumber && p.DebitCredit == dbcr);
+                if (balance == null)
+                {
+                    balance = new AccountBalance
+                    {
+                        Id = tran.LedgerAccountYear.Account.Id,
+                        Account = tran.LedgerAccountYear.Account,
+                        PeriodNumber = tran.PeriodNumber,
+                        DebitCredit = dbcr
+                    };
+                    balances.Add(balance);
+                }
+
+                balance.TotalAmount += Math.Abs(tran.Amount);
+            }
+
+            uow.CreateRepositoryForDataSource(balances);
+
+            foreach (var account in uow.GetEntities<Account>())
+            {
+                account.AccountBalances = balances.Where(p => p.Account == account).ToList();
+            }
+
+            return balances;
+        }
 
         public static IList<AccountBalance> GetDataSource(IUnitOfWork uow)
         {
@@ -50,6 +86,8 @@ namespace DDI.Business.Tests.GL.DataSources
             decimal totalDebits = 0, totalCredits = 0;
             Random random = new Random();
 
+            account.AccountBalances = new List<AccountBalance>();
+
             for (int period = 1; period <= account.FiscalYear.NumberOfPeriods; period++)
             {
                 var debitBalance = new AccountBalance()
@@ -83,6 +121,8 @@ namespace DDI.Business.Tests.GL.DataSources
 
                 _accountBalances.Add(debitBalance);
                 _accountBalances.Add(creditBalance);
+                account.AccountBalances.Add(debitBalance);
+                account.AccountBalances.Add(creditBalance);
             }
 
         }

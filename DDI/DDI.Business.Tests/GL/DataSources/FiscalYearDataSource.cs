@@ -101,7 +101,8 @@ namespace DDI.Business.Tests.GL.DataSources
                 {
                     FiscalYear = year,
                     PeriodNumber = month,
-                    IsAdjustmentPeriod = (month == 13)
+                    IsAdjustmentPeriod = (month == 13),
+                    Id = GuidHelper.NewSequentialGuid()
                 };
 
                 if (month < 13)
