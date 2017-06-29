@@ -9,6 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using Newtonsoft.Json.Linq;
+using DDI.Shared.Extensions;
+using DDI.Services.General;
+using DDI.Shared.Models;
+using DDI.Data;
 
 namespace DDI.Services.Security
 {
@@ -18,6 +23,7 @@ namespace DDI.Services.Security
                                                   IUserPasswordStore<User, Guid>,
                                                   IQueryableUserStore<User, Guid>
     {
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(UserService));
         public UserService(IUnitOfWork uow) : base(uow)
         {
             IncludesForSingle = new Expression<Func<User, object>>[]
@@ -69,6 +75,72 @@ namespace DDI.Services.Security
             return response;
         }
 
+        public IDataResponse UpdateUserBusinessUnits(Guid userId, JObject collection)
+        {
+            var user = UnitOfWork.GetById<User>(userId, u => u.BusinessUnits);
+             
+            IDataResponse response = null;
+            var newList = GetBusinessObjectsFromJObject<BusinessUnit>(collection);             
+            var existingList = user.BusinessUnits.ToList();
+
+            var removes = existingList.Except(newList);
+            var adds = newList.Except(existingList);
+
+            if (user != null)
+            {
+                removes.ForEach(e => user.BusinessUnits.Remove(e));
+                adds.ForEach(e => user.BusinessUnits.Add(e));
+            }
+
+            UnitOfWork.SaveChanges();
+
+            response = new DataResponse()
+            {
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
+        private List<T> GetBusinessObjectsFromJObject<T>(JObject collection) where T : class, IEntity, new()
+        {
+            var list = new List<T>();
+            foreach (var pair in collection)
+            {
+                if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
+                {
+                    list.AddRange(from jToken in (JArray)pair.Value select Guid.Parse(jToken.ToString()) into id select UnitOfWork.GetById<T>(id));
+                }
+            }
+            return list;
+        }
+        public IDataResponse UpdateUserGroups(Guid userId, JObject collection)
+        {
+            var groupService = new GroupService(UnitOfWork);
+            var user = UnitOfWork.GetById<User>(userId, u => u.Roles, u => u.Groups);
+
+            IDataResponse response = null;
+            var newList = GetBusinessObjectsFromJObject<Group>(collection);    
+            var existingList = user.Groups.ToList();
+
+            var removes = existingList.Except(newList);
+            var adds = newList.Except(existingList);
+
+            removes.ForEach(g => user.Groups.Remove(g));
+            adds.ForEach(g => user.Groups.Add(g));
+            UnitOfWork.Update(user);
+
+            groupService.UpdateUserRoles(user);
+            UnitOfWork.SaveChanges();
+
+            response = new DataResponse()
+            {
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+       
         private void CheckUser(User user)
         {
             if (user == null)
