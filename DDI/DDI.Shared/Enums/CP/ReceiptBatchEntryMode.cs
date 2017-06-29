@@ -2,7 +2,7 @@
 
 namespace DDI.Shared.Enums.CP
 {
-    public enum ReceiptBatchType
+    public enum ReceiptBatchEntryMode
     {
         None = 0,
 

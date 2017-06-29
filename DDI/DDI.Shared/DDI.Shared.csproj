@@ -129,8 +129,7 @@
     <Compile Include="Enums\CP\DisbursementType.cs" />
     <Compile Include="Enums\CP\ReceiptBatchDistributionMode.cs" />
     <Compile Include="Enums\CP\ReceiptBatchStatus.cs" />
-    <Compile Include="Enums\CP\ReceiptBatchType.cs" />
-    <Compile Include="Models\Client\CP\EFTInfo.cs" />
+    <Compile Include="Enums\CP\ReceiptBatchEntryMode.cs" />
     <Compile Include="Models\Client\CP\ETFFormatCode.cs" />
     <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
@@ -138,8 +137,8 @@
     <Compile Include="Models\Client\CP\Receipt.cs" />
     <Compile Include="Enums\CP\ReceiptCategory.cs" />
     <Compile Include="Models\Client\CP\ReceiptBatch.cs" />
-    <Compile Include="Models\Client\CP\ReceiptBatchGroup.cs" />
-    <Compile Include="Models\Client\CP\ReceiptTypeCode.cs" />
+    <Compile Include="Models\Client\CP\ReceiptBatchType.cs" />
+    <Compile Include="Models\Client\CP\ReceiptType.cs" />
     <Compile Include="Enums\CRM\Affiliation.cs" />
     <Compile Include="Enums\CRM\BirthDateType.cs" />
     <Compile Include="Enums\CRM\ConstituentBaseStatus.cs" />
@@ -223,10 +222,8 @@
     <Compile Include="Models\Client\Core\SavedEntityMapping.cs" />
     <Compile Include="Models\Client\Core\SavedEntityMappingField.cs" />
     <Compile Include="Models\Client\CP\BankAccount.cs" />
-    <Compile Include="Models\Client\CP\CheckForm.cs" />
     <Compile Include="Models\Client\CP\Disbursement.cs" />
     <Compile Include="Models\Client\CP\DisbursementLine.cs" />
-    <Compile Include="Models\Client\CP\Reconciliation.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
     <Compile Include="Models\Client\GL\AccountActivitySummary.cs" />
     <Compile Include="Models\Client\GL\AccountActivityDetail.cs" />

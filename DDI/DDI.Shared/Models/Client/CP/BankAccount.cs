@@ -41,12 +41,7 @@ namespace DDI.Shared.Models.Client.CP
         [MaxLength(128)]
         public string OffsetRoutingNumber { get; set; }
         [MaxLength(128)]
-        public string OffsetDescription { get; set; }
-
-        public Guid? DefaultCheckFormId { get; set; }
-        [ForeignKey("DefaultCheckFormId")]
-        public CheckForm DefaultCheckForm { get; set; }
-
+        public string OffsetDescription { get; set; }     
         public BankAccountStatus Status { get; set; }
 
 

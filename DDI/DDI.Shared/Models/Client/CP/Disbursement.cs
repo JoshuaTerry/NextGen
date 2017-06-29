@@ -46,15 +46,9 @@ namespace DDI.Shared.Models.Client.CP
         [Column(TypeName = "date")]
         public DateTime? FinalDate { get; set; }
         [MaxLength(128)]
-        public string FinalComment { get; set; }
-
-        public Guid? CheckFormId { get; set; }
-        [ForeignKey("CheckFormId")]
-        public CheckForm CheckForm { get; set; }
-
+        public string FinalComment { get; set; }         
         public bool IsImmediate { get; set; }
-        public bool IsManual { get; set; }
-        public EFTInfo EFTInfo { get; set; }
+        public bool IsManual { get; set; } 
         [Column(TypeName = "date")]
         public DateTime? ClearDate { get; set; }
     }
