@@ -117,7 +117,8 @@ namespace DDI.Business.Tests.GL.DataSources
                 IsLinked = false,
                 Length = 2,
                 Separator = "-",
-                Type = SegmentType.Fund
+                Type = SegmentType.Fund,
+                Id = GuidHelper.NewSequentialGuid()                
             });
 
             ledger.SegmentLevels.Add(new SegmentLevel
@@ -131,6 +132,7 @@ namespace DDI.Business.Tests.GL.DataSources
                 IsLinked = false,
                 Length = 3,
                 Separator = "-",
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             ledger.SegmentLevels.Add(new SegmentLevel
@@ -144,6 +146,7 @@ namespace DDI.Business.Tests.GL.DataSources
                 IsLinked = true,
                 Length = 2,
                 Separator = "-",
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             ledger.SegmentLevels.Add(new SegmentLevel
@@ -157,6 +160,7 @@ namespace DDI.Business.Tests.GL.DataSources
                 IsLinked = true,
                 Length = 2,
                 Separator = "-",
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             ledger.SegmentLevels.Add(new SegmentLevel
@@ -170,6 +174,7 @@ namespace DDI.Business.Tests.GL.DataSources
                 IsLinked = false,
                 Length = 2,
                 Separator = "",
+                Id = GuidHelper.NewSequentialGuid()
             });
         }
 
@@ -187,6 +192,7 @@ namespace DDI.Business.Tests.GL.DataSources
                 IsLinked = false,
                 Length = 4,
                 Separator = ".",
+                Id = GuidHelper.NewSequentialGuid()
             });
 
             ledger.SegmentLevels.Add(new SegmentLevel
@@ -200,6 +206,7 @@ namespace DDI.Business.Tests.GL.DataSources
                 IsLinked = false,
                 Length = 4,
                 Separator = "",
+                Id = GuidHelper.NewSequentialGuid()
             });
 
            

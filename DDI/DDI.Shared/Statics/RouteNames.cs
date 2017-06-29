@@ -7,6 +7,7 @@
         public const string Account = "Account";
         public const string AccountGroup = "AccountGroup";
         public const string AccountActivity = "AccountActivity";
+        public const string AccountMerge = "AccountMerge";
         public const string Address = "Address";
         public const string AddressType = "AddressType";
         public const string Alert = "Alert";
@@ -27,6 +28,7 @@
         public const string ConstituentType = "ConstituentType";
         public const string ContactCategory = "ContactCategory";
         public const string ContactType = "ContactType";
+        public const string Copy = "Copy";
         public const string Country = "Country";
         public const string County = "County";
         public const string CustomField = "CustomField";
@@ -84,5 +86,6 @@
         public const string State = "State";
         public const string Tag = "Tag";
         public const string TagGroup = "TagGroup";
+        public const string User = "User";
     }
 }
