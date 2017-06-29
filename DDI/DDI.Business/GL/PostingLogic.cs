@@ -12,6 +12,7 @@ using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 
 namespace DDI.Business.GL
@@ -148,7 +149,7 @@ namespace DDI.Business.GL
 
                 if (tran.TransactionDate == null)
                 {
-                    throw new InvalidOperationException(string.Format(UserMessagesGL.TransactionNoTranDate, tran.DisplayName));
+                    throw new InvalidOperationException(string.Format(UserMessages.TranNoTranDate, tran.DisplayName));
                 }
 
                 FiscalPeriod period = GetFiscalPeriod(year, tran.TransactionDate.Value, tran.IsAdjustment);
@@ -180,6 +181,10 @@ namespace DDI.Business.GL
                 {
                     // For one-sided transactions, only the debit account is used, and the transaction amount's sign is significant.
                     CreatePostedTransaction(uow, tran.DebitAccountId, tran.Amount, period, tran);
+                }
+                if (year.Status == FiscalYearStatus.Empty)
+                {
+                    year.Status = FiscalYearStatus.Open;
                 }
             }
 
@@ -230,13 +235,13 @@ namespace DDI.Business.GL
                 var lay = UnitOfWork.GetById<LedgerAccountYear>(ledgerAccountYearId.Value, p => p.Account);
                 if (lay == null)
                 {
-                    throw new InvalidOperationException(string.Format(UserMessagesGL.TransactionCantGetFund, tran.DisplayName));
+                    throw new InvalidOperationException(string.Format(UserMessages.TranCantGetFund, tran.DisplayName));
                 }
 
                 Fund fund = _fundLogic.GetFund(lay.Account);
                 if (fund == null)
                 {
-                    throw new InvalidOperationException(string.Format(UserMessagesGL.TransactionCantGetFund, tran.DisplayName));
+                    throw new InvalidOperationException(string.Format(UserMessages.TranCantGetFund, tran.DisplayName));
                 }
 
                 balanceInfo.FundBalance[fund.Id] = balanceInfo.FundBalance.GetValueOrDefault(fund.Id) + amount;
@@ -327,9 +332,11 @@ namespace DDI.Business.GL
 
         private void VerifyTransactionIsBalanced(Int64 transactionNumber)
         {
+            string tranName = $"Transaction {transactionNumber}";
+
             if (_tranBalance != 0m)
             {
-                throw new InvalidOperationException(string.Format(UserMessagesGL.TransactionImbalance, transactionNumber, _tranBalance));
+                throw new InvalidOperationException(string.Format(UserMessages.TranImbalance, tranName, _tranBalance));
             }
 
             foreach(var entry in _balances)
@@ -339,14 +346,14 @@ namespace DDI.Business.GL
 
                 if (balance.TranBalance != 0m)
                 {
-                    throw new InvalidOperationException(string.Format(UserMessagesGL.TransactionImbalanceForDate, transactionNumber, balance.TranBalance, tranDt));
+                    throw new InvalidOperationException(string.Format(UserMessages.TranImbalanceForDate, tranName, balance.TranBalance, tranDt));
                 }
 
                 var unbalanced = balance.EntityBalance.FirstOrDefault(p => p.Value != 0m);
                 if (unbalanced.Value != 0m)
                 {
                     BusinessUnit unit = UnitOfWork.GetById<BusinessUnit>(unbalanced.Key);
-                    throw new InvalidOperationException(string.Format(UserMessagesGL.TransactionImbalanceForBU, transactionNumber, unbalanced.Value,
+                    throw new InvalidOperationException(string.Format(UserMessages.TranImbalanceForBU, tranName, unbalanced.Value,
                         unit?.Code ?? string.Empty, tranDt));
                 }
 
@@ -354,7 +361,7 @@ namespace DDI.Business.GL
                 if (unbalanced.Value != 0m)
                 {
                     Fund fund = UnitOfWork.GetById<Fund>(unbalanced.Key, p => p.FundSegment);
-                    throw new InvalidOperationException(string.Format(UserMessagesGL.TransactionImbalanceForFund, transactionNumber, unbalanced.Value,
+                    throw new InvalidOperationException(string.Format(UserMessages.TranImbalanceForFund, tranName, unbalanced.Value,
                         fund?.FundSegment?.Code ?? string.Empty, tranDt));
                 }
             }

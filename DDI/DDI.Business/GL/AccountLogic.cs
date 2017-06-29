@@ -462,13 +462,19 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Get the default LedgerAccountYear for a LedgerAccount based on a fiscal year
+        /// Get the default LedgerAccountYear for a LedgerAccount based on a fiscal year.  
+        /// If necessary, a similar fiscal year in the LedgerAccount's ledger is used instead.
         /// </summary>
-        public LedgerAccountYear GetLedgerAccountYear(LedgerAccount account, Guid? yearId)
+        public LedgerAccountYear GetLedgerAccountYear(LedgerAccount account, FiscalYear year)
         {
-            if (account == null || yearId == null)
+            if (account?.LedgerId == null || year == null)
             {
                 return null;
+            }
+
+            if (year.LedgerId != account.LedgerId)
+            {
+                year = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetFiscalYearForLedger(year, account.LedgerId.Value);
             }
 
             if (account.LedgerAccountYears == null)
@@ -476,45 +482,38 @@ namespace DDI.Business.GL
                 UnitOfWork.LoadReference(account, p => p.LedgerAccountYears);
             }
 
-            return account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == yearId && p.IsMerge == false)
+            return account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == year.Id && p.IsMerge == false)
                     ??
-                   account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == yearId);
+                   account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == year.Id);
         }
 
         /// <summary>
-        /// Get the default LedgerAccountYear for a LedgerAccount based on a fiscal year
-        /// </summary>
-        public LedgerAccountYear GetLedgerAccountYear(LedgerAccount account, FiscalYear year)
-        {
-            return GetLedgerAccountYear(account, year?.Id);
-        }
-
-        /// <summary>
-        /// Get the default LedgerAccountYear for a LedgerAccount Id based on a fiscal year.
+        /// Get the default LedgerAccountYear for a LedgerAccount Id based on a fiscal year.  
+        /// If necessary, a similar fiscal year in the LedgerAccount's ledger is used instead.
         /// </summary>
         public LedgerAccountYear GetLedgerAccountYear(Guid? ledgerAccountId, FiscalYear year)
         {
-            if (year == null)
+            if (year == null || ledgerAccountId == null)
             {
                 return null;
             }
-            return GetLedgerAccountYear(ledgerAccountId, year.Id);
+            return GetLedgerAccountYear(UnitOfWork.GetById<LedgerAccount>(ledgerAccountId.Value), year);
         }
 
         /// <summary>
-        /// Get the default LedgerAccountYear for a LedgerAccount Id based on a fiscal year.
+        /// Get the default LedgerAccountYear for a LedgerAccount Id and fiscal year Id.  Both must refer to the same ledger.
         /// </summary>
-        public LedgerAccountYear GetLedgerAccountYear(Guid? ledgerAccountId, Guid? fiscalYearId)
+        public LedgerAccountYear GetLedgerAccountYear(Guid? ledgerAccountId, Guid? yearId)
         {
-            if (ledgerAccountId == null)
+            if (yearId == null || ledgerAccountId == null)
             {
                 return null;
             }
 
             return
-                UnitOfWork.FirstOrDefault<LedgerAccountYear>(p => p.LedgerAccountId == ledgerAccountId && p.FiscalYearId == fiscalYearId && p.IsMerge == false)
-                    ??
-                UnitOfWork.FirstOrDefault<LedgerAccountYear>(p => p.LedgerAccountId == ledgerAccountId && p.FiscalYearId == fiscalYearId);
+                UnitOfWork.FirstOrDefault<LedgerAccountYear>(p => p.LedgerAccountId == ledgerAccountId && p.FiscalYearId == yearId && p.IsMerge == false)
+                 ??
+                UnitOfWork.FirstOrDefault<LedgerAccountYear>(p => p.LedgerAccountId == ledgerAccountId && p.FiscalYearId == yearId);
         }
 
         public string GetAccountNumber(LedgerAccount ledgerAccount, FiscalYear year)

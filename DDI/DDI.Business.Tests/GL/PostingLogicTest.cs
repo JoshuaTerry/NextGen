@@ -9,6 +9,7 @@ using DDI.Shared.Enums.GL;
 using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -113,7 +114,7 @@ namespace DDI.Business.Tests.GL
 
             // Null tran date
             tran.TransactionDate = null;
-            AssertThrowsExceptionMessageContains<Exception>(() => _bl.PostTransaction(1), UserMessagesGL.TransactionNoTranDate);
+            AssertThrowsExceptionMessageContains<Exception>(() => _bl.PostTransaction(1), UserMessages.TranNoTranDate);
 
             // Date not valid for fiscal year
             tran.TransactionDate = DateTime.Parse(INVALID_DATE);
@@ -126,7 +127,7 @@ namespace DDI.Business.Tests.GL
             CreateTransaction(-60.00m, "01-200-00-20", "", year, 1, 2, description);
 
             _uow.CreateRepositoryForDataSource(_trans);
-            AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.PostTransaction(1), UserMessagesGL.TransactionImbalance);
+            AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.PostTransaction(1), UserMessages.TranImbalance);
 
             // Test for business unit imbalance
             _trans.Clear();
@@ -137,7 +138,7 @@ namespace DDI.Business.Tests.GL
             CreateTransaction(-50.00m, "01-200-00-20", "", year, 1, 2, description);
 
             _uow.CreateRepositoryForDataSource(_trans);
-            AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.PostTransaction(1), UserMessagesGL.TransactionImbalanceForBU);
+            AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.PostTransaction(1), UserMessages.TranImbalanceForBU);
 
             // Test for fund imbalance
             _trans.Clear();
@@ -146,7 +147,7 @@ namespace DDI.Business.Tests.GL
             CreateTransaction(-50.00m, "02-100-10-10", "", year, 1, 2, description);
 
             _uow.CreateRepositoryForDataSource(_trans);
-            AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.PostTransaction(1), UserMessagesGL.TransactionImbalanceForFund);
+            AssertThrowsExceptionMessageContains<InvalidOperationException>(() => _bl.PostTransaction(1), UserMessages.TranImbalanceForFund);
         }
 
 

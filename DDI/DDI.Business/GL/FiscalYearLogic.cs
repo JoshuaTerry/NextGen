@@ -461,7 +461,7 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Get an instance of this fiscal year in a different business unit.  (I.e. a fiscal year that contain's this fiscal year's start date.)
+        /// Get an instance of this fiscal year in a different business unit.  (I.e. a fiscal year that contains this fiscal year's start date.)
         /// </summary>
         public FiscalYear GetFiscalYearForBusinessUnit(FiscalYear year, BusinessUnit unit)
         {
@@ -473,7 +473,7 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Get an instance of this fiscal year in a different business unit.  (I.e. a fiscal year that contain's this fiscal year's start date.)
+        /// Get an instance of this fiscal year in a different business unit.  (I.e. a fiscal year that contains this fiscal year's start date.)
         /// </summary>
         public FiscalYear GetFiscalYearForBusinessUnit(FiscalYear year, Guid unitId)
         {
@@ -485,11 +485,34 @@ namespace DDI.Business.GL
             Ledger ledger = UnitOfWork.GetReference(year, p => p.Ledger);
 
             if (ledger.BusinessUnitId == unitId)
+            {
                 return year;
+            }            
 
             // Select all the years in all ledgers for given business unit that contain this fiscal year's start date.  (There should be zero or one).
             return _ledgerLogic.LedgerCache.Entities.Where(p => p.BusinessUnitId == unitId)
                                                     .SelectMany(p => p.FiscalYears.Where(f => f.StartDate <= year.StartDate && f.EndDate >= year.EndDate))
+                                                    .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Get an instance of this fiscal year in a different ledger.  (I.e. a fiscal year that contains this fiscal year's start date.)
+        /// </summary>
+        public FiscalYear GetFiscalYearForLedger(FiscalYear year, Guid ledgerId)
+        {
+            if (year == null)
+            {
+                return null;
+            }
+
+            if (year.LedgerId == ledgerId)
+            {
+                return year;
+            }
+
+            // Select all the years in all ledgers for given business unit that contain this fiscal year's start date.  (There should be zero or one).
+            return _ledgerLogic.LedgerCache.Entities.FirstOrDefault(p => p.Id == ledgerId)?
+                                                    .FiscalYears.Where(f => f.StartDate <= year.StartDate && f.EndDate >= year.EndDate)
                                                     .FirstOrDefault();
         }
 

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("LedgerAccount")]
+    [Table("LedgerAccount"),EntityName("G/L Account")]
     public class LedgerAccount : AuditableEntityBase
     {
         [Key]

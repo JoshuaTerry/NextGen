@@ -332,8 +332,7 @@ namespace DDI.Business.GL
             bool isAdjustment = false;
 
             bool isUnapproved = UnitOfWork.Any<EntityApproval>(p => p.EntityType == _journalTypeName && p.ParentEntityId == journal.Id && p.ApprovedOn == null);
-            bool isApproved = !isUnapproved 
-                                || 
+            bool isApproved = !isUnapproved &&
                               UnitOfWork.Any<EntityApproval>(p => p.EntityType == _journalTypeName && p.ParentEntityId == journal.Id && p.ApprovedOn != null);
 
             TransactionStatus transactionStatus = isUnapproved ? TransactionStatus.Pending : TransactionStatus.Unposted;
@@ -345,7 +344,7 @@ namespace DDI.Business.GL
 
             if (transactionDate == null)
             {
-                throw new InvalidOperationException(string.Format(UserMessagesGL.JournalNoTransactionDate, GetJournalDescription(journal)));
+                throw new InvalidOperationException(string.Format(UserMessages.TranDateMissingForEntity, GetJournalDescription(journal)));
             }
 
             // Ensure journal has a business unit.
@@ -362,38 +361,39 @@ namespace DDI.Business.GL
             }
 
             FiscalPeriod period = yearLogic.GetFiscalPeriod(year, transactionDate.Value);
-
+            
             // If the fiscal year is closed, this must be an adjustment.
             if (year.Status == FiscalYearStatus.Closed)
             {
                 if (!period.IsAdjustmentPeriod)
                 {
-                    throw new InvalidOperationException(string.Format(UserMessagesGL.JournalTransactionDateClosed, transactionDate.ToShortDateString()));
+                    throw new InvalidOperationException(string.Format(UserMessagesGL.TranDateClosedPeriod, transactionDate.ToShortDateString()));
                 }
                 isAdjustment = true;
             }
             // Otherwise, verify the fiscal period is open.
             else if (period.Status == FiscalPeriodStatus.Closed)
             {
-                throw new InvalidOperationException(string.Format(UserMessagesGL.JournalTransactionDateClosed, transactionDate.ToShortDateString()));
-            }
-            
+                throw new InvalidOperationException(string.Format(UserMessagesGL.TranDateClosedPeriod, transactionDate.ToShortDateString()));
+            }            
+
             // Get list of existing journal entity transactions
             var existingTrans = UnitOfWork.GetEntities<EntityTransaction>(p => p.Transaction)
                                           .Where(p => p.EntityType == _journalTypeName && p.ParentEntityId == journal.Id && p.Relationship == EntityTransactionRelationship.Owner)
                                           .ToList();
 
-            // Get a set of line item Ids, then get all the line item entity transactions.
-            Guid[] lineIds = UnitOfWork.GetReference(journal, p => p.JournalLines).Select(p => p.Id).ToArray();
-
-            var existingLineTrans = UnitOfWork.GetEntities<EntityTransaction>(p => p.Transaction)
-                                          .Where(p => p.EntityType == _journalTypeName && p.ParentEntityId != null && lineIds.Contains(p.ParentEntityId.Value) && p.Relationship == EntityTransactionRelationship.OwnerLine)
-                                          .ToList();
-
-
             bool isPosted = existingTrans.Any(p => p.Transaction.Status == TransactionStatus.Posted);
-
-            if (reverse) {
+            
+            if (reverse)
+            {
+                if (isUnapproved)
+                {
+                    throw new InvalidOperationException("Journal is unapproved and cannot be reversed.");
+                }
+                if (!isPosted)
+                {
+                    throw new InvalidOperationException("Journal is unposted and cannot be reversed.");
+                }
                 if (existingTrans.Any(p => p.Transaction.Status == TransactionStatus.Reversed))
                 {
                     throw new InvalidOperationException(string.Format(UserMessages.EntityAlreadyReversed, GetJournalDescription(journal)));
@@ -409,6 +409,13 @@ namespace DDI.Business.GL
             if (existingTrans.Count > 0)
             {
                 transactionNumber = existingTrans.Max(p => p.Transaction.TransactionNumber);
+
+                // Ensure starting line number is > than any existing line number for non-pending transactions.
+                var pendingTrans = existingTrans.Where(p => p.Transaction.TransactionNumber == transactionNumber && p.Transaction.Status != TransactionStatus.Pending);
+                if (pendingTrans.Count() > 0)
+                {
+                    lineNumber = pendingTrans.Max(p => p.Transaction.LineNumber);
+                }
             }
 
             // Create the list of transactions to be created.
@@ -427,7 +434,8 @@ namespace DDI.Business.GL
                     TransactionDate = transactionDate,
                 };
 
-                LedgerAccountYear account = accountLogic.GetLedgerAccountYear(line.LedgerAccountId, year.Id);
+                LedgerAccountYear account = accountLogic.GetLedgerAccountYear(line.LedgerAccountId, year);
+                tran.DebitAccount = account;
                 tran.DebitAccountId = account?.Id;
                 tran.CreditAccountId = null;
 
@@ -450,12 +458,16 @@ namespace DDI.Business.GL
                 // First, get the fund and the fiscal year for the line item G/L account.
                 Fund fund = year.Ledger.FundAccounting ? fund = fundLogic.GetFund(UnitOfWork.GetReference(account, p => p.Account)) : null;
                 FiscalYear accountYear = yearLogic.GetCachedFiscalYear(account.FiscalYearId);
+                Guid? sourceFundId = line.SourceFundId;
+                bool interUnit = false;
 
                 if (line.SourceBusinessUnitId != null && line.SourceBusinessUnitId != accountYear.Ledger.BusinessUnitId)
                 {
-                    // Business units are different.
-                    // Get a BusinessUnitFromTo
+                    // Business units are different.  (Inter-unit transfer required.)
 
+                    interUnit = true;
+
+                    // Get a BusinessUnitFromTo                    
                     LedgerAccountYear offsettingAccount = null;
                     BusinessUnitFromTo fromTo = fundLogic.GetBusinessUnitFromTo(accountYear.Id, line.SourceBusinessUnitId.Value);
                     if (fromTo != null)
@@ -472,25 +484,25 @@ namespace DDI.Business.GL
                     
                     if (year.Ledger.FundAccounting)
                     {
-                        // Fund is now the offsetting account's fund.
-                        fund = fundLogic.GetFund(UnitOfWork.GetReference(offsettingAccount, p => p.Account));
+                        // Source fund is now the offsetting account's fund.  (This fund will be in the same business unit as the transaction.)
+                        sourceFundId = fundLogic.GetFund(UnitOfWork.GetReference(offsettingAccount, p => p.Account)).Id;
                     }
 
                     // Create a transaction for the offsetting business unit.
                     Transaction tran2 = transactionLogic.Duplicate(tran);
                     tran2.LineNumber = ++lineNumber;
                     tran2.Amount = -tran.Amount;
-                    tran2.DebitAccount = null;
+                    tran2.DebitAccount = offsettingAccount;
                     tran2.DebitAccountId = offsettingAccount.Id;
                     trans.Add(tran2);
                 }
 
-                if (fund != null && line.SourceFundId != null && fund.Id != line.SourceFundId)
+                if (fund != null && sourceFundId != null && fund.Id != sourceFundId)
                 {
-                    // Funds are different.
+                    // Funds are different.  (Inter-fund transfer within the same business unit.)
                     // Get a FundFromTo.
                     LedgerAccountYear offsettingAccount = null;
-                    FundFromTo fromTo = fundLogic.GetFundFromTo(fund.Id, line.SourceFundId.Value);
+                    FundFromTo fromTo = fundLogic.GetFundFromTo(fund.Id, sourceFundId.Value);
                     if (fromTo != null)
                     {
                         Guid? offsettingLedgerAccountId = (line.DueToMode == DueToMode.DueFrom ? fromTo.FromLedgerAccountId : fromTo.ToLedgerAccountId);
@@ -508,9 +520,36 @@ namespace DDI.Business.GL
                     Transaction tran2 = transactionLogic.Duplicate(tran);
                     tran2.LineNumber = ++lineNumber;
                     tran2.Amount = -tran.Amount;
-                    tran2.DebitAccount = null;
+                    tran2.DebitAccount = offsettingAccount;
                     tran2.DebitAccountId = offsettingAccount.Id;
                     trans.Add(tran2);
+
+                    if (interUnit)
+                    {
+                        // A third transfer is required,  which is basically the reverse of the transfer just created above.
+                        // This is because the inter-unit transfer resulted in an inter-fund transfer.
+                        fromTo = fundLogic.GetFundFromTo(sourceFundId.Value, fund.Id);
+                        if (fromTo != null)
+                        {
+                            Guid? offsettingLedgerAccountId = (line.DueToMode != DueToMode.DueFrom ? fromTo.FromLedgerAccountId : fromTo.ToLedgerAccountId);
+                            offsettingAccount = accountLogic.GetLedgerAccountYear(offsettingLedgerAccountId, fromTo.FiscalYearId);
+                        }
+
+                        if (offsettingAccount == null)
+                        {
+                            string fund1 = UnitOfWork.GetById<Segment>(fund.FundSegmentId.Value)?.Code ?? string.Empty;
+                            string fund2 = UnitOfWork.GetById<Fund>(line.SourceFundId.Value, p => p.FundSegment)?.FundSegment?.Code ?? string.Empty;
+                            throw new InvalidOperationException(string.Format(UserMessagesGL.NoFundFromTo, fund1, fund2));
+                        }
+
+                        // Create a transaction for the offsetting fund.
+                        tran2 = transactionLogic.Duplicate(tran);
+                        tran2.LineNumber = ++lineNumber;
+                        tran2.Amount = tran.Amount;
+                        tran2.DebitAccount = offsettingAccount;
+                        tran2.DebitAccountId = offsettingAccount.Id;
+                        trans.Add(tran2);
+                    }
                 }
             } // Each journal line.
             

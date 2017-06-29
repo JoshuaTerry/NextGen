@@ -9,6 +9,7 @@ using DDI.Shared.Extensions;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics;
 
 namespace DDI.Business.Core
 {
@@ -81,11 +82,11 @@ namespace DDI.Business.Core
             }
             else
             {
-                if (transaction.FiscalYearId == null)
+                if (transaction.FiscalYear == null)
                 {
                     throw new InvalidOperationException(TRANSACTION_HAS_NO_FISCAL_YEAR);
                 }
-                transaction.DebitAccount = _accountLogic.GetLedgerAccountYear(account, transaction.FiscalYearId);
+                transaction.DebitAccount = _accountLogic.GetLedgerAccountYear(account, transaction.FiscalYear);
                 transaction.DebitAccountId = transaction.DebitAccount?.Id;
             }
         }
@@ -102,11 +103,11 @@ namespace DDI.Business.Core
             }
             else
             {
-                if (transaction.FiscalYearId == null)
+                if (transaction.FiscalYear == null)
                 {
                     throw new InvalidOperationException(TRANSACTION_HAS_NO_FISCAL_YEAR);
                 }
-                transaction.CreditAccount = _accountLogic.GetLedgerAccountYear(account, transaction.FiscalYearId);
+                transaction.CreditAccount = _accountLogic.GetLedgerAccountYear(account, transaction.FiscalYear);
                 transaction.CreditAccountId = transaction.CreditAccount?.Id;
             }
         }
@@ -159,6 +160,136 @@ namespace DDI.Business.Core
             };
         }
 
+        /// <summary>
+        /// Validate a set of transactions.  Any errors are returned as a string, otherwise the return value is null. 
+        /// Note: {0} in the returned string must be replaced by a description of an entity (e.g. "Journal #1")
+        /// </summary>
+        /// <returns></returns>
+        public string ValidateTransactions(IList<Transaction> transactions)
+        {
+            try
+            {
+                // Ensure transaction list is not null.
+                if (transactions == null)
+                {
+                    throw new ArgumentNullException(nameof(transactions));
+                }
+
+                FiscalYearLogic yearLogic = UnitOfWork.GetBusinessLogic<FiscalYearLogic>();
+                AccountLogic accountLogic = UnitOfWork.GetBusinessLogic<AccountLogic>();
+                FundLogic fundLogic = UnitOfWork.GetBusinessLogic<FundLogic>();
+
+                foreach (var transByNumber in transactions.Where(p => p.Status != TransactionStatus.Deleted && p.Status != TransactionStatus.NonPosting)
+                                                .GroupBy(p => p.TransactionNumber))
+                {
+                    decimal tranBalance = 0m;
+                    var balances = new Dictionary<DateTime, BalanceInfo>();
+
+                    foreach (var transaction in transByNumber)
+                    {
+                        if (transaction.TransactionDate == null)
+                        {
+                            throw new ValidationException(string.Format(UserMessages.TranNoFiscalYear, transaction.ToString()));
+                        }
+
+                        FiscalYear year = yearLogic.GetCachedFiscalYear(transaction.FiscalYearId);
+                        if (year == null)
+                        {
+                            throw new ValidationException(string.Format(UserMessages.TranInvalidDate, transaction.ToString()));
+                        }
+
+                        FiscalPeriod period = yearLogic.GetFiscalPeriod(year, transaction.TransactionDate.Value);
+                        if (period == null)
+                        {
+                            throw new ValidationException(string.Format(UserMessages.TranInvalidDate, transaction.ToString()));
+                        }
+
+                        BalanceInfo balanceInfo = balances.GetValueOrDefault(transaction.TransactionDate.Value);
+
+                        if (transaction.DebitAccountId != null)
+                        {
+                            tranBalance += transaction.Amount;
+
+                            LedgerAccountYear acct = UnitOfWork.GetReference(transaction, p => p.DebitAccount);
+                            balanceInfo.EntityBalance[acct.FiscalYearId.Value] = balanceInfo.EntityBalance.GetValueOrDefault(acct.FiscalYearId.Value) + transaction.Amount;
+                            if (year.Ledger.FundAccounting)
+                            {
+                                Fund fund = fundLogic.GetFund(UnitOfWork.GetReference(transaction.DebitAccount, p => p.Account));
+                                if (fund == null)
+                                {
+                                    throw new InvalidOperationException(string.Format(UserMessages.TranCantGetFund, transaction.DisplayName));
+                                }
+
+                                balanceInfo.FundBalance[fund.Id] = balanceInfo.FundBalance.GetValueOrDefault(fund.Id) + transaction.Amount;
+
+                            }
+                        }
+
+                        if (transaction.CreditAccountId != null)
+                        {
+                            tranBalance -= transaction.Amount;
+
+                            LedgerAccountYear acct = UnitOfWork.GetReference(transaction, p => p.CreditAccount);
+                            balanceInfo.EntityBalance[acct.FiscalYearId.Value] = balanceInfo.EntityBalance.GetValueOrDefault(acct.FiscalYearId.Value) - transaction.Amount;
+                            if (year.Ledger.FundAccounting)
+                            {
+                                Fund fund = fundLogic.GetFund(UnitOfWork.GetReference(transaction.CreditAccount, p => p.Account));
+                                if (fund == null)
+                                {
+                                    throw new InvalidOperationException(string.Format(UserMessages.TranCantGetFund, transaction.DisplayName));
+                                }
+
+                                balanceInfo.FundBalance[fund.Id] = balanceInfo.FundBalance.GetValueOrDefault(fund.Id) - transaction.Amount;
+                            }
+                        }
+
+                    } // Each transaction
+
+                    string tranName = "{0}";
+
+                    // Validate balances
+
+                    if (tranBalance != 0m)
+                    {
+                        throw new InvalidOperationException(string.Format(UserMessages.TranImbalance, tranName, tranBalance));
+                    }
+
+                    foreach (var entry in balances)
+                    {
+                        DateTime tranDt = entry.Key;
+                        BalanceInfo balance = entry.Value;
+
+                        if (balance.TranBalance != 0m)
+                        {
+                            throw new InvalidOperationException(string.Format(UserMessages.TranImbalanceForDate, tranName, balance.TranBalance, tranDt));
+                        }
+
+                        var unbalanced = balance.EntityBalance.FirstOrDefault(p => p.Value != 0m);
+                        if (unbalanced.Value != 0m)
+                        {
+                            BusinessUnit unit = UnitOfWork.GetById<BusinessUnit>(unbalanced.Key);
+                            throw new InvalidOperationException(string.Format(UserMessages.TranImbalanceForBU, tranName, unbalanced.Value,
+                                unit?.Code ?? string.Empty, tranDt));
+                        }
+
+                        unbalanced = balance.FundBalance.FirstOrDefault(p => p.Value != 0m);
+                        if (unbalanced.Value != 0m)
+                        {
+                            Fund fund = UnitOfWork.GetById<Fund>(unbalanced.Key, p => p.FundSegment);
+                            throw new InvalidOperationException(string.Format(UserMessages.TranImbalanceForFund, tranName, unbalanced.Value,
+                                fund?.FundSegment?.Code ?? string.Empty, tranDt));
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+        }
+
         public void SaveTransactions(IList<Transaction> transactions, IEntity entity)
         {
             string entityType = LinkedEntityHelper.GetEntityTypeName(entity.GetType());
@@ -190,6 +321,13 @@ namespace DDI.Business.Core
                 throw new InvalidOperationException("If some transactions have line numbers, all transactions must have line numbers.");
             }
 
+            // Validate the transactions.
+            string message = ValidateTransactions(transactions);
+            if (message != null)
+            {
+                throw new ValidationException(message, LinkedEntityHelper.GetEntityDisplayName(entity));
+            }
+
             using (IUnitOfWork innerUOW = Factory.CreateUnitOfWork())
             {
 
@@ -199,7 +337,8 @@ namespace DDI.Business.Core
 
                     // Get list of existing pending entity transactions
                     existingTrans = innerUOW.GetEntities<EntityTransaction>(p => p.Transaction)
-                                                  .Where(p => p.EntityType == entityType && p.ParentEntityId == entity.Id && p.Relationship == EntityTransactionRelationship.Owner && p.Transaction.Status == TransactionStatus.Pending)
+                                                  .Where(p => p.EntityType == entityType && p.ParentEntityId == entity.Id && p.Relationship == EntityTransactionRelationship.Owner && (p.Transaction.Status == TransactionStatus.Pending || 
+                                                                               p.Transaction.Status == TransactionStatus.Unposted))
                                                   .ToList();
 
                     if (transactions.Any(p => p.EntityLine != null))
@@ -210,7 +349,8 @@ namespace DDI.Business.Core
                                       .Where(p => p.EntityType == entityLineType && p.ParentEntityId != null &&
                                                   lineIds.Contains(p.ParentEntityId.Value) &&
                                                   p.Relationship == EntityTransactionRelationship.OwnerLine &&
-                                                  p.Transaction.Status == TransactionStatus.Pending)
+                                                  (p.Transaction.Status == TransactionStatus.Pending ||
+                                                   p.Transaction.Status == TransactionStatus.Unposted))
                                       .ToList();
                     }
                     else
@@ -357,5 +497,26 @@ namespace DDI.Business.Core
 
         #endregion
 
+        #region Nested Classes
+
+        /// <summary>
+        /// Class for validating balances for a transaction.
+        /// </summary>
+        private class BalanceInfo
+        {
+            public decimal TranBalance { get; set; }
+            public Dictionary<Guid, decimal> EntityBalance { get; set; }
+            public Dictionary<Guid, decimal> FundBalance { get; set; }
+
+            public BalanceInfo()
+            {
+                TranBalance = 0m;
+                EntityBalance = new Dictionary<Guid, decimal>();
+                FundBalance = new Dictionary<Guid, decimal>();
+            }
+
+        }
+
+        #endregion
     }
 }

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using DDI.Business.Helpers;
+using DDI.Business.Tests.CRM.DataSources;
 using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.GL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
@@ -43,6 +45,17 @@ namespace DDI.Business.Tests.Helpers
         {
             Assert.AreEqual("Constituent", LinkedEntityHelper.GetEntityTypeName(typeof(Constituent)));
             Assert.AreEqual("Country", LinkedEntityHelper.GetEntityTypeName<DDI.Shared.Models.Common.Country>());
+        }
+
+        [TestMethod, TestCategory(TESTDESCR)]
+        public void LinkedEntityHelper_GetDiplayTypeName()
+        {
+            Assert.AreEqual("Address Type", LinkedEntityHelper.GetEntityDisplayName(typeof(AddressType)));
+            Assert.AreEqual("G/L Account", LinkedEntityHelper.GetEntityDisplayName(typeof(Account)));
+
+            var genders = GenderDataSource.GetDataSource(_uow);
+            Assert.AreEqual("Gender Male", LinkedEntityHelper.GetEntityDisplayName(genders.First(p => p.Code == "M")));
+
         }
 
 

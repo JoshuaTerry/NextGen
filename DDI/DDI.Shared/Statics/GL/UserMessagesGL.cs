@@ -60,6 +60,7 @@
         public static string FiscalPeriodStartDate => "Period {0} in fiscal year {1} must start on {2}.";
         public static string NoFiscalPeriodForDate => "No fiscal period defined for {0} in fiscal year {1}.";
         public static string NoFiscalYearForDate => "No fiscal year defined for {0}.";
+        public static string TranDateClosedPeriod => "Transaction date of {0} is for a closed fiscal period.";
 
         public static string FundNoFiscalYear => "Fund has no fiscal year.";
         public static string FundNoFundSegment => "No fund segment specified for fund.";
@@ -86,15 +87,8 @@
 
         public static string NewJournalNoFiscalYear => "A valid fiscal year must be specified when creating a new one-time journal.";
         public static string NewJournalNoBusinessUnit => "A valid business unit must be specified when creating a recurring or template journal.";
-        public static string JournalNoTransactionDate => "{0} has no transaction date.";
-        public static string JournalTransactionDateClosed => "Journal transaction date of {0} is for a closed fiscal period.";
 
-        public static string TransactionNoTranDate => "Transaction #{0} has no transaction date.";
-        public static string TransactionCantGetFund => "Cannot determine fund for transaction #{0}.";
-        public static string TransactionImbalance => "Transaction {0} is out of balance by {1:C2}.";
-        public static string TransactionImbalanceForDate => "Transaction {0} is out of balance by {1:C2} on {2:d}.";
-        public static string TransactionImbalanceForBU => "Transaction {0} is out of balance by {1:C2} for {2} on {3:d}.";
-        public static string TransactionImbalanceForFund => "Transaction {0} is out of balance by {1:C2} for fund {2} on {3:d}.";
+
 
 
     }

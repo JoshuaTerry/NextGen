@@ -37,7 +37,7 @@ namespace DDI.Business.Tests.GL
             _segments = SegmentDataSource.GetDataSource(_uow);
             _accounts = AccountDataSource.GetDataSource(_uow);
 
-            _bl = new AccountLogic(_uow);
+            _bl = _uow.GetBusinessLogic<AccountLogic>();
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
@@ -532,7 +532,7 @@ namespace DDI.Business.Tests.GL
             var destination = CreateAccount(20000.00m, 1000.00m);
             var uow = new Mock<IUnitOfWork>();
             uow.Setup(u => u.Update(It.IsAny<PeriodAmountList>()));
-             
+
             var logic = new AccountLogic(uow.Object);
             logic.MergeAccountBudgets(source, destination);
 

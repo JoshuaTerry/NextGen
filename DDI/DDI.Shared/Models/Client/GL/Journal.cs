@@ -90,6 +90,8 @@ namespace DDI.Shared.Models.Client.GL
         [NotMapped]
         public string CreatedFrom { get; set; }
 
+        public override string DisplayName => JournalNumber.ToString();
+
         #endregion
 
 
