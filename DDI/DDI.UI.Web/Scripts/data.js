@@ -490,10 +490,9 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
     $(modal).find('.savebutton').unbind('click');
 
     $(modal).find('.savebutton').click(function () {
-
-        if (ValidateForm($(modal).attr('class').split(" ")[0]) == false) {
+        if (!ValidateFields(modal)) {
             return;
-        }
+        } 
 
         previousEntity = currentEntity;
         currentEntity = null;
