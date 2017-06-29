@@ -408,7 +408,7 @@ function GetConstituentPrimaryAddress() {
 
                     }
 
-                    $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.State + ', ' + currentaddress[i].Address.PostalCode);
+                    $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.Region2.Name + ', ' + currentaddress[i].Address.PostalCode);
 
                 }
             }
