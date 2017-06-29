@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script type="text/javascript" src="../../Scripts/JournalEntry.js"></script>
     <script type="text/javascript" src="../../Scripts/glaccountselection.js"></script>
+    <script type="text/javascript" src="../../Scripts/attachments.js"></script>
     <link rel="stylesheet" href="../../../CSS/journals.css" />
 
 </asp:Content>
@@ -22,11 +23,15 @@
         <ul>
             <li><a href="JournalDetail.aspx">Journal</a></li>
             <li><a href="~/Pages/Common/Notes.aspx" runat="server">Notes</a></li>
-            <li><a href="~/Pages/Common/Attachments.aspx" runat="server">Attachments</a></li>
+            <li><a href="#tab-attachments">Attachments</a></li>
             <li><a href="JournalCustom.aspx">Awesome Custom Stuff</a></li>
         </ul>
 
+         <div id="tab-attachments" class="scrollable">
+                <h1>Attachments</h1>
+                <div class="attachments"></div>
+         </div>
     </div>
-
+    
     <input type="hidden" class="hidjournalid" />
  </asp:Content>

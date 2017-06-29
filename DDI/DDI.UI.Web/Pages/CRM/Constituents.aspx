@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
-    <script type="text/javascript" src="..\..\Scripts\Notes.js"></script>
+   <%-- <script type="text/javascript" src="..\..\Scripts\Notes.js"></script>--%>
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <script type="text/javascript" src="..\..\Scripts\attachments.js"></script>

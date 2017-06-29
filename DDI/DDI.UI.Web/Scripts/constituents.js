@@ -44,18 +44,6 @@ $(document).ready(function () {
 
 });
 
-//function UploadFiles(callback) {
-
-//    modal = $('.fileuploadmodal').dialog({
-//        closeOnEscape: false,
-//        modal: true,
-//        width: 400,
-//        resizable: false
-//    });
-
-//    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload', callback);
-
-//}
 
 function ApplySystemSettings() {
     

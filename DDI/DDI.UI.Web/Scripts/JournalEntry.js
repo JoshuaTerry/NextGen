@@ -5,10 +5,14 @@ var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
 var businessUnitId = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16'    // testing
 var editMode = ''
 var journalContainer = '.journalbody'
-var entityId = journalId;
-var entityType = NoteEntity[1];
 
-//$(document).ready(function () {
+
+$(document).ready(function () {
+
+    LoadAttachmentsTab()
+
+});
+
 function JournalDetailLoad() {
     $('.editjournal').click(function (e) {
         e.preventDefault()
@@ -46,6 +50,12 @@ function JournalDetailLoad() {
 
     JournalLoad()
     InitNewJournalLineModal()
+   
+}
+
+function LoadAttachmentsTab() {
+    container = $('.attachments');
+    LoadAttachments(container, "journalentrygrid", journalId, null, NoteEntity[1]);
 }
 
 function JournalDisplayMode() {
@@ -134,6 +144,7 @@ function LoadJournalData() {
 
         if (data.Data) {
             if (data.IsSuccessful) {
+                currentEntity = data.Data;
                 $('.journaltype').html(data.Data.JournalDescription)
                 $('.StatusDescription').html(data.Data.StatusDescription)
                 $('.TransactionDate').val(data.Data.TransactionDate)

@@ -1,10 +1,4 @@
 ﻿
-$(document).ready(function () {
-
-    LoadAttachments($('.attachmentscontainer'),'attachmentsgrid', entityId, null, entityType)
-
-});
-
 function LoadAttachments(container, gridcontainername, entityId, noteId, entityType)
 {
     CreateAddFileUploadLink(container,gridcontainername, entityId, noteId, entityType);

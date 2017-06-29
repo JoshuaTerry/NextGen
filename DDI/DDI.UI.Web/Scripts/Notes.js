@@ -1,11 +1,6 @@
-﻿/* 
-   List of entities more or less taken from CustomFields
-   May need to be altered as functionality is expanded
-*/
+﻿
 
 $(document).ready(function () {
-
-    $('.tabscontainer').tabs();
 
     LoadDatePickers()
 

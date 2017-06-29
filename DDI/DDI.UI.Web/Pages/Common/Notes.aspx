@@ -15,9 +15,10 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div id="tab-notes">
-       <div class="tabscontainer inner">
-                <h1>Note Detail<a href="#" title="New" class="newnotesdetailmodallink newbutton"></a></h1>
-                <div class="notedetailsgridcontainer"></div>
+        <h1>Note Detail</h1>
+        <div class="notedetailsgridcontainer">
+            <a href="#" title="New" class="newnotesdetailmodallink newbutton"></a>
         </div>
     </div>
+
 </asp:Content>
