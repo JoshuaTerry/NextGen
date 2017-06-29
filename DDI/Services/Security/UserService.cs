@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using DDI.Shared.Extensions;
+using DDI.Services.General;
 
 namespace DDI.Services.Security
 {
@@ -26,39 +28,39 @@ namespace DDI.Services.Security
             };
         }
 
-        public IDataResponse AddDefaultBusinessUnitToUser(Guid id, Guid defaultbuid)
+        
+        public IDataResponse SyncBusinessUnitsToUser(Guid id, List<Guid> buids)
         {
-            var result = UnitOfWork.GetById<User>(id, u => u.BusinessUnits);
-            var defaultbu = UnitOfWork.GetById<BusinessUnit>(defaultbuid);
+            User result = UnitOfWork.GetById<User>(id, r => r.BusinessUnits);
 
-            if (!result.BusinessUnits.Contains(defaultbu))
+            List<Guid> currentBusinessUnitIds = new List<Guid>();
+            //remove any business units that should not be there
+            foreach (BusinessUnit bu in result.BusinessUnits)
             {
-                result.BusinessUnits.Add(defaultbu);
+                currentBusinessUnitIds.Add(bu.Id);
+
             }
 
-            result.DefaultBusinessUnitId = defaultbuid;
-
-           UnitOfWork.SaveChanges();
-
-            DataResponse<User> response = new DataResponse<User>
-            {
-                Data = result,
-                IsSuccessful = true
-            };
-
-            return response;
-        }
-
-        public IDataResponse AddBusinessUnitToUser(Guid id, Guid buid)
-        {
-            var result = UnitOfWork.GetById<User>(id, u => u.BusinessUnits);
-            var bu = UnitOfWork.GetById<BusinessUnit>(buid);
-
-            if (!result.BusinessUnits.Contains(bu))
-            {
-                result.BusinessUnits.Add(bu);
-                UnitOfWork.SaveChanges();
+            foreach (Guid cbuId in currentBusinessUnitIds)
+            { 
+                if (!buids.Contains(cbuId))
+                {
+                    BusinessUnit bu = UnitOfWork.GetById<BusinessUnit>(cbuId);
+                    result.BusinessUnits.Remove(bu);
+                }
             }
+
+            //add any business units that are not there already
+            foreach (Guid buid in buids)
+            {
+                BusinessUnit bu = UnitOfWork.GetById<BusinessUnit>(buid);
+                if (!result.BusinessUnits.Contains(bu))
+                {
+                    result.BusinessUnits.Add(bu);
+                }
+            }
+
+            UnitOfWork.SaveChanges();
 
             IDataResponse response = new DataResponse<User>
             {
@@ -69,10 +71,24 @@ namespace DDI.Services.Security
             return response;
         }
 
+        public IDataResponse AddGroupToUser(Guid id, Guid groupId)
+        {
+            GroupService groupService = new GroupService(UnitOfWork);
+            groupService.AddUserToGroup(id, groupId);
+
+            IDataResponse response = new DataResponse<Guid>
+            {
+                Data = id,
+                IsSuccessful = true
+            };
+
+            return response;
+        }
+
         private void CheckUser(User user)
         {
             if (user == null)
-            {                
+            {
                 throw new ArgumentNullException("User");
             }
         }
@@ -124,8 +140,8 @@ namespace DDI.Services.Security
         Task<IList<string>> IUserRoleStore<User, Guid>.GetRolesAsync(User user)
         {
             CheckUser(user);
-            var roleIds = user.Roles.Select(ur => ur.RoleId).ToList();              
-            var roles = UnitOfWork.Where<Role>(r => roleIds.Contains(r.Id)).Select(r=>r.Name).ToList();
+            var roleIds = user.Roles.Select(ur => ur.RoleId).ToList();
+            var roles = UnitOfWork.Where<Role>(r => roleIds.Contains(r.Id)).Select(r => r.Name).ToList();
             return Task.FromResult<IList<string>>(roles);
         }
 
@@ -133,7 +149,7 @@ namespace DDI.Services.Security
         {
             CheckUser(user);
 
-            var role = GetRole(roleName); 
+            var role = GetRole(roleName);
             bool result = user.Roles.Any(ur => ur.RoleId == role.Id);
 
             return Task.FromResult<bool>(result);
@@ -178,9 +194,9 @@ namespace DDI.Services.Security
 
         void IDisposable.Dispose()
         {
-            
+
         }
-         
+
         Task<User> IUserStore<User, Guid>.FindByIdAsync(Guid userId)
         {
             var response = base.GetById(userId);
@@ -191,7 +207,7 @@ namespace DDI.Services.Security
         {
             var response = base.GetWhereExpression(u => u.UserName == userName);
             return Task.FromResult<User>(response.Data);
-        }        
+        }
 
         Task IUserStore<User, Guid>.UpdateAsync(User user)
         {

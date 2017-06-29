@@ -19,6 +19,10 @@ a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-ev
 .editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; }
 .newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; }
 
+.actionbuttons { margin-right: 10px; }
+.actionbuttons.editbutton { float: none; background: url('../../Images/edit-16.png') no-repeat; width: 16px; height: 16px; }
+.actionbuttons.deletebutton { display: inline-block; background: url('../../Images/erase-16.png') no-repeat; width: 16px; height: 16px; }
+
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
 

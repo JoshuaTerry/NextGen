@@ -29,7 +29,7 @@ namespace DDI.Shared.Models.Client.Audit
 
         public override string ToString()
         {
-            return string.Format("By {0} on {1}, with {2} ObjectChanges", User, Timestamp, ObjectChanges.Count);
+            return string.Format("By {0} on {1}, with {2} ObjectChanges", User?.DisplayName ?? UserName, Timestamp, ObjectChanges.Count);
         }
     }
 }

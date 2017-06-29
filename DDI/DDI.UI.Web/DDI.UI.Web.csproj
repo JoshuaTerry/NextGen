@@ -96,6 +96,7 @@
     <Content Include="CSS\fileupload\jquery.fileupload-ui.css" />
     <Content Include="CSS\fileupload\jquery.fileupload.css" />
     <Content Include="CSS\fileupload\uploader.css" />
+    <Content Include="CSS\Journals.css" />
     <Content Include="CSS\importwizard.css" />
     <Content Include="CSS\login.css" />
     <Content Include="CSS\registrationconfirmation.css" />
@@ -105,6 +106,8 @@
     <Content Include="Images\OneTimeJournal.gif" />
     <Content Include="Images\RecurringJournal.gif" />
     <Content Include="Images\TemplateJournal.gif" />
+    <Content Include="Images\edit-16.png" />
+    <Content Include="Images\erase-16.png" />
     <Content Include="Images\trashcan-11.png" />
     <Content Include="Pages\Common\Notes.aspx" />
     <Content Include="Pages\GL\Accounting.aspx" />
