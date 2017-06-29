@@ -22,11 +22,9 @@ namespace DDI.Services.GL
 
         public IDataResponse<FiscalYear> Post(FiscalYear entityToSave)
         {
-            var response = base.Add(entityToSave);
-
             SetFiscalPeriods(entityToSave);
-
-            return response;
+            
+            return base.Add(entityToSave);
         }
 
         /// <summary>
@@ -89,45 +87,50 @@ namespace DDI.Services.GL
 
                 CreateFiscalPeriods(entityToSave, currentYear);
 
-                AddAdjustmentPeriod(entityToSave, currentYear);
+                if (entityToSave.HasAdjustmentPeriod)
+                {
+                    entityToSave.NumberOfPeriods += 1;
+                    
+                    AddAdjustmentPeriod(entityToSave, currentYear);
+                }
+
             }
         }
 
         private void CreateFiscalPeriods(FiscalYear entityToSave, int currentYear)
         {
-            switch (entityToSave.NumberOfPeriods)
+            int numberOfMonths = decimal.ToInt32(Math.Floor(12 / (decimal)entityToSave.NumberOfPeriods));
+            int currentMonth = 1;
+
+            for (int index = 1; index <= entityToSave.NumberOfPeriods; index++)
             {
-                case 1:
-                    
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                case 6:
-                    break;
-                case 12:
-                    break;
-                default:
-                    break;
+                int endMonth = currentMonth - 1 + numberOfMonths;
+
+                entityToSave.FiscalPeriods.Add(new FiscalPeriod()
+                {
+                    // FiscalYearId = entityToSave.Id,
+                    PeriodNumber = index,
+                    StartDate = new DateTime(currentYear, currentMonth, 1),
+                    EndDate = new DateTime(currentYear, endMonth, DateTime.DaysInMonth(currentYear, endMonth)),
+                    IsAdjustmentPeriod = false,
+                    Status = Shared.Enums.GL.FiscalPeriodStatus.Open
+                });
+
+                currentMonth += numberOfMonths;
             }
         }
 
         private void AddAdjustmentPeriod(FiscalYear entityToSave, int currentYear)
         {
-            if (entityToSave.HasAdjustmentPeriod)
+            entityToSave.FiscalPeriods.Add(new FiscalPeriod()
             {
-                entityToSave.FiscalPeriods.Add(new FiscalPeriod()
-                {
-                    PeriodNumber = entityToSave.NumberOfPeriods + 1,
-                    StartDate = new DateTime(currentYear, 12, 31),
-                    EndDate = new DateTime(currentYear, 12, 31),
-                    IsAdjustmentPeriod = true,
-                    Status = Shared.Enums.GL.FiscalPeriodStatus.Open
-                });
-            }
+                // FiscalYearId = entityToSave.Id,
+                PeriodNumber = entityToSave.NumberOfPeriods + 1,
+                StartDate = new DateTime(currentYear, 12, 31),
+                EndDate = new DateTime(currentYear, 12, 31),
+                IsAdjustmentPeriod = true,
+                Status = Shared.Enums.GL.FiscalPeriodStatus.Open
+            });
         }
 
         protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
