@@ -109,6 +109,7 @@
     <Content Include="Images\erase-16.png" />
     <Content Include="Images\Messaging-Note-icon.png" />
     <Content Include="Images\trashcan-11.png" />
+    <Content Include="Pages\Common\Attachments.aspx" />
     <Content Include="Pages\Common\ViewDocument.aspx" />
     <Content Include="Pages\Common\Notes.aspx" />
     <Content Include="Pages\GL\Accounting.aspx" />
@@ -355,6 +356,13 @@
     <Compile Include="Code\ApiRoleProvider.cs" />
     <Compile Include="Code\ApiUserProvider.cs" />
     <Compile Include="Code\CustomSiteMapProvider.cs" />
+    <Compile Include="Pages\Common\Attachments.aspx.cs">
+      <DependentUpon>Attachments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Common\Attachments.aspx.designer.cs">
+      <DependentUpon>Attachments.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Common\ViewDocument.aspx.cs">
       <DependentUpon>ViewDocument.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

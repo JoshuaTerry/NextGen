@@ -21,15 +21,12 @@
 
         <ul>
             <li><a href="JournalDetail.aspx">Journal</a></li>
-            <li><a href="JournalNotes.aspx">Notes</a></li>
+            <li><a href="~/Pages/Common/Notes.aspx" runat="server">Notes</a></li>
+            <li><a href="~/Pages/Common/Attachments.aspx" runat="server">Attachments</a></li>
             <li><a href="JournalCustom.aspx">Awesome Custom Stuff</a></li>
         </ul>
 
     </div>
 
     <input type="hidden" class="hidjournalid" />
-
-
-
-
-</asp:Content>
+ </asp:Content>

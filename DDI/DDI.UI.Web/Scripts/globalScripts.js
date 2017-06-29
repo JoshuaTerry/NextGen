@@ -10,6 +10,16 @@ var currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
 var toolbox = null;
 var newContactInformationFields = null;
 
+var NoteEntity = {
+    0: 'Constituent', 1: 'GeneralLedger', 2: 'AccountsPayable', 3: 'AccountsReceivable', 4: 'FixedAssets',
+    5: 'Inventory', 6: 'CashProcessing', 7: 'CashDisbursements', 8: 'CashReceipting', 9: 'Gifts',
+    10: 'NamedFunds', 11: 'CropEvents', 12: 'PlannedGiving', 13: 'Campaigns', 14: 'Investments',
+    15: 'LineOfCredit', 16: 'Loans', 17: 'Portfolio', 18: 'Pools', 19: 'CRM',
+    20: 'OfficeIntegration', 21: 'ProcessManagement', 22: 'ProjectManagement', 23: 'JobProcessing', 24: 'HealthPolicy', 25: 'SystemAdministration',
+    26: 'Accounting'
+};
+
+
 $(document).ready(function () {
 
     $.support.cors = true;
@@ -1844,4 +1854,19 @@ function FormatDateTimeStrings(str) {
     } while (result);    
 
     return str;
+}
+
+
+// function is used to open file upload modal from anywhere.
+function UploadFiles(callback) {
+
+    modal = $('.fileuploadmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        resizable: false
+    });
+
+    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload', callback);
+
 }

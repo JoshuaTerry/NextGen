@@ -5,6 +5,8 @@ var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
 var businessUnitId = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16'    // testing
 var editMode = ''
 var journalContainer = '.journalbody'
+var entityId = journalId;
+var entityType = NoteEntity[1];
 
 //$(document).ready(function () {
 function JournalDetailLoad() {

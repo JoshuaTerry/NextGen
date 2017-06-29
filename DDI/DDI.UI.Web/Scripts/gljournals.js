@@ -164,7 +164,7 @@ function GetSearchParameters() {
 function DisplayJournals(id) {
 
     sessionStorage.setItem("ID", id);
-    location.href = "../Admin/SystemSettings.aspx";
+    location.href = "JournalEntry.aspx";
 
 }
 
@@ -172,15 +172,6 @@ function addnewjournal() {
 
     sessionStorage.setItem("JOURNAL_ID", '');
     location.href = "JournalEntry.aspx";
-
-}
-
-
-
-function DisplayJournal(id) {
-
-    sessionStorage.setItem("id", id);
-    location.href = "/Admin/SystemSettings.aspx";
 
 }
 
