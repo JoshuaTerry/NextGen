@@ -27,10 +27,9 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/filestorage/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            fields = "Id,Name,Extension,Size,Data";
-            return base.GetById(id, fields);
+            fields = "Id,Name,Extension,Size,Data,FileType";
+            return base.GetById(id, fields, null);
         }
-
         [HttpPost]
         [Route("api/v1/filestorage")]
         public IHttpActionResult Post([FromBody] FileStorage entityToSave)
@@ -99,5 +98,6 @@ namespace DDI.WebApi.Controllers.General
         {
             return base.Delete(id);
         }
+
     }
 }

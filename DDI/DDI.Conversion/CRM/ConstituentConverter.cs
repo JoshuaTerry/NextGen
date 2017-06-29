@@ -39,7 +39,9 @@ namespace DDI.Conversion.CRM
             Relationships,
             Tags,
             CustomFieldData,
-            Notes
+            Notes,
+            FileStorage,
+            Attachments,
         }
 
         private string _crmDirectory;
@@ -76,12 +78,28 @@ namespace DDI.Conversion.CRM
             RunConversion(ConversionMethod.Tags, () => ConvertTags(InputFile.CRM_ConstituentTag, false));
             RunConversion(ConversionMethod.CustomFieldData, () => ConvertCustomData(InputFile.CRM_CustomData, false));
             RunConversion(ConversionMethod.Notes, () => ConvertNotes(InputFile.CRM_MemoConstituent, false));
+            RunConversion(ConversionMethod.FileStorage, () => ConvertFileStorage(InputFile.CRM_FileStorageConstituent, false));
+            RunConversion(ConversionMethod.Attachments, () => ConvertAttachments(InputFile.CRM_Attachment, false));
         }
 
         private void ConvertNotes(string filename, bool append)
         {
             var noteConverter = new NoteConverter();
-            noteConverter.ConvertNotes(() => CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)), "Constituent", null, false);
+            noteConverter.ConvertNotes(() => CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)), "Constituent", null, append);
+        }
+
+        private void ConvertFileStorage(string filename, bool append)
+        {
+            var attachmentConverter = new AttachmentConverter();
+
+            attachmentConverter.ConvertFileStorage(() => CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)), append);
+        }
+        private void ConvertAttachments(string filename, bool append)
+        {
+            var attachmentConverter = new AttachmentConverter();
+
+            attachmentConverter.ConvertAttachments(() => CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)),
+                "Constituent", null, append);
         }
 
         /// <summary>
