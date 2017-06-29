@@ -9,7 +9,13 @@ var journalContainer = '.journalbody'
 
 $(document).ready(function () {
 
-    LoadAttachmentsTab()
+    
+
+    $('#attachmentstab').click(function (e) {
+
+        $(".attachments").empty();
+        LoadAttachmentsTab();
+    })
 
 });
 
@@ -55,7 +61,7 @@ function JournalDetailLoad() {
 
 function LoadAttachmentsTab() {
     container = $('.attachments');
-    LoadAttachments(container, "journalentrygrid", journalId, null, NoteEntity[1]);
+    LoadAttachments(container, "journalentrygrid", currentEntity.Id, null, NoteEntity[1]);
 }
 
 function JournalDisplayMode() {

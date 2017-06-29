@@ -23,7 +23,7 @@
         <ul>
             <li><a href="JournalDetail.aspx">Journal</a></li>
             <li><a href="~/Pages/Common/Notes.aspx" runat="server">Notes</a></li>
-            <li><a href="#tab-attachments">Attachments</a></li>
+            <li><a href="#tab-attachments" id="attachmentstab">Attachments</a></li>
             <li><a href="JournalCustom.aspx">Awesome Custom Stuff</a></li>
         </ul>
 
