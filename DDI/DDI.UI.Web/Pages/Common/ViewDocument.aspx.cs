@@ -24,7 +24,6 @@ namespace DDI.UI.Web.Pages.Common
 
             Token token = Token.GetToken();
 
-            //api/v1/roles/user/{username}
             WebRequest request = WebRequest.Create(ConfigurationManager.AppSettings.Get("ApiUrl") + "filestorage/" + Request.QueryString["Id"]);
             request.Method = "GET";
             request.ContentType = "application/x-www-form-urlencoded";
