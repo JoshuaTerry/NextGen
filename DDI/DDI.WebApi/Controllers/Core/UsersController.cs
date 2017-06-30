@@ -149,6 +149,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
+        [Route("api/v1/users/{id}/businessunit")]
         [Route("api/v1/users/{id}/businessunits")]
         public IHttpActionResult GetBusinessUnitsByUserId(Guid id)
         {
