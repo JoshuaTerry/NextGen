@@ -2619,7 +2619,7 @@ function LoadAccountingSettingsSectionSettings() {
 
     CreateSaveAndCancelButtons('saveAccountingSettings', function (e) {
 
-        e.preventDefault();
+        //e.preventDefault();
 
         var data = {
 
@@ -2692,7 +2692,7 @@ function LoadBudgetSectionSettings() {
     var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
     CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {
 
-        e.preventDefault();
+        //e.preventDefault();
 
         var data = {
             Id: $(id).val(),
