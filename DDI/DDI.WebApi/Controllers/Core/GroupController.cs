@@ -54,7 +54,7 @@ namespace DDI.WebApi.Controllers.Core
         }
 
         [HttpGet]
-        [Route("api/v1/group/{groupId}/roles")]
+        [Route("api/v1/groups/{groupId}/roles")]
         public IHttpActionResult GetRolesByGroup(Guid groupId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
