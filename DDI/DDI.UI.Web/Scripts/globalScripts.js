@@ -1725,15 +1725,12 @@ function ValidateFields(containerClass, saveFunction) {
     return validFields;
 }
 
-function ValidateField(index, el) {
+function ValidateField(index, el) { 
     var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
     $("#" + errorId).remove();
     if ($(this).val() === "" || $(this).val() == null) {
-        $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
-        validFields = false;
-    }
-
-    return validFields;
+        $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>'); 
+    }     
 }
 
 function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, maxlength) {
