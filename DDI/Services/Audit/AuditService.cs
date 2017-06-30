@@ -1,15 +1,15 @@
-﻿using System;
+﻿using DDI.Shared;
+using DDI.Shared.Models.Client.Audit;
+using DDI.Shared.Models.Client.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DDI.Shared;
-using DDI.Shared.Models.Client.Audit;
-using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Services
 {
     public class AuditService : IService
-    { 
+    {
         private readonly IUnitOfWork _uow;
 
         public AuditService(IUnitOfWork uow)
@@ -45,22 +45,23 @@ namespace DDI.Services
             response.Data = changes;
             return response;
         }
-       
-        public IDataResponse<List<dynamic>> GetAllFlat(Guid id, DateTime start, DateTime end, IPageable search = null)
+
+        public IDataResponse<List<dynamic>> GetAllFlat(Guid[] ids, DateTime start, DateTime end, IPageable search = null)
         {
             var response = new DataResponse<List<dynamic>>();
+            var stringArray = Array.ConvertAll(ids, x => x.ToString());
             try
             {
                 var results = _uow.GetRepository<ChangeSet>().Entities
                                  .Where(c => c.Timestamp >= start && c.Timestamp <= end)
-                                 .Join(_uow.GetRepository<ObjectChange>().Entities.Where(o => o.EntityId == id.ToString()),
+                                 .Join(_uow.GetRepository<ObjectChange>().Entities.Where(o => stringArray.Contains(o.EntityId)),
                                          cs => cs.Id,
                                          oc => oc.ChangeSetId,
                                          (cs, oc) => new { cs, oc })
                                  .GroupJoin(_uow.GetRepository<PropertyChange>().Entities,
                                          outer => outer.oc.Id,
                                          pc => pc.ObjectChangeId,
-                                         (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc }) 
+                                         (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
                                  .SelectMany(x => x.pc.DefaultIfEmpty(),
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
                                  .Join(_uow.GetRepository<User>().Entities,
@@ -80,17 +81,17 @@ namespace DDI.Services
                                              OldValue = outer.pc.OriginalValue,
                                              NewDisplayName = outer.pc.NewDisplayName,
                                              NewValue = outer.pc.NewValue
-                                         }).Distinct().OrderByDescending(c => c.Timestamp).ToList<dynamic>();
+                                         }).Distinct().OrderBy(c => c.EntityType).OrderByDescending(c => c.Timestamp).ToList<dynamic>();
 
                 response.Data = results;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.IsSuccessful = false;
                 response.ErrorMessages.Add(ex.Message);
             }
 
             return response;
-        }       
+        }
     }
 }

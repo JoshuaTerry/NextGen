@@ -142,6 +142,8 @@ function NewNoteDetailsModal() {
 
 function LoadNoteDetails(id) {
 
+    $('.attachmentscontainer').empty()
+
     MakeServiceCall('GET', 'notes/' + id, null, function (data) {
 
         LoadSelectedNoteTopics(id);
@@ -161,7 +163,7 @@ function LoadNoteDetails(id) {
         $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
         $('.nd-CreatedOn').text(FormatJSONDate(data.Data.CreatedOn)),
         $('.nd-UpdatedOn').text(FormatJSONDate(data.Data.LastModifiedOn))
-
+        LoadAttachments($('.attachmentscontainer'), "notesattachments", currentEntity.Id , id);
         if (data.Data.PrimaryContact != null) {
             var constituentLabel = data.Data.PrimaryContact.ConstituentNumber + ": " + data.Data.PrimaryContact.Name + ", " + data.Data.PrimaryContact.PrimaryAddress;
             $('.rs-Constituent1Information').val(constituentLabel);
@@ -377,3 +379,101 @@ function CreateMultiSelectTopics(topics, container) {
 
 /* End NoteTopics */
 
+/* Loading Notes Modal Independently from Notes grid*/
+
+function LoadNotesModal(id, cancelCallBack, saveCallBack)
+{
+
+
+    PopulateDropDown('.nd-Category', 'notecategories/', '', '');
+    PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
+    PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
+
+    //e.preventDefault();
+
+    var modal = $('.notesdetailmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 750,
+        resizable: false
+    });
+
+    LoadNoteDetails(id);
+    
+    $('.noteTopicSelectImage').unbind('click');
+
+    $('.noteTopicSelectImage').click(function (e) {
+
+        SaveNewNoteTopics(modal);
+
+    });
+
+    $('.cancelnotesmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+        ClearNoteTopicTagBox(modal);
+
+        $('.editnoteinfo').hide();
+
+        $('.nd-CreatedBy').text('');
+        $('.nd-UpdatedBy').text('');
+        $('.nd-CreatedOn').text('');
+        $('.nd-UpdatedOn').text('');
+
+        if (cancelCallBack)
+        {
+            cancelCallBack();
+        }
+
+    });
+
+    $('.savenotedetails').unbind('click');
+
+    $('.savenotedetails').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = GetNoteDetailsToSave(modal);
+
+        MakeServiceCall('POST', 'notes', item, function (data) {
+
+            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function () {
+
+                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
+
+            }, function (xhr, status, err) {
+
+                DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+
+            });
+
+            DisplaySuccessMessage('Success', 'Note Details saved successfully.');
+
+            CloseModal(modal);
+
+            $('.editnoteinfo').hide();
+
+            $('.nd-CreatedBy').text('');
+            $('.nd-UpdatedBy').text('');
+            $('.nd-CreatedOn').text('');
+            $('.nd-UpdatedOn').text('');
+
+            ClearNoteTopicTagBox(modal);
+
+            LoadNoteDetailsGrid();
+
+            if (saveCallBack) {
+                saveCallBack();
+            }
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+
+        });
+
+    });
+}
