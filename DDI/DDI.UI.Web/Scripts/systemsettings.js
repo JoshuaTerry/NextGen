@@ -3201,6 +3201,8 @@ function PopulateFiscalYearContextMenu() {
     });
 }
 
+//close, reopen, reclose fiscal year
+
 function CloseFiscalYearModal(option) {
     var fiscalYearId = '';
     var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
@@ -3214,7 +3216,7 @@ function CloseFiscalYearModal(option) {
         fiscalYearId = selectedRow.Id;
     }
     $('.closefiscalyearmodal').prop('title', option + ' Fiscal Year' );
-    $('.selectfiscalyearlabel').html('Fiscal Year to ' + option);
+    $('.selectfiscalyearlabel').html('Fiscal Year to ' + option + ":");
 
     modal = $('.closefiscalyearmodal').dialog({
         closeOnEscape: false,
@@ -3235,41 +3237,142 @@ function CloseFiscalYearModal(option) {
 
     $('.okclosefiscalyearmodalbutton').click(function () {
 
-        CloseFiscalYear(modal, option)
+        CloseFiscalYearValidate(modal, option)
 
     });
 
     $('.closefiscalyearprogresslabel').html('Please wait... Now loading fiscal years');
     PopulateDropDown('.fc-FiscalYear', 'fiscalyears/ledger/' + $('.LedgerId').val() + '?fields=Id,DisplayName', '', '', fiscalYearId, '', function () {
-        CloseFiscalYearContinue(modal, option)
+        CloseFiscalYearDropDownComplete(modal, option)
     })
 
 }
 
-function CloseFiscalYearContinue(element, data) {
+function CloseFiscalYearDropDownComplete(element, data) {
     $('.closefiscalyearprogresslabel').html('');
 }
 
-function CloseFiscalYear(modal, option) {
+function CloseFiscalYearValidate(modal, option) {
     if ($('.fc-FiscalYear').val() === '') {
         DisplayErrorMessage('Error', 'You must select a fiscal year first.');
         return;
     }
-    $('.closefiscalyearprogresslabel').html('Please wait... Now processing fiscal year');
-    switch (option) {
-        case 'Close':
-            CloseFiscalYear()
-            break
-        case 'Reopen':
-            ReopenFiscalYear
-            break
-        case 'Reclose':
-            break
-    }
+    $('.closefiscalyearprogresslabel').html('Please wait... Now updating fiscal year');
+    CloseFiscalYearUpdate(modal, option)
 
-    CloseModal(modal);
 }
 
+function CloseFiscalYearUpdate(modal, option) {
+    var item = null;
+    var status = 0;
+    switch (option) {
+        case 'Close':
+            status = 'closed'
+            break;
+        case 'Reopen':
+            status = 'reopen'
+            break;
+        case 'Reclose':
+            status = 'closed'
+            break;
+    }
+    item = {
+        Id: $('.fc-FiscalYear').val(),
+        Status: status
+    }
+
+    MakeServiceCall('PATCH', 'fiscalyears/' + $('.fc-FiscalYear').val(), JSON.stringify(item), function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+                DisplaySuccessMessage('Success', 'Fiscal year update successful.');
+                CloseModal(modal);
+            }
+
+        }
+
+    }, null);
+}
+
+//new fiscal year
+
+function NewFiscalYearModal() {
+    var fiscalYearId = '';
+    var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
+    if (!dataGrid) {
+        DisplayErrorMessage('Error', 'You must select a ledger first.');
+        return;
+    }
+    info = dataGrid.getSelectedRowsData();
+    if (info.length > 0) {
+        selectedRow = info[0];
+        fiscalYearId = selectedRow.Id;
+    }
+    modal = $('.newfiscalyearmodal').dialog({
+        NewOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    $('.cancelNewfiscalyearmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.okNewfiscalyearmodalbutton').unbind('click');
+
+    $('.okNewfiscalyearmodalbutton').click(function () {
+
+        NewFiscalYearValidate(modal, option)
+
+    });
+
+    $('.Newfiscalyearprogresslabel').html('Please wait... Now loading fiscal years');
+    PopulateDropDown('.fc-FromFiscalYear', 'fiscalyears/ledger/' + $('.LedgerId').val() + '?fields=Id,DisplayName', '', '', fiscalYearId, '', function () {
+        NewFiscalYearDropDownComplete(modal)
+    })
+
+}
+
+function NewFiscalYearDropDownComplete(element, data) {
+    $('.Newfiscalyearprogresslabel').html('');
+}
+
+function NewFiscalYearValidate(modal) {
+    if ($('.fc-FiscalYear').val() === '') {
+        DisplayErrorMessage('Error', 'You must select a fiscal year first.');
+        return;
+    }
+    $('.newfiscalyearprogresslabel').html('Please wait... Now copying fiscal year');
+
+    var item = null;
+    item = {
+        Name: $('.fn-NewFiscalYear').val(),
+        //StartDate: $('.fn-StartDate').val(),
+        //CopyInactiveAccounts: if ($('.fn-CopyInactiveAccounts').val()) === true)
+        //    value = 'true';
+        //else
+        //    value = 'false';
+        //break;
+    }
+
+    MakeServiceCall('POST', 'fiscalyears/' + $('.fn-FromFiscalYear').val() + '/copy', JSON.stringify(item), function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+                DisplaySuccessMessage('Success', 'Fiscal year copy successful.');
+                CloseModal(modal);
+            }
+
+        }
+
+    }, null);
+
+}
 
 /* GENERAL LEDGER FUND SETTINGS */
 function LoadFundAccountingSectionSettings() {

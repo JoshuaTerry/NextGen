@@ -1338,4 +1338,40 @@
         </div>
     </div>
 
+    <div class="newfiscalyearmodal" title="Create New Fiscal Year" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Copy From Fiscal Year:</label>
+                <select class="fn-FromFiscalYear">
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>New Fiscal Year:</label>
+                <input type="text" class="fn-NewFiscalYear editable required" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Start Date:</label>
+                <input type="text" class="fn-StartDate editable date datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Copy all inactive accounts to the new fiscal year.</label>
+                <input type="checkbox" class="fn-CopyInactiveAccounts" />
+            </div>
+
+            <div class="fieldblock">
+                <label class="copyfiscalyearprogresslabel"></label>
+            </div>
+
+            <div class="modalbuttons">
+                <input type="button" class="okcopyfiscalyearmodalbutton" value="OK" />
+                <a href="#" class="cancelcopyfiscalyearmodal">Cancel</a>
+            </div>
+        </div>
+    </div>
+
 </asp:Content>
