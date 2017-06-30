@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.CP
 {
-    [Table("ReceiptBatchGroup")]
+    [Table("ReceiptBatchType")]
     public class ReceiptBatchType : AuditableEntityBase, ICodeEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
+
         public bool IsActive { get; set; }
 
         [Index("IX_Code", IsUnique = true), MaxLength(128)]
@@ -17,8 +18,9 @@ namespace DDI.Shared.Models.Client.CP
 
         [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
-        public Guid BankAccountId { get; set; }
-        [ForeignKey("BankAccountId")]
+
+        public Guid? BankAccountId { get; set; }
+        [ForeignKey(nameof(BankAccountId)]
         public BankAccount BankAccount { get; set; }
 
     }

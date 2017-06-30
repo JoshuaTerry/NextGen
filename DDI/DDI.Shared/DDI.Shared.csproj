@@ -130,7 +130,6 @@
     <Compile Include="Enums\CP\ReceiptBatchDistributionMode.cs" />
     <Compile Include="Enums\CP\ReceiptBatchStatus.cs" />
     <Compile Include="Enums\CP\ReceiptBatchEntryMode.cs" />
-    <Compile Include="Models\Client\CP\ETFFormatCode.cs" />
     <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
     <Compile Include="Enums\CP\EFTAccountType.cs" />

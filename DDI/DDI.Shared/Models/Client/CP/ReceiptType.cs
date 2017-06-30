@@ -6,12 +6,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Shared.Models.Client.CP
 {
-    [Table("ReceiptTypeCode")]
+    [Table("ReceiptType")]
     public class ReceiptType : AuditableEntityBase, ICodeEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
+
         public bool IsActive { get; set; }
 
         [Index("IX_Code", IsUnique = true), MaxLength(128)]
@@ -20,8 +21,6 @@ namespace DDI.Shared.Models.Client.CP
         [Index("IX_Name", IsUnique = true), MaxLength(128)]
         public string Name { get; set; }
 
-        public Guid CategoryId { get; set; }
-        [ForeignKey("CategoryId")]
         public ReceiptCategory Category { get; set; }
     }
 }
