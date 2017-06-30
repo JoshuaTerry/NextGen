@@ -10,7 +10,7 @@ namespace DDI.Shared.Models.Client.Core
         public override Guid Id { get; set; }
 
         [MaxLength(256)]
-        public string Name { get; set; }        
+        public string Name { get; set; }
 
         [MaxLength(8)]
         public string Extension { get; set; }
@@ -26,8 +26,7 @@ namespace DDI.Shared.Models.Client.Core
 
         [NotMapped]
         public override string DisplayName => $"{Name}.{Extension}";
-
-        [NotMapped]
+        [MaxLength(128)]
         public string FileType { get; set; }
     }
 }
