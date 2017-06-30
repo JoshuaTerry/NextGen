@@ -101,7 +101,7 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        protected IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, string routeName, IPageable search, string fields = null, UrlHelper urlHelper = null)
+        protected IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, IPageable search, string fields = null, UrlHelper urlHelper = null)
             where T1 : class
         {
             try

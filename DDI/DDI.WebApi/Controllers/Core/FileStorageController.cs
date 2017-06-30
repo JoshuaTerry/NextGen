@@ -20,7 +20,7 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             fields = "Id,Name,Extension,Size";
-            return base.GetAll(RouteNames.Note, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]

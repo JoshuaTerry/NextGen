@@ -32,7 +32,7 @@ namespace DDI.WebApi.Controllers.General
 
 
         [HttpDelete]
-        [Route("api/v1/attachments/{id}", Name = RouteNames.Attachment + RouteVerbs.Delete)]
+        [Route("api/v1/attachments/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             try
@@ -49,7 +49,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/attachments", Name = RouteNames.Attachment)]
+        [Route("api/v1/attachments")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax,
                                         int? offset = SearchParameters.OffsetDefault,
                                         string orderBy = OrderByProperties.DisplayName,
@@ -62,18 +62,18 @@ namespace DDI.WebApi.Controllers.General
                 OrderBy = orderBy
             };
 
-            return base.GetAll(RouteNames.Attachment, search, fields);
+            return base.GetAll(search, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/attachments/{id}", Name = RouteNames.Attachment + RouteVerbs.Get)]
+        [Route("api/v1/attachments/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/attachments/entity/{entityId}", Name = RouteNames.Entity + RouteNames.Attachment)]
+        [Route("api/v1/attachments/entity/{entityId}")]
         public IHttpActionResult GetByEntityId(Guid entityId)
         {
             try
@@ -91,7 +91,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/attachments/notes/{noteId}", Name = RouteNames.Attachment + RouteNames.Note )]
+        [Route("api/v1/attachments/notes/{noteId}")]
         public IHttpActionResult GetAttachmensByNoteId( Guid noteId)
         {
             try
@@ -110,14 +110,14 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpPatch]
-        [Route("api/v1/attachments/{id}", Name = RouteNames.Attachment + RouteVerbs.Patch)]
+        [Route("api/v1/attachments/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpPost]
-        [Route("api/v1/attachments", Name = RouteNames.Attachment + RouteVerbs.Post)]
+        [Route("api/v1/attachments")]
         public IHttpActionResult Post([FromBody] Attachment entityToSave)
         {
             return base.Post(entityToSave);

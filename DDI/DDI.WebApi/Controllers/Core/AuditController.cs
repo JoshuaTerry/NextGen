@@ -66,7 +66,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/audit/{id}", Name = RouteNames.Audit)]
+        [Route("api/v1/audit/{id}")]
         public IHttpActionResult GetAuditInfo(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try

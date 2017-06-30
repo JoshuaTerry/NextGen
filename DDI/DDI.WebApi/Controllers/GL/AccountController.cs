@@ -22,10 +22,7 @@ namespace DDI.WebApi.Controllers.GL
     {
         protected new IAccountService Service => (IAccountService)base.Service;
         public AccountController(IAccountService service) : base(service) { }
-
-
-        private const string ROUTENAME_GETALLLEDGERACCOUNTS = RouteNames.Account + RouteNames.FiscalYear + RouteVerbs.Get;
-
+        
         private string _fieldsForAll = null;
 
         protected override string FieldsForList => $"{nameof(Account.Id)},{nameof(Account.AccountNumber)},{nameof(Account.Name)}";
@@ -78,7 +75,7 @@ namespace DDI.WebApi.Controllers.GL
 
             var glAccountSelectionService = Factory.CreateService<GLAccountSelectionService>();
 
-            return FinalizeResponse(glAccountSelectionService.GetAllWhereExpression((a=> a.FiscalYearId == fiscalYearId && a.AccountNumber.Contains(name)), search), null, search, null, null);
+            return FinalizeResponse(glAccountSelectionService.GetAllWhereExpression((a=> a.FiscalYearId == fiscalYearId && a.AccountNumber.Contains(name)), search), search, null, null);
         }
 
         [HttpGet]
@@ -89,14 +86,14 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/accounts/{id}", Name = RouteNames.Account + RouteVerbs.Get)]
+        [Route("api/v1/accounts/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/accounts/activity/{id}", Name = RouteNames.AccountActivity + RouteVerbs.Get)]
+        [Route("api/v1/accounts/activity/{id}")]
         public IHttpActionResult GetAccountActivity(Guid id)
         {   
             return base.CustomAction(() => Service.GetAccountActivity(id));
@@ -120,7 +117,7 @@ namespace DDI.WebApi.Controllers.GL
                 IService<GLAccountSelection> _glAccountService = Factory.CreateService<IService<GLAccountSelection>>();
 
                 var accounts = _glAccountService.GetAllWhereExpression(l => l.FiscalYearId == fiscalYearId && l.AccountNumber == accountNumber, search);
-                return FinalizeResponse(accounts, ROUTENAME_GETALLLEDGERACCOUNTS, search, null);
+                return FinalizeResponse(accounts, search, null);
             }
             catch (Exception ex)
             {
@@ -130,7 +127,7 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/accounts/fiscalyear/{id}", Name = ROUTENAME_GETALLLEDGERACCOUNTS)]
+        [Route("api/v1/accounts/fiscalyear/{id}")]
         public HttpResponseMessage GetAccountSelectorAccounts(Guid Id, DataSourceLoadOptions loadOptions)
         {
             try
@@ -148,13 +145,13 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpPost]
-        [Route("api/v1/accounts", Name = RouteNames.Account + RouteVerbs.Post)]
+        [Route("api/v1/accounts")]
         public IHttpActionResult Post([FromBody] Account item)
         {
             return base.Post(item);
         }
 
-        [Route("api/v1/accounts/{sourceAccountId}/merge/{destinationAccountId}", Name = RouteNames.AccountMerge + RouteVerbs.Post)]
+        [Route("api/v1/accounts/{sourceAccountId}/merge/{destinationAccountId}")]
         public IHttpActionResult Post(Guid sourceAccountId, Guid destinationAccountId)
         {
             var response = Service.Merge(sourceAccountId, destinationAccountId);
@@ -162,14 +159,14 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpPatch]
-        [Route("api/v1/accounts/{id}", Name = RouteNames.Account + RouteVerbs.Patch)]
+        [Route("api/v1/accounts/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/accounts/{id}", Name = RouteNames.Account + RouteVerbs.Delete)]
+        [Route("api/v1/accounts/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

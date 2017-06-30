@@ -25,7 +25,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Route("api/v1/taggroups")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
         {
-            return base.GetAll(null, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
