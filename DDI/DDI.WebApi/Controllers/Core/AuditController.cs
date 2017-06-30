@@ -45,7 +45,7 @@ namespace DDI.WebApi.Controllers.General
             }
         }
         [HttpGet]
-        [Route("api/v1/audit/flat/multiple", Name = "AuditFlat")]
+        [Route("api/v1/audit/flat/multiple", Name = "AuditFlatMultiple")]
         public IHttpActionResult GetAuditFlatMultiple([FromUri]Guid[] ids, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try

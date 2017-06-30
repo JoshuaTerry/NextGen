@@ -1,14 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/TabbedContent.Master" AutoEventWireup="true" CodeBehind="JournalDetail.aspx.cs" Inherits="DDI.UI.Web.Pages.GL.JournalDetail" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-            JournalDetailLoad();
-        });
-
-    </script>
+    
+    <script type="text/javascript" src="../../Scripts/journaldetail.js"></script>
 
 </asp:Content>
 
@@ -18,10 +12,6 @@
 
         <h1 class="journaltype"></h1>
 
-        <div class="editcontrols">
-            <a href="#" class="editjournal editbutton">Edit</a>
-        </div>
-
         <div class="editcontainer">
             <div class="fieldblock">
                 <label class="inline">Status: </label>
@@ -30,16 +20,18 @@
 
             <div class="threecolumn">
 
-                <div class="fieldblock">
+                <div>
                     <h3>Transaction Date:</h3>
-                    <input type="text" class="TransactionDate editable datepicker" />
-
-                    <div>
+                    <div class="fieldblock">
+                        <input type="text" class="TransactionDate editable datepicker" />
+                    </div>
+                    
+                    <div class="fieldblock">
                         <input id="ReverseJournal" type="checkbox" class="reversejournal editable" />
                         <label for="ReverseJournal" class="inline">Reverse this journal at a later date: </label>
                     </div>
 
-                    <div>
+                    <div class="fieldblock reverseondatecontainer" style="display: none;">
                         <label>Reverse on:</label>
                         <input type="text" class="ReverseOnDate editable date datepicker" />
                     </div>
@@ -124,11 +116,6 @@
                 <div class="journallinegridcontainer">
                     <div class="journallinegrid"></div>
                 </div>
-            </div>
-
-            <div class="savejournalbuttons hidebuttons floatright">
-                <input type="button" class="savejournal" value="Save" />
-                <a href="#" class="cancelsavejournal">Cancel</a>
             </div>
 
 
