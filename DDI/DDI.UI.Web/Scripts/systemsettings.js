@@ -2604,6 +2604,9 @@ function LoadAccountingSettingsSectionSettings() {
             
         }
 
+        $('.hidLedgerId').val($('.as-ledgerselect').val());
+        ShowAuditData($('.hidLedgerId').val());
+        LoadAccountingSettings($('.hidLedgerId').val());
 
      });
 
