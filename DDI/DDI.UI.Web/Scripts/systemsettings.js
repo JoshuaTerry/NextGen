@@ -2693,10 +2693,7 @@ function LoadBudgetSectionSettings() {
     CreateBasicFieldBlock('What If Budget Name: ', '<input>', 'whatifBudgetName', container, true, 128);
      
     var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
-    CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {
-
-        e.preventDefault();
-
+    CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {                 
         var data = {
             Id: $(id).val(),
             WorkingBudgetName: $('.workingBudgetName').val(),
