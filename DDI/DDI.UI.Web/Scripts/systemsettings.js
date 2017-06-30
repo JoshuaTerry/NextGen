@@ -2589,14 +2589,23 @@ function LoadAccountingSettingsSectionSettings() {
     // Select the ledger
     CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer, true);
 
-    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '<Please Select>', '', '', function () {
+    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '<Please Select>', null, '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
         ShowAuditData($('.hidLedgerId').val());
         LoadAccountingSettings($('.hidLedgerId').val());
 
 
-    }, null);
+    }, function (element, data) {
+
+        if (data.TotalResults > 1) {
+
+            $('.as-ledgerselect').val(data.Data[0].Id);
+            
+        }
+
+
+     });
 
     // fiscal year
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer, true);
@@ -2610,9 +2619,8 @@ function LoadAccountingSettingsSectionSettings() {
     // disable or enable approvals for journals
     CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer, false);
 
-    CreateSaveAndCancelButtons('saveAccountingSettings', function (e) {
+    CreateSaveAndCancelButtons('saveAccountingSettings', function () {
 
-        e.preventDefault();
 
         var data = {
 
@@ -2631,9 +2639,10 @@ function LoadAccountingSettingsSectionSettings() {
         }, null);
 
 
-    }, 'cancel', function (e) {
-        e.preventDefault();
+    }, 'cancel', function () {
+
         LoadAccountingSettings($('.hidLedgerId').val());
+
     },
 
     acctsettingscontainer);
