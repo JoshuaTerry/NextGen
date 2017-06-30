@@ -205,6 +205,11 @@ namespace DDI.Business.Core
                         }
 
                         BalanceInfo balanceInfo = balances.GetValueOrDefault(transaction.TransactionDate.Value);
+                        if (balanceInfo == null)
+                        {
+                            balanceInfo = new BalanceInfo();
+                            balances[transaction.TransactionDate.Value] = balanceInfo;
+                        }
 
                         if (transaction.DebitAccountId != null)
                         {
@@ -439,6 +444,7 @@ namespace DDI.Business.Core
                                 EntityType = entityType,
                                 ParentEntityId = entity.Id,
                                 Relationship = EntityTransactionRelationship.Owner,
+                                Transaction = tran,
                                 TransactionId = tran.Id
                             };
                             innerUOW.Insert(entityTran);
@@ -452,6 +458,7 @@ namespace DDI.Business.Core
                                 EntityType = entityLineType,
                                 ParentEntityId = tran.EntityLine.Id,
                                 Relationship = EntityTransactionRelationship.OwnerLine,
+                                Transaction = tran,
                                 TransactionId = tran.Id
                             };
                             innerUOW.Insert(entityTran);

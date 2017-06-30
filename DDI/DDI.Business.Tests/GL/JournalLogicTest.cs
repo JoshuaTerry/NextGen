@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DDI.Business.Core;
 using DDI.Business.GL;
 using DDI.Business.Tests.GL.DataSources;
 using DDI.Shared;
@@ -127,6 +128,9 @@ namespace DDI.Business.Tests.GL
                                          p.DebitAccount.FiscalYear.Ledger.Code == BusinessUnitDataSource.UNIT_CODE2 &&
                                          p.Amount == 100m), "Tran for line 2 due to other unit.");
 
+            var tranLogic = _uow.GetBusinessLogic<TransactionLogic>();
+            string result = tranLogic.ValidateTransactions(trans);
+            Assert.IsNull(result, $"Transactions validation error: {result}");
         }
 
 
