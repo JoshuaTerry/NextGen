@@ -83,6 +83,10 @@
     <Compile Include="Migrations\Client\201706262045123_TransactionIndex.Designer.cs">
       <DependentUpon>201706262045123_TransactionIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706301616290_FileStorageChange.cs" />
+    <Compile Include="Migrations\201706301616290_FileStorageChange.Designer.cs">
+      <DependentUpon>201706301616290_FileStorageChange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201706162112069_Initial.cs" />
     <Compile Include="Migrations\Client\201706162112069_Initial.Designer.cs">
       <DependentUpon>201706162112069_Initial.cs</DependentUpon>
@@ -129,6 +133,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\Client\201706262045123_TransactionIndex.resx">
       <DependentUpon>201706262045123_TransactionIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706301616290_FileStorageChange.resx">
+      <DependentUpon>201706301616290_FileStorageChange.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201706162112069_Initial.resx">
       <DependentUpon>201706162112069_Initial.cs</DependentUpon>

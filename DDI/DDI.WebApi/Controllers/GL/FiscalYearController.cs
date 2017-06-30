@@ -17,11 +17,7 @@ namespace DDI.WebApi.Controllers.GL
     public class FiscalYearController : GenericController<FiscalYear>
     {
         public FiscalYearController(IService<FiscalYear> service) : base(service) { }
-
-        private const string ROUTENAME_GETALLBYLEDGER = RouteNames.Ledger + RouteNames.FiscalYear + RouteVerbs.Get;
-        private const string ROUTENAME_GETALLBYUNIT = RouteNames.BusinessUnit + RouteNames.FiscalYear + RouteVerbs.Get;
-        private const string ROUTENAME_GETYEARFOROTHERBUSINESSUNIT = RouteNames.BusinessUnit + RouteNames.FiscalYear + "Id" + RouteVerbs.Get;
-
+        
         private string _fieldsForAll = null;
 
         protected override string FieldsForList => $"{nameof(FiscalYear.Id)},{nameof(FiscalYear.Name)},{nameof(FiscalYear.Status)}";
@@ -50,8 +46,8 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/fiscalyears/ledger/{ledgerId}", Name = RouteNames.FiscalYear + RouteNames.Ledger + RouteVerbs.Get)]
-        [Route("api/v1/ledgers/{ledgerId}/fiscalyears", Name = ROUTENAME_GETALLBYLEDGER)]
+        [Route("api/v1/fiscalyears/ledger/{ledgerId}")]
+        [Route("api/v1/ledgers/{ledgerId}/fiscalyears")]
         public IHttpActionResult GetAllByLedgerId(Guid ledgerId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = "all")
         {
             try
@@ -60,7 +56,7 @@ namespace DDI.WebApi.Controllers.GL
                 fields = ConvertFieldList(fields, FieldsForList);
                 var result = Service.GetAllWhereExpression(fy => fy.LedgerId == ledgerId, search, fields);
 
-                return FinalizeResponse(result, ROUTENAME_GETALLBYLEDGER, search, fields);
+                return FinalizeResponse(result, search, fields);
             }
             catch (Exception ex)
             {
@@ -70,14 +66,14 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/businessunits/{unitId}/fiscalyears/{fiscalYearId}", Name = ROUTENAME_GETYEARFOROTHERBUSINESSUNIT)]
+        [Route("api/v1/businessunits/{unitId}/fiscalyears/{fiscalYearId}")]
         public IHttpActionResult GetYearForOtherBusinessUnit(Guid unitId, Guid fiscalYearId, string fields = null)
         {
             try
             {
                 var result = ((IFiscalYearService)Service).GetYearForOtherBusinessUnit(unitId, fiscalYearId);
 
-                return FinalizeResponse(result, ROUTENAME_GETYEARFOROTHERBUSINESSUNIT, PageableSearch.Default, ConvertFieldList(fields, FieldsForSingle));
+                return FinalizeResponse(result, PageableSearch.Default, ConvertFieldList(fields, FieldsForSingle));
             }
             catch (Exception ex)
             {
@@ -93,7 +89,7 @@ namespace DDI.WebApi.Controllers.GL
             {
                 var result = Service.GetWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId && fy.Id == fy.Ledger.DefaultFiscalYearId);
 
-                return FinalizeResponse(result, ConvertFieldList(fields, FieldsForSingle), null);
+                return FinalizeResponse(result, ConvertFieldList(fields, FieldsForSingle));
             }
             catch(Exception ex)
             {
@@ -103,8 +99,8 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/fiscalyears/businessunit/{unitId}", Name = RouteNames.FiscalYear + RouteNames.BusinessUnit + RouteVerbs.Get)]
-        [Route("api/v1/businessunits/{unitId}/fiscalyears", Name = ROUTENAME_GETALLBYUNIT)]
+        [Route("api/v1/fiscalyears/businessunit/{unitId}")]
+        [Route("api/v1/businessunits/{unitId}/fiscalyears")]
         public IHttpActionResult GetAllByBusinessUnitId(Guid unitId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             try
@@ -113,7 +109,7 @@ namespace DDI.WebApi.Controllers.GL
                 fields = ConvertFieldList(fields, FieldsForList);
                 var result = Service.GetAllWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId, search, fields);
 
-                return FinalizeResponse(result, ROUTENAME_GETALLBYUNIT, search, fields);
+                return FinalizeResponse(result, search, fields);
             }
             catch (Exception ex)
             {
@@ -123,35 +119,35 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/fiscalyears/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Get)]
+        [Route("api/v1/fiscalyears/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/fiscalyears", Name = RouteNames.FiscalYear + RouteVerbs.Post)]
+        [Route("api/v1/fiscalyears")]
         public IHttpActionResult Post([FromBody] FiscalYear entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPost]
-        [Route("api/v1/fiscalyears/{sourceFiscalYearId}/copy", Name = RouteNames.FiscalYear + RouteVerbs.Post + RouteNames.Copy)]
+        [Route("api/v1/fiscalyears/{sourceFiscalYearId}/copy")]
         public IHttpActionResult Copy(Guid sourceFiscalYearId, [FromBody] FiscalYearTemplate newFiscalYear)
         {
             return FinalizeResponse(((FiscalYearService)Service).CopyFiscalYear(sourceFiscalYearId, newFiscalYear), FieldsForSingle);
         }
 
         [HttpPatch]
-        [Route("api/v1/fiscalyears/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Patch)]
+        [Route("api/v1/fiscalyears/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
-        [Route("api/v1/fiscalyears/{id}", Name = RouteNames.FiscalYear + RouteVerbs.Delete)]
+        [Route("api/v1/fiscalyears/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

@@ -2642,7 +2642,9 @@ function LoadAccountingSettingsSectionSettings() {
         }, null);
 
 
-    }, 'cancel', function () {
+    }, 'cancel', function (e) {
+
+        e.preventDefault();
 
         LoadAccountingSettings($('.hidLedgerId').val());
 

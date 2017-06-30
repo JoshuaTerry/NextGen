@@ -43,7 +43,7 @@ namespace DDI.WebApi.Controllers.Core
         [Route("api/v1/groups")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
         {
-            return base.GetAll(null, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
@@ -69,7 +69,7 @@ namespace DDI.WebApi.Controllers.Core
                     IsSuccessful = true
                 };
 
-                return FinalizeResponse<Role>(response, "", search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse<Role>(response, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -94,7 +94,7 @@ namespace DDI.WebApi.Controllers.Core
                     IsSuccessful = true
                 };
 
-                return FinalizeResponse<User>(response, "", search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse<User>(response, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {

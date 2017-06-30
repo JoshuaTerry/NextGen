@@ -55,7 +55,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/businessdate", Name = RouteNames.BusinessDate)]
+        [Route("api/v1/businessdate")]
         public IHttpActionResult Get()
         {
             try

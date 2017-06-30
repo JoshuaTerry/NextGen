@@ -344,9 +344,6 @@
     <Compile Include="Statics\SearchParameters.cs" />
     <Compile Include="Statics\CRM\UserMessagesCRM.cs" />
     <Compile Include="Statics\OrderByProperties.cs" />
-    <Compile Include="Statics\RouteRelationships.cs" />
-    <Compile Include="Statics\RouteVerbs.cs" />
-    <Compile Include="Statics\RouteNames.cs" />
     <Compile Include="Statics\UserMessages.cs" />
     <Compile Include="TaskScheduler.cs" />
     <Compile Include="ValidationException.cs" />

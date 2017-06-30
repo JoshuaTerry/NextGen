@@ -20,7 +20,7 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             fields = "Id,Name,Extension,Size";
-            return base.GetAll(RouteNames.Note, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
@@ -28,7 +28,7 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             fields = "Id,Name,Extension,Size,Data,FileType";
-            return base.GetById(id, fields, null);
+            return base.GetById(id, fields);
         }
         [HttpPost]
         [Route("api/v1/filestorage")]
