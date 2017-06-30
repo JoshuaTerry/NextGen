@@ -2581,15 +2581,34 @@ function LoadAccountingSettingsSectionSettings() {
 
     $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
 
+
+    // Audit Link
+    $('<a>').text('Audit History').attr('href', '#').attr('type', 'hidden').addClass('newauditmodal').prependTo($('.gridcontainer'));
+
+
     // Select the ledger
     CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer, true);
 
-    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
+    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '<Please Select>', null, '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
+        ShowAuditData($('.hidLedgerId').val());
         LoadAccountingSettings($('.hidLedgerId').val());
 
-    }, null);
+
+    }, function (element, data) {
+
+        if (data.TotalResults > 1) {
+
+            $('.as-ledgerselect').val(data.Data[0].Id);
+            
+        }
+
+        $('.hidLedgerId').val($('.as-ledgerselect').val());
+        ShowAuditData($('.hidLedgerId').val());
+        LoadAccountingSettings($('.hidLedgerId').val());
+
+     });
 
     // fiscal year
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer, true);
@@ -2603,23 +2622,8 @@ function LoadAccountingSettingsSectionSettings() {
     // disable or enable approvals for journals
     CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer, false);
 
-    // if approval is enabled: load users and select who can approve
-    $('.as-approval').change(function () {
+    CreateSaveAndCancelButtons('saveAccountingSettings', function () {
 
-        if (this.checked) {
-
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
-            // PopulateDropDown(); // users with permissions to post approvals
-
-        } else {
-
-            $('.as-approvedusers').parent().remove();
-        }
-    });
-
-    CreateSaveAndCancelButtons('saveAccountingSettings', function (e) {
-
-        //e.preventDefault();
 
         var data = {
 
@@ -2638,13 +2642,16 @@ function LoadAccountingSettingsSectionSettings() {
         }, null);
 
 
-    }, 'cancel', function (e) {
-        e.preventDefault();
+    }, 'cancel', function () {
+
         LoadAccountingSettings($('.hidLedgerId').val());
+
     },
 
     acctsettingscontainer);
 }
+
+
 
 function LoadAccountingSettings(id) {
 
@@ -2656,12 +2663,6 @@ function LoadAccountingSettings(id) {
         $('.as-approval').prop('checked', data.Data.ApproveJournals);
 
         PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null);
-
-        if (data.Data.ApproveJournals && !($('.as-approvedusers').length > 0)) {
-
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
-            // PopulateDropDown(); // users with permissions to post approvals
-        }
 
     }, null);
 }
@@ -2690,10 +2691,7 @@ function LoadBudgetSectionSettings() {
     CreateBasicFieldBlock('What If Budget Name: ', '<input>', 'whatifBudgetName', container, true, 128);
      
     var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
-    CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {
-
-        //e.preventDefault();
-
+    CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {                 
         var data = {
             Id: $(id).val(),
             WorkingBudgetName: $('.workingBudgetName').val(),
@@ -3958,4 +3956,5 @@ function SendCustomField(method, route, data, modal) {
 }
 
 /* END CUSTOM FIELDS */
+
 
