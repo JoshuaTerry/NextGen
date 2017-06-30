@@ -11,116 +11,195 @@
 
     <div class="adminsecurity">
 
-        <div class="tabscontainer">
-
+        <div class="securitynav">
             <ul>
-                <li><a href="#tab-groups">Groups</a></li>
-                <li><a href="#tab-users">Users</a></li>
+                <li><a href="#" class="groupnav">Groups</a></li>
+                <li><a href="#" class="usernav">Users</a></li>
             </ul>
+        </div>
 
-            <!-- Groups Tab -->
-            <div id="tab-groups">
-                <h1 class="GroupsSectionLabel">Groups</h1>
-                <div class="newlinkcontainer"><a href="#" class="newgroupmodal newlink">New Group</a></div>
-                <div class="groupstable"></div>
-            </div>
+        <div class="contentcontainer groupscontainer" style="display: none;">
 
-            <div class="groupmodal" title="Groups" style="display: none;">
+            <h1>Groups</h1>
+            <hr />
+            <div class="groupselectcontainer"></div>
+
+            <div class="groupdetailscontainer" style="display: none;">
 
                 <input type="hidden" class="hidgroupid" />
 
+                <h1>Group Details</h1>
+                <hr />
+
+                <div class="fieldblock required">
+                    <label>Name</label>
+                    <input type="text" class="gp-Name" maxlength="128" />
+                </div>
+
+                <div class="buttons">
+                    <input type="button" value="Save" class="savegroup" />
+                    <a href="cancel" class="cancelgroup">Cancel</a>
+                </div>
+
+                <br /><br />
+
+                <div class="accordions nocontrols">
+
+                    <h1>Roles</h1>
+                    <div>
+                        <div class="newlinkcontainer">
+                            <a href="#" class="addroles">Manage Roles</a>
+                        </div>
+                        <div class="grouprolesgridcontainer"></div>
+                    </div>
+
+                    <h1>Users in Group</h1>
+                    <div>
+                        <div class="groupusersgridcontainer"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="rolesmodal" title="Manage Roles..." style="display: none;">
+
                 <div class="modalcontent">
 
-                    <div class="fieldblock">
-                        <label>Name:</label>
-                        <input type="text" class="gp-Name required" maxlength="128" />
-                    </div>
-
-                    <div class="rolesmodal" style="display: none;">
-
-                        <div class="fieldblock">
-                            <label>Roles:</label>
-                            <div class="gp-rolesdropdowncontainer"></div>
-                        </div>
-                    
-                        <div class="modalbuttons roleaddbuttons">
-                            <input type="button" class="saverolesbutton" value="Add" />
-                            <a href="#" class="cancelrolesmodal">Cancel</a>
-                        </div>
-
-                    </div>
-
-                    <div class="rolesgriditems" style="display: none;">
-
-                        <div class="rolesgridcontainer"></div>
-
-                        <input type="button" class="addrolesbutton" value="Add Roles" />
-                    </div>
+                    <div class="roleselection"></div>
 
                     <div class="modalbuttons">
-                        <input type="button" class="savegroupbutton" value="Save" />
-                        <a href="#" class="cancelgroupmodal">Cancel</a>
+                        <input type="button" class="saveroles" value="Save" />
+                        <a href="#" class="cancelmodal">Cancel</a>
                     </div>
 
                 </div>
 
             </div>
 
-            
-
-            <!-- Users Tab -->
-            <div id="tab-users">
-                <div class="usersgridcontainer">
-                    <div class="usergrid"></div>
-                </div>
-            </div>
         </div>
-    </div>
 
-    <div class="newgroupmodal " title="New Group" style="display: none;">
-        <div class="modalcontent">
-        </div>
-    </div>
+        <div class="contentcontainer userscontainer" style="display: none;">
 
-    <div class="usermodal" title="New User" style="display: none;">
-        <div class="modalcontent">
+            <h1>Users</h1>
+            <hr />
 
-            <div class="fieldblock">
-                <label>Email</label>
-                <input type="email" name="email" class="user-Email" />
-            </div>
+            <div class="userselectcontainer"></div>
 
-            <div class="fieldblock">
-                <label>Password</label>
-                <input type="password" name="password" class="user-Password" />
-            </div>
+            <div class="userdetailscontainer">
 
-            <div class="fieldblock">
-                <label>Confirm Password</label>
-                <input type="password" name="confirmpassword" class="user-ConfirmPassword" />
-            </div>
+                <input type="hidden" class="hiduserid" />
 
-            <div class="fieldblock">
-                <label>Default Business Unit:</label>
-                <select class="user-DefaultBusinessUnitId"></select>
-            </div>
+                <h1>User Details</h1>
+                <hr />
 
-            <div class="fieldblock">
-                <div class="businessUnits">
+                <div class="twocolumn">
+
+                    <div>
+
+                        <div class="fieldblock required">
+                            <label>User Name</label>
+                            <input type="text" class="user-UserName" maxlength="256" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Full Name</label>
+                            <input type="text" class="user-FullName" maxlength="256" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>E-mail</label>
+                            <input type="text" class="user-Email email" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Phone Number</label>
+                            <input type="text" class="user-PhoneNumber phone" />
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="fieldblock">
+                            <label>Is Active</label>
+                            <input type="checkbox" class="user-IsActive" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Constituent</label>
+                            <input type="text" class="rs-Constituent1Information constituentlookup" />
+                            <input type="hidden" class="rs-Constituent1Id" />
+                        </div>
+
+                        <div class="fieldblock">
+                            <label>Business Unit</label>
+                            <select class="user-DefaultBusinessUnitId"></select>
+                        </div>
+
+                    </div>
+
                 </div>
-            </div>
 
-            <div class="fieldblock">
-                 <div class="fieldblock">
-                    <input type="hidden" class="rs-Constituent1Id" />
-                    <label>Constituent</label>
-                    <input type="text" class="rs-Constituent1Information constituentlookup" maxlength="128" />
+                <div class="buttons">
+                    <input type="button" value="Save" class="saveuser" />
+                    <a href="cancel" class="canceluser">Cancel</a>
                 </div>
+
+                <br /><br />
+
+                <div class="userextendeddetails twocolumn">
+
+                    <div>
+                        <h2>Groups</h2>
+                        <hr />
+                        <div class="newlinkcontainer">
+                            <a href="#" class="managegroups">Manage Groups</a>
+                        </div>
+                        <div class="usergroupsgridcontainer"></div>
+                    </div>
+
+                    <div>
+                        <h2>Business Units</h2>
+                        <hr />
+                        <div class="newlinkcontainer">
+                            <a href="#" class="managebu">Manage Business Units</a>
+                        </div>
+                        <div class="userbugridcontainer"></div>
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="modalbuttons">
-                <input type="button" class="savebutton" value="Save" />
-                <a href="#" class="cancelmodal">Cancel</a>
+            <div class="usergroupsmodal" title="Manage Groups..." style="display: none;">
+                
+                <div class="modalcontent">
+
+                    <div class="usergroupsselection"></div>
+                    
+                    <div class="modalbuttons">
+                        <input type="button" class="saveusergroups" value="Save" />
+                        <a href="#" class="cancelmodal">Cancel</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="userbusinessunitsmodal" title="Manage Business Units..." style="display: none;">
+
+                <div class="modalcontent">
+
+                    <div class="userbuselection"></div>
+
+                    <div class="modalbuttons">
+                        <input type="button" class="saveuserbu" value="Save" />
+                        <a href="#" class="cancelmodal">Cancel</a>
+                    </div>
+
+                </div>
+
             </div>
 
         </div>

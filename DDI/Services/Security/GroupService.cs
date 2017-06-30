@@ -8,24 +8,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DDI.Shared.Extensions;
+using DDI.Logger;
 
 namespace DDI.Services.General
 {
     public class GroupService : ServiceBase<Group>, IGroupService
     {
-
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(GroupService));
         public GroupService(IUnitOfWork uow) : base(uow) { }
 
-        public IDataResponse AddUserToGroup(Guid userId, Guid groupId)
+        public override IDataResponse Delete(Group entity)
         {
-            throw new NotImplementedException();
-        }
+            UnitOfWork.GetReference(entity, g => g.Users); 
+            Parallel.ForEach(entity.Users, u => RemoveUser(u, entity));
 
-        public IDataResponse RemoveUserFromGroup(Guid userId, Guid groupId)
-        {
-            throw new NotImplementedException();
+            return base.Delete(entity);
         }
-
+        
         public IDataResponse<ICollection<Role>> GetRolesInGroup(Guid groupId)
         {
             var roles = UnitOfWork.GetById<Group>(groupId).Roles;
@@ -35,67 +34,103 @@ namespace DDI.Services.General
                 IsSuccessful = true
             };
             return response;
-
         }
 
-        public IDataResponse<Group> AddRolesToGroup(Guid groupId, JObject roleIds)
+        public IDataResponse<ICollection<User>> GetUsersInGroup(Guid groupId)
         {
-            var group = UnitOfWork.GetById<Group>(groupId, r => r.Roles);
-            var rolesToAdd = new List<Role>();
-            List<Role> roles = new List<Role>();
-
-            foreach(var pair in roleIds)
+            var users = UnitOfWork.GetById<Group>(groupId).Users;
+            var response = new DataResponse<ICollection<User>>()
             {
-                if(pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
-                {
-                    rolesToAdd.AddRange(from jToken in (JArray)pair.Value
-                                        select Guid.Parse(jToken.ToString()) 
-                                        into id select UnitOfWork.GetById<Role>(id));
-                }
-            }
-
-            rolesToAdd.ForEach(r => group.Roles.Remove(r));
-            rolesToAdd.ForEach(ra => group.Roles.Add(ra));
-
-            UnitOfWork.SaveChanges();
-            var response = new DataResponse<Group>
-            {
-               Data = UnitOfWork.GetById<Group>(group.Id),
+                Data = users,
                 IsSuccessful = true
             };
-
             return response;
         }
 
-        public IDataResponse<Group> RemoveRolesFromGroup(Guid groupId, Guid roleId)
+        public IDataResponse<Group> UpdateGroupRoles(Guid groupId, JObject roleIds)
         {
-            var group = UnitOfWork.GetById<Group>(groupId, g => g.Roles, g => g.Users); // group
-            var roleToRemove = group.Roles.Where(r => r.Id == roleId).FirstOrDefault(); // role 
-
-            if (roleToRemove != null)
+            var group = UnitOfWork.GetById<Group>(groupId, g => g.Roles, g => g.Users);
+            try
             {
-                group.Roles.Remove(roleToRemove);
-                var groupUserIds = group.Users.Select(u => u.Id).ToList(); // user Ids in that group
-                var roleUserIds = roleToRemove.Users.Select(u => u.UserId); // user Ids in role
-                var usersToRemove = groupUserIds.Intersect(roleUserIds).ToList(); // intersection of users in group and role
+                var rolelist = GetRoleListFromJObject(roleIds);
 
-                foreach (Guid userId in usersToRemove)
-                {
-                    roleToRemove.Users.Remove(roleToRemove.Users.FirstOrDefault(u => u.UserId == userId));
-                    var userToRemoveRoles = UnitOfWork.GetRepository<User>().GetById(userId);
-                    userToRemoveRoles.Roles.Remove(userToRemoveRoles.Roles.FirstOrDefault(r => r.RoleId == roleToRemove.Id));
-                }
+                var adds = rolelist.Except(group.Roles).ToList();
+                var removes = group.Roles.Except(rolelist).ToList(); 
 
+                adds.ForEach(r => group.Roles.Add(r)); 
+                removes.ForEach(r => group.Roles.Remove(r));
+
+                UnitOfWork.Update(group);
+                Parallel.ForEach(group.Users, u => { UpdateUserRoles(u); });
+                
                 UnitOfWork.SaveChanges();
-
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                var response = new DataResponse<Group>(group);
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
             }
 
-            return new DataResponse<Group>()
-            {
-                Data = UnitOfWork.GetById<Group>(group.Id),
-                IsSuccessful = true
-            };
+            return new DataResponse<Group>(group); 
+        }
+        
+        public void UpdateUserRoles(User user)
+        {
+            UnitOfWork.GetReference(user, u => u.Groups);
+            UnitOfWork.GetReference(user, u => u.Roles);
+            user.Groups.ForEach(g => UnitOfWork.GetReference(g, r => r.Roles));
+            
+            // Get all the Roles tied to the User
+            var userRoles = user.Roles.Select(r => r.RoleId).ToList();
+            // Get all the Roles tied to all the Groups tied to the User
+            var groupRoles = user.Groups.SelectMany(g => g.Roles).Select(r => r.Id).Distinct().ToList();
+
+            // Get all the Roles that now exist in the Users's Groups that aren't assigned to the User
+            var adds = groupRoles.Except(userRoles);
+            // Get all the Roles that no longer exist in the User's Groups but are still assigned to the User
+            var removes = userRoles.Except(groupRoles);
+
+            // Remove the Roles the User should no longer have 
+            foreach (Guid id in removes)
+            { 
+                UnitOfWork.Delete(user.Roles.First(r => r.RoleId == id));
+            }
+            // Add the Roles the User should now have
+            adds.ForEach(r => user.Roles.Add(new UserRole() { Id = Guid.NewGuid(), UserId = user.Id, RoleId = r }));
+
+            UnitOfWork.Update(user);
         }
 
+        public void RemoveUser(User user, Group group)
+        {
+            UnitOfWork.GetReference(group, g => g.Roles);
+            UnitOfWork.GetReference(user, u => u.Roles);
+            user.Groups.Remove(group);
+            var newRoles = user.Groups.SelectMany(g => g.Roles).Select(r => r.Id).Distinct().ToList();
+            var removes = user.Roles.Select(r => r.RoleId).Except(newRoles).ToList();
+
+            foreach (Guid id in removes)
+            {  
+                UnitOfWork.Delete(user.Roles.First(r => r.RoleId == id));
+            }
+        }
+        internal List<Role> GetRoleListFromJObject(JObject roleIds)
+        {
+            var list = new List<Role>();
+
+            foreach (var pair in roleIds)
+            {
+                if (pair.Value.Type == JTokenType.Array && pair.Value.HasValues)
+                {
+                    list.AddRange(from jToken in (JArray)pair.Value
+                                             select Guid.Parse(jToken.ToString())
+                                        into id
+                                             select UnitOfWork.GetById<Role>(id));
+                }
+            }
+            return list;
+        } 
     }
 }
