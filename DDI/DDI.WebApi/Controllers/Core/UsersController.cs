@@ -72,10 +72,10 @@ namespace DDI.WebApi.Controllers.General
 
 
         [HttpGet]
-        [Route("api/v1/users", Name = RouteNames.User)]
+        [Route("api/v1/users")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.User, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]

@@ -13,7 +13,7 @@ namespace DDI.WebApi.Controllers.General
         
         private string ENVIRONMENTKEY = "Environment";
         [HttpGet]
-        [Route("api/v1/environment", Name = RouteNames.Environment)]
+        [Route("api/v1/environment")]
         public IHttpActionResult Get()
         {
             try
