@@ -12,7 +12,7 @@ namespace DDI.WebApi.Controllers
     {
         public GenericController(IService<T> serviceBase) : base(serviceBase) { }
          
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             var search = new PageableSearch()
             {
@@ -21,16 +21,15 @@ namespace DDI.WebApi.Controllers
                 OrderBy = orderBy
             };
 
-            return GetAll(search, fields, urlHelper ?? GetUrlHelper());
+            return GetAll(search, fields);
         }
 
-        public IHttpActionResult GetAll(IPageable search, string fields = null, UrlHelper urlHelper = null)
+        public IHttpActionResult GetAll(IPageable search, string fields = null)
         {
             try
-            {
-                urlHelper = urlHelper ?? GetUrlHelper();
+            { 
                 fields = ConvertFieldList(fields, FieldsForList);
-                return FinalizeResponse(Service.GetAll(fields, search), search, fields, urlHelper);
+                return FinalizeResponse(Service.GetAll(fields, search), search, fields);
             }
             catch (Exception ex)
             {

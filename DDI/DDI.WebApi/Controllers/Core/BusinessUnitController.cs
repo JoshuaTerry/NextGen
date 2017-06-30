@@ -27,7 +27,7 @@ namespace DDI.WebApi.Controllers.General
             var search = PageableSearch.Max;
             fields = ConvertFieldList(fields, FieldsForList);
             var results = Service.GetAllWhereExpression(bu => bu.BusinessUnitType != BusinessUnitType.Organization, search, fields);
-            return base.FinalizeResponse(results, search, null, null);
+            return base.FinalizeResponse(results, search, null);
         }
 
         [HttpGet]

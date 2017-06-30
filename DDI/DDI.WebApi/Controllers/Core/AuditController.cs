@@ -89,8 +89,7 @@ namespace DDI.WebApi.Controllers.General
         private IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, string routeName, IPageable search) where T1 : class
         {
             try
-            {
-                var urlHelper = new UrlHelper(Request);
+            { 
                 if (!response.IsSuccessful)
                 {
                     _logger.LogError(response.ErrorMessages.ToString());

@@ -47,7 +47,7 @@ namespace DDI.WebApi.Controllers.GL
             {
                 var result = ((IFiscalPeriodService)Service).GetFiscalPeriodsByAccountId(accountId);
 
-                return FinalizeResponse(result, PageableSearch.Max, null, null);
+                return FinalizeResponse(result, PageableSearch.Max, null);
             }
             catch (Exception ex)
             {

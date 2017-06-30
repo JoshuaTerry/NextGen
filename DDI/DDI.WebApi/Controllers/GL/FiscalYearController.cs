@@ -89,7 +89,7 @@ namespace DDI.WebApi.Controllers.GL
             {
                 var result = Service.GetWhereExpression(fy => fy.Ledger.BusinessUnitId == unitId && fy.Id == fy.Ledger.DefaultFiscalYearId);
 
-                return FinalizeResponse(result, ConvertFieldList(fields, FieldsForSingle), null);
+                return FinalizeResponse(result, ConvertFieldList(fields, FieldsForSingle));
             }
             catch(Exception ex)
             {

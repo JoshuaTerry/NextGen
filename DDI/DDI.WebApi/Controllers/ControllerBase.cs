@@ -74,25 +74,17 @@ namespace DDI.WebApi.Controllers
             
             return fields;
         }
-
-
-
-        protected UrlHelper GetUrlHelper()
-        {
-            return new UrlHelper(Request);
-        }
-          
-        protected IHttpActionResult GetById(Guid id, string fields = null, UrlHelper urlHelper = null)
+             
+        protected IHttpActionResult GetById(Guid id, string fields = null)
         {
             try
-            {                
-                urlHelper = urlHelper ?? GetUrlHelper();
+            {                                
                 var response = _service.GetById(id);
                 if (!response.IsSuccessful)
                 {
                     throw new Exception(string.Join(", ", response.ErrorMessages));
                 }
-                return FinalizeResponse(response, ConvertFieldList(fields, FieldsForSingle), urlHelper);
+                return FinalizeResponse(response, ConvertFieldList(fields, FieldsForSingle));
             }
             catch (Exception ex)
             {
@@ -101,7 +93,7 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        protected IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, IPageable search, string fields = null, UrlHelper urlHelper = null)
+        protected IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, IPageable search, string fields = null)
             where T1 : class
         {
             try
@@ -110,8 +102,7 @@ namespace DDI.WebApi.Controllers
                 {
                     search = PageableSearch.Default;
                 }
-
-                urlHelper = urlHelper ?? GetUrlHelper();
+                                
                 if (!response.IsSuccessful)
                 {
                     return BadRequest(string.Join(", ", response.ErrorMessages));
@@ -133,11 +124,10 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        protected IHttpActionResult FinalizeResponse(IDataResponse<T> response, string fields = null, UrlHelper urlHelper = null)
+        protected IHttpActionResult FinalizeResponse(IDataResponse<T> response, string fields = null)
         {
             try
             {
-                urlHelper = urlHelper ?? GetUrlHelper();
                 if (response.Data == null)
                 {
                     if (response.ErrorMessages.Count > 0)
@@ -165,11 +155,10 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        protected IHttpActionResult Post(T entity, UrlHelper urlHelper = null)
+        protected IHttpActionResult Post(T entity)
         {
             try
             {
-                urlHelper = urlHelper ?? GetUrlHelper();
                 if (!ModelState.IsValid)
                 {
                     throw new Exception("Model Invalid");
@@ -181,7 +170,7 @@ namespace DDI.WebApi.Controllers
                 if (!response.IsSuccessful)
                     throw new Exception(string.Join(",", response.ErrorMessages));
 
-                return FinalizeResponse(response, string.Empty, urlHelper);
+                return FinalizeResponse(response, string.Empty);
             }
             catch (Exception ex)
             {
@@ -190,12 +179,10 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        protected IHttpActionResult Patch(Guid id, JObject changes, UrlHelper urlHelper = null)
+        protected IHttpActionResult Patch(Guid id, JObject changes)
         {
             try
             {
-                urlHelper = urlHelper ?? GetUrlHelper();
-
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -206,7 +193,7 @@ namespace DDI.WebApi.Controllers
                 if (!response.IsSuccessful)
                     throw new Exception(string.Join(",", response.ErrorMessages));
 
-                return FinalizeResponse(response, string.Empty, urlHelper);
+                return FinalizeResponse(response, string.Empty);
 
             }
             catch (Exception ex)

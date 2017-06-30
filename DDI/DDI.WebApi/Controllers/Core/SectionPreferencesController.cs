@@ -57,7 +57,7 @@ namespace DDI.WebApi.Controllers.General
             {
                 var search = new PageableSearch(0, int.MaxValue, null);
                 var response = Service.GetAllWhereExpression(s => s.SectionName == categoryName, search);
-                return FinalizeResponse(response, search, null, null);
+                return FinalizeResponse(response, search, null);
                 
             }
             catch (Exception ex)
