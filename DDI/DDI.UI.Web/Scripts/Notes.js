@@ -39,6 +39,13 @@ function LoadNoteDetailsGrid() {
         PopulateDropDown('.nd-NoteCode', 'notecodes', '', '');
         PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
 
+        var link = $('<a>')
+            .attr('href', '#')
+            .addClass('newmodallink')
+            .addClass('.newnotesdetailmodallink')
+            .text('New Item');
+
+        $('.notedetailsgridcontainer').prepend(link);
     }
 
 }
@@ -96,6 +103,8 @@ function NewNoteDetailsModal() {
         MakeServiceCall('POST', 'notes', item, function (data) {
 
             MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function () {
+
+                // TODO: Do this on the service layer so that you only have to make one service call; the service will handle the adding the new note
 
                 DisplaySuccessMessage('Success', 'Note topics saved successfully.');
 

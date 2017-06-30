@@ -1532,6 +1532,8 @@ function EditNoteDetails(id) {
 
         ClearNoteTopicTagBox(modal);
 
+        $('.tagdropdowncontainer').hide();
+
         $('.editnoteinfo').hide();
 
         $('.nd-CreatedBy').text('');
