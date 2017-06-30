@@ -1629,7 +1629,7 @@ function BusinessUnitModal() {
         $('.savebusinessunit').click(function (e) {
 
 
-            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit', null, function (data) {
+            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit/username', null, function (data) {
 
                 businessunits = data.Data
 
