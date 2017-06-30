@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DDI.Shared.Models
 {
@@ -14,5 +10,10 @@ namespace DDI.Shared.Models
     public class DatabaseConstraintDeleteException : Exception
     {
         public DatabaseConstraintDeleteException() : base("The record you are trying to delete is currently in use.") { }
+    }
+
+    public class DatabaseConcurrencyException : Exception
+    {
+        public DatabaseConcurrencyException() : base("A record you are updating was changed before you save.  Refresh to get latest version.") { }
     }
 }

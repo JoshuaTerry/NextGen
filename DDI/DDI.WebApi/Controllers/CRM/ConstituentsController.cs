@@ -20,6 +20,9 @@ namespace DDI.WebApi.Controllers.CRM
 
         public ConstituentsController(IConstituentService service) : base(service) { }
 
+        protected override string FieldsForSingle => FieldListBuilder
+           .IncludeAll();
+
         protected override Expression<Func<Constituent, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<Constituent, object>>[]

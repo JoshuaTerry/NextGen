@@ -209,6 +209,12 @@ namespace DDI.Data
 
                 return base.SaveChanges();
             }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogInformation(ex);
+                throw new DatabaseConcurrencyException();
+
+            }
             catch (DbUpdateException ex)
             {
                 if (ex?.InnerException?.InnerException != null && ex.InnerException.InnerException is SqlException)
@@ -235,7 +241,7 @@ namespace DDI.Data
                     _logger.LogError(ex);
                     throw ex;
                 }
-            }
+            }            
             catch
             {
                 throw;
