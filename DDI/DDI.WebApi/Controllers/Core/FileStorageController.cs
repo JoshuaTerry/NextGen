@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using DDI.Shared;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -15,11 +15,23 @@ namespace DDI.WebApi.Controllers.General
     {
         public FileStorageController(IService<FileStorage> service) : base(service) { }
 
+        protected override string FieldsForList => FieldListBuilder
+           .Include(p => p.Id)
+           .Include(p => p.Name)
+           .Include(p => p.Extension)
+           .Include(p => p.Size);
+        protected override string FieldsForSingle => FieldListBuilder
+           .Include(p => p.Id)
+           .Include(p => p.Name)
+           .Include(p => p.Extension)
+           .Include(p => p.Size)
+           .Include(p => p.Data)
+           .Include(p => p.FileType);
+
         [HttpGet]
         [Route("api/v1/filestorage")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            fields = "Id,Name,Extension,Size";
             return base.GetAll(RouteNames.Note, limit, offset, orderBy, fields);
         }
 
@@ -27,9 +39,10 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/filestorage/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            fields = "Id,Name,Extension,Size,Data,FileType";
-            return base.GetById(id, fields, null);
+            var response = Service.GetById(id);
+            return FinalizeResponse(response, fields, null);
         }
+
         [HttpPost]
         [Route("api/v1/filestorage")]
         public IHttpActionResult Post([FromBody] FileStorage entityToSave)
@@ -82,7 +95,7 @@ namespace DDI.WebApi.Controllers.General
                 base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
-            
+
         }
 
         [HttpPatch]
@@ -98,6 +111,5 @@ namespace DDI.WebApi.Controllers.General
         {
             return base.Delete(id);
         }
-
     }
 }
