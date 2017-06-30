@@ -1663,7 +1663,7 @@ function BusinessUnitModal() {
 
 function LoadBusinessUnitDropDown() {
 
-    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit', '<Please Select>', null, currentBusinessUnitId, null, null);
+    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit/username', '<Please Select>', null, currentBusinessUnitId, null, null);
     
 }
 
