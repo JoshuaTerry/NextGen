@@ -69,6 +69,8 @@ namespace DDI.Shared.Models.Client.CP
         [MaxLength(30)]
         public string FractionalFormat { get; set; }
 
+        public bool GenerateBalancedACH { get; set; }
+
         [MaxLength(9)]
         public string OffsetRoutingNumber { get; set; }
 
