@@ -1629,7 +1629,7 @@ function BusinessUnitModal() {
         $('.savebusinessunit').click(function (e) {
 
 
-            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit', null, function (data) {
+            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit/username', null, function (data) {
 
                 businessunits = data.Data
 
@@ -1663,7 +1663,7 @@ function BusinessUnitModal() {
 
 function LoadBusinessUnitDropDown() {
 
-    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit', '<Please Select>', null, currentBusinessUnitId, null, null);
+    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit/username', '<Please Select>', null, currentBusinessUnitId, null, null);
     
 }
 
@@ -1708,15 +1708,6 @@ function RemoveValidation(formClassName) {
 // END FORM VALIDATION
 
 // DYNAMIC MARKUP
-//
-//function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
-
-//    var fieldblock = $('<div>').addClass('fieldblock');
-//    $('<label>').text(labelText).appendTo(fieldblock);
-//    $(controlType).addClass(controlClass).appendTo(fieldblock);
-//    $(fieldblock).appendTo(appendContainer);
-
-//}
 
 function ValidateFields(containerClass, saveFunction) {
     var validFields = true;
@@ -1725,20 +1716,25 @@ function ValidateFields(containerClass, saveFunction) {
     $(containerClass).find('.required input').each(ValidateField);
     $(containerClass).find('.required select').each(ValidateField);
 
+    validFields = ($(containerClass).find('.validateerror').length == 0);
+
     if (validFields && saveFunction != null) {
-        saveFunction;
+        saveFunction();
     }
 
     return validFields;
 }
 
 function ValidateField(index, el) {
+    var validFields = true;
     var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
     $("#" + errorId).remove();
     if ($(this).val() === "" || $(this).val() == null) {
         $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
         validFields = false;
     }
+
+    return validFields;
 }
 
 function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, maxlength) {
@@ -1772,6 +1768,10 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancel
 }
 //
 // END DYNAMIC MARKUP
+
+
+// FORMATTING
+//
 
 function MaskFields() {
     $('.date').mask('00/00/0000');
@@ -1823,4 +1823,79 @@ function FormatDateTimeStrings(str) {
     } while (result);    
 
     return str;
+
 }
+
+//
+// END FORMATTING
+
+/* Audit Section */
+
+function ShowAuditData(id) {
+
+    $('.newauditmodal').click(function (e) {
+
+        e.preventDefault();
+        var modal = $('.auditmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 800,
+            height: 600,
+            resizable: true
+        });
+
+        LoadAuditTable(id);
+    });
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.queryAudit').unbind('click');
+
+    $('.queryAudit').click(function () {
+
+        $.ajax({
+            type: 'GET',
+            url: WEB_API_ADDRESS + 'audit/flat/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            headers: GetApiHeaders(),
+            success: function (data) {
+
+                LoadAuditTable(id);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
+
+}
+
+function LoadAuditTable(id) {
+    var start = $(modal).find('.na-StartDate').val();
+    var end = $(modal).find('.na-EndDate').val();
+    var route = 'audit/flat/' + id;
+    var columns = [
+        { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0 },
+        { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
+        { dataField: 'User' },
+        { dataField: 'ChangeType', width: '100px' },
+        { dataField: 'Property' },
+        { dataField: 'OldValue', caption: 'Old Value' },
+        { dataField: 'OldDisplayName', caption: 'Old Display Name' },
+        { dataField: 'NewValue', caption: 'New Value' },
+        { dataField: 'NewDisplayName', caption: 'New Display Name' }
+    ];
+
+    CustomLoadGrid('auditgrid', '.auditgridcontainer', columns, route, '', '', '', null);
+
+}
+/* End Audit Section */

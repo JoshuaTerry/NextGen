@@ -14,6 +14,12 @@ a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-ev
 .floatleft {float: left}
 .floatright {float: right}
 
+/* ICONS */
+
+.view-icon { background: url('../../Images/Search_Mono_16.png') no-repeat; width: 16px; height: 16px; margin: 0px; padding: 0px; }
+
+/* END ICONS */
+
 .newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
 .editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
 .editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; }
@@ -22,6 +28,8 @@ a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-ev
 .actionbuttons { margin-right: 10px; }
 .actionbuttons.editbutton { float: none; background: url('../../Images/edit-16.png') no-repeat; width: 16px; height: 16px; }
 .actionbuttons.deletebutton { display: inline-block; background: url('../../Images/erase-16.png') no-repeat; width: 16px; height: 16px; }
+.actionbuttons.viewbutton { display: inline-block; background: url('../../Images/Note_16.png') no-repeat; width: 16px; height: 16px; }
+.actionbuttons.notebutton { display: inline-block; background: url('../../Images/Messaging-Note-icon.png') no-repeat; width: 16px; height: 16px; }
 
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }
@@ -95,7 +103,7 @@ div.fieldblock input,
 div.fieldblock select { width: 100%; }
 div.fieldblock input { height: 15px; }
 div.fieldblock select { height: 21px; }
-div.fieldblock input[type="checkbox"] { border: solid 1px lime; width: 25px; display: inline-block; }
+div.fieldblock input[type="checkbox"] { width: 25px; display: inline-block; }
 div.fieldblock.range {  }
 div.fieldblock.range input { display: inline-block; width: 25%; }
 div.fieldblock.checkbox label { display: inline-block; }

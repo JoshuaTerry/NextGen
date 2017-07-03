@@ -19,7 +19,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/regions/regionlevels/{level}")]
-        [Route("api/v1/regionlevels/{level}/regions", Name = RouteNames.RegionLevel + RouteNames.Region)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/regionlevels/{level}/regions")]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByLevel(int level, string fields = null, int? offset = null, int? limit = 1000, string orderBy = OrderByProperties.DisplayName)
         {
             return GetRegions(level, null, fields, offset, limit, orderBy);
@@ -27,7 +27,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/regions/{id}/regionlevels/{nextLevel}")]
-        [Route("api/v1/regionlevels/{nextLevel}/regions/{id}", Name = RouteNames.Region + RouteNames.RegionLevel + RouteNames.RegionChildren)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/regionlevels/{nextLevel}/regions/{id}")]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByNextLevel(int nextLevel, Guid? id = null, string fields = null, int? offset = null, int? limit = 1000, string orderBy = OrderByProperties.DisplayName)
         {
             return GetRegions(nextLevel, id, fields, offset, limit, orderBy);
@@ -40,7 +40,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.Level == level && (id == null || a.ParentRegionId == id), search, fields);
-                return FinalizeResponse(response, RouteNames.RegionLevel + RouteNames.Region, search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/regions", Name = RouteNames.Region)]
+        [Route("api/v1/regions")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             try
@@ -58,7 +58,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.ParentRegionId == null, search, fields);
-                return FinalizeResponse(response, RouteNames.Region, search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/regions/{id}", Name = RouteNames.Region + RouteVerbs.Get)]
+        [Route("api/v1/regions/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -76,7 +76,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/regions", Name = RouteNames.Region + RouteVerbs.Post)]
+        [Route("api/v1/regions")]
         public IHttpActionResult Post([FromBody] Region entityToSave)
         {
             return base.Post(entityToSave);
@@ -84,7 +84,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/regions/{id}", Name = RouteNames.Region + RouteVerbs.Patch)]
+        [Route("api/v1/regions/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -92,7 +92,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/regions/{id}", Name = RouteNames.Region + RouteVerbs.Delete)]
+        [Route("api/v1/regions/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

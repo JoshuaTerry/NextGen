@@ -11,6 +11,7 @@ using DevExtreme.AspNet.Mvc;
 
 namespace DDI.WebApi.Controllers.GL
 {
+    [Authorize]
     public class PostedTransactionController : GenericController<PostedTransaction>
     {
 

@@ -33,14 +33,14 @@ namespace DDI.WebApi.Controllers.General
         public CustomFieldsController(ICustomFieldService service) : base(service) { }
 
         [HttpGet]
-        [Route("api/v1/customfields", Name = RouteNames.CustomField)]
+        [Route("api/v1/customfields")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.CustomField, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/customfields/entity/{entityId}", Name = RouteNames.CustomField + RouteNames.Entity)]
+        [Route("api/v1/customfields/entity/{entityId}")]
         public IHttpActionResult GetByEntity(int entityId)
         {
             try
@@ -62,7 +62,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/customfields/entity/{entityId}/constituent/{constituentId}", Name = RouteNames.CustomField + RouteNames.Entity + RouteNames.Constituent)]
+        [Route("api/v1/customfields/entity/{entityId}/constituent/{constituentId}" )]
         public IHttpActionResult GetByEntityConstituent(int entityId, Guid constituentId)
         {
             try
@@ -84,14 +84,14 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpPost]
-        [Route("api/v1/customfields", Name = RouteNames.CustomField + RouteVerbs.Post)]
+        [Route("api/v1/customfields")]
         public IHttpActionResult Post([FromBody] CustomField item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/customfields/{id}", Name = RouteNames.CustomField + RouteVerbs.Patch)]
+        [Route("api/v1/customfields/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);

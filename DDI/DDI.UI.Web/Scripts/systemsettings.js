@@ -30,7 +30,7 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        ClearContextMenu();
+        ClearNavMenu();
 
         $('.customfieldmodallink').remove();
 
@@ -50,13 +50,12 @@ $(document).ready(function () {
 
 });
 
-function ClearContextMenu() {
+function ClearNavMenu() {
     $('.utilitymenu').find('li').each(function () {
         $(this).remove();
     })
     $('.utilitynav').hide();
 }
-
 
 function LoadSettingsGrid(grid, container, columns, route) {
 
@@ -110,7 +109,6 @@ function GetSystemSettings(category, callback) {
         }
 
     }, null);
-
 }
 
 
@@ -295,7 +293,7 @@ function LoadNoteSectionSettings() {
     $(noteCodes).appendTo($(accordion));
 
     var noteCodecolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -307,7 +305,7 @@ function LoadNoteSectionSettings() {
     $(noteCategories).appendTo($(accordion));
 
     var noteCategorycolumns = [
-
+        
         { dataField: 'Label', caption: 'Label' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -320,7 +318,7 @@ function LoadNoteSectionSettings() {
     $(noteTopics).appendTo($(accordion));
 
     var noteTopiccolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -367,10 +365,10 @@ function LoadClergySectionSettings() {
     $(status).appendTo($(accordion));
 
     var statuscolumns = [
-
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
+              
+              { dataField: 'Code', caption: 'Code' },
+              { dataField: 'Name', caption: 'Description' },
+              { dataField: 'IsActive', caption: 'Active' }
     ];
     LoadGrid('.clergystatuscontainer', 'clergystatusgrid', statuscolumns, 'clergystatuses?fields=all', 'clergystatuses', null, 'cstat-',
         '.clergystatusmodal', '.clergystatusmodal', 250, true, false, false, null);
@@ -379,10 +377,10 @@ function LoadClergySectionSettings() {
     $(types).appendTo($(accordion));
 
     var typecolumns = [
-
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
+    
+    { dataField: 'Code', caption: 'Code' },
+    { dataField: 'Name', caption: 'Description' },
+    { dataField: 'IsActive', caption: 'Active' }
     ];
     LoadGrid('.clergytypecontainer', 'clergytypegrid', typecolumns, 'clergytypes?fields=all', 'clergytypes', null, 'ctype-',
         '.clergytypemodal', '.clergytypemodal', 250, true, false, false, null);
@@ -401,7 +399,7 @@ function LoadConstituentTypesSectionSettings() {
 
 
     var header = $('<h1>').text('Constituent Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -564,7 +562,7 @@ function LoadConstituentTypeTagSelector(typeId, container) {
 function LoadConstituentTypeSettingsGrid() {
 
     var typecolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         {
@@ -611,7 +609,7 @@ function LoadConstituentTypeSettingsGrid() {
     ];
 
 
-    CustomLoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes?fields=all', null, EditConstituentType, DeleteConstituentType);
+    CustomLoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes?fields=all', '', EditConstituentType, DeleteConstituentType,null);
 
 }
 
@@ -673,16 +671,19 @@ function EditConstituentType(id) {
 function DeleteConstituentType(id) {
 
     MakeServiceCall('DELETE', 'constituenttypes/' + id, null, function (data) {
+      
+        DisplaySuccessMessage('Success', 'Constituent Type deleted successfully.');
 
-        if (data.Data) {
-            DisplaySuccessMessage('Success', 'Constituent Type deleted successfully.');
+        LoadConstituentTypeSettingsGrid();
 
-            LoadConstituentTypeSettingsGrid();
-        }
-
-    }, null);
-
+    }, 
+        
+         function (xhr, status, err) {
+             DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Type.');
+    }
+);
 }
+
 
 function LoadConstituentType(id) {
 
@@ -727,7 +728,7 @@ function LoadContactInformationSectionSettings() {
 
 
     var header = $('<h1>').text('Address Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newaddresstypemodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newaddresstypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -785,7 +786,7 @@ function LoadContactInformationSectionSettings() {
     LoadAddressTypeSettingsGrid();
 
     header = $('<h1>').text('Contact Categories').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newcontactcategorymodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newcontactcategorymodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -848,7 +849,7 @@ function LoadContactInformationSectionSettings() {
     LoadContactCategorySettingsGrid();
 
     header = $('<h1>').text('Contact Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newcontacttypemodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newcontacttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -919,10 +920,10 @@ function LoadContactInformationSectionSettings() {
 function LoadAddressTypeSettingsGrid() {
 
     var addresstypecolumns = [
-
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'IsActive', caption: 'Active' }
+       
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Description' },
+       { dataField: 'IsActive', caption: 'Active' }
     ];
 
     CustomLoadGrid('addresstypesgrid', 'addresstypescontainer', addresstypecolumns, 'addresstypes?fields=all', null, EditAddressType, DeleteAddressType);
@@ -932,7 +933,7 @@ function LoadAddressTypeSettingsGrid() {
 function LoadContactCategorySettingsGrid() {
 
     var contactcategorycolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'SectionTitle', caption: 'Section Title' },
@@ -947,7 +948,7 @@ function LoadContactCategorySettingsGrid() {
 function LoadContactTypeSettingsGrid() {
 
     var contacttypecolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'ContactCategory.DisplayName', caption: 'Contact Category' },
@@ -1334,69 +1335,69 @@ function LoadDemographicsSectionSettings() {
 function LoadDenominationSettingsGrid() {
 
     var denominationcolumns = [
+       
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Denomination' },
+       {
+           caption: 'Religion', cellTemplate: function (container, options) {
+               var religion = 'None';
 
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Denomination' },
-        {
-            caption: 'Religion', cellTemplate: function (container, options) {
-                var religion = 'None';
+               switch (options.data.Religion) {
+                   case 1:
+                       religion = "Catholic";
+                       break;
+                   case 2:
+                       religion = "Protestant";
+                       break;
+                   case 3:
+                       religion = "Orthodox";
+                       break;
+                   case 4:
+                       religion = "Jewish";
+                       break;
+                   case 5:
+                       religion = "Islam";
+                       break;
+                   case 6:
+                       religion = "Hindu";
+                       break;
+                   case 7:
+                       religion = "Buddhist";
+                       break;
+                   case 8:
+                       religion = "Taoist";
+                       break;
+                   case 9:
+                       religion = "Shinto";
+                       break;
+                   case 10:
+                       religion = "Sikh";
+                       break;
+                   case 11:
+                       religion = "Bahai";
+                       break;
+               }
 
-                switch (options.data.Religion) {
-                    case 1:
-                        religion = "Catholic";
-                        break;
-                    case 2:
-                        religion = "Protestant";
-                        break;
-                    case 3:
-                        religion = "Orthodox";
-                        break;
-                    case 4:
-                        religion = "Jewish";
-                        break;
-                    case 5:
-                        religion = "Islam";
-                        break;
-                    case 6:
-                        religion = "Hindu";
-                        break;
-                    case 7:
-                        religion = "Buddhist";
-                        break;
-                    case 8:
-                        religion = "Taoist";
-                        break;
-                    case 9:
-                        religion = "Shinto";
-                        break;
-                    case 10:
-                        religion = "Sikh";
-                        break;
-                    case 11:
-                        religion = "Bahai";
-                        break;
-                }
+               $('<label>').text(religion).appendTo(container);
+           }
+       },
+       {
+           caption: 'Affiliation', cellTemplate: function (container, options) {
+               var affiliation = 'None';
 
-                $('<label>').text(religion).appendTo(container);
-            }
-        },
-        {
-            caption: 'Affiliation', cellTemplate: function (container, options) {
-                var affiliation = 'None';
+               switch (options.data.Affiliation) {
+                   case 1:
+                       affiliation = "Affiliated";
+                       break;
+                   case 2:
+                       affiliation = "Unaffiliated";
+                       break;
+               }
 
-                switch (options.data.Affiliation) {
-                    case 1:
-                        affiliation = "Affiliated";
-                        break;
-                    case 2:
-                        affiliation = "Unaffiliated";
-                        break;
-                }
-
-                $('<label>').text(affiliation).appendTo(container);
-            }
-        },
-        { dataField: 'IsActive', caption: 'Active' }
+               $('<label>').text(affiliation).appendTo(container);
+           }
+       },
+       { dataField: 'IsActive', caption: 'Active' }
     ];
 
     LoadGrid('.denominationscontainer', 'denominationsgrid', denominationcolumns, 'denominations?fields=all', 'denominations', null, 'den-',
@@ -1407,12 +1408,12 @@ function LoadDenominationSettingsGrid() {
 function LoadEthnicitySettingsGrid() {
 
     var ethnicitycolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Ethnicity' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
-
+    
     LoadGrid('.ethnicitiescontainer', 'ethnicitiesgrid', ethnicitycolumns, 'ethnicities?fields=all', 'ethnicities', null, 'eth-',
         '.ethnicitymodal', '.ethnicitymodal', 250, true, false, false, null);
 
@@ -1421,7 +1422,7 @@ function LoadEthnicitySettingsGrid() {
 function LoadLanguageSettingsGrid() {
 
     var languagecolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Language' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1470,42 +1471,42 @@ function LoadEducationSectionSettings() {
 function LoadDegreeSettingsGrid() {
 
     var degreecolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
     LoadGrid('.degreecontainer', 'degreesgrid', degreecolumns, 'degrees?fields=all', 'degrees', null, 'deg-',
-        '.degreemodal', '.degreemodal', 250, true, false, false, null);
+    '.degreemodal', '.degreemodal', 250, true, false, false, null);
 
 }
 
 function LoadEducationLevelSettingsGrid() {
 
     var educationLevelcolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
     LoadGrid('.educationlevelscontainer', 'educationlevelsgrid', educationLevelcolumns, 'educationlevels?fields=all', 'educationlevels', null, 'eduLev-',
-        '.educationLevelmodal', '.educationLevelmodal', 250, true, false, false, null);
+    '.educationLevelmodal', '.educationLevelmodal', 250, true, false, false, null);
 
 }
 
 function LoadSchoolsSettingsGrid() {
 
     var schoolcolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
     ];
 
     LoadGrid('.schoolscontainer', 'schoolsgrid', schoolcolumns, 'schools?fields=all', 'schools', null, 'sch-',
-        '.schoolmodal', '.schoolmodal', 250, true, false, false, null);
+    '.schoolmodal', '.schoolmodal', 250, true, false, false, null);
 
 }
 /* END EDUCATION SYSTEM SETTINGS */
@@ -1513,7 +1514,7 @@ function LoadSchoolsSettingsGrid() {
 function LoadGenderSectionSettings() {
 
     var columns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Gender' },
         { dataField: 'IsMasculine', caption: 'Masculine' },
@@ -1521,7 +1522,7 @@ function LoadGenderSectionSettings() {
     ];
 
     LoadGrid('.gridcontainer', 'gendergridcontainer', columns, 'genders?fields=all', 'genders', null, 'gen-',
-        '.gendermodal', '.gendermodal', 250, true, false, false, null);
+    '.gendermodal', '.gendermodal', 250, true, false, false, null);
 }
 
 function LoadHubSearchSectionSettings() {
@@ -1551,12 +1552,12 @@ function LoadPersonalSectionSettings() {
 function LoadPrefixSectionSettings() {
 
     var prefixcolumns = [
-
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Description' },
-        { dataField: 'Salutation', caption: 'Salutation Prefix' },
-        { dataField: 'LabelPrefix', caption: 'Label Prefix' },
-        { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
+       
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Description' },
+       { dataField: 'Salutation', caption: 'Salutation Prefix' },
+       { dataField: 'LabelPrefix', caption: 'Label Prefix' },
+       { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
     ];
 
     LoadGrid('.gridcontainer', 'prefixgrid', prefixcolumns, 'prefixes?fields=all', 'prefixes', null, 'prefix-',
@@ -1587,7 +1588,7 @@ function LoadProfessionalSectionSettings() {
 function LoadIncomeLevelSettingsGrid() {
 
     var incomeLevelcolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1601,7 +1602,7 @@ function LoadIncomeLevelSettingsGrid() {
 function LoadProfessionSettingsGrid() {
 
     var professioncolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'IsActive', caption: 'Active' }
@@ -1811,10 +1812,10 @@ function DisplayRegions(level, parentid) {
     route = route + "?fields=Id,Code,Name,IsActive";
 
     var columns = [
-
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Name' },
-        { dataField: 'IsActive', caption: 'Active' }
+       
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Name' },
+       { dataField: 'IsActive', caption: 'Active' }
     ];
 
     CustomLoadGrid('regiongrid', 'regiongridcontainer', columns, route, null, EditRegion, DeleteRegion, function () {
@@ -2010,7 +2011,7 @@ function LoadRelationshipSectionSettings() {
     var type = $('<div>').addClass('relationshiptypecontainer');
 
     var header = $('<h1>').text('Relationship Categories').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -2067,7 +2068,7 @@ function LoadRelationshipSectionSettings() {
     LoadRelationshipCategorySettingsGrid();
 
     header = $('<h1>').text('Relationship Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -2141,11 +2142,11 @@ function LoadRelationshipCategorySettingsGrid() {
 
 
     var relationshipcategorycolumns = [
-
-        { dataField: 'Code', caption: 'Code' },
-        { dataField: 'Name', caption: 'Denomination' },
-        { dataField: 'IsShownInQuickView', caption: 'Show in Quick View' },
-        { dataField: 'IsActive', caption: 'Active' }
+       
+       { dataField: 'Code', caption: 'Code' },
+       { dataField: 'Name', caption: 'Denomination' },
+       { dataField: 'IsShownInQuickView', caption: 'Show in Quick View' },
+       { dataField: 'IsActive', caption: 'Active' }
     ];
 
     LoadGrid('.relationshipcategorycontainer', 'relationshipcategorygrid', relationshipcategorycolumns, 'relationshipcategories?fields=all', 'relationshipcategories', null, 'relcat-',
@@ -2156,7 +2157,7 @@ function LoadRelationshipCategorySettingsGrid() {
 function LoadRelationshipTypeSettingsGrid() {
 
     var relationshiptypecolumns = [
-
+        
         { dataField: 'Code', caption: 'Code' },
         { dataField: 'Name', caption: 'Description' },
         { dataField: 'ReciprocalTypeMale.DisplayName', caption: 'Male Reciprocal' },
@@ -2564,19 +2565,19 @@ function CreateNewModalLink(linkText, newEntityModalMethod, prependToClass, addT
     if (modalLinkClass.indexOf('.') != 0)
         modalLinkClass = '.' + modalLinkClass;
 
-    newEntityModalMethod(modalLinkClass);
+    newEntityModalMethod(modalLinkClass); 
 }
 /* END CRM SETTINGS */
 
 
 /* DONATIONS SETTINGS */
-function LoadDonationSettingsSectionSettings() { }
+function LoadDonationSettingsSectionSettings() {}
 
-function LoadDonorSettingsSectionSettings() { }
+function LoadDonorSettingsSectionSettings() {}
 
 function LoadGLAccountAutoAssignSectionSettings() { }
 
-function LoadDonationHomeScreenSectionSettings() { }
+function LoadDonationHomeScreenSectionSettings() {}
 /* END DONATIONS SETTINGS */
 
 
@@ -2589,15 +2590,34 @@ function LoadAccountingSettingsSectionSettings() {
 
     $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
 
+
+    // Audit Link
+    $('<a>').text('Audit History').attr('href', '#').attr('type', 'hidden').addClass('newauditmodal').prependTo($('.gridcontainer'));
+
+
     // Select the ledger
     CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer, true);
 
-    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
+    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '<Please Select>', null, '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
+        ShowAuditData($('.hidLedgerId').val());
         LoadAccountingSettings($('.hidLedgerId').val());
 
-    }, null);
+
+    }, function (element, data) {
+
+        if (data.TotalResults > 1) {
+
+            $('.as-ledgerselect').val(data.Data[0].Id);
+            
+        }
+
+        $('.hidLedgerId').val($('.as-ledgerselect').val());
+        ShowAuditData($('.hidLedgerId').val());
+        LoadAccountingSettings($('.hidLedgerId').val());
+
+     });
 
     // fiscal year
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer, true);
@@ -2611,23 +2631,8 @@ function LoadAccountingSettingsSectionSettings() {
     // disable or enable approvals for journals
     CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer, false);
 
-    // if approval is enabled: load users and select who can approve
-    $('.as-approval').change(function () {
+    CreateSaveAndCancelButtons('saveAccountingSettings', function () {
 
-        if (this.checked) {
-
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
-            // PopulateDropDown(); // users with permissions to post approvals
-
-        } else {
-
-            $('.as-approvedusers').parent().remove();
-        }
-    });
-
-    CreateSaveAndCancelButtons('saveAccountingSettings', function (e) {
-
-        e.preventDefault();
 
         var data = {
 
@@ -2647,12 +2652,17 @@ function LoadAccountingSettingsSectionSettings() {
 
 
     }, 'cancel', function (e) {
+
         e.preventDefault();
+
         LoadAccountingSettings($('.hidLedgerId').val());
+
     },
 
-        acctsettingscontainer);
+    acctsettingscontainer);
 }
+
+
 
 function LoadAccountingSettings(id) {
 
@@ -2665,12 +2675,6 @@ function LoadAccountingSettings(id) {
 
         PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null);
 
-        if (data.Data.ApproveJournals && !($('.as-approvedusers').length > 0)) {
-
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
-            // PopulateDropDown(); // users with permissions to post approvals
-        }
-
     }, null);
 }
 
@@ -2681,27 +2685,24 @@ function LoadBudgetSectionSettings() {
     $('.gridcontainer').empty();
 
     var container = $('<div>').addClass('budgetsettingscontainer onecolumn').css('width', '50%').appendTo($('.gridcontainer'));
+     
+    CreateBasicFieldBlock('Ledger: ', '<select>', 'budgetLedgerId', container, true); 
 
-    CreateBasicFieldBlock('Ledger: ', '<select>', 'budgetLedgerId', container, true);
-
-    PopulateDropDown('.budgetLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
-    }, function () {
+    PopulateDropDown('.budgetLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {       
+    }, function () {      
         GetBudgetSetting();
-    });
+        });
 
     $(container).find('.budgetLedgerId').change(function () { GetBudgetSetting(); });
-
+         
     CreateBasicFieldBlock('Working Budget Name: ', '<input>', 'workingBudgetName', container, true, 128);
 
     CreateBasicFieldBlock('Fixed Budget Name: ', '<input>', 'fixedBudgetName', container, true, 128);
 
     CreateBasicFieldBlock('What If Budget Name: ', '<input>', 'whatifBudgetName', container, true, 128);
-
+     
     var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
-    CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {
-
-        e.preventDefault();
-
+    CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {                 
         var data = {
             Id: $(id).val(),
             WorkingBudgetName: $('.workingBudgetName').val(),
@@ -2723,7 +2724,7 @@ function LoadBudgetSectionSettings() {
         GetBudgetSetting();
 
     }, container);
-
+     
 }
 
 function ValidBudgetSettingForm() {
@@ -2777,7 +2778,7 @@ function LoadChartAccountsSectionSettings() {
         GetChartSetting();
     });
 
-    selectledgername.change(function () {
+    $('.chartLedgerId').change(function () {
         GetChartSetting();
     });
 
@@ -2803,17 +2804,17 @@ function LoadChartAccountsSectionSettings() {
     $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup1Title').appendTo(group1);
     $(group1).appendTo(container);
 
-    var group2 = $('<div>').addClass('fieldblock AccountGroup2group');
+    var group2 = $('<div>').addClass('fieldblock AccountGroup2group AccountGroup ag2 ag3 ag4');
     $('<label>').text('Account Group 2: ').appendTo(group2);
     $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup2Title').appendTo(group2);
     $(group2).hide().appendTo(container);
 
-    var group3 = $('<div>').addClass('fieldblock AccountGroup3group');
+    var group3 = $('<div>').addClass('fieldblock AccountGroup3group AccountGroup ag3 ag4');
     $('<label>').text('Account Group 3: ').appendTo(group3);
     $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup3Title').appendTo(group3);
     $(group3).hide().appendTo(container);
 
-    var group4 = $('<div>').addClass('fieldblock AccountGroup4group');
+    var group4 = $('<div>').addClass('fieldblock AccountGroup4group AccountGroup ag4');
     $('<label>').text('Account Group 4: ').appendTo(group4);
     $('<input>').attr({ type: 'text', maxLength: '40' }).addClass('accountGroup4Title').appendTo(group4);
     $(group4).hide().appendTo(container);
@@ -2923,30 +2924,13 @@ function SaveChartSetting(id) {
 
 function GroupLevelsChange() {
     var groupLevels = $('.groupLevels').val();
-    switch (groupLevels) {
-        case '1':
-            $('.AccountGroup2group').hide();
-            $('.AccountGroup3group').hide();
-            $('.AccountGroup4group').hide();
-            break;
-        case '2':
-            $('.AccountGroup2group').show();
-            $('.AccountGroup3group').hide();
-            $('.AccountGroup4group').hide();
-            break;
-        case '3':
-            $('.AccountGroup2group').show();
-            $('.AccountGroup3group').show();
-            $('.AccountGroup4group').hide();
-            break;
-        case '4':
-            $('.AccountGroup2group').show();
-            $('.AccountGroup3group').show();
-            $('.AccountGroup4group').show();
-            break;
-    }
+
+    $('.AccountGroup').hide();
+    $('.ag' + groupLevels).show(); 
+
+   
 }
-function LoadChartAccountsSettingsSectionSettings() { }
+function LoadChartAccountsSettingsSectionSettings() {}
 
 /// Entities/BusinessUnits Settings
 function LoadEntitiesSectionSettings() {
@@ -2954,28 +2938,28 @@ function LoadEntitiesSectionSettings() {
     $('.gridcontainer').empty();
 
     var entityColumns = [
+      
+      { dataField: 'Code', caption: 'Code', sortOrder: 'asc', sortIndex: 0 },
+      { dataField: 'Name', caption: 'Description' },
+      {
+          caption: 'Entity Type', cellTemplate: function (container, options) {
+              var entity = 'None';
 
-        { dataField: 'Code', caption: 'Code', sortOrder: 'asc', sortIndex: 0 },
-        { dataField: 'Name', caption: 'Description' },
-        {
-            caption: 'Entity Type', cellTemplate: function (container, options) {
-                var entity = 'None';
+              switch (options.data.BusinessUnitType) {
+                  case 0:
+                      entity = "Organization";
+                      break;
+                  case 1:
+                      entity = "Common";
+                      break;
+                  case 2:
+                      entity = "Separate";
+                      break;
+              }
 
-                switch (options.data.BusinessUnitType) {
-                    case 0:
-                        entity = "Organization";
-                        break;
-                    case 1:
-                        entity = "Common";
-                        break;
-                    case 2:
-                        entity = "Separate";
-                        break;
-                }
-
-                $('<label>').text(entity).appendTo(container);
-            }
-        }
+              $('<label>').text(entity).appendTo(container);
+          }
+      }
     ];
 
     LoadGrid('gridcontainer', 'bugridcontainer', entityColumns, 'businessunits/noorganization', 'businessunits', null, 'en-',
@@ -2988,10 +2972,9 @@ function LoadFiscalYearSectionSettings() {
 
     $('.gridcontainer').empty();
     $('.fiscalyearcontainer').remove();
-    PopulateFiscalYearContextMenu();
+    PopulateFiscalYearNavMenu();
 
     var container = $('<div>');
-
     var selectledgergroup = $('<div style="margin-bottom: 20px;">');
     var selectledgername = $('<h2>').text('Ledger: ');
 
@@ -3084,11 +3067,11 @@ function LoadFiscalPeriods(info) {
     } else {
         selectedRow = info.data;
     }
-    /*
-<option value="0">Open</option>
-<option value="1">Closed</option>
-<option value="2">Reopened</option>
-*/
+        /*
+    <option value="0">Open</option>
+    <option value="1">Closed</option>
+    <option value="2">Reopened</option>
+    */
 
     var columns = [
         { dataField: 'PeriodNumber', caption: '' },
@@ -3129,15 +3112,12 @@ function LoadFiscalPeriods(info) {
 
 }
 
-function PopulateFiscalYearContextMenu() {
+function PopulateFiscalYearNavMenu() {
     var um = $('.utilitymenu')
     um.append('<li class="closefiscalyear"><a href="#">Close Fiscal Year</a></li>');
     um.append('<li class="reopenfiscalyear"><a href="#">Reopen Fiscal Year</a></li>');
     um.append('<li class="reclosefiscalyear"><a href="#">Reclose Fiscal Year</a></li>');
     um.append('<li class="newfiscalyear"><a href="#">Create New Fiscal Year</a></li>');
-    um.append('<li class="menu-break fiscalperiodmenu"></li>');
-    um.append('<li class="closefiscalperiod"><a href="#">Close Fiscal Period</a></li>');
-    um.append('<li class="reopenfiscalperiod"><a href="#">Reopen Fiscal Period</a></li>');
 
     var un = $('.utilitynav');
     un.show();
@@ -3215,7 +3195,7 @@ function CloseFiscalYearModal(option) {
         selectedRow = info[0];
         fiscalYearId = selectedRow.Id;
     }
-    $('.closefiscalyearmodal').prop('title', option + ' Fiscal Year' );
+    $('.closefiscalyearmodal').prop('title', option + ' Fiscal Year');
     $('.selectfiscalyearlabel').html('Fiscal Year to ' + option + ":");
 
     modal = $('.closefiscalyearmodal').dialog({
@@ -3315,7 +3295,7 @@ function NewFiscalYearModal() {
         resizable: false
     });
 
-    $('.cancelNewfiscalyearmodal').click(function (e) {
+    $('.cancelnewfiscalyearmodal').click(function (e) {
 
         e.preventDefault();
 
@@ -3323,23 +3303,23 @@ function NewFiscalYearModal() {
 
     });
 
-    $('.okNewfiscalyearmodalbutton').unbind('click');
+    $('.oknewfiscalyearmodalbutton').unbind('click');
 
-    $('.okNewfiscalyearmodalbutton').click(function () {
+    $('.oknewfiscalyearmodalbutton').click(function () {
 
         NewFiscalYearValidate(modal, option)
 
     });
 
-    $('.Newfiscalyearprogresslabel').html('Please wait... Now loading fiscal years');
-    PopulateDropDown('.fc-FromFiscalYear', 'fiscalyears/ledger/' + $('.LedgerId').val() + '?fields=Id,DisplayName', '', '', fiscalYearId, '', function () {
+    $('.newfiscalyearprogresslabel').html('Please wait... Now loading fiscal years');
+    PopulateDropDown('.fn-FromFiscalYear', 'fiscalyears/ledger/' + $('.LedgerId').val() + '?fields=Id,DisplayName', '', '', fiscalYearId, '', function () {
         NewFiscalYearDropDownComplete(modal)
     })
 
 }
 
 function NewFiscalYearDropDownComplete(element, data) {
-    $('.Newfiscalyearprogresslabel').html('');
+    $('.newfiscalyearprogresslabel').html('');
 }
 
 function NewFiscalYearValidate(modal) {
@@ -3352,12 +3332,8 @@ function NewFiscalYearValidate(modal) {
     var item = null;
     item = {
         Name: $('.fn-NewFiscalYear').val(),
-        //StartDate: $('.fn-StartDate').val(),
-        //CopyInactiveAccounts: if ($('.fn-CopyInactiveAccounts').val()) === true)
-        //    value = 'true';
-        //else
-        //    value = 'false';
-        //break;
+        StartDate: $('.fn-StartDate').val(),
+        CopyInactiveAccounts: ($('.fn-CopyInactiveAccounts').prop('checked') === true ? 'true' : 'false')
     }
 
     MakeServiceCall('POST', 'fiscalyears/' + $('.fn-FromFiscalYear').val() + '/copy', JSON.stringify(item), function (data) {
@@ -3375,17 +3351,35 @@ function NewFiscalYearValidate(modal) {
 }
 
 /* GENERAL LEDGER FUND SETTINGS */
+/* GENERAL LEDGER FUND SETTINGS */
 function LoadFundAccountingSectionSettings() {
 
 
-    var fund = '';
-
+    var fund = ''; 
+    var container = $('<div>').addClass('fundsettingscontainer onecolumn');
+     
+    /* FISCAL YEAR */
     $('.gridcontainer').empty();
-    var container = $('<div>').addClass('fundsettingscontainer onecolumn').appendTo('.gridcontainer');
+    var container = $('<div>').appendTo('.gridcontainer');
+    var header = $('<div>');
+    $('<label>').text('Setting for ').appendTo(header);
+    var fundnamedisplay = $('<label>').addClass('FundLedgerId').appendTo(header);
+    $('<hr>').addClass('').appendTo(header);
+    $(header).append('<br />').appendTo(container);
+    
+    /* FUND */
+    var selectfiscalyeargroup = $('<div>').addClass('twocolumn');
+    var selectfiscalyearname = $('<label>').text('Fiscal Year: ');
+    $('<select>').addClass('selectfiscalyear').appendTo(selectfiscalyearname);
+    $(selectfiscalyearname).appendTo(selectfiscalyeargroup);
+    $(selectfiscalyeargroup).append('<br />').append('<br />').appendTo(container);
 
-    CreateBasicFieldBlock('Ledger: ', '<select>', 'FundLedgerId', container, false);
-    CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'selectfiscalyear', container, true);
-    CreateBasicFieldBlock('Fund: ', '<select>', 'selectfund', container, true);
+    /* ACCOUNT/REVENUE/EXPENSE ACCORDION */
+    var selectfundgroup = $('<div>');
+    var selectfundname = $('<label>').text('Fund: ');
+    $('<select>').addClass('selectfund').appendTo(selectfundname);
+    $(selectfundname).appendTo(selectfundgroup);
+    $(selectfundgroup).appendTo(container);
 
     var accordions = $('<div>').addClass('accordions');
     var accountrevenuegroup = $('<div>').addClass('accountrevenuecontainer');
@@ -3394,7 +3388,6 @@ function LoadFundAccountingSectionSettings() {
     $(accordions).appendTo($('.gridcontainer'));
 
     /* FUND BALANCE ACCOUNT */
-    //CreateBasicFieldBlock('Fund Balance Aaccount: ', '<select>', 'selectfundbalanceaccount', selectfundbalanceaccountgroup, true); 
     var selectfundbalanceaccountgroup = $('<div>');
     var selectfundbalanceaccountname = $('<label>').text('Fund balance account: ');
     $('<div>').addClass('selectfundbalanceaccount').appendTo(selectfundbalanceaccountname);
@@ -3437,6 +3430,7 @@ function LoadFundAccountingSectionSettings() {
 
         MakeServiceCall('PATCH', 'fund/' + $('.selectfund').val(), JSON.stringify(item), function () {
 
+
             LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
             DisplaySuccessMessage('Success', 'Setting saved successfully.');
             LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
@@ -3445,19 +3439,23 @@ function LoadFundAccountingSectionSettings() {
 
     },
 
-        'cancel', function (e) {
-            e.preventDefault();
+    'cancel', function (e) {
 
-            LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
-        },
+        e.preventDefault();
 
-        accountrevenuegroup);
+        LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.FundLedgerId').val(), $('.selectfund').val())
+
+    },
+
+   accountrevenuegroup);
+    
+    // var fiscalyearid = '';
 
     MakeServiceCall('GET', 'ledgers/businessunit/' + currentBusinessUnitId + '?fields=all', null, function (data) {
         var ledger = data.Data[0];
         $('.FundLedgerId').val(ledger.Id);
         $('.FundLedgerId').text(ledger.Code);
-
+       
         fundid = $('.selectfund').val();
 
         //fiscalyearid = ledger.DefaultFiscalYearId;
@@ -3466,15 +3464,15 @@ function LoadFundAccountingSectionSettings() {
             fiscalyearid = $('.selectfiscalyear').val();
             PopulateFundBusinessFromFiscalYear(fiscalyearid, ledger);
 
-
+           
             $('.selectfiscalyear').unbind('change');
             $('.selectfiscalyear').change(function (e) {
 
                 //fiscalyear = $('.selectfiscalyear').val();
                 PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), ledger);
-
-                PopulateFundDueFromFund($('.selectfund').val());
-
+                
+                    PopulateFundDueFromFund($('.selectfund').val());
+               
                 $('.accountnumber').val("");
 
             });
@@ -3495,7 +3493,10 @@ function LoadFundAccountingSectionSettings() {
 
 
     }, null);
-
+    //function (xhr, status, err) {
+    //    DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+    //}
+  
     /* BUSINESS UNIT & FUND DUE ACCORDION */
     var businessunitdue = $('<div>').addClass('businessunitduecontainer');
     var funddue = $('<div>').addClass('fundduecontainer');
@@ -3509,10 +3510,14 @@ function LoadFundAccountingSectionSettings() {
     $(accordions).appendTo($('.gridcontainer'));
 
     LoadAccordions();
+
 }
 
 /* POPULATING FUND FROM FISCAL YEAR GRID */
 function PopulateFundFromFiscalYear(fiscalyear, ledger, fundid) {
+    
+    //PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback) {
+
 
     PopulateDropDown('.selectfund', 'fund/' + fiscalyear + '/fiscalyear', '', '', '', function () {
 
@@ -3524,7 +3529,7 @@ function PopulateFundFromFiscalYear(fiscalyear, ledger, fundid) {
         $('.selectfund').unbind('change');
         $('.selectfund').change(function (e) {
             LoadFundGLAccountSelector($('.selectfiscalyear').val(), ledger, fundid);
-
+           
             PopulateFundDueFromFund(fundid);
 
         });
@@ -3551,18 +3556,22 @@ function LoadFundGLAccountSelector(fiscalyearid, ledger, fundid) {
             LoadSelectedAccount($('.selectclosingrevenueaccount'), fund.ClosingRevenueAccountId);
             LoadSelectedAccount($('.selectclosingexpenseaccount'), fund.ClosingExpenseAccountId);
         });
+
     }
 }
 
 /* POPULATING FUND DUE FROM FUND */
 function PopulateFundDueFromFund(fundid) {
+
+
+
     var fundduecolumns = [
-        { dataField: 'Id', width: '0px' },
-        { dataField: 'DisplayName', caption: 'Fund' },
-        { dataField: 'FromLedgerAccount.AccountNumber', caption: 'Due From Account' },
-        { dataField: 'FromLedgerAccount.Name', caption: 'Description' },
-        { dataField: 'ToLedgerAccount.AccountNumber', caption: 'Due To Account' },
-        { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
+              { dataField: 'Id', width: '0px' },
+              { dataField: 'DisplayName', caption: 'Fund' },
+              { dataField: 'FromLedgerAccount.AccountNumber', caption: 'Due From Account' },
+              { dataField: 'FromLedgerAccount.Name', caption: 'Description' },
+             { dataField: 'ToLedgerAccount.AccountNumber', caption: 'Due To Account' },
+         { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
     ];
     //LoadGrid('.fundduecontainer', 'fundduegrid', fundduecolumns, 'funds/' + fundid + '/fundfromto', 'funds', null, 'fn-',
     //   '.fundduemodal', '', 250, false, false, false, null);
@@ -3573,7 +3582,9 @@ function PopulateFundDueFromFund(fundid) {
 
 /* POPULATING BUSINESS UNIT */
 function PopulateFundBusinessFromFiscalYear(fiscalyearid, ledger) {
-    PopulateFundFromFiscalYear(fiscalyearid, ledger, $('.selectfund').val());
+
+
+    PopulateFundFromFiscalYear(fiscalyearid, ledger,$('.selectfund').val());
 
     var businessduecolumns = [
         { dataField: 'Id', width: '0px' },
@@ -3584,21 +3595,28 @@ function PopulateFundBusinessFromFiscalYear(fiscalyearid, ledger) {
         { dataField: 'ToLedgerAccount.Name', caption: 'Description' }
     ];
 
-    CustomLoadGrid('businessunitduegrid', '.businessunitduecontainer', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', null, EditBusinessUnit, null, null);
+      CustomLoadGrid('businessunitduegrid', '.businessunitduecontainer', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', null, EditBusinessUnit, null, null);   
+    //LoadGrid('.businessunitduecontainer', 'businessunitduegrid', businessduecolumns, 'fiscalyears/' + fiscalyearid + '/businessunitfromto', 'businessunitfromtos', null, 'bus-',
+    //'.businessunitduemodal', '', 250, false, false, false, null
+    //);
 }
 
 function LoadFundSettings(fundid) {
+
     MakeServiceCall('GET', 'fund/' + fundid, null, function (data) {
 
         $('.selectfund').val(data.Data.fundid);
         $('.selectfundbalanceaccount').val(data.Data.FundBalanceAccountId);
         $('.selectclosingrevenueaccount').val(data.Data.ClosingRevenueAccountId);
         $('.selectclosingexpenseaccount').val(data.Data.ClosingExpenseAccountId);
-
+     
     }, null);
-}
 
+
+
+}
 function EditBusinessUnit(bufromtoid) {
+
     MakeServiceCall('GET', 'businessunitfromtos/' + bufromtoid, null, function (data) {
         modal = $('.businessunitduemodal').dialog({
             closeOnEscape: false,
@@ -3609,74 +3627,76 @@ function EditBusinessUnit(bufromtoid) {
                 $('.bus-FromLedgerAccount').empty();
                 $('.bus-ToLedgerAccount').empty();
             }
-
+         
         });
 
         // $('.businessunitduemodal').show();
 
         var foo = currentBusinessUnit;
-        GLAccountSelector($(modal).find('.bus-FromLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
-        GLAccountSelector($(modal).find('.bus-ToLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
-
-
-        LoadSelectedAccount($(modal).find('.bus-FromLedgerAccount'), data.Data.FromAccountId);
-        LoadSelectedAccount($(modal).find('.bus-ToLedgerAccount'), data.Data.ToAccountId);
-
-        //$('.bus-FromLedgerAccount').val(data.Data.FromLedgerAccount.AccountNumber);
+            GLAccountSelector($(modal).find('.bus-FromLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
+            GLAccountSelector($(modal).find('.bus-ToLedgerAccount'), $('.FundLedgerId').val(), $('.selectfiscalyear').val());
+     
+            
+            LoadSelectedAccount($(modal).find('.bus-FromLedgerAccount'), data.Data.FromAccountId);
+            LoadSelectedAccount($(modal).find('.bus-ToLedgerAccount'), data.Data.ToAccountId);
+      
+       //$('.bus-FromLedgerAccount').val(data.Data.FromLedgerAccount.AccountNumber);
 
         //$('.bus-ToLedgerAccount').val(data.Data.ToLedgerAccount.AccountNumber);
 
+            
+            $('.cancelbusinessunitduedetailsmodal').click(function (e) {
 
-        $('.cancelbusinessunitduedetailsmodal').click(function (e) {
+                e.preventDefault();
 
-            e.preventDefault();
-
-            CloseModal(modal);
-
-            PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
-
-            $('.bus-FromLedgerAccount').empty();
-            $('.bus-ToLedgerAccount').empty();
-
-        });
-
-        $('.Savebusinessunitduedetails').unbind('click');
-
-        $('.Savebusinessunitduedetails').click(function () {
-
-            var item = {
-                FromAccountId: $(modal).find('.bus-FromLedgerAccount > .hidaccountid').val(),
-                ToAccountId: $(modal).find('.bus-ToLedgerAccount > .hidaccountid').val()
-
-            }
-
-            MakeServiceCall('PATCH', 'businessunitfromtos/' + bufromtoid, JSON.stringify(item), function (data) {
-
-                DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
                 CloseModal(modal);
+
                 PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
-                // PopulateFundFromFiscalYear(fiscalyear, $('.FundLedgerId').val(), fundid);
-                $('.bus-FromLedgerAccount').empty();
-                $('.bus-ToLedgerAccount').empty();
-
-            }, function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred during saving the Business Due.');
-
+                              
+               $('.bus-FromLedgerAccount').empty();
+               $('.bus-ToLedgerAccount').empty();
+              
             });
 
+       $('.Savebusinessunitduedetails').unbind('click');
 
+       $('.Savebusinessunitduedetails').click(function () {
 
-        });
+               var item =     {       
+                   FromAccountId: $(modal).find('.bus-FromLedgerAccount > .hidaccountid').val(),
+                   ToAccountId: $(modal).find('.bus-ToLedgerAccount > .hidaccountid').val()
+            
+        }
 
+               MakeServiceCall('PATCH', 'businessunitfromtos/' + bufromtoid, JSON.stringify(item), function (data) {
 
+               DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
+               CloseModal(modal);
+               PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.FundLedgerId').val());
+              // PopulateFundFromFiscalYear(fiscalyear, $('.FundLedgerId').val(), fundid);
+               $('.bus-FromLedgerAccount').empty();
+               $('.bus-ToLedgerAccount').empty();
+              
+               }, function (xhr, status, err) {
+
+                   DisplayErrorMessage('Error', 'An error occurred during saving the Business Due.');
+
+               });
+            
+             
+             
+         });
+
+          
 
     }, null);
+
+
 }
 
 function EditFundDue(funddueid) {
 
-    MakeServiceCall('GET', 'fundfromtos/' + funddueid, null, function (data) {
+     MakeServiceCall('GET', 'fundfromtos/' + funddueid, null, function (data) {
         modal = $('.fundduemodal').dialog({
             closeOnEscape: false,
             modal: true,
@@ -3714,7 +3734,7 @@ function EditFundDue(funddueid) {
 
         //$('.fn-DueFromAccount').val(data.Data.FromLedgerAccount.AccountNumber);
 
-        //$('.fn-DueToAccount').val(data.Data.ToLedgerAccount.AccountNumber);
+         //$('.fn-DueToAccount').val(data.Data.ToLedgerAccount.AccountNumber);
 
         $('.Savefundduedetails').unbind('click');
 
@@ -3753,11 +3773,11 @@ function LoadGLFormatSectionSettings() {
 
     $('.gridcontainer').empty();
 
-    var container = $('<div>').addClass('onecolumn');
+        var container = $('<div>').addClass('onecolumn');
 
     var glaccountformat = '';
     CreateBasicFieldBlock('Ledger: ', '<select>', 'glf-ledgerselect', container, true);
-
+     
     var glformat = $('<div>').addClass('glformatcontainer').css('display', 'block');
     $(glformat).appendTo($(container));
     $(container).appendTo($('.gridcontainer'));
@@ -3791,78 +3811,78 @@ function LoadGLFormatSectionSettings() {
                 }
 
                 var glformatcolumns = [
+            
+            { dataField: 'Level', caption: 'Level' },
+            {
+                caption: 'Type', cellTemplate: function (container, options) {
+                    var type = "None";
 
-                    { dataField: 'Level', caption: 'Level' },
-                    {
-                        caption: 'Type', cellTemplate: function (container, options) {
-                            var type = "None";
-
-                            switch (options.data.Type) {
-                                case 1:
-                                    type = "Fund";
-                                    break;
-                                case 2:
-                                    type = "Account";
-                                    break;
-                            }
-
-                            $('<label>').text(type).appendTo(container);
-                        }
-                    },
-                    {
-                        caption: 'Format', cellTemplate: function (container, options) {
-                            var format;
-
-                            switch (options.data.Format) {
-                                case 0:
-                                    format = "Both";
-                                    break;
-                                case 1:
-                                    format = "Numeric";
-                                    break;
-                                case 2:
-                                    format = "Alpha";
-                                    break;
-                            }
-
-                            $('<label>').text(format).appendTo(container);
-                        }
-                    },
-                    { dataField: 'Length', caption: 'Length' },
-                    { dataField: 'IsLinked', caption: 'Linked' },
-                    { dataField: 'IsCommon', caption: 'Common' },
-                    { dataField: 'Name', caption: 'Name' },
-                    { dataField: 'Abbreviation', caption: 'Abbreviation' },
-                    {
-                        caption: 'Separator', cellTemplate: function (container, options) {
-                            var separator = 'None';
-                            options.data.Separator.replace(' ', '(Space)');
-
-                            if (options.data.Separator == '') {
-                                options.data.Separator = 'None';
-                            }
-
-                            $('<label>').text(options.data.Separator).appendTo(container);
-                        }
-                    },
-                    {
-                        caption: 'Sort Order', cellTemplate: function (container, options) {
-                            var order = 'None';
-
-                            switch (options.data.SortOrder) {
-                                case 0:
-                                    order = "Ascending";
-                                    break;
-                                case 1:
-                                    order = "Unaffiliated";
-                                    break;
-                            }
-
-                            $('<label>').text(order).appendTo(container);
-                        }
+                    switch (options.data.Type) {
+                        case 1:
+                            type = "Fund";
+                            break;
+                        case 2:
+                            type = "Account";
+                            break;
                     }
-                ];
 
+                    $('<label>').text(type).appendTo(container);
+                }
+            },
+            {
+                caption: 'Format', cellTemplate: function (container, options) {
+                    var format;
+
+                    switch (options.data.Format) {
+                        case 0:
+                            format = "Both";
+                            break;
+                        case 1:
+                            format = "Numeric";
+                            break;
+                        case 2:
+                            format = "Alpha";
+                            break;
+                    }
+
+                    $('<label>').text(format).appendTo(container);
+                }
+            },
+            { dataField: 'Length', caption: 'Length' },
+            { dataField: 'IsLinked', caption: 'Linked' },
+            { dataField: 'IsCommon', caption: 'Common' },
+            { dataField: 'Name', caption: 'Name' },
+            { dataField: 'Abbreviation', caption: 'Abbreviation' },
+            {
+                caption: 'Separator', cellTemplate: function (container, options) {
+                    var separator = 'None';
+                    options.data.Separator.replace(' ', '(Space)');
+
+                    if (options.data.Separator == '') {
+                        options.data.Separator = 'None';
+                    }                      
+
+                    $('<label>').text(options.data.Separator).appendTo(container);
+                }
+            },
+            {
+                caption: 'Sort Order', cellTemplate: function (container, options) {
+                    var order = 'None';
+
+                    switch (options.data.SortOrder) {
+                        case 0:
+                            order = "Ascending";
+                            break;
+                        case 1:
+                            order = "Unaffiliated";
+                            break;
+                    }
+
+                    $('<label>').text(order).appendTo(container);
+                }
+            }
+                ];
+                
                 LoadGrid('.glformatcontainer', 'glformatgrid', glformatcolumns, 'segmentlevels/ledger/' + ledgerId, 'segmentlevels', null, 'glformat-',
                     editModalClass, editModalClass, 250, canDeleteSegmentLevels, false, false, function () {
 
@@ -3878,32 +3898,32 @@ function LoadGLFormatSectionSettings() {
                             }
                             $('.AccountFormat').remove();
                             $('<span>').addClass('AccountFormat').text('Example: ' + glaccountformat).appendTo($('.glformatcontainer'));
-                        }, null);
+                        }, null);       
                     });
             }
         }, null);
-    });
+    });    
 }
 
 function LoadJournalSectionSettings() {
 
-    $('.gridcontainer').empty();
+    $('.gridcontainer').empty(); 
 }
 
 function LoadUtilitiesSectionSettings() {
 
-    $('.gridcontainer').empty();
+    $('.gridcontainer').empty(); 
 }
 /* END GENERAL LEDGER SETTINGS */
 
 /* REPORTS SETTINGS */
-function LoadPageFootersSectionSettings() { }
+function LoadPageFootersSectionSettings() {}
 
-function LoadPageHeadersSectionSettings() { }
+function LoadPageHeadersSectionSettings() {}
 
-function LoadReportFootersSectionSettings() { }
+function LoadReportFootersSectionSettings() {}
 
-function LoadReportHeadersSectionSettings() { }
+function LoadReportHeadersSectionSettings() {}
 /* END REPORTS SETTINGS */
 
 /* CUSTOM FIELDS */
@@ -4048,8 +4068,8 @@ function CustomFieldTypeSelected(selectedvalue) {
 
     if (selectedvalue) {
         if (selectedvalue == CustomFieldType.Number ||
-            selectedvalue == CustomFieldType.Date ||
-            selectedvalue == CustomFieldType.DateTime) {
+        selectedvalue == CustomFieldType.Date ||
+        selectedvalue == CustomFieldType.DateTime) {
             $('.minmaxvalues').show()
         }
         else {
@@ -4084,7 +4104,7 @@ function CustomFieldTypeSelected(selectedvalue) {
                         $('.options').show();
                     }
                 }
-                , 500);
+            , 500);
 
 
         }
@@ -4109,7 +4129,7 @@ function CustomFieldTypeSelected(selectedvalue) {
 
                     }
                 }
-                , 500);
+            , 500);
         }
     }
     else {
@@ -4184,5 +4204,7 @@ function SendCustomField(method, route, data, modal) {
 
     }, null);
 }
+
 /* END CUSTOM FIELDS */
+
 

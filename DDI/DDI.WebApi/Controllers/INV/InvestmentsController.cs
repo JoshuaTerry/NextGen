@@ -27,14 +27,14 @@ namespace DDI.WebApi.Controllers.INV
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
 
         [HttpGet]
-        [Route("api/v1/investments", Name = RouteNames.Investment)]
+        [Route("api/v1/investments")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.Investment, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Get)]
+        [Route("api/v1/investments/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
 
@@ -55,7 +55,7 @@ namespace DDI.WebApi.Controllers.INV
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/investments", Name = RouteNames.Investment + RouteVerbs.Post)]
+        [Route("api/v1/investments")]
         public IHttpActionResult Post([FromBody] Investment entityToSave)
         {
             return base.Post(entityToSave);
@@ -63,7 +63,7 @@ namespace DDI.WebApi.Controllers.INV
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Patch)]
+        [Route("api/v1/investments/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -71,7 +71,7 @@ namespace DDI.WebApi.Controllers.INV
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/investments/{id}", Name = RouteNames.Investment + RouteVerbs.Delete)]
+        [Route("api/v1/investments/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

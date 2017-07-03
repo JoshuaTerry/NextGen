@@ -33,7 +33,7 @@ namespace DDI.Conversion.Core
                 Directory.CreateDirectory(_outputDirectory);
 
                 // Create the output filename
-                string outputFilename = CreateOutputFilename(OutputFile.Core_EntityApprovalFile, outputFileNameSuffix);
+                string outputFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_EntityApprovalFile, outputFileNameSuffix);
 
                 // Import the approvals.
 
@@ -75,17 +75,6 @@ namespace DDI.Conversion.Core
                     outputFile.Dispose();
                 }
             }
-        }
-
-        private string CreateOutputFilename(string filename, string suffix)
-        {
-            if (!string.IsNullOrWhiteSpace(suffix))
-            {
-                string extension = Path.GetExtension(filename);
-                filename = filename.Replace(extension, "_" + suffix) + extension;
-            }
-
-            return filename;
         }
 
         private User GetUserByName(IEnumerable<User> users, string userName)

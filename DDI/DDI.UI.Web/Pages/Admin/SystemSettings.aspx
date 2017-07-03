@@ -124,13 +124,13 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label class="required">Code</label>
-                <input type="text" class="cstat-Code" required="required" maxlength="4" />
+                <label >Code</label>
+                <input type="text" class="cstat-Code required"  maxlength="4" />
             </div>
 
             <div class="fieldblock">
-                <label class="required">Description</label>
-                <input type="text" class="cstat-Name" required="required" maxlength="128" />
+                <label>Description</label>
+                <input type="text" class="cstat-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -151,13 +151,13 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label class="required">Code</label>
-                <input type="text" class="ctype-Code" maxlength="4" />
+                <label >Code</label>
+                <input type="text" class="ctype-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
-                <label class="required">Description</label>
-                <input type="text" class="ctype-Name" maxlength="128" />
+                <label>Description</label>
+                <input type="text" class="ctype-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -1344,7 +1344,7 @@
 
             <div class="fieldblock">
                 <label>Copy From Fiscal Year:</label>
-                <select class="fn-FromFiscalYear">
+                <select class="fn-FromFiscalYear required">
                 </select>
             </div>
 
@@ -1364,12 +1364,12 @@
             </div>
 
             <div class="fieldblock">
-                <label class="copyfiscalyearprogresslabel"></label>
+                <label class="newfiscalyearprogresslabel"></label>
             </div>
 
             <div class="modalbuttons">
-                <input type="button" class="okcopyfiscalyearmodalbutton" value="OK" />
-                <a href="#" class="cancelcopyfiscalyearmodal">Cancel</a>
+                <input type="button" class="oknewfiscalyearmodalbutton" value="OK" />
+                <a href="#" class="cancelnewfiscalyearmodal">Cancel</a>
             </div>
         </div>
     </div>
