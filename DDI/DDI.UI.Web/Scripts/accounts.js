@@ -43,6 +43,14 @@ $(document).ready(function () {
 
     });
 
+    $('.selectaccount').click(function (e) {
+
+        e.preventDefault();
+
+        location.href = "/Pages/GL/Accounts.aspx";
+
+    });
+
 });
 
 function LoadAccountActivityAndBudgetTab(id) {
