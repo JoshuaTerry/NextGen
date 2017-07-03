@@ -20,7 +20,7 @@ namespace DDI.Shared.Models.Client.CP
         public string Name { get; set; }
 
         public Guid? BankAccountId { get; set; }
-        [ForeignKey(nameof(BankAccountId)]
+        [ForeignKey(nameof(BankAccountId))]
         public BankAccount BankAccount { get; set; }
 
     }
