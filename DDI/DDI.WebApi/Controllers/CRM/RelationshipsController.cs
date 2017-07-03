@@ -61,7 +61,7 @@ namespace DDI.WebApi.Controllers.CRM
         }
         
         [HttpGet]
-        [Route("api/v1/relationships", Name = RouteNames.Relationship)]
+        [Route("api/v1/relationships")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             if (string.IsNullOrWhiteSpace(fields))
@@ -69,11 +69,11 @@ namespace DDI.WebApi.Controllers.CRM
                 fields = DefaultFields;
             }
 
-            return base.GetAll(RouteNames.Relationship, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/relationships/{id}", Name = RouteNames.Relationship + RouteVerbs.Get)]
+        [Route("api/v1/relationships/{id}")]
         public IHttpActionResult GetById(Guid id, Guid? constituentId = null, string fields = null)
         {
             if (string.IsNullOrWhiteSpace(fields))
@@ -90,7 +90,7 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpPost]
-        [Route("api/v1/relationships", Name = RouteNames.Relationship + RouteVerbs.Post)]
+        [Route("api/v1/relationships")]
         public IHttpActionResult Post([FromBody] Relationship entityToSave)
         {
             return base.Post(entityToSave);
@@ -98,7 +98,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/constituents/{constituentId}/relationships", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Post)]
+        [Route("api/v1/constituents/{constituentId}/relationships")]
         public IHttpActionResult Post(Guid constituentId, [FromBody] Relationship entityToSave)
         {
             Service.TargetConstituentId = constituentId;
@@ -108,7 +108,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/relationships/{id}", Name = RouteNames.Relationship + RouteVerbs.Patch)]
+        [Route("api/v1/relationships/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -116,7 +116,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/constituents/{constituentId}/relationships/{id}", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Patch)]
+        [Route("api/v1/constituents/{constituentId}/relationships/{id}")]
         public IHttpActionResult Patch(Guid constituentId, Guid id, JObject entityChanges)
         {
             Service.TargetConstituentId = constituentId;
@@ -126,7 +126,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/relationships/{id}", Name = RouteNames.Relationship + RouteVerbs.Delete)]
+        [Route("api/v1/relationships/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
@@ -134,7 +134,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
-        [Route("api/v1/constituents/{constituentId}/relationships/{id}", Name = RouteNames.Constituent + RouteNames.Relationship + RouteVerbs.Get)]
+        [Route("api/v1/constituents/{constituentId}/relationships/{id}")]
         public IHttpActionResult GetById(Guid constituentId, Guid id, string fields = null)
         {
             if (string.IsNullOrWhiteSpace(fields))
@@ -151,7 +151,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/relationships/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/relationships", Name = RouteNames.Constituent + RouteNames.Relationship)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/constituents/{id}/relationships")]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -162,7 +162,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var response1 = Service.GetAllWhereExpression(a => a.Constituent1Id == id, search, fields);
                 var response2 = Service.GetAllWhereExpression(a => a.Constituent2Id == id, search, fields);
                 response1.Data = response1.Data.Union(response2.Data).ToList();
-                return FinalizeResponse(response1, RouteNames.Constituent + RouteNames.Relationship, search, fields);
+                return FinalizeResponse(response1, search, fields);
             }
             catch (Exception ex)
             {

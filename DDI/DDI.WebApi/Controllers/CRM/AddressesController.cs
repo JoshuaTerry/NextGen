@@ -32,14 +32,14 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/addresses", Name = RouteNames.Address)]
+        [Route("api/v1/addresses")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.Address, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/addresses/{id}", Name = RouteNames.Address + RouteVerbs.Get)]
+        [Route("api/v1/addresses/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -47,7 +47,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/addresses", Name = RouteNames.Address + RouteVerbs.Post)]
+        [Route("api/v1/addresses")]
         public IHttpActionResult Post([FromBody] Address item)
         {
             return base.Post(item);
@@ -55,7 +55,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/addresses/{id}", Name = RouteNames.Address + RouteVerbs.Patch)]
+        [Route("api/v1/addresses/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
@@ -63,7 +63,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/addresses/{id}", Name = RouteNames.Address + RouteVerbs.Delete)]
+        [Route("api/v1/addresses/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

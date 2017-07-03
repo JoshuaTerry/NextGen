@@ -16,12 +16,22 @@ a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-ev
 
 .newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; color: #0f75b4 !important; }
 .editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; color: #0f75b4 !important; }
+/* ICONS */
+
+.view-icon { background: url('../../Images/Search_Mono_16.png') no-repeat; width: 16px; height: 16px; margin: 0px; padding: 0px; }
+
+/* END ICONS */
+
+.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
+.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
 .editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; }
 .newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; }
 
 .actionbuttons { margin-right: 10px; }
 .actionbuttons.editbutton { float: none; background: url('../../Images/edit-16.png') no-repeat; width: 16px; height: 16px; }
 .actionbuttons.deletebutton { display: inline-block; background: url('../../Images/erase-16.png') no-repeat; width: 16px; height: 16px; }
+.actionbuttons.viewbutton { display: inline-block; background: url('../../Images/Note_16.png') no-repeat; width: 16px; height: 16px; }
+.actionbuttons.notebutton { display: inline-block; background: url('../../Images/Messaging-Note-icon.png') no-repeat; width: 16px; height: 16px; }
 
 fieldset { border: solid 1px #999999; margin-bottom: 10px; }
 fieldset legend { font-weight: bold; }

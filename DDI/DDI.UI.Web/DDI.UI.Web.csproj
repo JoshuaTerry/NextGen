@@ -108,7 +108,9 @@
     <Content Include="Images\TemplateJournal.gif" />
     <Content Include="Images\edit-16.png" />
     <Content Include="Images\erase-16.png" />
+    <Content Include="Images\Messaging-Note-icon.png" />
     <Content Include="Images\trashcan-11.png" />
+    <Content Include="Pages\Common\ViewDocument.aspx" />
     <Content Include="Pages\Common\Notes.aspx" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\GL\AccountDetails.aspx" />
@@ -160,6 +162,7 @@
     <Content Include="Scripts\journaldetail.js" />
     <Content Include="Scripts\JournalEntry.js" />
     <Content Include="Scripts\accounts.js" />
+    <Content Include="Scripts\attachments.js" />
     <Content Include="Scripts\dx.all.js" />
     <Content Include="Scripts\gljournals.js" />
     <Content Include="Scripts\importwizard.js" />
@@ -354,6 +357,13 @@
     <Compile Include="Code\ApiRoleProvider.cs" />
     <Compile Include="Code\ApiUserProvider.cs" />
     <Compile Include="Code\CustomSiteMapProvider.cs" />
+    <Compile Include="Pages\Common\ViewDocument.aspx.cs">
+      <DependentUpon>ViewDocument.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Common\ViewDocument.aspx.designer.cs">
+      <DependentUpon>ViewDocument.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Common\Notes.aspx.cs">
       <DependentUpon>Notes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
