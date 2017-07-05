@@ -25,14 +25,14 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/paymentmethods", Name = RouteNames.PaymentMethod)]
+        [Route("api/v1/paymentmethods")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.PaymentMethod, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/paymentmethods/{id}", Name = RouteNames.PaymentMethod + RouteVerbs.Get)]
+        [Route("api/v1/paymentmethods/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -40,7 +40,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/paymentmethods", Name = RouteNames.PaymentMethod + RouteVerbs.Post)]
+        [Route("api/v1/paymentmethods")]
         public IHttpActionResult Post([FromBody] PaymentMethod entityToSave)
         {
             return base.Post(entityToSave);
@@ -48,7 +48,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/paymentmethods/{id}", Name = RouteNames.PaymentMethod + RouteVerbs.Patch)]
+        [Route("api/v1/paymentmethods/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -56,7 +56,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/paymentmethods/{id}", Name = RouteNames.PaymentMethod + RouteVerbs.Delete)]
+        [Route("api/v1/paymentmethods/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
@@ -65,7 +65,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/paymentmethods/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/paymentmethods", Name = RouteNames.Constituent + RouteNames.PaymentMethod)]
+        [Route("api/v1/constituents/{id}/paymentmethods")]
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -73,7 +73,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search, fields);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.PaymentMethod, search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {

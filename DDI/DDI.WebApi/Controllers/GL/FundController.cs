@@ -18,9 +18,6 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class FundController : GenericController<Fund>
     {
-
-        private const string ROUTENAME_FUND = RouteNames.Ledger + RouteNames.Fund + RouteVerbs.Get;
-
         public FundController(FundService service) : base(service) { }
 
         protected override Expression<Func<Fund, object>>[] GetDataIncludesForList()
@@ -75,14 +72,14 @@ namespace DDI.WebApi.Controllers.GL
         protected override string FieldsForAll => FieldsForList;
 
         [HttpGet]
-        [Route("api/v1/fund", Name = RouteNames.Fund)]
+        [Route("api/v1/fund")]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.Fund, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/fund/{id}", Name = RouteNames.Fund + RouteVerbs.Get)]
+        [Route("api/v1/fund/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -99,7 +96,7 @@ namespace DDI.WebApi.Controllers.GL
                 var search = new PageableSearch(offset, limit, orderBy);
                 var result = Service.GetAllWhereExpression(f => f.FiscalYearId == fiscalyearid , search, fields);
                 
-                return FinalizeResponse(result, "", search, fields);
+                return FinalizeResponse(result, search, fields);
             }
             catch (Exception ex)
             {
@@ -110,7 +107,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [Authorize]
         [HttpPost]
-        [Route("api/v1/fund", Name = RouteNames.Fund + RouteVerbs.Post)]
+        [Route("api/v1/fund")]
         public IHttpActionResult Post([FromBody] Fund entityToSave)
         {
             return base.Post(entityToSave);
@@ -118,7 +115,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [Authorize]
         [HttpPatch]
-        [Route("api/v1/fund/{id}", Name = RouteNames.Fund + RouteVerbs.Patch)]
+        [Route("api/v1/fund/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -126,7 +123,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [Authorize]
         [HttpDelete]
-        [Route("api/v1/fund/{id}", Name = RouteNames.Fund + RouteVerbs.Delete)]
+        [Route("api/v1/fund/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

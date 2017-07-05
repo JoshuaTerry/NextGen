@@ -1,13 +1,11 @@
-﻿using DDI.Shared.Models.Client.CRM;
+﻿using DDI.Services.Search;
+using DDI.Shared;
+using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Services.Search;
-using DDI.Shared.Helpers;
-using DDI.Services;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -31,14 +29,14 @@ namespace DDI.WebApi.Controllers.CRM
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.ContactCategoryDefaults).Exclude(p => p.ContactCategory.ContactTypes).Exclude(p => p.ContactCategory.DefaultContactType);
 
         [HttpGet]
-        [Route("api/v1/contacttypes", Name = RouteNames.ContactType)]
+        [Route("api/v1/contacttypes")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.ContactType, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/contacttypes/newconstituent", Name = RouteNames.ContactType + RouteNames.Constituent)]
+        [Route("api/v1/contacttypes/newconstituent")]
         public IHttpActionResult GetForNewConstituent()
         {
             try
@@ -46,7 +44,7 @@ namespace DDI.WebApi.Controllers.CRM
                 string fields = $"{nameof(ContactType.Id)},{nameof(ContactType.Name)},{nameof(ContactType.ContactCategory)}.{nameof(ContactCategory.Code)}";
                 var search = PageableSearch.Max;
                 var result = Service.GetAllWhereExpression(ct => ct.IsAlwaysShown == true, search, fields);
-                return FinalizeResponse(result, RouteNames.ContactType + RouteNames.Constituent, search, fields);                
+                return FinalizeResponse(result, search, fields);
             }
             catch (Exception ex)
             {
@@ -64,7 +62,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var result = Service.GetAllWhereExpression(ct => ct.ContactCategoryId == categoryid, search, fields);
-                return FinalizeResponse(result, string.Empty, search, fields);
+                return FinalizeResponse(result, search, fields);
             }
             catch (Exception ex)
             {
@@ -74,7 +72,7 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/contacttypes/{id}", Name = RouteNames.ContactType + RouteVerbs.Get)]
+        [Route("api/v1/contacttypes/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -82,7 +80,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/contacttypes", Name = RouteNames.ContactType + RouteVerbs.Post)]
+        [Route("api/v1/contacttypes")]
         public IHttpActionResult Post([FromBody] ContactType entityToSave)
         {
             return base.Post(entityToSave);
@@ -90,7 +88,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/contacttypes/{id}", Name = RouteNames.ContactType + RouteVerbs.Patch)]
+        [Route("api/v1/contacttypes/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -98,7 +96,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/contacttypes/{id}", Name = RouteNames.ContactType + RouteVerbs.Delete)]
+        [Route("api/v1/contacttypes/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
