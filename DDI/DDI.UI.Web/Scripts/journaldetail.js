@@ -40,6 +40,8 @@ function LoadJournalDetail() {
 
         if (data.Data && data.IsSuccessful) {
 
+            currentEntity = data.Data;
+
             $('.journaltype').html(data.Data.JournalDescription);
             $('.StatusDescription').html(data.Data.StatusDescription);
             $('.TransactionDate').val(data.Data.TransactionDate);
@@ -197,6 +199,26 @@ function EditJournalLineModal(id) {
         });
 
     });
+}
+
+function LoadJournalLine(id) {
+
+    MakeServiceCall('GET', 'JournalLine/' + id, null, function (data) {
+
+        $('.LinkedAccountType').val(data.Data.LinkedAccountType),
+            $('.LinkedAccountInd').val((data.Data.LinkedAccountNumber > 0) ? 1 : 0),
+            $('.LinkedAccountNumber').val(data.Data.LinkedAccountNumber),
+            $('.CollateralTypePercent').prop("checked", (data.Data.CollateralType === 0) ? true : false),
+            $('.CollateralTypeAmount').prop("checked", (data.Data.CollateralType === 1) ? true : false),
+            $('.CollateralType').val(data.Data.CollateralType),
+            $('.Collateral').val(data.Data.Collateral),
+            $('.BlockOtherLoanLinks').val(data.Data.BlockOtherLoanLinks)
+
+
+    }, function (xhr, status, err) {
+        DisplayErrorMessage('Error', 'An error occurred during loading the Linked Account.');
+    });
+
 }
 
 function DeleteJournalLine(id) {
