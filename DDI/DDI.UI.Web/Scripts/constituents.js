@@ -359,9 +359,7 @@ function DisplayConstituentSideBar() {
     $('.FormattedName').text(currentEntity.FormattedName);
 
     GetConstituentPrimaryAddress();
-
-    //GetConstituentPreferredContactInfo();
-
+    
 }
 
 function DisplayConstituentType() {
