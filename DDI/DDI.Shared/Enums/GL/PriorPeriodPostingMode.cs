@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.ComponentModel;
 
 namespace DDI.Shared.Enums.GL
 {
     public enum PriorPeriodPostingMode
     {
+        [Description("Allow")]
         Allow = 0,
+
+        [Description("Security")]
         Security = 1,
+
+        [Description("Prohibit")]
         Prohibit = 2
     }
 }

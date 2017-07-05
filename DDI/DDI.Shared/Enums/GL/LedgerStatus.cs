@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.ComponentModel;
 
 namespace DDI.Shared.Enums.GL
 {
     public enum LedgerStatus
     {
+        [Description("Empty")]
         Empty = 0,
+
+        [Description("Active")]
         Active = 1,
+
+        [Description("Closed")]
         Closed = 2
-    }
-    
+    }    
 }

@@ -1,10 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.ComponentModel;
 
 namespace DDI.Shared.Enums.GL
 {
-    public enum PostedTransactionType { Actual = 0, CloseFrom = 1, CloseTo = 2, BeginBal = 3, EndBal = 4 }
+    public enum PostedTransactionType
+    {
+        [Description("Actual")]
+        Actual = 0,
+
+        [Description("Close From")]
+        CloseFrom = 1,
+
+        [Description("Close To")]
+        CloseTo = 2,
+
+        [Description("Begin Balance")]
+        BeginBal = 3,
+
+        [Description("End Balance")]
+        EndBal = 4
+    }
 }

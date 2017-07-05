@@ -67,22 +67,11 @@
             </div>
 
             <div class="fieldblock">
-                
-
-                
-            </div>
-
-            <div class="fieldblock">
                 <label>Occurs: </label>
-                <select class="IsNormallyDebit editable">
-                    <option value="0">Monthly</option>
-                    <option value="1">Daily</option>
-                    <option value="2">Weekly</option>
-                    <option value="3">Yearly</option>
-                </select>
+                <select class="RecurringType editable"></select>
             </div>
 
-            <div class="expirationselection">
+            <div class="expirationselection" style="display: none;">
                 <div class="fieldblock">
                     <label>Expires: </label>
                 </div>
@@ -159,11 +148,7 @@
 
                 <div class="fieldblock">
                     <label>Due: </label>
-                    <select class="DoToMode editable">
-                        <option value="0">None</option>
-                        <option value="1">Due From</option>
-                        <option value="2">Due To</option>
-                    </select>
+                    <select class="DueToMode editable"></select>
                 </div>
 
                 <div class="fieldblock">

@@ -164,6 +164,7 @@
     <Compile Include="Enums\INV\MaturityMethod.cs" />
     <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\IoExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="Models\Client\Security\UserRole.cs" />
     <Compile Include="Models\AuditableEntityBase.cs" />
     <Compile Include="Models\DatabaseConstraintException.cs" />
+    <Compile Include="Models\EnumEntity.cs" />
     <Compile Include="Models\ICanTransmogrify.cs" />
     <Compile Include="Models\ICodeEntity.cs" />
     <Compile Include="Models\IAuditableEntity.cs" />

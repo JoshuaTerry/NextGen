@@ -1,12 +1,21 @@
 ﻿
+using System.ComponentModel;
+
 namespace DDI.Shared.Enums.CRM
 {
     public enum BirthDateType
-	{
-		None = 0,
-		AgeRange = 1,
-		FullDate = 2,
-		MonthDay = 3
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Age Range")]
+        AgeRange = 1,
+
+        [Description("Full Date")]
+        FullDate = 2,
+
+        [Description("Month Day")]
+        MonthDay = 3
 	}
 
 }

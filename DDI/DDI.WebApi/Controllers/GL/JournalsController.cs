@@ -5,11 +5,16 @@ using System.Web.Http;
 using System.Web.Routing;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
+using DDI.Shared.Models;
+using DDI.Shared.Extensions;
+using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -158,6 +163,37 @@ namespace DDI.WebApi.Controllers.GL
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/journals/recurringtypes")]
+        public IHttpActionResult GetRecurringTypes()
+        {
+            try
+            {
+                return Ok(Enum<RecurringType>.GetDataResponse());
+            }
+            catch (Exception ex)
+            {
+                
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/journals/duetomodes")]
+        public IHttpActionResult GetDueToModes()
+        {
+            try
+            {
+                return Ok(Enum<DueToMode>.GetDataResponse());
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
     }
 }

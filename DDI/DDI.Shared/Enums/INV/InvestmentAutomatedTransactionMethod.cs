@@ -12,8 +12,6 @@ namespace DDI.Shared.Enums.INV
         Withdrawal = 1,
 
         [Description("Transfer")]
-        Transfer = 2
-            
+        Transfer = 2       
     }
-
 }

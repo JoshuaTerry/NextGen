@@ -1,10 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.ComponentModel;
 
 namespace DDI.Shared.Enums.GL
 {
-    public enum DueToMode { None = 0, DueFrom = 1, DueTo = 2 }
+    public enum DueToMode
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Due From")]
+        DueFrom = 1,
+
+        [Description("Due To")]
+        DueTo = 2
+    }
 }

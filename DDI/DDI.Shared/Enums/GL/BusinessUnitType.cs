@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.ComponentModel;
+
 
 namespace DDI.Shared.Enums.GL
 {
     public enum BusinessUnitType
     {
+        [Description("Organization")]
         Organization = 0,
+
+        [Description("Common")]
         Common = 1,
+
+        [Description("Separate")]
         Separate = 2
     }
 

@@ -16,7 +16,5 @@ namespace DDI.Shared.Enums.INV
 
         [Description("Grant")]
         Grant = 3
-
     }
-
 }

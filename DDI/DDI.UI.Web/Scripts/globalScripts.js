@@ -1170,7 +1170,7 @@ function SetupEditControls() {
         var editcontainer = $(this).closest('.editcontainer');
 
         StopEdit(editcontainer);
-        $('#form1').validate().resetForm();
+        // $('#form1').validate().resetForm();
         CancelEdit();
 
     });

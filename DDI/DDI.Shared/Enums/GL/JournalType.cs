@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.ComponentModel;
 
 namespace DDI.Shared.Enums.GL
 {
     public enum JournalType
     {
+        [Description("Normal")]
         Normal = 0,
+
+        [Description("Recurring")]
         Recurring = 1,
+
+        [Description("Template")]
         Template = 2,      
     }
 }
