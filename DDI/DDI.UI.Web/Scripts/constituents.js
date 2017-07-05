@@ -388,7 +388,8 @@ function DisplayConstituentType() {
 function GetConstituentPrimaryAddress() {
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id + '/constituentaddresses/' ,
+        url: WEB_API_ADDRESS + 'constituents/primary/' + currentEntity.Id ,
+       
         contentType: 'application/json',
         crossDomain: true,
         headers: GetApiHeaders(),
