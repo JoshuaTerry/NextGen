@@ -7,7 +7,7 @@ using DDI.Shared.Enums.GL;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("Account"),EntityName("G/L Account")]
+    [Table("Account"),EntityName("GL Account")]
     public class Account : AuditableEntityBase
     {
         [Key]

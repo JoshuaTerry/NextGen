@@ -51,7 +51,7 @@ namespace DDI.Business.Tests.Helpers
         public void LinkedEntityHelper_GetDiplayTypeName()
         {
             Assert.AreEqual("Address Type", LinkedEntityHelper.GetEntityDisplayName(typeof(AddressType)));
-            Assert.AreEqual("G/L Account", LinkedEntityHelper.GetEntityDisplayName(typeof(Account)));
+            Assert.AreEqual("GL Account", LinkedEntityHelper.GetEntityDisplayName(typeof(Account)));
 
             var genders = GenderDataSource.GetDataSource(_uow);
             Assert.AreEqual("Gender Male", LinkedEntityHelper.GetEntityDisplayName(genders.First(p => p.Code == "M")));

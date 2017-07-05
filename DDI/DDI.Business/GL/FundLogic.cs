@@ -23,7 +23,7 @@ namespace DDI.Business.GL
         #region Public Methods
 
         /// <summary>
-        /// Get the Fund entity for a G/L account.
+        /// Get the Fund entity for a GL account.
         /// </summary>
         public Fund GetFund(Account account)
         {

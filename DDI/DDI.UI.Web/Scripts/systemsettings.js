@@ -3135,7 +3135,7 @@ function LoadFundAccountingSectionSettings() {
 
     var accordions = $('<div>').addClass('accordions');
     var accountrevenuegroup = $('<div>').addClass('accountrevenuecontainer');
-    var header = $('<h1>').text('G/L Account Settings ').appendTo($(accordions));
+    var header = $('<h1>').text('GL Account Settings ').appendTo($(accordions));
     $(accountrevenuegroup).appendTo($(accordions));
     $(accordions).appendTo($('.gridcontainer'));
 

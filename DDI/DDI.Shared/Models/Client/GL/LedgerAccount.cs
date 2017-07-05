@@ -6,7 +6,7 @@ using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.GL
 {
-    [Table("LedgerAccount"),EntityName("G/L Account")]
+    [Table("LedgerAccount"),EntityName("GL Account")]
     public class LedgerAccount : AuditableEntityBase
     {
         [Key]

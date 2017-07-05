@@ -455,7 +455,7 @@ namespace DDI.Business.GL
 
                 // Create fund accounting transactions...
 
-                // First, get the fund and the fiscal year for the line item G/L account.
+                // First, get the fund and the fiscal year for the line item GL account.
                 Fund fund = year.Ledger.FundAccounting ? fund = fundLogic.GetFund(UnitOfWork.GetReference(account, p => p.Account)) : null;
                 FiscalYear accountYear = yearLogic.GetCachedFiscalYear(account.FiscalYearId);
                 Guid? sourceFundId = line.SourceFundId;

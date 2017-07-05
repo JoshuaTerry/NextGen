@@ -252,7 +252,7 @@ namespace DDI.Business.Tests.GL
             AssertNoException(() => _bl.ValidateAccountNumber(year, "01-150-50-42-01", false, false, false),
                 "Invalid account, with account validation disabled.");
 
-            // Allowing new G/L segments
+            // Allowing new GL segments
             AssertThrowsExceptionMessageContains<ValidationException>(() => result = _bl.ValidateAccountNumber(year, "01-159-50-42", false, false, false),
                 UserMessages.InvalidCode, "Invalid segment, with new segments disabled.");
 
@@ -297,7 +297,7 @@ namespace DDI.Business.Tests.GL
             result = _bl.ValidateAccountNumber(ledger, unit + ":01-150-50-42", false, false, true);
             Assert.AreEqual(_bl.GetLedgerAccount(account), result.LedgerAccount, "Unit prefix where unit matches fiscal year.");
 
-            // G/L segments shouldn't be validated when passing a ledger.
+            // GL segments shouldn't be validated when passing a ledger.
             AssertNoException(() => result = _bl.ValidateAccountNumber(ledger, "01-159-50-42", false, false, false),
                 "No validation of segments.");
         }

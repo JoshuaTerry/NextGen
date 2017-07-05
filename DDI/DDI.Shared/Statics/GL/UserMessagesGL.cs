@@ -3,21 +3,21 @@
     public static class UserMessagesGL
     {
         public static string BusinessUnitTypeNotEditable => "The Business Unit Type is not editable.";
-        public static string GLAcctDescrBlank => "G/L account description cannot be blank.";
-        public static string GLAcctNumBlank => "G/L account number cannot be blank.";
-        public static string GLAcctCategoryNone => "G/L account category cannot be set to \"None\".";
+        public static string GLAcctDescrBlank => "GL account description cannot be blank.";
+        public static string GLAcctNumBlank => "GL account number cannot be blank.";
+        public static string GLAcctCategoryNone => "GL account category cannot be set to \"None\".";
         public static string GLAcctBeginBalRandE => "Revenue and expense accounts cannot have a beginning balance.";
-        public static string GLAcctDuplicate => "G/L account number is already assigned for this fiscal year.";
+        public static string GLAcctDuplicate => "GL account number is already assigned for this fiscal year.";
 
         public static string AccountGroupLevelsRange => $"The number of account groups must be between 1 and {ConstantsGL.MaxAccountGroups}.";
-        public static string AccountGroupLevelsChanged => "The number of account groups cannot be modified if any G/L accounts have been defined for this ledger.";
+        public static string AccountGroupLevelsChanged => "The number of account groups cannot be modified if any GL accounts have been defined for this ledger.";
         public static string AccountGroupCodeBlank => "Group code cannot be blank.";
         public static string AccountGroupNameBlank => "Group name cannot be blank.";
 
-        public static string AccountSegmentsRange => $"The number of G/L account segments must be between 1 and {ConstantsGL.MaxAccountSegments}.";
-        public static string SegmentLevelsChanged => "The number of segment levels cannot be modified if any G/L account segments have been defined for this ledger.";
+        public static string AccountSegmentsRange => $"The number of GL account segments must be between 1 and {ConstantsGL.MaxAccountSegments}.";
+        public static string SegmentLevelsChanged => "The number of segment levels cannot be modified if any GL account segments have been defined for this ledger.";
         public static string BadBusinessUnitCode => "Invalid {0} \"{1}\".";
-        public static string AccountMustBeInBusinessUnit => "G/L account must be in {0} \"{1}\".";
+        public static string AccountMustBeInBusinessUnit => "GL account must be in {0} \"{1}\".";
         public static string BadFiscalYearForBusinessUnit => "Fiscal year {0} not defined for {1} \"{2}\".";
         public static string BadFiscalYear => "Fiscal year not defined.";
         public static string GLSegmentAlpha => "Segment code must contain only letters.";
@@ -25,7 +25,7 @@
         public static string GLSegmentLength => "Segment code must be {0} characters long.";
         public static string GLSegmentNumeric => "Segment code must contain only numbers.";
         public static string GLSegmentNameBlank => "Segment name cannot be blank.";
-        public static string GLAccountNumberInvalid => "Invalid G/L account \"{0}\".";
+        public static string GLAccountNumberInvalid => "Invalid GL account \"{0}\".";
         public static string GLAccountSegmentInvalid => "Account segment is not specified or invalid.";
         public static string GLAccountNoSegments => "Account has no account segments.";
         public static string GLAccountNotInFiscalYear => "Account {0} not defined in fiscal year {1}.";

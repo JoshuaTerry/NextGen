@@ -18,7 +18,7 @@ using DDI.Shared.Statics.GL;
 namespace DDI.Business.GL
 {
     /// <summary>
-    /// Business Logic class for posting G/L transactions (Transaction to PostedTransaction)
+    /// Business Logic class for posting GL transactions (Transaction to PostedTransaction)
     /// </summary>
     public class PostingLogic : IBusinessLogic
     {

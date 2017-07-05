@@ -53,7 +53,7 @@ namespace DDI.Business.Core
         }
 
         /// <summary>
-        /// Set the debit G/L account to a specific Account.
+        /// Set the debit GL account to a specific Account.
         /// </summary>
         public void SetDebitAccount(Transaction transaction, Account acct)
         {
@@ -62,7 +62,7 @@ namespace DDI.Business.Core
         }
 
         /// <summary>
-        /// Set the credit G/L account to a specific Account.
+        /// Set the credit GL account to a specific Account.
         /// </summary>
         public void SetCreditAccount(Transaction transaction, Account acct)
         {
@@ -71,7 +71,7 @@ namespace DDI.Business.Core
         }
 
         /// <summary>
-        /// Set the debit G/L account to a LedgerAccount using the transaction's fiscal year.
+        /// Set the debit GL account to a LedgerAccount using the transaction's fiscal year.
         /// </summary>
         public void SetDebitAccount(Transaction transaction, LedgerAccount account)
         {
@@ -92,7 +92,7 @@ namespace DDI.Business.Core
         }
 
         /// <summary>
-        /// Set the debit G/L account to a LedgerAccount using the transaction's fiscal year.
+        /// Set the debit GL account to a LedgerAccount using the transaction's fiscal year.
         /// </summary>
         public void SetCreditAccount(Transaction transaction, LedgerAccount account)
         {
@@ -113,7 +113,7 @@ namespace DDI.Business.Core
         }
 
         /// <summary>
-        /// Exchange the debit and credit G/L account values.
+        /// Exchange the debit and credit GL account values.
         /// </summary>
         public void SwapGLAccounts(Transaction transaction)
         {
@@ -129,7 +129,7 @@ namespace DDI.Business.Core
             }
         }
 
-        // Negate a tranaction's amount and swap the G/L accounts (since amount's sign is not used when posting)
+        // Negate a tranaction's amount and swap the GL accounts (since amount's sign is not used when posting)
         public void Negate(Transaction transaction)
         {
             transaction.Amount = -transaction.Amount;
