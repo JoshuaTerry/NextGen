@@ -108,7 +108,6 @@ namespace DDI.Services.GL
 
                 entityToSave.FiscalPeriods.Add(new FiscalPeriod()
                 {
-                    // FiscalYearId = entityToSave.Id,
                     PeriodNumber = index,
                     StartDate = new DateTime(currentYear, currentMonth, 1),
                     EndDate = new DateTime(currentYear, endMonth, DateTime.DaysInMonth(currentYear, endMonth)),

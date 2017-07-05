@@ -3102,13 +3102,6 @@ function LoadFiscalPeriods(info) {
 
         $('.fiscalperiodscontainer').show();
 
-        //if (data.Data.length > 0) {
-        //    $('.fiscalperiodscontainer').show();
-        //}
-        //else {
-        //    $('.fiscalperiodscontainer').hide();
-        //}
-
     });
 
 }
