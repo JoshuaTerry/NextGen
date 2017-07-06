@@ -18,5 +18,6 @@ namespace DDI.Shared.Statics
         public static string Unapproved => "Unapproved";
         public static string Posted => "Posted";
         public static string Unposted => "Unposted";
+        public static string Reversed => "Reversed";
     }
 }
