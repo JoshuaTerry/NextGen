@@ -144,9 +144,7 @@ namespace DDI.Shared.Models.Client.CRM
         public string TaxId { get; set; }
 
         public int? YearEstablished { get; set; }
-        
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+                
         #region Navigation Properties
         [ForeignKey("ClergyStatusId")]
         public ClergyStatus ClergyStatus { get; set; }

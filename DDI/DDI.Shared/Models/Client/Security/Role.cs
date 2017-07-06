@@ -26,6 +26,8 @@ namespace DDI.Shared.Models.Client.Security
         public DateTime? LastModifiedOn { get; set; }
         [InverseProperty(nameof(Group.Roles))]
         public ICollection<Group> Groups { get; set; }
+        [NotMapped]
+        public Byte[] RowVersion { get; set; }
         public void AssignPrimaryKey() { }
     }
 } 

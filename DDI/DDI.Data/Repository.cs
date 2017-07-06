@@ -66,7 +66,7 @@ namespace DDI.Data
                 if (_entities == null)
                 {
                     _entities = _context.Set<T>();
-                    
+
                 }
 
                 return _entities;
@@ -308,6 +308,17 @@ namespace DDI.Data
             DbEntityEntry<T> entry = _context.Entry(entity);
             DbPropertyValues currentValues = entry.CurrentValues;
             IEnumerable<string> propertynames = currentValues.PropertyNames;
+
+            var entityInterface = entity as IEntity;
+            Byte[] requestRowVersion = propertyValues["RowVersion"] as Byte[];
+            if (requestRowVersion != null && !entityInterface.RowVersion.SequenceEqual(requestRowVersion))
+                throw new DatabaseConcurrencyException();
+
+            var manager = ((IObjectContextAdapter)_context).ObjectContext.ObjectStateManager;
+            var ose = manager.GetObjectStateEntry(entity);
+            ose.AcceptChanges();
+
+
             foreach (KeyValuePair<string, object> keyValue in propertyValues)
             {
                 if (propertynames.Contains(keyValue.Key))
@@ -384,7 +395,7 @@ namespace DDI.Data
 
             // The first step is capture the state of all tracked entites in the context by storing them in a dictionary (keyed by entity.Id)
             var stateDict = new Dictionary<Guid, System.Data.Entity.EntityState>();
-           
+
             foreach (var entry in _context.ChangeTracker.Entries())
             {
                 if (entry.Entity is IEntity)
@@ -394,7 +405,7 @@ namespace DDI.Data
             }
 
             // Then add the entity via the Add method.  
-            EntitySet.Add(entity);            
+            EntitySet.Add(entity);
 
             // Change the entity state to what we want it to be (Unmodified, or Modified)
             _context.Entry(entity).State = entityState;

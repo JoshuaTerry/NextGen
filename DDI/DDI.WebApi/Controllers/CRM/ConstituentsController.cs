@@ -147,7 +147,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Route("api/v1/constituents/{id}")]
         public IHttpActionResult GetConstituentById(Guid id, string fields = null)
         {
-            return base.GetById(id, fields);
+           return base.GetById(id, fields);
         }
 
         [HttpGet]

@@ -12,6 +12,8 @@ using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics.GL;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDI.Business.GL
 {
@@ -821,7 +823,8 @@ namespace DDI.Business.GL
             public decimal CreditAmount { get; set; }
 
             public string DisplayName => string.Empty;
-
+            [NotMapped]
+            public Byte[] RowVersion { get; set; }
             public void AssignPrimaryKey() { }            
         }
 

@@ -22,7 +22,7 @@ namespace DDI.Shared.Models.Client.Security
             return userIdentity;
         }
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("UserId")]
         public override Guid Id { get; set; }
         [MaxLength(256)]
@@ -33,11 +33,11 @@ namespace DDI.Shared.Models.Client.Security
             set { base.UserName = value; }
         }
         [MaxLength(256)]
-        public string FullName { get; set; } 
+        public string FullName { get; set; }
         public bool IsActive { get; set; }
         public DateTime? LastLogin { get; set; }
         [MaxLength(64)]
-        public string CreatedBy { get; set; }        
+        public string CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         [MaxLength(64)]
         public string LastModifiedBy { get; set; }
@@ -55,7 +55,9 @@ namespace DDI.Shared.Models.Client.Security
         public ICollection<BusinessUnit> BusinessUnits { get; set; }
         [InverseProperty(nameof(Group.Users))]
         public ICollection<Group> Groups { get; set; }
-                
+
+        [NotMapped] 
+        public Byte[] RowVersion { get; set; }
         public string DisplayName
         {
             get
@@ -67,5 +69,5 @@ namespace DDI.Shared.Models.Client.Security
         public void AssignPrimaryKey() { }
     }
 }
-        
-   
+
+

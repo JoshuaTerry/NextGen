@@ -22,7 +22,8 @@ namespace DDI.Shared.Models.Client.Security
         public DateTime? CreatedOn { get; set; }
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
-
+        [NotMapped]
+        public Byte[] RowVersion { get; set; }
         public void AssignPrimaryKey()
         {
         }
