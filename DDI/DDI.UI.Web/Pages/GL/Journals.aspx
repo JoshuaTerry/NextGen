@@ -17,11 +17,11 @@
         
         <div class="scrollable">
             <fieldset>
-                <legend>Quick Search</legend>
+            <%--    <legend>Quick Search</legend>
 
                 <div class="fieldblock">
-                    <input type="text" class="searchQueryString" />
-                </div>
+                    <input type="text" class="searchQueryString" maxlength="128"/>
+                </div>--%>
 
                                        
 
@@ -41,28 +41,28 @@
 
                         <div class="fieldblock">
                             <label>Journal#</label>
-                            <input type="text" class="searchJournalNumber" />
+                            <input type="text" class="searchJournalNumber" maxlength="5"/>
                         </div>
 
                         <div class="fieldblock">
                             <label>Transaction Date From</label>
-                            <input type="date" class="transactionDateFrom datepicker" />
+                            <input type="text" class="transactionDateFrom datepicker" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Transaction Date To</label>
-                            <input type="date" class="transactionDateTo datepicker" />
+                            <input type="text" class="transactionDateTo datepicker" />
                         </div>
 
-                        <div class="fieldblock">
-                            <label>through</label>
-                             <input type="text" class="through datepicker" />
-                        </div>
+                       <%-- <div class="fieldblock">
+                            <label>Through</label>
+                             <input type="text" class="through datepicker" maxlength="20" />
+                        </div>--%>
 
-                        <div class="fieldblock">
+                        <%--<div class="fieldblock">
                             <label>Created By</label>
                             <select class="searchCreatedBy"></select>
-                        </div>
+                        </div>--%>
 
                         <div class="fieldblock">
                             <label>Creation Date From</label>
@@ -78,24 +78,26 @@
                             <label>Status</label>
                           <select class="searchjournalStatus">
                                    <option ></option>
-                                   <option value="1">Active</option>
-                                    <option value="2">Expired</option>
-                                    <option value="4">Approved</option>
-                                    <option value="5">Unapproved</option>
-                                    <option value="6">Posted</option>
-                                    <option value="7">Unposted</option>
-                                     <option value="8">Deleted</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Expired">Expired</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Unapproved">Unapproved</option>
+                                    <option value="Posted">Posted</option>
+                                     <option value="Reversed">Reversed</option>
+                                    <option value="Unposted">Unposted</option>
+                                     <option value="Deleted">Deleted</option>
+                                                  
                           </select>
                         </div>
 
                         <div class="fieldblock">
                             <label>Journal Memo</label>
-                              <input type="text" class="searchComment" />
+                              <input type="text" class="searchComment" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Line Item Memo</label>
-                            <input type="text" class="searchlineItemComment" />
+                            <input type="text" class="searchlineItemComment" maxlength="128" />
                         </div>
 
 
@@ -118,7 +120,8 @@
     
     <div class="searchresults">
         <div class="buttons">
-            <input type="button" class="addnewjournal" value="Add New Journal" />
+            <%--<input type="button" class="addnewjournal" value="Add New Journal" />--%>
+             <a href="#" class="addnewjournal">Add New Journal</a>
         </div>
         <div class="scrollable">
             <div class="gridcontainer"></div>

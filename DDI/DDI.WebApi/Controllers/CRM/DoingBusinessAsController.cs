@@ -1,10 +1,10 @@
-using System;
-using System.Web.Http;
 using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -18,14 +18,14 @@ namespace DDI.WebApi.Controllers.CRM
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Constituent);
 
         [HttpGet]
-        [Route("api/v1/doingbusinessas", Name = RouteNames.DoingBusinessAs)]
+        [Route("api/v1/doingbusinessas")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.DoingBusinessAs, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/doingbusinessas/{id}", Name = RouteNames.DoingBusinessAs + RouteVerbs.Get)]
+        [Route("api/v1/doingbusinessas/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -33,7 +33,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/doingbusinessas", Name = RouteNames.DoingBusinessAs + RouteVerbs.Post)]
+        [Route("api/v1/doingbusinessas")]
         public IHttpActionResult Post([FromBody] DoingBusinessAs entityToSave)
         {
             return base.Post(entityToSave);
@@ -41,7 +41,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/doingbusinessas/{id}", Name = RouteNames.DoingBusinessAs + RouteVerbs.Patch)]
+        [Route("api/v1/doingbusinessas/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -49,7 +49,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/doingbusinessas/{id}", Name = RouteNames.DoingBusinessAs + RouteVerbs.Delete)]
+        [Route("api/v1/doingbusinessas/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
@@ -58,7 +58,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/doingbusinessas/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/doingbusinessas", Name = RouteNames.Constituent + RouteNames.DoingBusinessAs)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/constituents/{id}/doingbusinessas")]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -66,7 +66,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search, fields);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.DoingBusinessAs, search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {

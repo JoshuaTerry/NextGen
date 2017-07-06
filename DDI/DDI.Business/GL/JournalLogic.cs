@@ -117,6 +117,16 @@ namespace DDI.Business.GL
                 }
             }
 
+            if (entity.IsReversed)
+            {
+                statusTerms.Add(EntityStatus.Reversed);
+            }
+
+            if (entity.DeletionDate != null)
+            {
+                statusTerms.Add(EntityStatus.Deleted);
+            }
+
             document.Status = string.Join(" ", statusTerms);
             return document;
         }

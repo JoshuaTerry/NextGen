@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DDI.Shared.Enums.Core
+﻿namespace DDI.Shared.Enums.Core
 {
     public enum RecurringType
     {        

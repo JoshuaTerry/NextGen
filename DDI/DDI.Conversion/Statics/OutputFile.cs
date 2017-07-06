@@ -19,6 +19,8 @@ namespace DDI.Conversion.Statics
         public static string CP_PaymentMethodIdMappingFile => "PaymentMethodId.csv";
 
         public static string Core_NoteIdMappingFile => "NoteId.csv";
+        public static string Core_FileStorageMappingFile => "FileStorageId.csv";
+        public static string Core_AttachmentMappingFile => "AttachmentId.csv";
 
         public static string GL_BusinessUnitIdMappingFile => "BusinessUnitId.csv";
         public static string GL_LedgerIdMappingFile => "LedgerId.csv";
@@ -43,6 +45,7 @@ namespace DDI.Conversion.Statics
         public static string Core_EntityTransactionFile => "EntityTransactions.csv";
         public static string Core_TransactionXrefFile => "TransactionXref.csv";
         public static string Core_EntityApprovalFile => "EntityApprovals.csv";
+        public static string Core_AttachmentFile => "Attachments.csv";
 
         #endregion
 

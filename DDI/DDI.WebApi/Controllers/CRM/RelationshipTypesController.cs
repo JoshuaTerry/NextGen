@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Web.Http;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq.Expressions;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -16,14 +16,14 @@ namespace DDI.WebApi.Controllers.CRM
         private string _allFields = null;
 
         [HttpGet]
-        [Route("api/v1/relationshiptypes", Name = RouteNames.RelationshipTypes)]
+        [Route("api/v1/relationshiptypes")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.RelationshipTypes, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/relationshiptypes/{id}", Name = RouteNames.RelationshipTypes + RouteVerbs.Get)]
+        [Route("api/v1/relationshiptypes/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -31,7 +31,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/relationshiptypes", Name = RouteNames.RelationshipTypes + RouteVerbs.Post)]
+        [Route("api/v1/relationshiptypes")]
         public IHttpActionResult Post([FromBody] RelationshipType entityToSave)
         {
             return base.Post(entityToSave);
@@ -39,7 +39,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/relationshiptypes/{id}", Name = RouteNames.RelationshipTypes + RouteVerbs.Patch)]
+        [Route("api/v1/relationshiptypes/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -47,7 +47,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/relationshiptypes/{id}", Name = RouteNames.RelationshipTypes + RouteVerbs.Delete)]
+        [Route("api/v1/relationshiptypes/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Web.Http;
-using System.Web.Routing;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Http;
+using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -61,14 +61,14 @@ namespace DDI.WebApi.Controllers.GL
                                                                                                .Exclude(p => p.ParentJournal.ParentJournal);
 
         [HttpGet]
-        [Route("api/v1/journals/{id}", Name = RouteNames.Journal + RouteVerbs.Get)]
+        [Route("api/v1/journals/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/journals", Name = RouteNames.Journal)]
+        [Route("api/v1/journals")]
         public IHttpActionResult GetJournals(Guid? businessUnitId = null,
                                              Guid? fiscalYearId = null,
                                              string journalType = null,
@@ -116,7 +116,7 @@ namespace DDI.WebApi.Controllers.GL
                 search.JournalType = EnumHelper.ConvertToEnum<JournalType>(journalType);
             }
 
-            return base.GetAll(RouteNames.Journal, search, fields);
+            return base.GetAll(search, fields);
         }
 
         [HttpGet]
@@ -140,21 +140,21 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpPost]
-        [Route("api/v1/journals", Name = RouteNames.Journal + RouteVerbs.Post)]
+        [Route("api/v1/journals")]
         public IHttpActionResult Post([FromBody] Journal item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/journals/{id}", Name = RouteNames.Journal + RouteVerbs.Patch)]
+        [Route("api/v1/journals/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/journals/{id}", Name = RouteNames.Journal + RouteVerbs.Delete)]
+        [Route("api/v1/journals/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

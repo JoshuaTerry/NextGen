@@ -1,9 +1,9 @@
-﻿using System;
+﻿using DDI.Shared.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using DDI.Shared.Extensions;
 
 namespace DDI.Shared.Data
 {

@@ -1,11 +1,8 @@
-﻿using DDI.Services;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
-using DDI.Shared.Helpers;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -20,15 +17,15 @@ namespace DDI.WebApi.Controllers.CRM
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.States);
 
         [HttpGet]
-        [Route("api/v1/countries", Name = RouteNames.Country)]
+        [Route("api/v1/countries")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         { 
-            return base.GetAll(RouteNames.Country, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
 
         [HttpGet]
-        [Route("api/v1/countries/{id}", Name = RouteNames.Country + RouteVerbs.Get)]
+        [Route("api/v1/countries/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);

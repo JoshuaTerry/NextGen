@@ -1,9 +1,9 @@
-﻿using System;
-using System.Web.Http;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -15,35 +15,35 @@ namespace DDI.WebApi.Controllers.CRM
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]
-        [Route("api/v1/clergystatuses", Name = RouteNames.ClergyStatus)]
+        [Route("api/v1/clergystatuses")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.ClergyStatus, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/clergystatuses/{id}", Name = RouteNames.ClergyStatus + RouteVerbs.Get)]
+        [Route("api/v1/clergystatuses/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/clergystatuses", Name = RouteNames.ClergyStatus + RouteVerbs.Post)]
+        [Route("api/v1/clergystatuses")]
         public IHttpActionResult Post([FromBody] ClergyStatus item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/clergystatuses/{id}", Name = RouteNames.ClergyStatus + RouteVerbs.Patch)]
+        [Route("api/v1/clergystatuses/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/clergystatuses/{id}", Name = RouteNames.ClergyStatus + RouteVerbs.Delete)]
+        [Route("api/v1/clergystatuses/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
