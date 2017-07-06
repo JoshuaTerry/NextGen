@@ -1,11 +1,10 @@
-﻿using DDI.Logger;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.General
 {

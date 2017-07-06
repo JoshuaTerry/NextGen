@@ -1,10 +1,10 @@
-﻿using System;
-using System.Web.Http;
-using System.Web.Http.Routing;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
+using System;
+using System.Web.Http;
+using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Controllers
 {

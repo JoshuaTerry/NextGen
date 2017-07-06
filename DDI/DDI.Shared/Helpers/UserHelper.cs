@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DDI.Shared.Caching;
+using DDI.Shared.Models.Client.Security;
+using System;
 using System.Linq;
 using System.Threading;
-using DDI.Shared.Caching;
-using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Shared.Helpers
 {
