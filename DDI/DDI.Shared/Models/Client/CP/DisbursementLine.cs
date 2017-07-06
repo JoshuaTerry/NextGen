@@ -2,11 +2,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.CP
 {
     [Table("DisbursementLine")]
-    public class DisbursementLine : AuditableEntityBase
+    public class DisbursementLine : LinkedEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -23,9 +24,11 @@ namespace DDI.Shared.Models.Client.CP
         [MaxLength(128)]
         public string Description { get; set; }
 
-        public decimal LineDebitAmount { get; set; }
+        [DecimalPrecision(14, 2)]
+        public decimal DebitAmount { get; set; }
 
-        public decimal LineCreditAmount { get; set; }
+        [DecimalPrecision(14, 2)]
+        public decimal CreditAmount { get; set; }
 
         [MaxLength(64)]
         public string InvoiceNumber { get; set; }
@@ -33,10 +36,6 @@ namespace DDI.Shared.Models.Client.CP
         [Column(TypeName = "date")]
         public DateTime? InvoiceDate { get; set; }
 
-        [MaxLength(64)]
-        public string InvoiceLabel { get; set; }
-
-        // There still needs to be some way to link these lines to where they came from, such as an AP voucher, investment, or loan.
 
     }
 }
