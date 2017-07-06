@@ -44,6 +44,14 @@ $(document).ready(function () {
 
     });
 
+    $('.selectaccount').click(function (e) {
+
+        e.preventDefault();
+
+        location.href = "/Pages/GL/Accounts.aspx";
+
+    });
+
 });
 
 function LoadAccountActivityAndBudgetTab(id) {
@@ -223,7 +231,7 @@ function LoadSummaryTabContinued() {
 
     $('.editaccount').click(function (e) {
         e.preventDefault();
-        AccountentryMode();
+        AccountEditMode();
     });
 
     $('.saveaccount').unbind('click');
@@ -336,8 +344,8 @@ function RetrieveLedgerSettings() {
 
                 //segments
                 segmentLevels = data.Data.NumberOfSegments;
-
                 RetrieveSegmentLevels()
+
             }
         }
 
@@ -466,7 +474,7 @@ function AccountAddMode() {
     EnableSegments();
 }
 
-function AccountentryMode() {
+function AccountEditMode() {
     entryMode = 'edit';
     if (activityTotal === 0) {
         EnableSegments();
@@ -763,7 +771,7 @@ function SaveAccount() {
                 AccountAddMode();
             }
             else {
-                AccountentryMode();
+                AccountEditMode();
             }
         }
     );
@@ -1193,10 +1201,14 @@ function CopyAccount() {
         return;
     }
 
-    $('.tabscontainer').tabs("option", "active", 1);
-
     entryMode = 'copy';
-    LoadSummaryTab(accountId);
+    var currentTab = $('.tabscontainer').tabs('option');
+    if (currentTab.active != 1) {
+        $('.tabscontainer').tabs("option", "active", 1);
+    }
+    else {
+        AccountCopyMode();
+    }
 
 }
 
