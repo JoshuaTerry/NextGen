@@ -118,7 +118,7 @@ function DoSearch() {
                         { dataField: 'Amount', caption: 'Amount' },
                         { dataField: 'CreatedBy', caption: 'Created By'},
                         { dataField: 'CreatedOn', caption: 'Created On', dataType: 'date' },
-
+                        { dataField: 'Status', caption: 'Status'}
                     ],
                     paging: {
                         pageSize: 15
@@ -178,7 +178,7 @@ function GetSearchParameters() {
     });
 
     p += 'limit=100&' + 'BusinessUnitId=' + currentBusinessUnitId;
-    p += '&fields=JournalNumber,JournalType,TransactionDate,Comment,Amount,CreatedBy,CreatedOn,&';
+    p += '&fields=JournalNumber,JournalType,TransactionDate,Comment,Amount,CreatedBy,CreatedOn,Status&';
 
     p = p.substring(0, p.length - 1);
 
