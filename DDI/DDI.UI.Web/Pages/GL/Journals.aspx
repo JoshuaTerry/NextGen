@@ -54,10 +54,10 @@
                             <input type="text" class="transactionDateTo datepicker" />
                         </div>
 
-                        <div class="fieldblock">
+                       <%-- <div class="fieldblock">
                             <label>Through</label>
                              <input type="text" class="through datepicker" maxlength="20" />
-                        </div>
+                        </div>--%>
 
                         <%--<div class="fieldblock">
                             <label>Created By</label>
@@ -78,14 +78,15 @@
                             <label>Status</label>
                           <select class="searchjournalStatus">
                                    <option ></option>
-                                   <option value="1">Active</option>
-                                    <option value="2">Expired</option>
-                                    <option value="4">Approved</option>
-                                    <option value="5">Unapproved</option>
-                                    <option value="6">Posted</option>
-                                     <option value="7">Reversed</option>
-                                    <option value="8">Unposted</option>
-                                     <option value="9">Deleted</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Expired">Expired</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Unapproved">Unapproved</option>
+                                    <option value="Posted">Posted</option>
+                                     <option value="Reversed">Reversed</option>
+                                    <option value="Unposted">Unposted</option>
+                                     <option value="Deleted">Deleted</option>
+                                                  
                           </select>
                         </div>
 
