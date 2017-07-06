@@ -1,15 +1,12 @@
-﻿using DDI.Services;
+﻿using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Services.Search;
-using DDI.Shared.Helpers;
-using System.Linq;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.General
 {

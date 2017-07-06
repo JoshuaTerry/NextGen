@@ -1,13 +1,11 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using DDI.Services.GL;
-using DDI.Services.ServiceInterfaces;
-using DDI.Shared;
+﻿using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
