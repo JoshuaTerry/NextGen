@@ -4,6 +4,7 @@
 $(document).ready(function () {
 
     Resize();
+    
  
     $('.clearsearch').click(function () {
         $('.searchcriteria div.fieldblock input').each(function () {
@@ -85,15 +86,17 @@ function DoSearch() {
 
                 $('.gridcontainer').dxDataGrid({
                     dataSource: data.Data,
+                     key: "Id",
+                    type:"array",
                     columns: [
-                        { dataField: 'ID', caption: 'ID', alignment: 'right', width: '100px' },
+                       // { dataField: 'ID', caption: 'ID', alignment: 'right', width: '100px' },
                         { dataField: 'JournalNumber', caption: 'Journal#' },
                         { dataField: 'JournalType', caption: 'Type' },
-                        { dataField: 'TransactionDate', caption: 'Tran Dt' },
+                        { dataField: 'TransactionDate', caption: 'Tran Dt', dataType: 'date' },
                         { dataField: 'Comment', caption: 'Memo' },
                         { dataField: 'Amount', caption: 'Amount' },
-                        { dataField: 'CreatedBy', caption: 'Created By' },
-                        { dataField: 'CreatedOn', caption: 'Year' },
+                        { dataField: 'CreatedBy', caption: 'Created By'},
+                        { dataField: 'CreatedOn', caption: 'Created On', dataType: 'date' },
 
                     ],
                     paging: {
@@ -160,6 +163,13 @@ function GetSearchParameters() {
     return p;
 
 }
+
+function LoadCreatedBy() {
+
+    PopulateDropDown('.searchCreatedBy', 'CreatedBy', '', '');
+   
+}
+
 
 function DisplayJournals(id) {
 
