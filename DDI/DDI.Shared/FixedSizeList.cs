@@ -90,7 +90,7 @@ namespace DDI.Shared
         /// <returns></returns>
         public IEnumerable<KeyValuePair<int, T>> AsTable()
         {
-            return Enumerable.Range(0, _capacity).Zip(_enumerable, (p, q) => new KeyValuePair<int, T>(p, q));
+            return _enumerable.Select((p, index) => new KeyValuePair<int, T>(index, p));
         }
 
         /// <summary>

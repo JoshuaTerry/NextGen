@@ -15,14 +15,14 @@ namespace DDI.WebApi.Controllers.CRM
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]
-        [Route("api/v1/genders", Name = RouteNames.Gender)]
+        [Route("api/v1/genders")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.Gender, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/genders/{id}", Name = RouteNames.Gender + RouteVerbs.Get)]
+        [Route("api/v1/genders/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -30,7 +30,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/genders", Name = RouteNames.Gender + RouteVerbs.Post)]
+        [Route("api/v1/genders")]
         public IHttpActionResult Post([FromBody] Gender entityToSave)
         {
             return base.Post(entityToSave);
@@ -38,7 +38,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/genders/{id}", Name = RouteNames.Gender + RouteVerbs.Patch)]
+        [Route("api/v1/genders/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -46,7 +46,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/genders/{id}", Name = RouteNames.Gender + RouteVerbs.Delete)]
+        [Route("api/v1/genders/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

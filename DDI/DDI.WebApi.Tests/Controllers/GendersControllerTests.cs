@@ -38,7 +38,7 @@ namespace DDI.WebApi.Tests.Controllers
             Assert.AreEqual("Male", data[1].DisplayName);
             Assert.AreEqual("Unspecified", data[2].DisplayName);
 
-            result = controller.GetAll("", new PageableSearch(null, null, OrderByProperties.DisplayName), "Name,IsMasculine");
+            result = controller.GetAll(new PageableSearch(null, null, OrderByProperties.DisplayName), "Name,IsMasculine");
             data = GetResponseData(result);
 
             Assert.AreEqual("Female", data[0].Name);

@@ -19,6 +19,7 @@ namespace DDI.Conversion
 		private bool _eof = true;
 		private bool _isABLData = false;   // true if delimiter is space, implying that data came from OpenEdge ABL EXPORT statement.
 		private ILog _logger;
+        private string _filename = null;
 
 		#endregion
 
@@ -36,6 +37,8 @@ namespace DDI.Conversion
 			_csvReader.Delimiters = new String[1] { delimiter.ToString() };
 			_csvReader.HasFieldsEnclosedInQuotes = true;
 			_csvReader.CommentTokens = new string[] { "#" };
+
+            _filename = filename;
 
 			CurrentLineNumber = 0;
 			_eof = false;
@@ -113,6 +116,8 @@ namespace DDI.Conversion
 				return GetString(idx);
 			}
 		}
+
+        public string FileName => _filename;
 
 		#endregion
 

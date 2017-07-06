@@ -30,21 +30,21 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/contactinfo", Name = RouteNames.ContactInfo)]
+        [Route("api/v1/contactinfo")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.ContactInfo, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/contactinfo/{id}", Name = RouteNames.ContactInfo + RouteVerbs.Get)]
+        [Route("api/v1/contactinfo/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/contactinfo/{categoryid}/{constituentid}", Name = RouteNames.ContactCategory + RouteNames.ContactInfo)]
+        [Route("api/v1/contactinfo/{categoryid}/{constituentid}")]
         public IHttpActionResult GetContactInfoByContactCategoryForConstituent(Guid? categoryId, Guid? constituentId)
         {
             try
@@ -67,7 +67,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/contactinfo", Name = RouteNames.ContactInfo + RouteVerbs.Post)]
+        [Route("api/v1/contactinfo")]
         public IHttpActionResult Post([FromBody] ContactInfo entityToSave)
         {
             return base.Post(entityToSave);
@@ -75,7 +75,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/contactinfo/{id}", Name = RouteNames.ContactInfo + RouteVerbs.Patch)]
+        [Route("api/v1/contactinfo/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -83,7 +83,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/contactinfo/{id}", Name = RouteNames.ContactInfo + RouteVerbs.Delete)]
+        [Route("api/v1/contactinfo/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

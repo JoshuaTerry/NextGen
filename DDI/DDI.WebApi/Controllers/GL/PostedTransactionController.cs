@@ -9,6 +9,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
+    [Authorize]
     public class PostedTransactionController : GenericController<PostedTransaction>
     {
 

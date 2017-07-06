@@ -43,7 +43,7 @@ namespace DDI.Conversion
             Factory.RegisterRepositoryFactory<RepositoryFactoryEF>();
 
             _filePath = Path.Combine(DirectoryName.DataDirectory, organization);
-            GuidHelper.GenerateSequentialGuids = true;            
+            GuidHelper.GenerateSequentialGuids = true;
 
             // These can be uncommented to run individual conversions.
 
@@ -51,7 +51,7 @@ namespace DDI.Conversion
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Users));
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Codes));
             //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.NoteCategories));
-            Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Configuration));
+            //Run<Core.SettingsLoader>(new ConversionMethodArgs(Core.SettingsLoader.ConversionMethod.Configuration));
             //Run<Core.NoteConverter>(new ConversionMethodArgs(Core.NoteConverter.ConversionMethod.Notes_CRM));
 
 
@@ -71,6 +71,11 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Relationships));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Tags));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.CustomFieldData));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Notes));
+
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.FileStorage));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Attachments));
+
 
             //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnits));
             //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnitUsers));
@@ -87,7 +92,7 @@ namespace DDI.Conversion
             //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.LedgerAccountMerges));
             //Run<GL.AccountConverter>(new ConversionMethodArgs(GL.AccountConverter.ConversionMethod.AccountBudgets));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.Funds));
-            Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.FundFromTos));
+            //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.FundFromTos));
             //Run<GL.FundConverter>(new ConversionMethodArgs(GL.FundConverter.ConversionMethod.BusinessUnitFromTos));
             //Run<GL.PostedTransactionConverter>(new ConversionMethodArgs(GL.PostedTransactionConverter.ConversionMethod.PostedTransactions));
 
@@ -98,6 +103,9 @@ namespace DDI.Conversion
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalNotes));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalEntityNumbers));
 
+            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.FileStorage));
+            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.Attachments));
+
             //Run<GL.JournalSearchIndexer>(new ConversionMethodArgs(GL.JournalSearchIndexer.ConversionMethod.IndexJournals));
             //Run<Core.NoteSearchIndexer>(new ConversionMethodArgs(Core.NoteSearchIndexer.ConversionMethod.IndexNotes));
 
@@ -107,6 +115,15 @@ namespace DDI.Conversion
             // Post-conversion tasks
 
             //Run<CRM.ConstituentSearchIndexer>();
+
+            var uow = new UnitOfWorkEF();
+            var bl = uow.GetBusinessLogic<Business.GL.ClosingLogic>();
+            var fy = uow.FirstOrDefault<FiscalYear>(p => p.Name == "2014" && p.Ledger.Code == "DCEF");
+            bl.CloseFiscalYear(fy.Id);
+
+            //bl.CreateNewFiscalYear(new Guid("1a67ed6f-0fd8-47cd-9476-dc09d94e5f28"), "2017", DateTime.Parse("1/1/2017"), false);
+
+
 
         }
 

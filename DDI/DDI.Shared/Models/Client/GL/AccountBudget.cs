@@ -24,7 +24,7 @@ namespace DDI.Shared.Models.Client.GL
         [DecimalPrecision(14, 2)]
         public decimal YearAmount { get; set; }
 
-        public PeriodAmountList Budget { get; set; }
+        public PeriodAmountList Budget { get; set; } = new PeriodAmountList();
 
         public PeriodAmountList Percent { get; set; }
 

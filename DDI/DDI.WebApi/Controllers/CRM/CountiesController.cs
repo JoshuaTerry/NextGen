@@ -25,20 +25,20 @@ namespace DDI.WebApi.Controllers.CRM
         #region Public Methods
 
         [HttpGet]
-        [Route("api/v1/counties", Name = RouteNames.County)]
+        [Route("api/v1/counties")]
         public IHttpActionResult GetAll(Guid? stateId = null, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             if (stateId == null)
             {
-                return base.GetAll(RouteNames.County, limit, offset, orderBy, fields);
+                return base.GetAll(limit, offset, orderBy, fields);
             }
 
             return GetByState(stateId.Value, limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/counties/state/{id}", Name = RouteNames.County + RouteNames.State)]
-        [Route("api/v1/states/{id}/counties", Name = RouteNames.State + RouteNames.County)]
+        [Route("api/v1/counties/state/{id}")]
+        [Route("api/v1/states/{id}/counties")]
         public IHttpActionResult GetByState(Guid id, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
 
@@ -48,7 +48,7 @@ namespace DDI.WebApi.Controllers.CRM
                 fields = ConvertFieldList(fields, FieldsForList);
                 var result = Service.GetAllWhereExpression(fp => fp.StateId == id, search, fields);
 
-                return FinalizeResponse(result, RouteNames.State + RouteNames.County, search, fields);
+                return FinalizeResponse(result, search, fields);
             }
             catch (Exception ex)
             {
@@ -59,7 +59,7 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/counties/{id}", Name = RouteNames.County + RouteVerbs.Get)]
+        [Route("api/v1/counties/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);

@@ -20,21 +20,21 @@ namespace DDI.WebApi.Controllers.General
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.Notes);
 
         [HttpGet]
-        [Route("api/v1/notetopics", Name = RouteNames.NoteTopic)]
+        [Route("api/v1/notetopics")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.NoteTopic, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/notetopics/{id}", Name = RouteNames.NoteTopic + RouteVerbs.Get)]
+        [Route("api/v1/notetopics/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/notes/{noteid}/notetopics",Name = RouteNames.Note + RouteNames.NoteTopic)]
+        [Route("api/v1/notes/{noteid}/notetopics")]
         public IHttpActionResult GetByNoteId(Guid noteId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -42,7 +42,7 @@ namespace DDI.WebApi.Controllers.General
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(n => n.Notes.Any(c => c.Id == noteId), search, fields);
-                return FinalizeResponse(response, RouteNames.Note + RouteNames.NoteTopic, search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {
@@ -52,21 +52,21 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpPost]
-        [Route("api/v1/notetopics", Name = RouteNames.NoteTopic + RouteVerbs.Post)]
+        [Route("api/v1/notetopics")]
         public IHttpActionResult Post([FromBody] NoteTopic entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
-        [Route("api/v1/notetopics/{id}", Name = RouteNames.NoteTopic + RouteVerbs.Patch)]
+        [Route("api/v1/notetopics/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
-        [Route("api/v1/notetopics/{id}", Name = RouteNames.NoteTopic + RouteVerbs.Delete)]
+        [Route("api/v1/notetopics/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

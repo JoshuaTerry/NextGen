@@ -22,14 +22,14 @@ namespace DDI.WebApi.Controllers.CRM
         protected new IEthnicitiesService Service => (IEthnicitiesService) base.Service;
    
         [HttpGet]
-        [Route("api/v1/ethnicities", Name = RouteNames.Ethnicity)]
+        [Route("api/v1/ethnicities")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.Ethnicity, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/ethnicities/{id}", Name = RouteNames.Ethnicity + RouteVerbs.Get)]
+        [Route("api/v1/ethnicities/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -37,7 +37,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/ethnicities", Name = RouteNames.Ethnicity + RouteVerbs.Post)]
+        [Route("api/v1/ethnicities")]
         public IHttpActionResult Post([FromBody] Ethnicity entityToSave)
         {
             return base.Post(entityToSave);
@@ -45,7 +45,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/ethnicities/{id}", Name = RouteNames.Ethnicity + RouteVerbs.Patch)]
+        [Route("api/v1/ethnicities/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -53,7 +53,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/ethnicities/{id}", Name = RouteNames.Ethnicity + RouteVerbs.Delete)]
+        [Route("api/v1/ethnicities/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
@@ -62,7 +62,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Read)]
         [HttpGet]
         [Route("api/v1/ethnicities/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/ethnicities", Name = RouteNames.Constituent + RouteNames.Ethnicity)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/constituents/{id}/ethnicities")]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -70,7 +70,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search, fields);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.Ethnicity, search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/constituents/{id}/ethnicities", Name = RouteNames.Constituent + RouteNames.Ethnicity + RouteVerbs.Post)]
+        [Route("api/v1/constituents/{id}/ethnicities")]
         public IHttpActionResult AddEthnicitiesToConstituent(Guid id, [FromBody] JObject ethnicityIds)
         {
             try

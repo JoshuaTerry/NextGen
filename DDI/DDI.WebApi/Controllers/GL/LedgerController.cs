@@ -15,8 +15,7 @@ namespace DDI.WebApi.Controllers.GL
     public class LedgerController : GenericController<Ledger>
     {
         public LedgerController(IService<Ledger> service) : base(service) { }
-
-        private const string ROUTENAME_GETBYUNIT = RouteNames.BusinessUnit + RouteNames.Ledger + RouteVerbs.Get;
+        
         
         protected override Expression<Func<Ledger, object>>[] GetDataIncludesForSingle()
         {
@@ -41,22 +40,22 @@ namespace DDI.WebApi.Controllers.GL
 
 
         [HttpGet]
-        [Route("api/v1/ledgers/{id}", Name = RouteNames.Ledger + RouteVerbs.Get)]
+        [Route("api/v1/ledgers/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/ledgers/businessunit/{buid}", Name = RouteNames.Ledger + RouteNames.BusinessUnit + RouteVerbs.Get)]
-        [Route("api/v1/businessunits/{buid}/ledgers", Name = ROUTENAME_GETBYUNIT)]
+        [Route("api/v1/ledgers/businessunit/{buid}")]
+        [Route("api/v1/businessunits/{buid}/ledgers")]
         public IHttpActionResult GetByBusinessUnit(Guid buid, string fields = null)
         {
             try
             {
                 fields = ConvertFieldList(fields, FieldsForList);
                 var result = Service.GetAllWhereExpression(l => l.BusinessUnitId == buid, null, fields);
-                return FinalizeResponse(result, ROUTENAME_GETBYUNIT, null, fields);
+                return FinalizeResponse(result, null, fields);
             }
             catch (Exception ex)
             {
@@ -66,21 +65,21 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpPost]
-        [Route("api/v1/ledgers", Name = RouteNames.Ledger + RouteVerbs.Post)]
+        [Route("api/v1/ledgers")]
         public IHttpActionResult Post([FromBody] Ledger item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/ledgers/{id}", Name = RouteNames.Ledger + RouteVerbs.Patch)]
+        [Route("api/v1/ledgers/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/ledgers/{id}", Name = RouteNames.Ledger + RouteVerbs.Delete)]
+        [Route("api/v1/ledgers/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

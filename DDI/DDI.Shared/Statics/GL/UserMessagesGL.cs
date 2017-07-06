@@ -38,11 +38,19 @@
         public static string SegmentLevelFundZero => "A segment level can not be of type \"Fund\" unless fund accounting is enabled.";
 
         public static string FiscalYearNotEditable => "Fiscal year settings cannot be modified once transactions have been posted.";
-        public static string FiscalPeriodClosed => "Fiscal year {0} has been closed.";
+        public static string FiscalPeriodClosed => "Fiscal period {0} in year {0} has already been closed.";
+        public static string FiscalPeriodOpen => "Fiscal period {0} in year {0} is open.";
         public static string FiscalYearClosed => "Fiscal year {0} has been closed.";
+        public static string FiscalYearOpen => "Fiscal year {0} is open.";
         public static string FiscalPeriodsRange => $"The number of fiscal periods must be between 1 and {ConstantsGL.MaxFiscalPeriods}.";
+        public static string FiscalYearCantReopen => "Fiscal year {0} has no fiscal period that can be re-opened.";
+        public static string FiscalYearCantReclose => "Fiscal year {0} cannot be re-closed:  No fiscal years defined after fiscal year {0}.";
         public static string CurrentPeriodRange => "The current period number must be between 1 and {0}.";
         public static string FiscalYearDatesInvalid => "Fiscal year date range is invalid.";
+        public static string FiscalYearDuplicateName => "Fiscal year {0} already exists.";
+        public static string FiscalYearDuplicateStartDate => "A fiscal year with a start date of {0} already exists.";
+        public static string BadFiscalPeriod => "Invalid fiscal period.";
+        public static string FiscalYearNoName => "Fiscal year name is required.";
 
         public static string FiscalPeriodMissing => "Fiscal period {0} not defined for fiscal year {1}.";
         public static string FiscalPeriodDuplicate => "Fiscal period {0} appears more than once in fiscal year {1}.";
@@ -73,6 +81,6 @@
         public static string FundFromToDTAccountWrongFund => "Fund from/to has a \"due to\" account in the wrong fund.";
 
         public static string NewJournalNoFiscalYear => "A valid fiscal year must be specified when creating a new one-time journal.";
-        public static string NewJournalNoBusinessUnit => "A valid business unit must be specified when creating a recurring or template journal.";
+        public static string NewJournalNoBusinessUnit => "A valid business unit must be specified when creating a recurring or template journal.";        
     }
 }

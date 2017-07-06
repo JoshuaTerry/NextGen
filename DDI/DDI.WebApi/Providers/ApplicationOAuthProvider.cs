@@ -1,4 +1,5 @@
 ﻿using DDI.Shared.Models.Client.Security;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
@@ -27,6 +28,10 @@ namespace DDI.WebApi.Providers
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             var userManager = context.OwinContext.GetUserManager<UserManager>();
+            userManager.UserValidator = new UserValidator<User, Guid>(userManager)
+            {
+                RequireUniqueEmail = false
+            };
 
             User user = await userManager.FindAsync(context.UserName, context.Password);
 
