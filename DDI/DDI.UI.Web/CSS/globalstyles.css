@@ -36,6 +36,7 @@ fieldset legend { font-weight: bold; }
 
 label.error { color: red; font-size: 10px; font-style: italic; font-weight: lighter !important; width: 100% !important; margin-left: 31%; text-align: left !important; }
 label.validateerror { color: red; font-size: 10px; font-style: italic; font-weight: lighter !important; width: 100% !important; text-align: left !important; }
+label.notify {color: green}
 
 input:disabled,
 select:disabled { border: solid 1px transparent; border-top: solid 1px #666666; background-color: #eeeeee; color: #333333; }

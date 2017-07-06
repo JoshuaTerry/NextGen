@@ -436,7 +436,7 @@ namespace DDI.Business.GL
                     newAccount.IsNormallyDebit = account.IsNormallyDebit;
                     newAccount.IsActive = account.IsActive;
                     newAccount.BeginningBalance = 0m;
-                    newAccount.ClosingAccountId = mapper.Get(account.ClosingAccountId);
+                    //newAccount.ClosingAccountId = mapper.Get(account.ClosingAccountId);
                     newAccount.AssignPrimaryKey();
 
                     batch.UnitOfWork.Insert(newAccount);

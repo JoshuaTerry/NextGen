@@ -1317,23 +1317,23 @@
         </div>
     </div>
 
-    <div class="closefiscalyearmodal" title="" style="display: none;">
+    <div class="updatefiscalyearmodal" title="" style="display: none;">
 
         <div class="modalcontent">
 
             <div class="fieldblock">
                 <label class="selectfiscalyearlabel"></label>
-                <select class="fc-FiscalYear">
+                <select class="uf-FiscalYear">
                 </select>
             </div>
 
             <div class="fieldblock">
-                <label class="closefiscalyearprogresslabel"></label>
+                <label class="updatefiscalyearnotifylabel notify"></label>
             </div>
 
-            <div class="modalbuttons">
-                <input type="button" class="okclosefiscalyearmodalbutton" value="OK" />
-                <a href="#" class="cancelclosefiscalyearmodal">Cancel</a>
+            <div class="updatefiscalyearmodalbuttons modalbuttons">
+                <input type="button" class="okupdatefiscalyearmodalbutton" value="OK" />
+                <a href="#" class="cancelupdatefiscalyearmodal">Cancel</a>
             </div>
         </div>
     </div>
@@ -1355,7 +1355,7 @@
 
             <div class="fieldblock">
                 <label>Start Date:</label>
-                <input type="text" class="fn-StartDate editable date datepicker" />
+                <input type="text" class="fn-StartDate editable date datepicker" maxlength="10" />
             </div>
 
             <div class="fieldblock">
@@ -1364,10 +1364,10 @@
             </div>
 
             <div class="fieldblock">
-                <label class="newfiscalyearprogresslabel"></label>
+                <label class="newfiscalyearnotifylabel notify"></label>
             </div>
 
-            <div class="modalbuttons">
+            <div class="newfiscalyearmodalbuttons modalbuttons">
                 <input type="button" class="oknewfiscalyearmodalbutton" value="OK" />
                 <a href="#" class="cancelnewfiscalyearmodal">Cancel</a>
             </div>
