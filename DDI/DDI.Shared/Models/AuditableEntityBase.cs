@@ -1,6 +1,5 @@
 using DDI.Shared.Attributes.Logging;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DDI.Shared.Models

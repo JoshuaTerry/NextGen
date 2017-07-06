@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <script type="text/javascript" src="../../Scripts/gljournals.js"></script>
+    <script type="text/javascript" src="../../Scripts/data.js"></script>
       <link rel="stylesheet" href="../../CSS/Journals.css" />
     
     
@@ -16,11 +17,11 @@
         
         <div class="scrollable">
             <fieldset>
-                <legend>Quick Search</legend>
+            <%--    <legend>Quick Search</legend>
 
                 <div class="fieldblock">
-                    <input type="text" class="searchquicksearch" />
-                </div>
+                    <input type="text" class="searchQueryString" maxlength="128"/>
+                </div>--%>
 
                                        
 
@@ -28,8 +29,8 @@
 
                       <div>
                         <div class="fieldblock">
-                            <label>Type</label>
-                             <select class="searchtype">
+                            <label>JournalType</label>
+                             <select class="searchjournaltype">
                                     <option ></option>
                                     <option value="0">Normal</option>
                                     <option value="1">Recurring</option>
@@ -40,51 +41,63 @@
 
                         <div class="fieldblock">
                             <label>Journal#</label>
-                            <input type="text" class="searchname" />
+                            <input type="text" class="searchJournalNumber" maxlength="5"/>
                         </div>
 
                         <div class="fieldblock">
-                            <label>Transaction Date</label>
-                            <input type="text" class="TransactionDate datepicker" />
+                            <label>Transaction Date From</label>
+                            <input type="text" class="transactionDateFrom datepicker" />
                         </div>
 
                         <div class="fieldblock">
-                            <label>through</label>
-                             <input type="text" class="through datepicker" />
+                            <label>Transaction Date To</label>
+                            <input type="text" class="transactionDateTo datepicker" />
                         </div>
 
-                        <div class="fieldblock">
+                       <%-- <div class="fieldblock">
+                            <label>Through</label>
+                             <input type="text" class="through datepicker" maxlength="20" />
+                        </div>--%>
+
+                        <%--<div class="fieldblock">
                             <label>Created By</label>
-                            <select class="searchcreated"></select>
+                            <select class="searchCreatedBy"></select>
+                        </div>--%>
+
+                        <div class="fieldblock">
+                            <label>Creation Date From</label>
+                              <input type="text" class="CreatedOnFrom datepicker" />
                         </div>
 
                         <div class="fieldblock">
-                            <label>Creation Date</label>
-                              <input type="text" class="creationdate datepicker" />
+                            <label>Creation Date To</label>
+                              <input type="text" class="CreatedOnTo datepicker" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Status</label>
-                          <select class="searchstatus">
+                          <select class="searchjournalStatus">
                                    <option ></option>
-                                   <option value="1">Active</option>
-                                    <option value="2">Expired</option>
-                                    <option value="4">Approved</option>
-                                    <option value="5">Unapproved</option>
-                                    <option value="6">Posted</option>
-                                    <option value="7">Unposted</option>
-                                     <option value="8">Deleted</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Expired">Expired</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Unapproved">Unapproved</option>
+                                    <option value="Posted">Posted</option>
+                                     <option value="Reversed">Reversed</option>
+                                    <option value="Unposted">Unposted</option>
+                                     <option value="Deleted">Deleted</option>
+                                                  
                           </select>
                         </div>
 
                         <div class="fieldblock">
                             <label>Journal Memo</label>
-                              <input type="text" class="searchjournalmemo" />
+                              <input type="text" class="searchComment" maxlength="128" />
                         </div>
 
                         <div class="fieldblock">
                             <label>Line Item Memo</label>
-                            <input type="text" class="searchLineItemMemo" />
+                            <input type="text" class="searchlineItemComment" maxlength="128" />
                         </div>
 
 
@@ -92,7 +105,6 @@
                   
 
                 </div>
-                  <%--  </div>--%>
                 
 
             </fieldset>
@@ -103,22 +115,17 @@
             <input type="button" class="dosearch" value="Search" />
         </div>
 
+        </div>
     
-
-<%--     <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            LoadjournalsaccountSettings();
-
-        });
-
-    </script>--%>
-         </div>
-
     
     <div class="searchresults">
-        <div class="gridcontainer scrollable"></div>
+        <div class="buttons">
+            <%--<input type="button" class="addnewjournal" value="Add New Journal" />--%>
+             <a href="#" class="addnewjournal">Add New Journal</a>
+        </div>
+        <div class="scrollable">
+            <div class="gridcontainer"></div>
+        </div>
     </div>
       
   

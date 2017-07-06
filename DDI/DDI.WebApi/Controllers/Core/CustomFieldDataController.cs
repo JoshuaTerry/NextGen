@@ -1,9 +1,9 @@
-﻿using System;
-using System.Web.Http;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -15,7 +15,7 @@ namespace DDI.WebApi.Controllers.General
         [Route("api/v1/customfielddata")]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.CustomFieldData, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]

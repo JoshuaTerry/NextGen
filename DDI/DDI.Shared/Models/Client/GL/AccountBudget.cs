@@ -1,7 +1,6 @@
 ﻿using DDI.Shared.Attributes.Models;
 using DDI.Shared.Enums.GL;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,7 +24,7 @@ namespace DDI.Shared.Models.Client.GL
         [DecimalPrecision(14, 2)]
         public decimal YearAmount { get; set; }
 
-        public PeriodAmountList Budget { get; set; }
+        public PeriodAmountList Budget { get; set; } = new PeriodAmountList();
 
         public PeriodAmountList Percent { get; set; }
 

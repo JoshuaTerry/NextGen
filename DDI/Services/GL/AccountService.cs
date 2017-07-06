@@ -39,7 +39,51 @@ namespace DDI.Services.GL
             return new DataResponse<List<AccountActivityDetail>>(activityDetailList);
         }
 
-        protected override Action<Account,string> FormatEntityForGet => (account, fields) => PopulateAccountBalanceIds(account);
+        public IDataResponse<Account> Copy(Guid sourceId, string destNumber)
+        {
+            // Fields to be copied
+            // FiscalYear, four account groups, the Category, IsNormallyDebit, AccountNumber, ClosingAccount, Name, and the AccountSegment collection.  Also set IsActive to true.  
+
+            Account source = UnitOfWork.GetById<Account>(sourceId, p => p.AccountSegments,
+                                                                   p => p.FiscalYear,
+                                                                   p => p.Group1,
+                                                                   p => p.Group2,
+                                                                   p => p.Group3,
+                                                                   p => p.Group4,
+                                                                   p => p.ClosingAccount);
+            Account dest = new Account();
+
+            dest.AccountNumber = destNumber;
+            dest.IsActive = true;
+            dest.FiscalYear = source.FiscalYear;
+            dest.Group1 = source.Group1;
+            dest.Group2 = source.Group2;
+            dest.Group3 = source.Group3;
+            dest.Group4 = source.Group4;
+            dest.Category = source.Category;
+            dest.IsNormallyDebit = source.IsNormallyDebit;
+            dest.ClosingAccount = source.ClosingAccount;
+            dest.Name = source.Name;
+            
+            source.AccountSegments.ToList().ForEach(s => dest.AccountSegments.Add(new AccountSegment() { Level = s.Level, Segment = s.Segment }));
+        
+
+            UnitOfWork.Insert<Account>(dest);
+            UnitOfWork.SaveChanges();
+
+            return new DataResponse<Account>(dest);
+        }
+
+		protected override Action<Account,string> FormatEntityForGet => (account, fields) => PopulateAccountBalanceIds(account);
+
+        public IDataResponse<Account> ValidateAccountNumber(Guid fiscalYearId, string accountNumber)
+        {
+            var fiscalYear = UnitOfWork.GetById<FiscalYear>(fiscalYearId);
+            var account = _accountLogic.ValidateAccountNumber(fiscalYear, accountNumber, false, false, false);
+
+            return new DataResponse<Account>(new Account());
+        }
+
 
         /// <summary>
         /// The Ids coming back from the SQL view put the account ID into AccountBalance.Id.  This confuses the dynamic transmogrifier, 
@@ -154,6 +198,10 @@ namespace DDI.Services.GL
             return base.Add(account);
         }
 
+        public IDataResponse<Account> Merge(Guid sourceAccountId, Guid destinationAccountId)
+        {
+            return _accountLogic.MergeAccounts(sourceAccountId, destinationAccountId);
+        }
 
         protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
         {
@@ -255,8 +303,5 @@ namespace DDI.Services.GL
 
             return false;
         }
-
-
-
     }
 }

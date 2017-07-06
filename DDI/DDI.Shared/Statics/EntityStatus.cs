@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DDI.Shared.Statics
+﻿namespace DDI.Shared.Statics
 {
     /// <summary>
     /// Status strings used for ElasticSearch indexing of entities.

@@ -47,18 +47,18 @@ namespace DDI.Conversion.Core
                 var noteCodes = context.NoteCodes.Local;
                 var users = context.Users.Local;
 
-                string _outputDirectory = Path.Combine(DirectoryName.OutputDirectory, DirectoryName.Core);
-                string noteFilename = CreateOutputFilename(OutputFile.Core_NoteFile, outputFileNameSuffix);
-                string legacyIdFilename = CreateOutputFilename(OutputFile.Core_NoteIdMappingFile, outputFileNameSuffix);
-                string topicFilename = CreateOutputFilename(OutputFile.Core_NoteTopicFile, outputFileNameSuffix);
+                string outputDirectory = Path.Combine(DirectoryName.OutputDirectory, DirectoryName.Core);
+                string noteFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_NoteFile, outputFileNameSuffix);
+                string legacyIdFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_NoteIdMappingFile, outputFileNameSuffix);
+                string topicFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_NoteTopicFile, outputFileNameSuffix);
 
                 using (var importer = noteImporter())
                 {
                     Guid id;
 
-                    var outputFile = new FileExport<Note>(Path.Combine(_outputDirectory, noteFilename), append);
-                    var legacyIdFile = new FileExport<ConversionBase.LegacyToID>(Path.Combine(_outputDirectory, legacyIdFilename), append, true);
-                    var topicFile = new FileExport<ConversionBase.JoinRow>(Path.Combine(_outputDirectory, topicFilename), append); // Join table created by EF
+                    var outputFile = new FileExport<Note>(Path.Combine(outputDirectory, noteFilename), append);
+                    var legacyIdFile = new FileExport<ConversionBase.LegacyToID>(Path.Combine(outputDirectory, legacyIdFilename), append, true);
+                    var topicFile = new FileExport<ConversionBase.JoinRow>(Path.Combine(outputDirectory, topicFilename), append); // Join table created by EF
 
                     topicFile.SetColumnNames("NoteTopic_Id", "Note_Id");
 
@@ -246,18 +246,6 @@ namespace DDI.Conversion.Core
                 }
             }
         }
-
-        private string CreateOutputFilename(string filename, string suffix)
-        {
-            if (!string.IsNullOrWhiteSpace(suffix))
-            {
-                string extension = Path.GetExtension(filename);
-                filename = filename.Replace(extension, "_" + suffix) + extension;
-            }
-
-            return filename;
-        }
-
 
     }
 }

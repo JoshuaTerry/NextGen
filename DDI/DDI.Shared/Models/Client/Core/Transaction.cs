@@ -1,11 +1,10 @@
-﻿using DDI.Shared.Enums.GL;
+﻿using DDI.Shared.Attributes.Models;
+using DDI.Shared.Enums.Core;
+using DDI.Shared.Models.Client.GL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Shared.Attributes.Models;
-using DDI.Shared.Models.Client.GL;
-using DDI.Shared.Enums.Core;
 
 namespace DDI.Shared.Models.Client.Core
 {
@@ -64,6 +63,8 @@ namespace DDI.Shared.Models.Client.Core
         public ICollection<PostedTransaction> PostedTransactions { get; set; }
         
         public ICollection<EntityTransaction> EntityTransactions { get; set; }
+
+        public override string DisplayName => $"{TransactionNumber}-{LineNumber}";
 
     }
 }

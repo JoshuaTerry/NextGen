@@ -60,7 +60,7 @@ namespace DDI.Shared.Models.Client.Security
         {
             get
             {
-                return string.IsNullOrEmpty(UserName) ? FullName : UserName;
+                return !string.IsNullOrEmpty(FullName) ? FullName : UserName;
             }
         }
 

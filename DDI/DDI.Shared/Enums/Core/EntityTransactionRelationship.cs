@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DDI.Shared.Enums.Core
+﻿namespace DDI.Shared.Enums.Core
 {
     /// <summary>
     /// For an EntityTransaction, describes the relationship between a transaction and an entity.

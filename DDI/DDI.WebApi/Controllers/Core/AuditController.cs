@@ -26,16 +26,36 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/audit/flat/{id}", Name = "AuditFlat")]
-        public IHttpActionResult GetAuditInfo(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        public IHttpActionResult GetAuditFlat(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
                 start = start ?? DateTime.Today.AddDays(-90);
-                end = end ?? DateTime.Today.AddDays(1); 
+                end = end ?? DateTime.Today.AddDays(1);
 
                 var search = new PageableSearch(offset, limit, orderBy);
-                var response = _service.GetAllFlat(id, start.Value, end.Value, search);
-                  
+                var response = _service.GetAllFlat(new Guid[] { id }, start.Value, end.Value, search);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+        [HttpGet]
+        [Route("api/v1/audit/flat/multiple", Name = "AuditFlatMultiple")]
+        public IHttpActionResult GetAuditFlatMultiple([FromUri]Guid[] ids, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                start = start ?? DateTime.Today.AddDays(-90);
+                end = end ?? DateTime.Today.AddDays(1);
+
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = _service.GetAllFlat(ids, start.Value, end.Value, search);
+
                 return Ok(response);
             }
             catch (Exception ex)
@@ -46,8 +66,8 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/audit/{id}", Name = RouteNames.Audit)]
-        public IHttpActionResult GetAuditFlat(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        [Route("api/v1/audit/{id}")]
+        public IHttpActionResult GetAuditInfo(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
             {
@@ -69,8 +89,7 @@ namespace DDI.WebApi.Controllers.General
         private IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, string routeName, IPageable search) where T1 : class
         {
             try
-            {
-                var urlHelper = new UrlHelper(Request);
+            { 
                 if (!response.IsSuccessful)
                 {
                     _logger.LogError(response.ErrorMessages.ToString());

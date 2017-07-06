@@ -16,10 +16,6 @@ $(document).ready(function () {
 
     LoadDefaultAuthToken();
 
-    LoadCurrentUser();
-
-    LoadCurrentBusinessUnit();
-
     LoadDatePickers();
 
     LoadDatePair();
@@ -29,6 +25,8 @@ $(document).ready(function () {
     LoadTabs();
 
     LoadAccordions();
+
+    LoadCurrentUser();
 
     NewConstituentModal();
 
@@ -110,11 +108,9 @@ function LoadDefaultAuthToken() {
 
                     sessionStorage.setItem(AUTH_TOKEN_KEY, split_token[0]);
 
-                    MakeServiceCall('GET', 'userbyname/' + split_token[1] + '/', null, function (data) {
+                    sessionStorage.setItem('CURRENT_USER_NAME', split_token[1]);
 
-                        sessionStorage.setItem('CURRENT_USER_ID', data.Data.Id);
-
-                    }, null);
+                    LoadCurrentUser();
 
                     location.href = "/Default.aspx";
                 }
@@ -130,51 +126,44 @@ function LoadDefaultAuthToken() {
 
 function LoadCurrentUser() {
 
-    var userId = sessionStorage.getItem('CURRENT_USER_ID');
-    if (currentBusinessUnitId === null) {
+    var userName = sessionStorage.getItem('CURRENT_USER_NAME');
+    if (userName !== null) {
 
-        MakeServiceCall('GET', 'users/' + userId, null, function (data) {
+        if (currentBusinessUnitId === null) {
 
-            if (data.Data.DefaultBusinessUnitId === null) {
+            MakeServiceCall('GET', 'userbyname/' + userName + '/', null, function (data) {
 
-                currentBusinessUnitId = data.Data.BusinessUnits[0].Id;
+                if (data.Data.DefaultBusinessUnitId === null) {
 
-                sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.BusinessUnits[0].Id);
+                    currentBusinessUnitId = data.Data.BusinessUnits[0].Id;
 
-                $('.editbusinessunit').text(data.Data.BusinessUnits[0].DisplayName);
+                    sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.BusinessUnits[0].Id);
 
-            } else {
+                    $('.editbusinessunit').text(data.Data.BusinessUnits[0].DisplayName);
 
-                currentBusinessUnitId = data.Data.DefaultBusinessUnit.Id;
+                } else {
 
-                sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.DefaultBusinessUnit.Id);
+                    currentBusinessUnitId = data.Data.DefaultBusinessUnit.Id;
 
-                $('.editbusinessunit').text(data.Data.DefaultBusinessUnit.DisplayName);
+                    sessionStorage.setItem('CURRENT_BUSINESS_UNIT', data.Data.DefaultBusinessUnit.Id);
 
-            }
+                    $('.editbusinessunit').text(data.Data.DefaultBusinessUnit.DisplayName);
+
+                }
+
+            });
+
+        }
+
+        MakeServiceCall('GET', 'businessunits/' + currentBusinessUnitId, null, function (data) {
+
+            $('.editbusinessunit').text(data.Data.DisplayName);
 
         });
 
     }
-
-    MakeServiceCall('GET', 'businessunits/' + currentBusinessUnitId, null, function (data) {
-
-        $('.editbusinessunit').text(data.Data.DisplayName);
-
-    });
 }
 
-function LoadCurrentBusinessUnit() {
-
-    currentBusinessUnitId = sessionStorage.getItem('CURRENT_BUSINESS_UNIT');
-    
-    if (currentBusinessUnitId == null) {
-        
-        LoadCurrentUser();
-
-    }
-    
-}
 
 /* NEW CONSTITUENT */
 function NewConstituentModal() {
@@ -1631,7 +1620,7 @@ function BusinessUnitModal() {
         var modal = $('.changebusinessunitmodal').dialog({
             closeOnEscape: false,
             modal: true,
-            width: 250,
+            width: 275,
             resizable: false,
         });
 
@@ -1640,7 +1629,7 @@ function BusinessUnitModal() {
         $('.savebusinessunit').click(function (e) {
 
 
-            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_ID') + '/businessunit', null, function (data) {
+            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit/username', null, function (data) {
 
                 businessunits = data.Data
 
@@ -1674,7 +1663,7 @@ function BusinessUnitModal() {
 
 function LoadBusinessUnitDropDown() {
 
-    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_ID') + '/businessunit', '<Please Select>', null,  currentBusinessUnitId, null, null);
+    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit/username', '<Please Select>', null, currentBusinessUnitId, null, null);
     
 }
 
@@ -1719,40 +1708,30 @@ function RemoveValidation(formClassName) {
 // END FORM VALIDATION
 
 // DYNAMIC MARKUP
-//
-//function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
 
-//    var fieldblock = $('<div>').addClass('fieldblock');
-//    $('<label>').text(labelText).appendTo(fieldblock);
-//    $(controlType).addClass(controlClass).appendTo(fieldblock);
-//    $(fieldblock).appendTo(appendContainer);
-
-//}
-
-function ValidateFields(containerClass, saveFunction) {
-    var validFields = true;
+function ValidateFields(containerClass, saveFunction) { 
     
     // required items
     $(containerClass).find('.required input').each(ValidateField);
     $(containerClass).find('.required select').each(ValidateField);
 
-    if (validFields && saveFunction != null) {
-        saveFunction;
-    }
+    validFields = ($(containerClass).find('.validateerror').length == 0);
 
-    return validFields;
+    if (validFields && saveFunction != null) {
+        saveFunction();
+    } 
 }
 
-function ValidateField(index, el) {
+function ValidateField(index, el) {    
     var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
     $("#" + errorId).remove();
     if ($(this).val() === "" || $(this).val() == null) {
         $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
         validFields = false;
-    }
+    } 
 }
 
-function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, length, maxlength) {
+function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, maxlength) {
 
     var fieldblock = $('<div>').addClass('fieldblock');
     var label = $('<label>').text(labelText).appendTo(fieldblock);
@@ -1761,9 +1740,6 @@ function CreateBasicFieldBlock(labelText, controlType, controlClass, appendConta
     if (maxlength != null) {
         control.attr('maxlength', maxlength);
     }
-        
-    if (length != null)
-        control.css('width', length + 'px');
      
     if (isRequired) {
         fieldblock.addClass('required'); 
@@ -1786,6 +1762,10 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancel
 }
 //
 // END DYNAMIC MARKUP
+
+
+// FORMATTING
+//
 
 function MaskFields() {
     $('.date').mask('00/00/0000');
@@ -1837,4 +1817,79 @@ function FormatDateTimeStrings(str) {
     } while (result);    
 
     return str;
+
 }
+
+//
+// END FORMATTING
+
+/* Audit Section */
+
+function ShowAuditData(id) {
+
+    $('.newauditmodal').click(function (e) {
+
+        e.preventDefault();
+        var modal = $('.auditmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 800,
+            height: 600,
+            resizable: true
+        });
+
+        LoadAuditTable(id);
+    });
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.queryAudit').unbind('click');
+
+    $('.queryAudit').click(function () {
+
+        $.ajax({
+            type: 'GET',
+            url: WEB_API_ADDRESS + 'audit/flat/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            headers: GetApiHeaders(),
+            success: function (data) {
+
+                LoadAuditTable(id);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
+
+}
+
+function LoadAuditTable(id) {
+    var start = $(modal).find('.na-StartDate').val();
+    var end = $(modal).find('.na-EndDate').val();
+    var route = 'audit/flat/' + id;
+    var columns = [
+        { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0 },
+        { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
+        { dataField: 'User' },
+        { dataField: 'ChangeType', width: '100px' },
+        { dataField: 'Property' },
+        { dataField: 'OldValue', caption: 'Old Value' },
+        { dataField: 'OldDisplayName', caption: 'Old Display Name' },
+        { dataField: 'NewValue', caption: 'New Value' },
+        { dataField: 'NewDisplayName', caption: 'New Display Name' }
+    ];
+
+    CustomLoadGrid('auditgrid', '.auditgridcontainer', columns, route, '', '', '', null);
+
+}
+/* End Audit Section */

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using DDI.Services.Security;
+﻿using DDI.Services.Security;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using System;
+using System.Threading.Tasks;
 
 namespace DDI.WebApi
 {
@@ -35,7 +35,7 @@ namespace DDI.WebApi
             manager.UserValidator = new UserValidator<User, Guid>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = false
             };
             // Configure validation logic for passwords 
             manager.PasswordValidator = new PasswordValidator
