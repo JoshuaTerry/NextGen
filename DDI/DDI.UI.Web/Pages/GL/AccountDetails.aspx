@@ -8,6 +8,12 @@
 
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
+
+    <li><a href="#" class="copyaccount">Copy Account</a></li>
+
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="accounts">
@@ -16,7 +22,7 @@
             <ul>
                 <li id="activity-and-budget-tab"><a href="ActivityAndBudget.aspx">Activity and Budget</a></li>
                 <li id="summary-tab"><a href="AccountSummary.aspx">Summary</a></li>
-                <li><a href="AccountTransactions.aspx">Transations</a></li>
+                <li><a href="AccountTransactions.aspx">Transactions</a></li>
             </ul>
 
             <div id="tab-activity">

@@ -197,11 +197,8 @@ namespace DDI.Business.GL
             {
                 throw new ArgumentNullException(nameof(ledger));
             }
-            if (ledger.SegmentLevels == null)
-            {
-                UnitOfWork.LoadReference(ledger, p => p.SegmentLevels);
-            }
-            return ledger.SegmentLevels.OrderBy(p => p.Level).ToArray();
+
+            return UnitOfWork.GetReference(ledger, p => p.SegmentLevels).OrderBy(p => p.Level).ToArray();
         }
 
         public SegmentLevel[] GetSegmentLevels(Guid ledgerId)
@@ -216,11 +213,7 @@ namespace DDI.Business.GL
         {
             if (ledger.FundAccounting)
             {
-                if (ledger.SegmentLevels == null)
-                {
-                    UnitOfWork.LoadReference(ledger, p => p.SegmentLevels);
-                }
-                return ledger.SegmentLevels?.FirstOrDefault(p => p.Type == SegmentType.Fund)?.Level ?? 0;
+                return UnitOfWork.GetReference(ledger, p => p.SegmentLevels).FirstOrDefault(p => p.Type == SegmentType.Fund)?.Level ?? 0;
             }
             return 0;
         }
@@ -240,11 +233,7 @@ namespace DDI.Business.GL
         {
             if (ledger.FundAccounting)
             {
-                if (ledger.SegmentLevels == null)
-                {
-                    UnitOfWork.LoadReference(ledger, p => p.SegmentLevels);
-                }
-                return ledger.SegmentLevels?.FirstOrDefault(p => p.Type == SegmentType.Fund)?.Name ?? string.Empty;
+                return UnitOfWork.GetReference(ledger, p => p.SegmentLevels)?.FirstOrDefault(p => p.Type == SegmentType.Fund)?.Name ?? string.Empty;
             }
             return string.Empty;
         }

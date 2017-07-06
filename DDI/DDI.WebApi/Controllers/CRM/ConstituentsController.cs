@@ -13,13 +13,13 @@ using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers.CRM
 {
-    [Authorize(Roles=Permissions.CRM_Read)]
+    [Authorize(Roles = Permissions.CRM_Read)]
     public class ConstituentsController : GenericController<Constituent>
     {
-        protected new IConstituentService Service => (IConstituentService) base.Service;
+        protected new IConstituentService Service => (IConstituentService)base.Service;
 
         public ConstituentsController(IConstituentService service) : base(service) { }
-     
+
         protected override Expression<Func<Constituent, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<Constituent, object>>[]
@@ -50,13 +50,13 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/constituents", Name = RouteNames.Constituent)]
-        public IHttpActionResult GetConstituents(string quickSearch = null, 
-                                                 string name = null, 
+        [Route("api/v1/constituents")]
+        public IHttpActionResult GetConstituents(string quickSearch = null,
+                                                 string name = null,
                                                  string queryString = null,
-                                                 int? constituentNumber = null, 
-                                                 string address = null, 
-                                                 string city = null, 
+                                                 int? constituentNumber = null,
+                                                 string address = null,
+                                                 string city = null,
                                                  string state = null,
                                                  string country = null,
                                                  string zipFrom = null,
@@ -74,8 +74,8 @@ namespace DDI.WebApi.Controllers.CRM
                                                  DateTime? createdfrom = null,
                                                  DateTime? createdto = null,
                                                  string fields = null,
-                                                 int? offset = SearchParameters.OffsetDefault, 
-                                                 int? limit = SearchParameters.LimitDefault, 
+                                                 int? offset = SearchParameters.OffsetDefault,
+                                                 int? limit = SearchParameters.LimitDefault,
                                                  string orderBy = OrderByProperties.DisplayName)
         {
             var search = new ConstituentSearch()
@@ -88,7 +88,7 @@ namespace DDI.WebApi.Controllers.CRM
                 Address = address,
                 City = city,
                 StateId = state,
-                PostalCodeFrom =  zipFrom,
+                PostalCodeFrom = zipFrom,
                 PostalCodeTo = zipTo,
                 CountryId = country,
                 RegionId1 = region1,
@@ -109,7 +109,7 @@ namespace DDI.WebApi.Controllers.CRM
                 Fields = fields,
             };
 
-            return base.GetAll(RouteNames.Constituent, search, fields);
+            return base.GetAll(search, fields);
         }
 
         [HttpGet]
@@ -122,7 +122,7 @@ namespace DDI.WebApi.Controllers.CRM
             {
                 return Ok(new Constituent[0]);
             }
-            
+
             // Format the query string by splitting into words, then if the word has any letters, append a "*" to the end.
             // Example:  12345 Fred* Jones*
             var queryString = string.Join(" ", StringHelper.SplitIntoWords(name)
@@ -137,11 +137,11 @@ namespace DDI.WebApi.Controllers.CRM
                 Fields = fields,
             };
 
-            return base.GetAll(null, search, fields);
+            return base.GetAll(search, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Get)]
+        [Route("api/v1/constituents/{id}")]
         public IHttpActionResult GetConstituentById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
@@ -174,12 +174,12 @@ namespace DDI.WebApi.Controllers.CRM
 
                 return FinalizeResponse(constituent, ConvertFieldList(fields, FieldsForSingle));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.LogError(ex.ToString());
                 return InternalServerError(ex);
             }
-            
+
         }
 
         [HttpGet]
@@ -199,16 +199,16 @@ namespace DDI.WebApi.Controllers.CRM
 
                 return Ok(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.LogError(ex.ToString());
                 return InternalServerError(ex);
             }
-        } 
+        }
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/constituents", Name = RouteNames.Constituent + RouteVerbs.Post)]
+        [Route("api/v1/constituents")]
         public IHttpActionResult Post([FromBody] Constituent constituent)
         {
             return base.Post(constituent);
@@ -218,7 +218,7 @@ namespace DDI.WebApi.Controllers.CRM
         [HttpPost]
         [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Post(Guid id)
-        { 
+        {
             try
             {
                 if (!ModelState.IsValid)
@@ -239,15 +239,15 @@ namespace DDI.WebApi.Controllers.CRM
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Patch)]
+        [Route("api/v1/constituents/{id}")]
         public IHttpActionResult Patch(Guid id, JObject constituentChanges)
-        { 
+        {
             return base.Patch(id, constituentChanges);
         }
 
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/constituents/{id}", Name = RouteNames.Constituent + RouteVerbs.Delete)]
+        [Route("api/v1/constituents/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
@@ -271,7 +271,7 @@ namespace DDI.WebApi.Controllers.CRM
 
                 return Ok(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));

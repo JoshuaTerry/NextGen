@@ -1,12 +1,12 @@
-﻿using DDI.Logger;
-using DDI.Shared.Models;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DDI.Shared.Data;
+using DDI.Shared.Models;
 
-namespace DDI.Data
+namespace DDI.Shared
 {
     /// <summary>
     /// Class that allows processing a large number of entities in batches.  (Each batch uses a new UnitOfWork.)
@@ -18,25 +18,26 @@ namespace DDI.Data
 
         private const int DEFAULT_BATCH_SIZE = 100;
 
-        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(BatchUnitOfWork<T>));
         private List<Guid> _ids;
         private Expression<Func<T, object>>[] _includes;
         private bool _loaded = false;
         private int _skip;
-        private UnitOfWorkEF _initialUnitOfWork = null;
+        private IUnitOfWork _initialUnitOfWork = null;
         private IQueryable<T> _query = null;
         private List<ISorter> _sorters = null;
         private int _count;
+        private bool _autoSaveChanges = false;
+        private bool _hasDataSource = false;
+        private IUnitOfWork _parentUnitOfWork = null;
 
         #endregion
 
         #region Public Properties
-        protected ILogger Logger => _logger;
 
         /// <summary>
         /// UnitOfWork for the current batch.
         /// </summary>
-        public UnitOfWorkEF UnitOfWork { get; private set; }
+        public IUnitOfWork UnitOfWork { get; private set; }
 
         /// <summary>
         /// Number of entities per batch.
@@ -49,7 +50,7 @@ namespace DDI.Data
         public int BatchesToSkip { get; set; }
 
         /// <summary>
-        /// Action to perform at the start of each batch.  This action is useful for creating businses logic classes or reporting progress.  
+        /// Action to perform at the start of each batch.  This action is useful for creating business logic classes or reporting progress.  
         /// It can also be used for enumerating each batch separately by calling the Process method instead of enumerating the BatchUnitOfWork.
         /// </summary>
         public Action<int,IEnumerable<T>> OnNextBatch { get; set; }
@@ -66,21 +67,50 @@ namespace DDI.Data
         /// <summary>
         /// Create a new BatchUnitOfWork.
         /// </summary>
+        /// <param name="autoSaveChanges">True to automatically save changed entities in each batch.</param>
         /// <param name="includes">Paths to include for the entity.</param>
-        public BatchUnitOfWork(params Expression<Func<T, object>>[] includes)
+        public BatchUnitOfWork(params Expression<Func<T, object>>[] includes) : this()
+        {
+            _includes = includes;
+            _hasDataSource = false;
+            _initialUnitOfWork = Factory.CreateUnitOfWork();
+            // The initial query to get all entities.  This can be filtered via Where.
+            _query = _initialUnitOfWork.GetEntities<T>();
+
+        }
+
+        /// <summary>
+        /// Create a new BatchUnitOfWork with a data source.
+        /// </summary>
+        /// <param name="dataSource">Datasource to be enumerated.</param>
+        public BatchUnitOfWork(IEnumerable<T> dataSource) : this()
+        {
+            _includes = new Expression<Func<T, object>>[0];
+            _initialUnitOfWork = null;
+            _query = dataSource.AsQueryable();
+            _hasDataSource = true;
+        }
+
+        private BatchUnitOfWork()
         {
             BatchSize = DEFAULT_BATCH_SIZE;
             OnNextBatch = null;
             OnCompletion = null;
-            _includes = includes;
-            _initialUnitOfWork = new UnitOfWorkEF();  // The UnitOfWork to use for building the list of Ids.
-            _query = _initialUnitOfWork.GetEntities<T>();  // The initial query to get all entities.  This can be filtered via Where.
             _sorters = new List<ISorter>();
         }
 
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Causes changed entities to be saved automatically (by calling SaveChanges()) after each batch is processed.
+        /// </summary>
+        public BatchUnitOfWork<T> AutoSaveChanges(bool saveChanges = true)
+        {
+            _autoSaveChanges = saveChanges;
+            return this;
+        }
 
         /// <summary>
         /// Filters entities based on a predicate.
@@ -143,11 +173,22 @@ namespace DDI.Data
                 }
 
                 // Create a UnitOfWork for this batch.
-                using (UnitOfWork = new UnitOfWorkEF())
+                using (UnitOfWork = Factory.CreateUnitOfWork())
                 {
 
                     // Create a EF set of entities for this batch of Id's.
-                    IQueryable<T> entities = UnitOfWork.GetEntities<T>(_includes).Where(p => idSet.Contains(p.Id)); // This EF "Where" pattern provides a list of Ids to the SELECT statement.
+                    IQueryable<T> entities;
+                    if (_hasDataSource)
+                    {
+                        // Using datasource provided via constructor.
+                        entities = _query.Where(p => idSet.Contains(p.Id)); 
+                    }
+                    else
+                    {
+                        // Using datasource from UnitOfWork.
+                        // This EF "Where" pattern provides a list of Ids to the SELECT statement.
+                        entities = UnitOfWork.GetEntities<T>(_includes).Where(p => idSet.Contains(p.Id)); 
+                    }
 
                     // Apply any sorters to the query.
                     foreach (var sorter in _sorters)
@@ -159,9 +200,14 @@ namespace DDI.Data
                     OnNextBatch?.Invoke(_count, entities);
 
                     // Iterate through each entity in the query.
-                    foreach (var entity in entities)
+                    foreach (var entity in entities.ToList())
                     {
                         yield return entity;
+                    }
+
+                    if (_autoSaveChanges)
+                    {
+                        UnitOfWork.SaveChanges();
                     }
 
                     // Update the count and skip values.
@@ -217,14 +263,14 @@ namespace DDI.Data
                 _count = 0;
                 _skip = BatchesToSkip * BatchSize;
                 _loaded = true;
-                _initialUnitOfWork.Dispose();
+                _initialUnitOfWork?.Dispose();
                 _initialUnitOfWork = null;
             }
         }
 
         #endregion
 
-        #region Internal Classes and Interfaces
+        #region Nested Classes and Interfaces
 
         /// <summary>
         /// Class to provide OrderBy functionality. The initial set of Ids may be ordered, but the batched sets must also be ordered.  

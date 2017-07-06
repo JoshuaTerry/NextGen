@@ -23,12 +23,12 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/states", Name = RouteNames.State)]
+        [Route("api/v1/states")]
         public IHttpActionResult GetAll(Guid? countryId = null, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             if (countryId == null)
             {
-                return base.GetAll(RouteNames.State, limit, offset, orderBy, fields);
+                return base.GetAll(limit, offset, orderBy, fields);
             }
 
             return GetByCountry(countryId.Value, limit, offset, orderBy, fields);
@@ -36,8 +36,8 @@ namespace DDI.WebApi.Controllers.CRM
 
 
         [HttpGet]
-        [Route("api/v1/states/country/{id}", Name = RouteNames.State + RouteNames.Country)]
-        [Route("api/v1/countries/{id}/states", Name = RouteNames.Country + RouteNames.State)]
+        [Route("api/v1/states/country/{id}")]
+        [Route("api/v1/countries/{id}/states")]
         public IHttpActionResult GetByCountry(Guid id, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
 
@@ -47,7 +47,7 @@ namespace DDI.WebApi.Controllers.CRM
                 fields = ConvertFieldList(fields, FieldsForList);
                 var result = Service.GetAllWhereExpression(fp => fp.CountryId == id, search, fields);
 
-                return FinalizeResponse(result, RouteNames.Country + RouteNames.State, search, fields);
+                return FinalizeResponse(result, search, fields);
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/states/{id}", Name = RouteNames.State + RouteVerbs.Get)]
+        [Route("api/v1/states/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);

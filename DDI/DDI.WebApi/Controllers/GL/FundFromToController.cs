@@ -13,7 +13,6 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class FundFromToController : GenericController<FundFromTo>
     {
-        private const string ROUTENAME_GETBYFUND = RouteNames.Fund + RouteNames.FundFromTo + RouteVerbs.Get;
 
         protected new IFundFromToService Service => (IFundFromToService)base.Service;
         public FundFromToController(IFundFromToService service) : base(service) { }
@@ -61,21 +60,21 @@ namespace DDI.WebApi.Controllers.GL
         protected override string FieldsForAll => FieldsForList;
 
         [HttpGet]
-        [Route("api/v1/fundfromtos/{id}", Name = RouteNames.FundFromTo + RouteVerbs.Get)]
+        [Route("api/v1/fundfromtos/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/fundfromtos/fund/{fundid}", Name = RouteNames.FundFromTo + RouteNames.Fund + RouteVerbs.Get)]
-        [Route("api/v1/funds/{fundid}/fundfromto", Name = ROUTENAME_GETBYFUND)]
+        [Route("api/v1/fundfromtos/fund/{fundid}")]
+        [Route("api/v1/funds/{fundid}/fundfromto")]
         public IHttpActionResult GetByFund(Guid fundid, string fields = null)
         {
             try
             {
                 var result = Service.GetForFund(fundid);
-                return FinalizeResponse(result, ROUTENAME_GETBYFUND, null, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(result, null, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -85,21 +84,21 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpPost]
-        [Route("api/v1/fundfromtos", Name = RouteNames.FundFromTo + RouteVerbs.Post)]
+        [Route("api/v1/fundfromtos")]
         public IHttpActionResult Post([FromBody] FundFromTo item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/fundfromtos/{id}", Name = RouteNames.FundFromTo + RouteVerbs.Patch)]
+        [Route("api/v1/fundfromtos/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/fundfromtos/{id}", Name = RouteNames.FundFromTo + RouteVerbs.Delete)]
+        [Route("api/v1/fundfromtos/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

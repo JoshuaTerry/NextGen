@@ -18,7 +18,7 @@ namespace DDI.WebApi.Controllers.Core
         [Route("api/v1/savedentitymapping")]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(string.Empty, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]

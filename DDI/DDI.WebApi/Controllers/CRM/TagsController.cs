@@ -22,7 +22,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Route("api/v1/tags")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
         {
-            return base.GetAll(null, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
@@ -55,7 +55,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/tags/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/tags", Name = RouteNames.Constituent + RouteNames.Tag + RouteVerbs.Get)]
+        [Route("api/v1/constituents/{id}/tags")]
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.Order)
         {
             try
@@ -63,7 +63,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.Constituents.Any(c => c.Id == id), search, fields);
-                return FinalizeResponse(response, "", search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {
@@ -74,7 +74,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/tags/constituenttypes/{id}")]
-        [Route("api/v1/constituenttypes/{id}/tags", Name = RouteNames.ConstituentType + RouteNames.Tag + RouteVerbs.Get)]
+        [Route("api/v1/constituenttypes/{id}/tags")]
         public IHttpActionResult GetByConstituentTypeId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.Order)
         {
             try
@@ -82,7 +82,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.ConstituentTypes.Any(c => c.Id == id), search, fields);
-                return FinalizeResponse(response, "", search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {
@@ -101,7 +101,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.TagGroupId == id, search, fields);
-                return FinalizeResponse(response, "", search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {

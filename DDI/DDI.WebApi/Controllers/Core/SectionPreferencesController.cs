@@ -14,49 +14,49 @@ namespace DDI.WebApi.Controllers.General
         public SectionPreferencesController(IService<SectionPreference> service) : base(service) { }
 
         [HttpGet]
-        [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference)]
+        [Route("api/v1/sectionpreferences")]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.SectionPreference, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/sectionpreferences/{id}", Name = RouteNames.SectionPreference + RouteVerbs.Get)]
+        [Route("api/v1/sectionpreferences/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/sectionpreferences", Name = RouteNames.SectionPreference + RouteVerbs.Post)]
+        [Route("api/v1/sectionpreferences")]
         public IHttpActionResult Post([FromBody] SectionPreference entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
-        [Route("api/v1/sectionpreferences/{id}", Name = RouteNames.SectionPreference + RouteVerbs.Patch)]
+        [Route("api/v1/sectionpreferences/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
-        [Route("api/v1/sectionpreferences/{id}", Name = RouteNames.SectionPreference + RouteVerbs.Delete)]
+        [Route("api/v1/sectionpreferences/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
         }
 
         [HttpGet]
-        [Route("api/v1/sectionpreferences/{categoryName}/settings", Name = RouteNames.SectionPreference + RouteNames.CategoryName)]
+        [Route("api/v1/sectionpreferences/{categoryName}/settings") ]
         public IHttpActionResult GetSectionPreferences(string categoryName)
         {
             try
             {
                 var search = new PageableSearch(0, int.MaxValue, null);
                 var response = Service.GetAllWhereExpression(s => s.SectionName == categoryName, search);
-                return FinalizeResponse(response, RouteNames.SectionPreference + RouteNames.CategoryName, search, null, null);
+                return FinalizeResponse(response, search, null);
                 
             }
             catch (Exception ex)
@@ -67,7 +67,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/sectionpreferences/{categoryName}/settings/{sectionName}", Name = RouteNames.SectionPreference + RouteNames.CategoryName + RouteNames.SectionName)]
+        [Route("api/v1/sectionpreferences/{categoryName}/settings/{sectionName}" )]
         public IHttpActionResult GetSectionPreferenceByName(string categoryName, string sectionName)
         {
             try

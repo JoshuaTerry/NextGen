@@ -4,7 +4,7 @@ function GetPeriodDescription(periodNumber)
 {
     for (var i = 0; i < _periodDescription.length; i++)
     {
-        if (_periodDescription[i].PeriodNumber == periodNumber)
+        if (_periodDescription[i].PeriodNumber === periodNumber)
         {
             return _periodDescription[i].MonthYear;
         }
@@ -13,7 +13,7 @@ function GetPeriodDescription(periodNumber)
 
 $(document).ready(function () {
 
-    LoadTransactionGrid(sessionStorage.getItem("ACCOUNT_ID"));
+    LoadTransactionGrid(accountId);
 
 });
 
@@ -27,7 +27,7 @@ function LoadTransactionGrid(accountId) {
             };
 
             var periods = data.Data;
-            if (data != undefined)
+            if (data !== undefined)
             {
                 $.map(data.Data, function (item) {
                     var fiscalPeriodInfo = {

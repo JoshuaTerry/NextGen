@@ -28,14 +28,14 @@ namespace DDI.WebApi.Controllers.INV
         }
 
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
-        [Route("api/v1/investmentautomatedtransactions", Name = RouteNames.InvestmentAutomatedTransaction)]
+        [Route("api/v1/investmentautomatedtransactions")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.InvestmentInterestPayout, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/investmentautomatedtransactions/{id}", Name = RouteNames.InvestmentAutomatedTransaction + RouteVerbs.Get)]
+        [Route("api/v1/investmentautomatedtransactions/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             try
@@ -53,7 +53,7 @@ namespace DDI.WebApi.Controllers.INV
 
         //[Authorize] //(Roles = Permissions.INV_Read)] //add investment roles when available
         [HttpGet]
-        [Route("api/v1/investmentautomatedtransactions/investment/{id}", Name = RouteNames.InvestmentAutomatedTransaction + RouteNames.Investment + RouteVerbs.Get)]
+        [Route("api/v1/investmentautomatedtransactions/investment/{id}")]
         public IHttpActionResult GetByInvestmentId(Guid id)
         {
             
@@ -75,7 +75,7 @@ namespace DDI.WebApi.Controllers.INV
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPost]
-        [Route("api/v1/investmentautomatedtransactions", Name = RouteNames.InvestmentAutomatedTransaction + RouteVerbs.Post)]
+        [Route("api/v1/investmentautomatedtransactions")]
         public IHttpActionResult Post([FromBody] InvestmentAutomatedTransaction entityToSave)
         {
             return base.Post(entityToSave);
@@ -83,7 +83,7 @@ namespace DDI.WebApi.Controllers.INV
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPatch]
-        [Route("api/v1/investmentautomatedtransactions/{id}", Name = RouteNames.InvestmentAutomatedTransaction + RouteVerbs.Patch)]
+        [Route("api/v1/investmentautomatedtransactions/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
@@ -91,7 +91,7 @@ namespace DDI.WebApi.Controllers.INV
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpDelete]
-        [Route("api/v1/investmentautomatedtransactions/{id}", Name = RouteNames.InvestmentAutomatedTransaction + RouteVerbs.Delete)]
+        [Route("api/v1/investmentautomatedtransactions/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

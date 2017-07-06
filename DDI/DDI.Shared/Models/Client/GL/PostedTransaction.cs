@@ -47,7 +47,7 @@ namespace DDI.Shared.Models.Client.GL
         public Guid? TransactionId { get; set; }        
         [ForeignKey(nameof(TransactionId))]
         public Transaction Transaction { get; set; }
-        
 
+        public override string DisplayName => $"{TransactionNumber}-{LineNumber}";
     }
 }

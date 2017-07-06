@@ -13,8 +13,6 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class BusinessUnitFromToController : GenericController<BusinessUnitFromTo>
     {
-        private const string ROUTENAME_GETBYYEAR = RouteNames.FiscalYear + RouteNames.BusinessUnitFromTo + RouteVerbs.Get;
-
         protected new IBusinessUnitFromToService Service => (IBusinessUnitFromToService)base.Service;
 
         public BusinessUnitFromToController(IBusinessUnitFromToService service) : base(service) { }
@@ -58,21 +56,21 @@ namespace DDI.WebApi.Controllers.GL
         protected override string FieldsForAll => FieldsForList;
 
         [HttpGet]
-        [Route("api/v1/businessunitfromtos/{id}", Name = RouteNames.BusinessUnitFromTo + RouteVerbs.Get)]
+        [Route("api/v1/businessunitfromtos/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/businessunitfromtos/fiscalyear/{yearid}", Name = RouteNames.BusinessUnitFromTo + RouteNames.FiscalYear + RouteVerbs.Get)]
-        [Route("api/v1/fiscalyears/{yearid}/businessunitfromto", Name = ROUTENAME_GETBYYEAR)]
+        [Route("api/v1/businessunitfromtos/fiscalyear/{yearid}")]
+        [Route("api/v1/fiscalyears/{yearid}/businessunitfromto")]
         public IHttpActionResult GetByFiscalYear(Guid yearid, string fields = null)
         {
             try
             {
                 var result = Service.GetForFiscalYear(yearid);
-                return FinalizeResponse(result, ROUTENAME_GETBYYEAR, null, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(result, null, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -82,21 +80,21 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpPost]
-        [Route("api/v1/businessunitfromtos", Name = RouteNames.BusinessUnitFromTo + RouteVerbs.Post)]
+        [Route("api/v1/businessunitfromtos")]
         public IHttpActionResult Post([FromBody] BusinessUnitFromTo item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/businessunitfromtos/{id}", Name = RouteNames.BusinessUnitFromTo + RouteVerbs.Patch)]
+        [Route("api/v1/businessunitfromtos/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/businessunitfromtos/{id}", Name = RouteNames.BusinessUnitFromTo + RouteVerbs.Delete)]
+        [Route("api/v1/businessunitfromtos/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

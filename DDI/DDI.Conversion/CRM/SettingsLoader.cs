@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.Core;
 using DDI.Business.CRM;
+using DDI.Conversion.Core;
 using DDI.Conversion.Statics;
 using DDI.Data;
 using DDI.Shared;
 using DDI.Shared.Enums.Common;
 using DDI.Shared.Enums.CRM;
+using DDI.Shared.Extensions;
+using DDI.Shared.Helpers;
+using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
-using DDI.Shared.Extensions;
-using DDI.Shared.Models;
-using DDI.Conversion.Core;
-using DDI.Data.Helpers;
 
 namespace DDI.Conversion.CRM
-{    
+{
     internal class SettingsLoader : ConversionBase
     {
         public enum ConversionMethod
@@ -667,7 +665,7 @@ namespace DDI.Conversion.CRM
             CommonContext commonContext = new CommonContext();
 
             // Need to delete all region areas first...
-            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelpers.GetTableName<RegionArea>()}");
+            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelper.GetTableName<RegionArea>()}");
 
             using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
             {
@@ -882,8 +880,8 @@ namespace DDI.Conversion.CRM
             // Need to delete all tag related tables.
             context.Database.ExecuteSqlCommand($"DELETE FROM TagConstituents"); // Currently no way to retrieve these many-to-many table names.
             context.Database.ExecuteSqlCommand($"DELETE FROM TagConstituentTypes"); // Currently no way to retrieve these many-to-many table names.
-            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelpers.GetTableName<Tag>()}");
-            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelpers.GetTableName<TagGroup>()}");
+            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelper.GetTableName<Tag>()}");
+            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelper.GetTableName<TagGroup>()}");
 
             Dictionary<int, TagGroup> groupDict = new Dictionary<int, TagGroup>();
 
