@@ -35,7 +35,7 @@ namespace DDI.Search.Models
         [Number]
         public decimal Amount { get; set; }
 
-        [Keyword]
+        [Text]
         public string Status { get; set; }
 
         [Date]
