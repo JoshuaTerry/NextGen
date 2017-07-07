@@ -1,4 +1,7 @@
-﻿using DDI.Shared;
+﻿using DDI.Data;
+using DDI.Services;
+using DDI.Shared;
+using DDI.Shared.Enums.Common;
 using DDI.Shared.Models.Client.Core;
 using System.IO;
 using System.Web.Http;
@@ -34,7 +37,16 @@ namespace DDI.WebApi.Controllers.Core
             response.Data = result;
 
             return Ok(response);
-        } 
+        }
 
+        [HttpGet]
+        [Route("api/v1/import/{entityType}/MappableFields")]
+        public IHttpActionResult GetMappableFields(int entityType)
+        {
+            var entityMappingService = new ServiceBase<EntityMapping>(new UnitOfWorkEF());
+            var response = entityMappingService.GetAllWhereExpression(f => f.MappingType == (EntityMappingType)entityType);
+            
+            return Ok(response);
+        }
     }
 }

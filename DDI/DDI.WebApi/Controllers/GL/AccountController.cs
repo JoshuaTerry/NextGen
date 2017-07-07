@@ -2,6 +2,7 @@
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using DevExtreme.AspNet.Data;
@@ -169,6 +170,13 @@ namespace DDI.WebApi.Controllers.GL
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpPost]
+        [Route("api/v1/accounts/budget/import")]
+        public IHttpActionResult Post([FromBody] MappableEntityField[] fields)
+        {
+            return base.Post(item);
         }
     }
 }

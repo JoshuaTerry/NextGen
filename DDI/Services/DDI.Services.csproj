@@ -76,6 +76,7 @@
     <Compile Include="Common\CountryService.cs" />
     <Compile Include="CriteriaQuery.cs" />
     <Compile Include="Core\CustomFieldService.cs" />
+    <Compile Include="GL\BudgetImportService.cs" />
     <Compile Include="GL\FiscalPeriodService.cs" />
     <Compile Include="GL\FundService.cs" />
     <Compile Include="GL\FundFromToService.cs" />

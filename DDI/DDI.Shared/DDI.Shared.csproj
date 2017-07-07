@@ -133,6 +133,7 @@
     <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
     <Compile Include="Enums\CP\EFTAccountType.cs" />
+    <Compile Include="Models\Client\Core\MappableEntityField.cs" />
     <Compile Include="Models\Client\CP\Receipt.cs" />
     <Compile Include="Enums\CP\ReceiptCategory.cs" />
     <Compile Include="Models\Client\CP\ReceiptBatch.cs" />
