@@ -97,9 +97,9 @@ namespace DDI.Shared.Enums.Core
 
         // Special:  9999XX
 
-        [TransactionType("G/L closing balance", ModuleType = ModuleType.GeneralLedger)]
+        [TransactionType("GL closing balance", ModuleType = ModuleType.GeneralLedger)]
         ClosingBalance = 999998,
-        [TransactionType("G/L beginning balance", ModuleType = ModuleType.GeneralLedger)]
+        [TransactionType("GL beginning balance", ModuleType = ModuleType.GeneralLedger)]
         BeginningBalance = 999999,
 
     }
