@@ -120,7 +120,7 @@ namespace DDI.Business.Tests.GL
         [TestMethod, TestCategory(TESTDESCR)]
         public void LedgerLogic_Validate()
         {
-            AccountDataSource.GetDataSource(_uow); // ensure G/L accounts are available.
+            AccountDataSource.GetDataSource(_uow); // ensure GL accounts are available.
 
             Ledger ledger = _ledgers.FirstOrDefault(p => p.Code == BusinessUnitDataSource.UNIT_CODE1);
             AssertNoException(() => _bl.Validate(ledger), "Valid ledger example");

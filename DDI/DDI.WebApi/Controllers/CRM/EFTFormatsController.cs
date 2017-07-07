@@ -1,8 +1,8 @@
-﻿using System;
-using System.Web.Http;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {

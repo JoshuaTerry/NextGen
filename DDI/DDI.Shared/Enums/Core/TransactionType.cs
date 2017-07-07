@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Attributes.Transactions;
+﻿using DDI.Shared.Attributes.Transactions;
 
 namespace DDI.Shared.Enums.Core
 {
@@ -103,9 +97,9 @@ namespace DDI.Shared.Enums.Core
 
         // Special:  9999XX
 
-        [TransactionType("G/L closing balance", ModuleType = ModuleType.GeneralLedger)]
+        [TransactionType("GL closing balance", ModuleType = ModuleType.GeneralLedger)]
         ClosingBalance = 999998,
-        [TransactionType("G/L beginning balance", ModuleType = ModuleType.GeneralLedger)]
+        [TransactionType("GL beginning balance", ModuleType = ModuleType.GeneralLedger)]
         BeginningBalance = 999999,
 
     }

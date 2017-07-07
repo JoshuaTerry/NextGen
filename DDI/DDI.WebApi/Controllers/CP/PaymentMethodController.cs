@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Web.Http;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Http;
 
-namespace DDI.WebApi.Controllers.CRM
+namespace DDI.WebApi.Controllers.CP
 {
     [Authorize(Roles = Permissions.CRM_Settings_Read + "," + Permissions.Settings_Read)]
     public class PaymentMethodController : GenericController<PaymentMethod>
