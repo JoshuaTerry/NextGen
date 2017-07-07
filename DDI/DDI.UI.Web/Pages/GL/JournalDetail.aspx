@@ -66,12 +66,13 @@
                 
             </div>
 
-            <div class="fieldblock">
-                <label>Occurs: </label>
-                <select class="RecurringType editable"></select>
-            </div>
-
             <div class="expirationselection" style="display: none;">
+
+                <div class="fieldblock">
+                    <label>Occurs: </label>
+                    <select class="RecurringType editable"></select>
+                </div>
+
                 <div class="fieldblock">
                     <label>Expires: </label>
                 </div>
@@ -99,15 +100,14 @@
                     <input type="text" class="ExpireAmount editable money inline" />
                 </div>
             </div>
+
+        </div>
             
-            <div>
-                <a href="#" class="newjournallinemodallink newmodallink">New Item</a>
-                <div class="journallinegridcontainer">
-                    <div class="journallinegrid"></div>
-                </div>
+        <div>
+            <a href="#" class="newjournallinemodallink newmodallink">New Item</a>
+            <div class="journallinegridcontainer">
+                <div class="journallinegrid"></div>
             </div>
-
-
         </div>
 
     </div>

@@ -1154,13 +1154,19 @@ function SetupEditControls() {
     $('.savebutton').click(function (e) {
 
         e.preventDefault();
-        if ($('#form1').valid()) {
-            var editcontainer = $(this).closest('.editcontainer');
-            StopEdit(editcontainer);
-            SaveEdit(editcontainer);
-        } else {
-            DisplayErrorMessage('Error', 'There are invalid fields. Please fix those and then try saving again.');
-        }
+
+        var editcontainer = $(this).closest('.editcontainer');
+        StopEdit(editcontainer);
+        SaveEdit(editcontainer);
+
+        //if ($('#form1').valid()) {
+        //    var editcontainer = $(this).closest('.editcontainer');
+        //    StopEdit(editcontainer);
+        //    SaveEdit(editcontainer);
+        //} else {
+        //    DisplayErrorMessage('Error', 'There are invalid fields. Please fix those and then try saving again.');
+        //}
+
     });
 
     $('.cancelbutton').click(function (e) {
@@ -1242,7 +1248,7 @@ function SaveEdit(editcontainer) {
 
             if (data.Data) {
                 // Display success
-                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+                DisplaySuccessMessage('Success', 'Save successful.');
 
                 // Display updated entity data
                 currentEntity = data.Data;

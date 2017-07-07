@@ -83,6 +83,7 @@ span.journalcolumn { width: 30%; display: inline-block; margin: 5px 0 5px 0; ver
 
 div.inlinecontainer { width: 100%; display: inline; vertical-align: top; margin-top: 1%; }
 
+.journalbody div.editcontainer { padding: 10px; margin-bottom: 10px; }
 .journalbody div.threecolumn > div { margin-right: 0.5%; }
 .journalbody div.fieldblock label.inline { width: auto; }
 

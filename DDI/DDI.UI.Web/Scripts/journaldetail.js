@@ -1,4 +1,5 @@
 ﻿
+var SAVE_ROUTE = 'journals/';
 var DueTo = { 0: 'None', 1: 'Due From', 2: 'Due To' }
 
 var fiscalYearId = 'B80B38CF-108C-4D9D-BE49-DFFD6502449C'      // testing
@@ -46,34 +47,47 @@ function LoadJournalDetail() {
             $('.StatusDescription').html(data.Data.StatusDescription);
             $('.TransactionDate').val(data.Data.TransactionDate);
             $('.Comment').val(data.Data.Comment);
-
-            switch (data.Data.JournalType) {
-                case 0:
-                    if (data.Data.ReverseOnDate === null) {
-                        $('.reverseondatecontainer').hide();
-                    }
-                    else {
-                        $('.reverseondatecontainer').show();
-                        $('.ReverseOnDate').val(data.Data.ReverseOnDate);
-                    }
-                    break;
-                case 1:
-                    $('.expirationselection').show()
-                    PopulateDropDown('.RecurringType', 'journals/recurringtypes', null, null, data.Data.RecurringType, null, null);
-                    break;
-                case 2:
-                    break;
-            }
-
             $('.CreatedBy').html(data.Data.CreatedBy);
             $('.CreatedOn').html(data.Data.CreatedOn);
             $('.LastChangedBy').html(data.Data.LastChangedBy);
             $('.LastChangedOn').html(data.Data.LastChangedOn);
 
+            SetupJournalTypeDisplay(data);
+
             LoadJournalLineGrid(data);
+
+            LoadDatePickers();
         }
 
     }, null)
+
+}
+
+function SetupJournalTypeDisplay(data) {
+
+    switch (data.Data.JournalType) {
+        case 0:
+
+            if (data.Data.ReverseOnDate === null) {
+                $('.reverseondatecontainer').hide();
+            }
+            else {
+                $('.reverseondatecontainer').show();
+                $('.ReverseOnDate').val(data.Data.ReverseOnDate);
+            }
+
+            break;
+        case 1:
+
+            $('.expirationselection').show()
+            PopulateDropDown('.RecurringType', 'journals/recurringtypes', null, null, data.Data.RecurringType, null, null);
+
+
+
+            break;
+        case 2:
+            break;
+    }
 
 }
 
