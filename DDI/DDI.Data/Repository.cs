@@ -159,15 +159,16 @@ namespace DDI.Data
         public TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
         {
             var entry = _context.Entry(entity);
-
             if (entry.State == System.Data.Entity.EntityState.Detached || entry.State == System.Data.Entity.EntityState.Added)
             {
                 var method = property.Compile();
-                return method.Invoke(entity);
+                TElement returnValue = method.Invoke(entity);
+                if (returnValue != null || entry.State != System.Data.Entity.EntityState.Added)
+                {
+                    return returnValue;
+                }
             }
-
             var reference = entry.Reference(property);
-
             if (!reference.IsLoaded)
                 reference.Load();
             return reference.CurrentValue;
