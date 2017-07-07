@@ -46,6 +46,10 @@ namespace DDI.Shared.Models.Client.CP
         [ForeignKey(nameof(ConstituentId))]
         public Constituent Constituent { get; set; }
 
+        public Guid? DebitLedgerAccountId { get; set; }
+        [ForeignKey(nameof(DebitLedgerAccountId))]
+        public LedgerAccount DebitLedgerAccount { get; set; }
+
         public ICollection<MiscReceiptLine> MiscReceiptLines { get; set; }
 
         #region NotMapped Properties
