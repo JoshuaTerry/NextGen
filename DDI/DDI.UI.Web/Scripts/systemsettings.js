@@ -3104,7 +3104,6 @@ function LoadFundAccountingSectionSettings() {
     $('.gridcontainer').empty();
     
     ///* ACCOUNT/REVENUE/EXPENSE ACCORDION */
-   
     var container = $('<div>').addClass('fundsettingscontainer onecolumn').appendTo('.gridcontainer');
     var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
     var fiscalYearid = $('<input>').attr('type', 'hidden').addClass('hidFiscalId').appendTo(container);
@@ -3119,7 +3118,6 @@ function LoadFundAccountingSectionSettings() {
 
     $('.selectfiscalyear').parent().hide();
     $('.selectfund').parent().hide();
-
 
     var accordions = $('<div>').addClass('accordions');
     var accountrevenuegroup = $('<div>').addClass('accountrevenuecontainer');
@@ -3149,7 +3147,7 @@ function LoadFundAccountingSectionSettings() {
     $(errorgroup).append('<br />').appendTo(accountrevenuegroup).appendTo(container);
 
     CreateSaveAndCancelButtons('SaveFundSetting', function (e) {
-        e.preventDefault();
+      
         fundid = $('.selectfund').val();
         var item = null;
         fiscalyearid = $('.selectfiscalyear').val();
@@ -3189,6 +3187,7 @@ function LoadFundAccountingSectionSettings() {
     LoadAccordions();
 
     $(accordions).hide();
+    $('.accoudions-buttons').hide();
 }
 
 function PopulateFiscalYears() {
@@ -3221,6 +3220,7 @@ function PopulateFundFromFiscalYear(fiscalyear, ledgerid, fundid) {
     
     PopulateDropDown('.selectfund', 'fund/' + fiscalyear + '/fiscalyear', 'Please Select', '', '', function () {
         $('.gridcontainer .accordions').show()
+        $('.gridcontainer .accoudion-buttons').show();
 
         LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.hidLedgerId').val(), $('.selectfund').val());
         PopulateFundBusinessFromFiscalYear(($('.selectfiscalyear').val(), $('.hidLedgerId').val()));
@@ -3278,7 +3278,6 @@ function PopulateFundDueFromFund(fundid) {
                         EditFundDue(options.data);
                     })
                     .appendTo(container);
-
             }
         }
     ];
@@ -3313,7 +3312,6 @@ function PopulateFundBusinessFromFiscalYear() {
                             EditBusinessUnit(options.data);
                         })
                         .appendTo(container);
-               
             }
         }
     ];
@@ -3324,12 +3322,10 @@ function PopulateFundBusinessFromFiscalYear() {
 function LoadFundSettings(fundid) {
 
     MakeServiceCall('GET', 'fund/' + fundid, null, function (data) {
-
         $('.selectfund').val(data.Data.fundid);
         $('.selectfundbalanceaccount').val(data.Data.FundBalanceAccountId);
         $('.selectclosingrevenueaccount').val(data.Data.ClosingRevenueAccountId);
         $('.selectclosingexpenseaccount').val(data.Data.ClosingExpenseAccountId);
-     
     }, null);
 }
 function EditBusinessUnit(buFromToInfo) {
@@ -3346,7 +3342,6 @@ function EditBusinessUnit(buFromToInfo) {
                     $('.bus-FromLedgerAccount').empty();
                     $('.bus-ToLedgerAccount').empty();
                 }
-
             });
 
             GLAccountSelector($(modal).find('.bus-FromLedgerAccount'), $('.fundLedgerId').val(), $('.selectfiscalyear').val());
@@ -3358,41 +3353,31 @@ function EditBusinessUnit(buFromToInfo) {
             $('.cancelbusinessunitduedetailsmodal').click(function (e) {
 
                 e.preventDefault();
-
                 CloseModal(modal);
-
                 PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
 
                 $('.bus-FromLedgerAccount').empty();
                 $('.bus-ToLedgerAccount').empty();
-
             });
 
             $('.Savebusinessunitduedetails').unbind('click');
 
             $('.Savebusinessunitduedetails').click(function () {
-
                 var item = {
                     FromAccountId: $(modal).find('.bus-FromLedgerAccount > .hidaccountid').val(),
                     ToAccountId: $(modal).find('.bus-ToLedgerAccount > .hidaccountid').val()
-
                 }
 
                 MakeServiceCall('PATCH', 'businessunitfromtos/' + buFromToInfo.Id, JSON.stringify(item), function (data) {
-
                     DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
                     CloseModal(modal);
                     PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
-                    // PopulateFundFromFiscalYear(fiscalyear, $('.FundLedgerId').val(), fundid);
+                    
                     $('.bus-FromLedgerAccount').empty();
                     $('.bus-ToLedgerAccount').empty();
-
                 }, function (xhr, status, err) {
-
                     DisplayErrorMessage('Error', 'An error occurred during saving the Business Due.');
-
                 });
-
             });
         }, null);
     }
@@ -3406,52 +3391,40 @@ function EditBusinessUnit(buFromToInfo) {
                 $('.bus-FromLedgerAccount').empty();
                 $('.bus-ToLedgerAccount').empty();
             }
-
         });
 
         GLAccountSelector($(modal).find('.bus-FromLedgerAccount'), $('.fundLedgerId').val(), $('.selectfiscalyear').val());
         GLAccountSelector($(modal).find('.bus-ToLedgerAccount'), $('.fundLedgerId').val(), $('.selectfiscalyear').val());
 
         $('.cancelbusinessunitduedetailsmodal').click(function (e) {
-
             e.preventDefault();
-
             CloseModal(modal);
-
             PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
 
             $('.bus-FromLedgerAccount').empty();
             $('.bus-ToLedgerAccount').empty();
-
         });
 
         $('.Savebusinessunitduedetails').unbind('click');
-
         $('.Savebusinessunitduedetails').click(function () {
 
             var item = {
-
                 BusinessUnitId: buFromToInfo.BusinessUnitId,
                 FiscalYearId: buFromToInfo.FiscalYearId,
                 OffsettingBusinessUnitId: buFromToInfo.OffsettingBusinessUnitId,
                 FromAccountId: $(modal).find('.bus-FromLedgerAccount > .hidaccountid').val(),
                 ToAccountId: $(modal).find('.bus-ToLedgerAccount > .hidaccountid').val()
-
             }
 
             MakeServiceCall('POST', 'businessunitfromtos/', JSON.stringify(item), function (data) {
-
                 DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
                 CloseModal(modal);
                 PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
 
                 $('.bus-FromLedgerAccount').empty();
                 $('.bus-ToLedgerAccount').empty();
-
             }, function (xhr, status, err) {
-
                 DisplayErrorMessage('Error', 'An error occurred during saving the Business Unit From To.');
-
             });
         });       
     }
@@ -3460,7 +3433,6 @@ function EditBusinessUnit(buFromToInfo) {
 function EditFundDue(fundDueInfo) {
 
     if (fundDueInfo.Id != "00000000-0000-0000-0000-000000000000") {
-
         MakeServiceCall('GET', 'fundfromtos/' + fundDueInfo.Id, null, function (data) {
             modal = $('.fundduemodal').dialog({
                 closeOnEscape: false,
@@ -3480,9 +3452,7 @@ function EditFundDue(fundDueInfo) {
             LoadSelectedAccount($('.fn-DueToAccount'), data.Data.ToAccountId);
 
             $('.cancelfundduemodal').click(function (e) {
-
                 e.preventDefault();
-
                 CloseModal(modal);
                 PopulateFundDueFromFund($('.selectfund').val());
 
@@ -3493,25 +3463,20 @@ function EditFundDue(fundDueInfo) {
             $('.Savefundduedetails').unbind('click');
 
             $('.Savefundduedetails').click(function () {
-
                 var item = {
                     FromAccountId: $(modal).find('.fn-DueFromAccount > .hidaccountid').val(),
                     ToAccountId: $(modal).find('.fn-DueToAccount > .hidaccountid').val()
                 }
 
                 MakeServiceCall('PATCH', 'fundfromtos/' + fundDueInfo.Id, JSON.stringify(item), function (data) {
-
                     DisplaySuccessMessage('Success', 'Fund due saved successfully.');
                     CloseModal(modal);
                     PopulateFundDueFromFund($('.selectfund').val());
 
                     $('.fn-DueFromAccount').empty();
                     $('.fn-DueToAccount').empty();
-
                 }, function (xhr, status, err) {
-
                     DisplayErrorMessage('Error', 'An error occurred during saving the Fund due.');
-
                 });
             });
         }, null);
@@ -3532,9 +3497,7 @@ function EditFundDue(fundDueInfo) {
         GLAccountSelector($('.fn-DueToAccount'), $('.fundLedgerId').val(), $('.selectfiscalyear').val());
 
         $('.cancelfundduemodal').click(function (e) {
-
             e.preventDefault();
-
             CloseModal(modal);
             PopulateFundDueFromFund($('.selectfund').val());
 
@@ -3545,29 +3508,23 @@ function EditFundDue(fundDueInfo) {
         $('.Savefundduedetails').unbind('click');
 
         $('.Savefundduedetails').click(function () {
-
             var item = {
                 FundId: fundDueInfo.FundId,
                 FiscalYearId: fundDueInfo.FiscalYearId,
                 OffsettingFundId: fundDueInfo.OffsettingFundId,
                 FromAccountId: $(modal).find('.fn-DueFromAccount > .hidaccountid').val(),
                 ToAccountId: $(modal).find('.fn-DueToAccount > .hidaccountid').val()
-
             }
 
             MakeServiceCall('POST', 'fundfromtos/', JSON.stringify(item), function (data) {
-
                 DisplaySuccessMessage('Success', 'Fund due saved successfully.');
                 CloseModal(modal);
                 PopulateFundDueFromFund($('.selectfund').val());
 
                 $('.fn-DueFromAccount').empty();
                 $('.fn-DueToAccount').empty();
-
             }, function (xhr, status, err) {
-
                 DisplayErrorMessage('Error', 'An error occurred during saving the Fund due.');
-
             });
         });
     }
@@ -3688,7 +3645,7 @@ function LoadGLFormatSectionSettings() {
             }
                 ];
                 
-                LoadGrid('.glformatcontainer', 'glformatgrid', glformatcolumns, 'segmentlevels/ledger/' + $('.LedgerId').val(), 'segmentlevels', null, 'glformat-',
+                LoadGrid('.glformatcontainer', 'glformatgrid', glformatcolumns, 'segmentlevels/ledger/' + ledgerId, 'segmentlevels', null, 'glformat-',
                     editModalClass, editModalClass, 250, canDeleteSegmentLevels, false, false, function () {
 
                         MakeServiceCall('GET', 'ledgers/' + ledgerId, null, function (data) {
