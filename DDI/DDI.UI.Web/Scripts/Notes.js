@@ -11,19 +11,7 @@ var NoteEntity = {
     26: 'Accounting'
 };
 
-$(document).ready(function () {
-
-    $('.tabscontainer').tabs();
-
-    LoadDatePickers()
-
-    LoadNoteDetailsGrid();
-
-    NewNoteDetailsModal();
-
-});
-
-function LoadNoteDetailsGrid() {
+function LoadNoteDetailsGrid(entityType) {
 
     if (currentEntity) {
 
@@ -33,30 +21,34 @@ function LoadNoteDetailsGrid() {
             { dataField: 'CreatedBy', caption: 'Created By' }
         ];
 
-        CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, 'entity/' + currentEntity.Id + '/notes?fields=Id,CreatedBy,CreatedOn,DisplayName', null, EditNoteDetails, null, null);
+        CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, 'entity/' + currentEntity.Id + '/notes?fields=Id,CreatedBy,CreatedOn,DisplayName', null, EditNoteDetails, null, function (e) {
 
-        PopulateDropDown('.nd-Category', 'notecategories', '', '', '');
-        PopulateDropDown('.nd-NoteCode', 'notecodes', '', '');
-        PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
+            var link = $('<a>')
+                .attr('href', '#')
+                .addClass('newmodallink')
+                .addClass('newnotesdetailmodallink')
+                .text('New Item');
 
-        var link = $('<a>')
-            .attr('href', '#')
-            .addClass('newmodallink')
-            .addClass('.newnotesdetailmodallink')
-            .text('New Item');
+            $('.notedetailsgridcontainer').prepend($(link));
 
-        $('.notedetailsgridcontainer').prepend(link);
+            NewNoteDetailsModal(entityType);
+
+        });
+       
     }
 
 }
 
-function NewNoteDetailsModal() {
+function NewNoteDetailsModal(entityType) {
+
+    $('.newnotesdetailmodallink').unbind('click');
 
     $('.newnotesdetailmodallink').click(function (e) {
 
     PopulateDropDown('.nd-Category', 'notecategories/', '', '');
     PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
     PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
+    PopulateDropDown('.nd-UserResponsible', 'users', '', '');
 
     e.preventDefault();
 
@@ -93,26 +85,12 @@ function NewNoteDetailsModal() {
     });
 
     $('.savenotedetails').unbind('click');
-
+    
     $('.savenotedetails').click(function () {
 
-        var topicsavelist = GetNoteTopicsToSave();
-
-        var item = GetNoteDetailsToSave(modal);
+        var item = GetNoteDetailsToSave(modal, entityType);
 
         MakeServiceCall('POST', 'notes', item, function (data) {
-
-            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function () {
-
-                // TODO: Do this on the service layer so that you only have to make one service call; the service will handle the adding the new note
-
-                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
-
-            }, function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
-
-            });
 
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
@@ -179,7 +157,7 @@ function LoadNoteDetails(id) {
 
 }
 
-function GetNoteDetailsToSave(modal) {
+function GetNoteDetailsToSave(modal, entityType) {
 
     var rawitem = {
 
@@ -193,10 +171,14 @@ function GetNoteDetailsToSave(modal) {
         UserResponsibleId: $(modal).find('.nd-UserResponsible').val(),
         PrimaryContactId: $(modal).find('.rs-Constituent1Id').val(),
         ParentEntityId: currentEntity.Id,
-        EntityType: NoteEntity[0],
+        EntityType: entityType, 
         ContactMethodId: $(modal).find('.nd-ContactMethod').val(),
+        NoteTopics: GetNoteTopicsToSave()
+
 
     };
+
+
 
     var item = JSON.stringify(rawitem);
 
@@ -328,17 +310,14 @@ function LoadSelectedNoteTopics(id) {
 } 
 
 function GetNoteTopicsToSave() {
-    var topicidobject = { 
         
-        TopicIds: []
+        TopicIds = []
             
-     };
-
     var divs = $('.noteTopicSelect').children('div');
 
-    $.map(divs, function (divid) { topicidobject.TopicIds.push(divid.id) });
+    $.map(divs, function (divid) { TopicIds.push({ "Id":  divid.id  }) });
 
-    return topicidobject;
+    return TopicIds;
 
 }
 
@@ -380,11 +359,9 @@ function CreateMultiSelectTopics(topics, container) {
 /* End NoteTopics */
 
 /* Loading Notes Modal Independently from Notes grid*/
-
-function LoadNotesModal(id, cancelCallBack, saveCallBack)
+function LoadNotesModal(id, entityType, cancelCallBack, saveCallBack)
 {
-
-
+    
     PopulateDropDown('.nd-Category', 'notecategories/', '', '');
     PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
     PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
@@ -436,7 +413,7 @@ function LoadNotesModal(id, cancelCallBack, saveCallBack)
 
         var topicsavelist = GetNoteTopicsToSave();
 
-        var item = GetNoteDetailsToSave(modal);
+        var item = GetNoteDetailsToSave(modal, entityType);
 
         MakeServiceCall('POST', 'notes', item, function (data) {
 
