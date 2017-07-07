@@ -3187,7 +3187,7 @@ function LoadFundAccountingSectionSettings() {
     LoadAccordions();
 
     $(accordions).hide();
-    $('.accoudions-buttons').hide();
+    $('.accordion-buttons').hide();
 }
 
 function PopulateFiscalYears() {
@@ -3203,6 +3203,8 @@ function PopulateFiscalYears() {
                     var fiscalId = $('.hidFiscalId').val();
                     var ledgerId = $('.hidLedgerId').val();
                     PopulateFundFromFiscalYear(fiscalId, ledgerId);
+                    $('.gridcontainer .accordions').hide();
+                    $('.gridcontainer .accordion-buttons').hide();
                 }, function () {
                     $('.hidFiscalId').val($('.selectfiscalyear').val());
                     var fiscalId = $('.hidFiscalId').val();
@@ -3220,7 +3222,7 @@ function PopulateFundFromFiscalYear(fiscalyear, ledgerid, fundid) {
     
     PopulateDropDown('.selectfund', 'fund/' + fiscalyear + '/fiscalyear', 'Please Select', '', '', function () {
         $('.gridcontainer .accordions').show()
-        $('.gridcontainer .accoudion-buttons').show();
+        $('.gridcontainer .accordion-buttons').show();
 
         LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.hidLedgerId').val(), $('.selectfund').val());
         PopulateFundBusinessFromFiscalYear(($('.selectfiscalyear').val(), $('.hidLedgerId').val()));
