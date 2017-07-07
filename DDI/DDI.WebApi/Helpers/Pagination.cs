@@ -1,5 +1,4 @@
-﻿using DDI.Services.Extensions;
-using DDI.Shared;
+﻿using DDI.Shared;
 using System;
 using System.Web;
 using System.Web.Http.Routing;

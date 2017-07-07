@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using DDI.Services.Security;
+﻿using DDI.Services.Security;
 using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using System;
+using System.Threading.Tasks;
 
 namespace DDI.WebApi
 {

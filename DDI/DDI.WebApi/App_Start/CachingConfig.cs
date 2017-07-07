@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace DDI.WebApi
+﻿namespace DDI.WebApi
 {
     public class CachingConfig
     {

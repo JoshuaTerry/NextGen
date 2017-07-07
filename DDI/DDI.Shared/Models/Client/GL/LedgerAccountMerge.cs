@@ -1,7 +1,5 @@
-﻿using DDI.Shared.Enums.GL;
-using DDI.Shared.Models.Client.Security;
+﻿using DDI.Shared.Models.Client.Security;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

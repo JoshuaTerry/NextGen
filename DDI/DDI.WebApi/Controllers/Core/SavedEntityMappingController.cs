@@ -1,14 +1,9 @@
-﻿using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CRM;
+﻿using DDI.Services;
+using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
-using System.Net;
-using System.Net.Http;
-using System.IO;
-using DDI.Shared;
-using DDI.Services;
 
 namespace DDI.WebApi.Controllers.Core
 {
