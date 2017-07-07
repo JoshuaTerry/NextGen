@@ -1,9 +1,9 @@
-﻿using System;
-using System.Web.Http;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -15,35 +15,35 @@ namespace DDI.WebApi.Controllers.CRM
         protected override string FieldsForList => FieldLists.CodeFields;
 
         [HttpGet]
-        [Route("api/v1/clergytypes", Name = RouteNames.ClergyType)]
+        [Route("api/v1/clergytypes")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.ClergyType, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/clergytypes/{id}", Name = RouteNames.ClergyType + RouteVerbs.Get)]
+        [Route("api/v1/clergytypes/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/clergytypes", Name = RouteNames.ClergyType + RouteVerbs.Post)]
+        [Route("api/v1/clergytypes")]
         public IHttpActionResult Post([FromBody] ClergyType item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/clergytypes/{id}", Name = RouteNames.ClergyType + RouteVerbs.Patch)]
+        [Route("api/v1/clergytypes/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/clergytypes/{id}", Name = RouteNames.ClergyType + RouteVerbs.Delete)]
+        [Route("api/v1/clergytypes/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

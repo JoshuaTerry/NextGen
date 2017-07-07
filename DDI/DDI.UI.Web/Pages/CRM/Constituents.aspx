@@ -6,6 +6,7 @@
     <script type="text/javascript" src="..\..\Scripts\Notes.js"></script>
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\attachments.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
@@ -64,6 +65,7 @@
             <ul>
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
                 <li id="tab-notes-main"><a href="~/Pages/Common/Notes.aspx" runat="server">Notes</a></li>
+                <li><a href="#tab-attachments">Attachments</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li style="display: none;"><a href="#tab-donor">Donor</a></li>
                 <li id="tab-investments-main"><a href="#tab-investments">Investments</a></li>
@@ -506,6 +508,15 @@
             </div>
 
              <!-- Notes Tab -->
+            <div id="tab-notes" class="scrollable">
+               
+            </div>
+
+            <!--Attachments Tab -->
+            <div id="tab-attachments" class="scrollable">
+                <h1>Attachments</h1>
+                <div class="attachments"></div>
+            </div>
             
             
             <!-- Relationships Tab -->

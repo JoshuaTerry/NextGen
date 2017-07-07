@@ -390,7 +390,7 @@ function LoadConstituentTypesSectionSettings() {
 
 
     var header = $('<h1>').text('Constituent Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -600,7 +600,7 @@ function LoadConstituentTypeSettingsGrid() {
     ];
 
 
-    CustomLoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes?fields=all', null, EditConstituentType, DeleteConstituentType);
+    CustomLoadGrid('constituenttypesgrid', 'constituenttypescontainer', typecolumns, 'constituenttypes?fields=all', '', EditConstituentType, DeleteConstituentType,null);
 
 }
 
@@ -662,16 +662,19 @@ function EditConstituentType(id) {
 function DeleteConstituentType(id) {
 
     MakeServiceCall('DELETE', 'constituenttypes/' + id, null, function (data) {
+      
+        DisplaySuccessMessage('Success', 'Constituent Type deleted successfully.');
 
-        if (data.Data) {
-            DisplaySuccessMessage('Success', 'Constituent Type deleted successfully.');
+        LoadConstituentTypeSettingsGrid();
 
-            LoadConstituentTypeSettingsGrid();
-        }
-
-    }, null);
-
+    }, 
+        
+         function (xhr, status, err) {
+             DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Type.');
+    }
+);
 }
+
 
 function LoadConstituentType(id) {
 
@@ -716,7 +719,7 @@ function LoadContactInformationSectionSettings() {
 
 
     var header = $('<h1>').text('Address Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newaddresstypemodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newaddresstypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -774,7 +777,7 @@ function LoadContactInformationSectionSettings() {
     LoadAddressTypeSettingsGrid();
 
     header = $('<h1>').text('Contact Categories').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newcontactcategorymodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newcontactcategorymodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -837,7 +840,7 @@ function LoadContactInformationSectionSettings() {
     LoadContactCategorySettingsGrid();
 
     header = $('<h1>').text('Contact Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newcontacttypemodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newcontacttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -1999,7 +2002,7 @@ function LoadRelationshipSectionSettings() {
     var type = $('<div>').addClass('relationshiptypecontainer');
 
     var header = $('<h1>').text('Relationship Categories').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newrelationshipcategorymodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -2056,7 +2059,7 @@ function LoadRelationshipSectionSettings() {
     LoadRelationshipCategorySettingsGrid();
 
     header = $('<h1>').text('Relationship Types').appendTo($(accordion));
-    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton')
+    $('<a>').attr('href', '#').addClass('newrelationshiptypesmodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
 
@@ -2578,15 +2581,34 @@ function LoadAccountingSettingsSectionSettings() {
 
     $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
 
+
+    // Audit Link
+    $('<a>').text('Audit History').attr('href', '#').attr('type', 'hidden').addClass('newauditmodal').prependTo($('.gridcontainer'));
+
+
     // Select the ledger
     CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer, true);
 
-    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {
+    PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '<Please Select>', null, '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
+        ShowAuditData($('.hidLedgerId').val());
         LoadAccountingSettings($('.hidLedgerId').val());
 
-    }, null);
+
+    }, function (element, data) {
+
+        if (data.TotalResults > 1) {
+
+            $('.as-ledgerselect').val(data.Data[0].Id);
+            
+        }
+
+        $('.hidLedgerId').val($('.as-ledgerselect').val());
+        ShowAuditData($('.hidLedgerId').val());
+        LoadAccountingSettings($('.hidLedgerId').val());
+
+     });
 
     // fiscal year
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer, true);
@@ -2600,23 +2622,8 @@ function LoadAccountingSettingsSectionSettings() {
     // disable or enable approvals for journals
     CreateBasicFieldBlock('Enable Approvals:', '<input type="checkbox">', 'as-approval', acctsettingscontainer, false);
 
-    // if approval is enabled: load users and select who can approve
-    $('.as-approval').change(function () {
+    CreateSaveAndCancelButtons('saveAccountingSettings', function () {
 
-        if (this.checked) {
-
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
-            // PopulateDropDown(); // users with permissions to post approvals
-
-        } else {
-
-            $('.as-approvedusers').parent().remove();
-        }
-    });
-
-    CreateSaveAndCancelButtons('saveAccountingSettings', function (e) {
-
-        e.preventDefault();
 
         var data = {
 
@@ -2636,12 +2643,17 @@ function LoadAccountingSettingsSectionSettings() {
 
 
     }, 'cancel', function (e) {
+
         e.preventDefault();
+
         LoadAccountingSettings($('.hidLedgerId').val());
+
     },
 
     acctsettingscontainer);
 }
+
+
 
 function LoadAccountingSettings(id) {
 
@@ -2653,12 +2665,6 @@ function LoadAccountingSettings(id) {
         $('.as-approval').prop('checked', data.Data.ApproveJournals);
 
         PopulateDropDown('.as-fiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, null);
-
-        if (data.Data.ApproveJournals && !($('.as-approvedusers').length > 0)) {
-
-            CreateBasicFieldBlock('Approved Users:', '<select>', 'as-approvedusers', $('.as-approval').parent(), true);
-            // PopulateDropDown(); // users with permissions to post approvals
-        }
 
     }, null);
 }
@@ -2687,10 +2693,7 @@ function LoadBudgetSectionSettings() {
     CreateBasicFieldBlock('What If Budget Name: ', '<input>', 'whatifBudgetName', container, true, 128);
      
     var id = $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(container);
-    CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {
-
-        e.preventDefault();
-
+    CreateSaveAndCancelButtons('saveBudgetSettings', function (e) {                 
         var data = {
             Id: $(id).val(),
             WorkingBudgetName: $('.workingBudgetName').val(),
@@ -3132,7 +3135,7 @@ function LoadFundAccountingSectionSettings() {
 
     var accordions = $('<div>').addClass('accordions');
     var accountrevenuegroup = $('<div>').addClass('accountrevenuecontainer');
-    var header = $('<h1>').text('G/L Account Settings ').appendTo($(accordions));
+    var header = $('<h1>').text('GL Account Settings ').appendTo($(accordions));
     $(accountrevenuegroup).appendTo($(accordions));
     $(accordions).appendTo($('.gridcontainer'));
 
@@ -3522,7 +3525,7 @@ function LoadGLFormatSectionSettings() {
 
     $('.gridcontainer').empty();
 
-        var container = $('<div>').addClass('onecolumn');
+    var container = $('<div>').addClass('onecolumn');
 
     var glaccountformat = '';
     CreateBasicFieldBlock('Ledger: ', '<select>', 'glf-ledgerselect', container, true);
@@ -3955,4 +3958,5 @@ function SendCustomField(method, route, data, modal) {
 }
 
 /* END CUSTOM FIELDS */
+
 

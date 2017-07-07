@@ -121,13 +121,13 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label class="required">Code</label>
-                <input type="text" class="cstat-Code" required="required" maxlength="4" />
+                <label >Code</label>
+                <input type="text" class="cstat-Code required"  maxlength="4" />
             </div>
 
             <div class="fieldblock">
-                <label class="required">Description</label>
-                <input type="text" class="cstat-Name" required="required" maxlength="128" />
+                <label>Description</label>
+                <input type="text" class="cstat-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -148,13 +148,13 @@
         <div class="modalcontent">
 
             <div class="fieldblock">
-                <label class="required">Code</label>
-                <input type="text" class="ctype-Code" maxlength="4" />
+                <label >Code</label>
+                <input type="text" class="ctype-Code required" maxlength="4" />
             </div>
 
             <div class="fieldblock">
-                <label class="required">Description</label>
-                <input type="text" class="ctype-Name" maxlength="128" />
+                <label>Description</label>
+                <input type="text" class="ctype-Name required" maxlength="128" />
             </div>
 
             <div class="fieldblock">

@@ -23,6 +23,7 @@ namespace DDI.UI.Web
         [WebMethod]
         public static void AuthorizeUser(string username, string token)
         {
+           
 
             //api/v1/roles/user/{username}
             WebRequest request = WebRequest.Create(ConfigurationManager.AppSettings.Get("ApiUrl") + "roles/user/" + HttpUtility.HtmlEncode(username) + "/");

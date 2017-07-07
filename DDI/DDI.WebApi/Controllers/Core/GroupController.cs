@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Web;
 using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.Core
@@ -43,7 +42,7 @@ namespace DDI.WebApi.Controllers.Core
         [Route("api/v1/groups")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
         {
-            return base.GetAll(null, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
@@ -54,7 +53,7 @@ namespace DDI.WebApi.Controllers.Core
         }
 
         [HttpGet]
-        [Route("api/v1/group/{groupId}/roles")]
+        [Route("api/v1/groups/{groupId}/roles")]
         public IHttpActionResult GetRolesByGroup(Guid groupId, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -69,7 +68,7 @@ namespace DDI.WebApi.Controllers.Core
                     IsSuccessful = true
                 };
 
-                return FinalizeResponse<Role>(response, "", search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse<Role>(response, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -94,7 +93,7 @@ namespace DDI.WebApi.Controllers.Core
                     IsSuccessful = true
                 };
 
-                return FinalizeResponse<User>(response, "", search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse<User>(response, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {

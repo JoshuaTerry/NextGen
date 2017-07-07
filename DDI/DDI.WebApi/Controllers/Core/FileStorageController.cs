@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
+using DDI.Shared.Statics;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using DDI.Shared;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -20,17 +20,16 @@ namespace DDI.WebApi.Controllers.General
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             fields = "Id,Name,Extension,Size";
-            return base.GetAll(RouteNames.Note, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/filestorage/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
-            fields = "Id,Name,Extension,Size,Data";
+            fields = "Id,Name,Extension,Size,Data,FileType";
             return base.GetById(id, fields);
         }
-
         [HttpPost]
         [Route("api/v1/filestorage")]
         public IHttpActionResult Post([FromBody] FileStorage entityToSave)
@@ -99,5 +98,6 @@ namespace DDI.WebApi.Controllers.General
         {
             return base.Delete(id);
         }
+
     }
 }

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Web.Http;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -12,11 +12,7 @@ namespace DDI.WebApi.Controllers.GL
     public class SegmentLevelsController : GenericController<SegmentLevel>
     {
         public SegmentLevelsController(IService<SegmentLevel> service) : base(service) { }
-
-
-        private const string ROUTENAME_GETBYLEDGERID = RouteNames.Ledger + RouteNames.SegmentLevel + RouteVerbs.Get;
-        private const string ROUTENAME_GETBYUNITID = RouteNames.BusinessUnit + RouteNames.SegmentLevel + RouteVerbs.Get;
-
+        
         protected override string FieldsForAll => FieldListBuilder
             .IncludeAll()
             .Exclude(p => p.Ledger)
@@ -25,15 +21,15 @@ namespace DDI.WebApi.Controllers.GL
         protected override string FieldsForList => FieldsForAll;
 
         [HttpGet]
-        [Route("api/v1/segmentlevels/{id}", Name = RouteNames.SegmentLevel + RouteVerbs.Get)]
+        [Route("api/v1/segmentlevels/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/segmentlevels/ledger/{id}", Name = RouteNames.SegmentLevel + RouteNames.Ledger + RouteVerbs.Get)]
-        [Route("api/v1/ledgers/{id}/segmentlevels", Name = ROUTENAME_GETBYLEDGERID)]
+        [Route("api/v1/segmentlevels/ledger/{id}")]
+        [Route("api/v1/ledgers/{id}/segmentlevels")]
         public IHttpActionResult GetByLedgerId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = nameof(SegmentLevel.Level))
         {
 
@@ -43,7 +39,7 @@ namespace DDI.WebApi.Controllers.GL
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.LedgerId == id, search, fields);
                 
-                return FinalizeResponse(response, ROUTENAME_GETBYLEDGERID, search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {
@@ -54,8 +50,8 @@ namespace DDI.WebApi.Controllers.GL
 
 
         [HttpGet]
-        [Route("api/v1/segmentlevels/businessunit/{id}", Name = RouteNames.SegmentLevel + RouteNames.BusinessUnit + RouteVerbs.Get)]
-        [Route("api/v1/businessunits/{id}/segmentlevels", Name = ROUTENAME_GETBYUNITID)]
+        [Route("api/v1/segmentlevels/businessunit/{id}")]
+        [Route("api/v1/businessunits/{id}/segmentlevels")]
         public IHttpActionResult GetByUnitId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = nameof(SegmentLevel.Level))
         {
             try
@@ -64,7 +60,7 @@ namespace DDI.WebApi.Controllers.GL
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.Ledger.BusinessUnitId == id, search, fields);
 
-                return FinalizeResponse(response, ROUTENAME_GETBYUNITID, search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {
@@ -74,21 +70,21 @@ namespace DDI.WebApi.Controllers.GL
         }
         
         [HttpPost]
-        [Route("api/v1/segmentlevels", Name = RouteNames.SegmentLevel + RouteVerbs.Post)]
+        [Route("api/v1/segmentlevels")]
         public IHttpActionResult Post([FromBody] SegmentLevel item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/segmentlevels/{id}", Name = RouteNames.SegmentLevel + RouteVerbs.Patch)]
+        [Route("api/v1/segmentlevels/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/segmentlevels/{id}", Name = RouteNames.SegmentLevel + RouteVerbs.Delete)]
+        [Route("api/v1/segmentlevels/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

@@ -11,6 +11,8 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
 
     <li><a href="#" class="copyaccount">Copy Account</a></li>
+    <li class="menu-break"></li>
+    <li><a href="#" class="selectaccount">Select Account</a></li>
 
 </asp:Content>
 

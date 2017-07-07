@@ -7,12 +7,12 @@
         public const string Account = "Account";
         public const string AccountGroup = "AccountGroup";
         public const string AccountActivity = "AccountActivity";
-        public const string AccountMerge = "AccountMerge";
         public const string Address = "Address";
         public const string AddressType = "AddressType";
         public const string Alert = "Alert";
         public const string AlternateId = "AlternateId";
         public const string Audit = "Audit";
+        public const string BankAccount = "BankAccount";
         public const string BusinessDate = "BusinessDate";
         public const string BusinessUnit = "BusinessUnit";
         public const string BusinessUnitFromTo = "BusinessUnitFromTo";
@@ -28,14 +28,15 @@
         public const string ConstituentType = "ConstituentType";
         public const string ContactCategory = "ContactCategory";
         public const string ContactType = "ContactType";
-        public const string Copy = "Copy";
         public const string Country = "Country";
         public const string County = "County";
         public const string CustomField = "CustomField";
         public const string CustomFieldData = "CustomFieldData";
+        public const string Disbursement = "Disbursement";
         public const string Entity = "Entity";
         public const string Environment = "Environment";
         public const string EFT = "EFT";
+        public const string EFTInfo = "EFTInfo";
         public const string FiscalPeriod = "FiscalPeriod";
         public const string FiscalYear = "FiscalYear";
         public const string Fund = "Fund";
@@ -70,13 +71,14 @@
         public const string PaymentMethod = "PaymentMethod";
         public const string Prefix = "Prefix";
         public const string Profession = "Profession";
+        public const string Receipt = "Receipt";
         public const string Region = "Region";
         public const string RegionLevel = "RegionLevels";
         public const string RegionChildren = "ChildrenRegion";
         public const string Relationship = "Relationship";
         public const string RelationshipCategories = "RelationshipCategories";
         public const string RelationshipTypes = "RelationshipTypes";
-		public const string Role = "Role";
+        public const string Role = "Role";
         public const string SavedEntityMapping = "SavedEntityMapping";
         public const string School = "School";
         public const string SectionPreference = "SectionPreference";
@@ -86,6 +88,5 @@
         public const string State = "State";
         public const string Tag = "Tag";
         public const string TagGroup = "TagGroup";
-        public const string User = "User";
     }
 }

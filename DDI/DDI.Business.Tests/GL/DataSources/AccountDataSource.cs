@@ -145,6 +145,8 @@ namespace DDI.Business.Tests.GL.DataSources
                     AddAccount(year, "01-500-10-01-02", "Interest on Notes & Balances", AccountCategory.Expense);
 
                 }
+
+                year.LedgerAccounts = _ledgerAccountYears.Where(p => p.FiscalYear == year).ToList();
             }
 
             uow.CreateRepositoryForDataSource(_accounts);

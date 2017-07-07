@@ -223,6 +223,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\Core\AttachmentController.cs" />
     <Compile Include="Controllers\Core\AuditController.cs" />
     <Compile Include="Controllers\Core\AuthorizationsController.cs" />
     <Compile Include="Controllers\Core\BusinessUnitController.cs" />
@@ -243,6 +244,9 @@
     <Compile Include="Controllers\Core\RolesController.cs" />
     <Compile Include="Controllers\Core\SavedEntityMappingController.cs" />
     <Compile Include="Controllers\Core\SectionPreferencesController.cs" />
+    <Compile Include="Controllers\CP\BankAccountController.cs" />
+    <Compile Include="Controllers\CP\DisbursementController.cs" />
+    <Compile Include="Controllers\CP\ReceiptController.cs" />
     <Compile Include="Controllers\CRM\TagGroupsController.cs" />
     <Compile Include="Controllers\CRM\TagsController.cs" />
     <Compile Include="Controllers\Core\UserRolesController.cs" />
@@ -273,7 +277,7 @@
     <Compile Include="Controllers\CRM\IncomeLevelsController.cs" />
     <Compile Include="Controllers\CRM\LanguagesController.cs" />
     <Compile Include="Controllers\CRM\MaritalStatusesController.cs" />
-    <Compile Include="Controllers\CRM\PaymentMethodController.cs" />
+    <Compile Include="Controllers\CP\PaymentMethodController.cs" />
     <Compile Include="Controllers\CRM\PrefixesController.cs" />
     <Compile Include="Controllers\CRM\ProfessionsController.cs" />
     <Compile Include="Controllers\CRM\RegionLevelsController.cs" />

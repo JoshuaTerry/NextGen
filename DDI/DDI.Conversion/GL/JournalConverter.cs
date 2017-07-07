@@ -30,6 +30,8 @@ namespace DDI.Conversion.GL
             JournalApprovals,
             JournalNotes,
             JournalEntityNumbers,
+            FileStorage,
+            Attachments,
         }
 
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
@@ -43,8 +45,10 @@ namespace DDI.Conversion.GL
             RunConversion(ConversionMethod.JournalApprovals, () => ConvertApprovals(InputFile.GL_JournalApprovals, false));
             RunConversion(ConversionMethod.JournalNotes, () => ConvertNotes(InputFile.GL_MemoJournals, false));
             RunConversion(ConversionMethod.JournalEntityNumbers, () => ConvertEntityNumbers(InputFile.GL_JournalEntityNumbers));
-        }
+            RunConversion(ConversionMethod.FileStorage, () => ConvertFileStorage(InputFile.GL_FileStorage, true));
+            RunConversion(ConversionMethod.Attachments, () => ConvertAttachments(InputFile.GL_Attachment, false));
 
+        }
 
         private void ConvertTransactions(string transactionFilename, string entityTransactionFilename, bool append)
         {
@@ -81,6 +85,22 @@ namespace DDI.Conversion.GL
             var noteConverter = new NoteConverter();
             noteConverter.ConvertNotes(() => CreateFileImporter(GLDirectory, filename, typeof(ConversionMethod)), "Journal", _journalIds, false);
         }
+
+        private void ConvertFileStorage(string filename, bool append)
+        {
+            var attachmentConverter = new AttachmentConverter();
+
+            attachmentConverter.ConvertFileStorage(() => CreateFileImporter(GLDirectory, filename, typeof(ConversionMethod)), append);
+        }
+
+        private void ConvertAttachments(string filename, bool append)
+        {
+            var attachmentConverter = new AttachmentConverter();
+            LoadJournalIds();
+            attachmentConverter.ConvertAttachments(() => CreateFileImporter(GLDirectory, filename, typeof(ConversionMethod)),
+                "Journal", _journalIds, append);
+        }
+
 
         private void ConvertJournals(string filename, bool append)
         {
@@ -232,7 +252,7 @@ namespace DDI.Conversion.GL
                         line.Percent = importer.GetDecimal(6);
                         line.DueToMode = importer.GetEnum<DueToMode>(7);
 
-                        // G/L account
+                        // GL account
                         int accountKey = importer.GetInt(14);
                         if (!LedgerAccountIds.TryGetValue(accountKey, out id))
                         {

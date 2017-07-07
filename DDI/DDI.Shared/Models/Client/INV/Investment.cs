@@ -1,7 +1,5 @@
 using DDI.Shared.Attributes.Models;
 using DDI.Shared.Enums.INV;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.GL;
 using System;
 using System.Collections.Generic;

@@ -68,11 +68,8 @@ namespace DDI.Business.Tests
             {
                 if (contains_text.IndexOf('{') >= 0)
                 {
-                    // Kludge to replace {0}, {1}, etc. with .* and use RegEx.
-                    for (int index = 0; index <= 9; index++)
-                    {
-                        contains_text = contains_text.Replace("{" + index.ToString() + "}", ".*");
-                    }
+                    // Kludge to replace {0}, {1:XXX}, etc. with .* and use RegEx.
+                    contains_text = Regex.Replace(contains_text, @"\{[^{}]*\}", ".*");
                     if (Regex.IsMatch(ex.Message, contains_text))
                     {
                         return;
