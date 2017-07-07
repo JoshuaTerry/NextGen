@@ -361,9 +361,7 @@ function DisplayConstituentSideBar() {
     $('.FormattedName').text(currentEntity.FormattedName);
 
     GetConstituentPrimaryAddress();
-
-    GetConstituentPreferredContactInfo();
-
+    
 }
 
 function DisplayConstituentType() {
@@ -390,7 +388,8 @@ function DisplayConstituentType() {
 function GetConstituentPrimaryAddress() {
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id + '/constituentaddresses/' ,
+        url: WEB_API_ADDRESS + 'constituents/primary/' + currentEntity.Id ,
+       
         contentType: 'application/json',
         crossDomain: true,
         headers: GetApiHeaders(),
@@ -398,22 +397,8 @@ function GetConstituentPrimaryAddress() {
 
             currentaddress = data.Data;
 
-            for (i = 0; i < currentaddress.length; i++) { 
-
-                if (currentaddress[i].IsPrimary) {
-
-                    $('.Address').text(currentaddress[i].Address.AddressLine1);
-
-                    if (currentaddress[i].Address.AddressLine2 != null && currentaddress[i].Address.AddressLine2.length > 0) {
-
-                        $('.Address').append(currentaddress[i].Address.AddressLine2);
-
-                    }
-
-                    $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.State + ', ' + currentaddress[i].Address.PostalCode);
-
-                }
-            }
+            $('.Address').text(currentaddress);
+             
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
@@ -421,37 +406,6 @@ function GetConstituentPrimaryAddress() {
     });
 }
 
-function GetConstituentPreferredContactInfo() {
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        headers: GetApiHeaders(),
-        success: function (data) {
-
-            currentcontactinfo = data.Data.ContactInfo;
-
-            var preferredContactInfos = ''
-
-            for (i = 0; i < currentcontactinfo.length; i++) {
-
-                if (currentcontactinfo[i].IsPreferred) {
-
-                    preferredContactInfos += currentcontactinfo[i].Info + ' ';
-
-                }
-
-                $('.ContactInfo').text(preferredContactInfos);
-
-            }
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
 
 
 /* Demograpics Section */
@@ -591,81 +545,6 @@ function PopulateUserIdDropDown() {
 }
 
 /* End Professional Section */
-
-/* Audit Section */
-function ShowAuditData(id) {
-
-    $('.newauditmodal').click(function (e) {
-
-        e.preventDefault();
-    var modal = $('.auditmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 800,
-        height: 600,
-        resizable: true
-    });
-
-    LoadAuditTable(id, modal);
-    });
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.queryAudit').unbind('click');
-
-    $('.queryAudit').click(function () {
-
-        $.ajax({
-            type: 'GET',
-            url: WEB_API_ADDRESS + 'audit/flat/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            headers: GetApiHeaders(),
-            success: function (data) {
-
-                LoadAuditTable();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function LoadAuditTable() {
-    var id = currentEntity.Id;
-    var start = $(modal).find('.na-StartDate').val();
-    var end = $(modal).find('.na-EndDate').val();
-    var route = 'audit/flat/' + id;
-    var columns = [
-            { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0  },
-            { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
-            { dataField: 'User' }, 
-            { dataField: 'ChangeType', width: '100px' },  
-            { dataField: 'Property' },
-            { dataField: 'OldValue', caption: 'Old Value' },
-            { dataField: 'OldDisplayName', caption: 'Old Display Name' },
-            { dataField: 'NewValue', caption: 'New Value' },
-            { dataField: 'NewDisplayName', caption: 'New Display Name' }
-    ];
-
-    LoadAuditGrid('auditgrid',
-       'auditgridcontainer',
-       columns,
-       route,
-       false);
-     
-}
-/* End Audit Section */
 
 /* Alternate Id Section */
 function LoadAlternateIDTable() {

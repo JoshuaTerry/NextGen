@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DDI.Shared.Models;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using DDI.Shared.Models;
-using Newtonsoft.Json.Linq;
 
 namespace DDI.Shared
 {

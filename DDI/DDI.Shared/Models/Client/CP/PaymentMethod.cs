@@ -42,7 +42,7 @@ namespace DDI.Shared.Models.Client.CP
         public EFTAccountType AccountType { get; set; }
 
         public Guid? EFTFormatId { get; set; }
-
+        [ForeignKey(nameof(EFTFormatId))]
         public EFTFormat EFTFormat { get; set; }
 
         [MaxLength(128)]

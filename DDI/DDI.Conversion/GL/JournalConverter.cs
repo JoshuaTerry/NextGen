@@ -252,7 +252,7 @@ namespace DDI.Conversion.GL
                         line.Percent = importer.GetDecimal(6);
                         line.DueToMode = importer.GetEnum<DueToMode>(7);
 
-                        // G/L account
+                        // GL account
                         int accountKey = importer.GetInt(14);
                         if (!LedgerAccountIds.TryGetValue(accountKey, out id))
                         {

@@ -87,6 +87,16 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
     ClearElement(element);
 
     AddDefaultOption(element, defaultText, defaultValue);
+    
+    if (changecallback) {
+
+        $(element).unbind('change');
+
+        $(element).change(function () {
+            changecallback(element);
+        });
+
+    }
 
     MakeServiceCall('GET', route, null, function (data) {
         if (data.Data) {
@@ -102,24 +112,17 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
                 $(element).val(selectedValue);
             }
 
+            if (data.Data.length == 1) {
+                $(element).val(data.Data[0].Id);
+                $(element).change();
+            }
+
             if (completecallback) {
-
                 completecallback(element, data);
-
             }
 
         }
     }, null);
-
-    if (changecallback) {
-
-        $(element).unbind('change');
-
-        $(element).change(function () {
-            changecallback(element);
-        });
-
-    }
 
 }
 

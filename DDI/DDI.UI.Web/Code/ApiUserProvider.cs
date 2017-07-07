@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DDI.Logger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,7 @@ namespace DDI.UI.Web.Code
 {
     public class ApiUserProvider : MembershipProvider
     {
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(ApiUserProvider));
         #region Properties
 
         public override string ApplicationName
@@ -194,6 +196,7 @@ namespace DDI.UI.Web.Code
             }
             catch(Exception ex)
             {
+                _logger.LogError(ex);
                 return false;
             }
         }

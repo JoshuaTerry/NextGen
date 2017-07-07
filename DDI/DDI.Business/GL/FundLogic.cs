@@ -23,7 +23,7 @@ namespace DDI.Business.GL
         #region Public Methods
 
         /// <summary>
-        /// Get the Fund entity for a G/L account.
+        /// Get the Fund entity for a GL account.
         /// </summary>
         public Fund GetFund(Account account)
         {
@@ -52,6 +52,20 @@ namespace DDI.Business.GL
             }
 
             return GetFund(UnitOfWork.GetBusinessLogic<AccountLogic>().GetAccount(account, year), year);
+        }
+
+        public BusinessUnitFromTo GetBusinessUnitFromTo(Guid fiscalYearId, Guid offsettingUnitId)
+        {
+            return UnitOfWork.FirstOrDefault<BusinessUnitFromTo>(p => p.FiscalYearId == fiscalYearId && p.OffsettingBusinessUnitId == offsettingUnitId && p.FromLedgerAccountId != null && p.ToLedgerAccountId != null)
+                    ??
+             UnitOfWork.FirstOrDefault<BusinessUnitFromTo>(p => p.FiscalYearId == fiscalYearId && p.OffsettingBusinessUnitId == null && p.FromLedgerAccountId != null && p.ToLedgerAccountId != null);
+        }
+
+        public FundFromTo GetFundFromTo(Guid fundId, Guid offsettingFundId)
+        {
+            return UnitOfWork.FirstOrDefault<FundFromTo>(p => p.FundId == fundId && p.OffsettingFundId == offsettingFundId && p.FromLedgerAccountId != null && p.ToLedgerAccountId != null)
+                        ??
+                   UnitOfWork.FirstOrDefault<FundFromTo>(p => p.FundId == fundId && p.OffsettingFundId == null && p.FromLedgerAccountId != null && p.ToLedgerAccountId != null);
         }
 
         public override void Validate(Fund fund)

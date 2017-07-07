@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DDI.Logger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +8,7 @@ namespace DDI.UI.Web.Code
 {
     public class CustomSiteMapProvider : XmlSiteMapProvider
     {
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(CustomSiteMapProvider));
         public override bool IsAccessibleToUser(HttpContext context, SiteMapNode node)
         {
             // return base.IsAccessibleToUser(context, node);
@@ -35,6 +37,7 @@ namespace DDI.UI.Web.Code
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex);
                 return isAccessible;
             }
         }
