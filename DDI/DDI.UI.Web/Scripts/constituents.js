@@ -42,6 +42,12 @@ $(document).ready(function () {
         UploadFiles();
     });
 
+    $('.attachmentstab').click(function (e) {
+        e.preventDefault();
+        LoadAttachmentsTab(currentEntity.Id);
+    });
+
+
 });
 
 function UploadFiles(callback) {
@@ -1030,7 +1036,9 @@ function RelationshipLinkClicked(id) {
 }
 
 function LoadAttachmentsTab(id) {
+    
     container = $('.attachments');
+    container.empty();
     LoadAttachments(container, "contituentsgrid", id, null, NoteEntity[0]);
 }
 
