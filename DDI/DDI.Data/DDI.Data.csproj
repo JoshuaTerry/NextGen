@@ -79,12 +79,16 @@
     <Compile Include="DomainContextAdapter.cs" />
     <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
+    <Compile Include="Migrations\Client\201707071321445_TransactionIndex_v2.cs" />
+    <Compile Include="Migrations\Client\201707071321445_TransactionIndex_v2.Designer.cs">
+      <DependentUpon>201707071321445_TransactionIndex_v2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201706262045123_TransactionIndex.cs" />
     <Compile Include="Migrations\Client\201706262045123_TransactionIndex.Designer.cs">
       <DependentUpon>201706262045123_TransactionIndex.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201706301616290_FileStorageChange.cs" />
-    <Compile Include="Migrations\201706301616290_FileStorageChange.Designer.cs">
+    <Compile Include="Migrations\Client\201706301616290_FileStorageChange.cs" />
+    <Compile Include="Migrations\Client\201706301616290_FileStorageChange.Designer.cs">
       <DependentUpon>201706301616290_FileStorageChange.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201706162112069_Initial.cs" />
@@ -131,10 +135,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201707071321445_TransactionIndex_v2.resx">
+      <DependentUpon>201707071321445_TransactionIndex_v2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201706262045123_TransactionIndex.resx">
       <DependentUpon>201706262045123_TransactionIndex.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706301616290_FileStorageChange.resx">
+    <EmbeddedResource Include="Migrations\Client\201706301616290_FileStorageChange.resx">
       <DependentUpon>201706301616290_FileStorageChange.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201706162112069_Initial.resx">
