@@ -107,7 +107,7 @@ namespace DDI.Business.GL
 
                 if (modifiedProperties.Contains(nameof(ledger.AccountGroupLevels)))
                 {
-                    // # of account group levels changing - ensure no G/L accounts exist.
+                    // # of account group levels changing - ensure no GL accounts exist.
                     if (UnitOfWork.Any<Account>(p => p.LedgerAccountYears.Any(q => q.FiscalYear.LedgerId == ledger.Id)))
                     {
                         throw new ValidationException(UserMessagesGL.AccountGroupLevelsChanged);
@@ -296,7 +296,7 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Generate a sample G/L account based on the ledger settings.
+        /// Generate a sample GL account based on the ledger settings.
         /// </summary>
         public string GetGLAccountFormatSample(Ledger ledger)
         {

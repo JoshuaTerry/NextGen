@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http.Dependencies;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Web.Http.Dependencies;
 
 namespace DDI.WebApi.IoC
 {

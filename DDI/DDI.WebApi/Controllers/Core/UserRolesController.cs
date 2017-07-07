@@ -1,4 +1,5 @@
-﻿using DDI.Shared.Models.Client.Security;
+﻿using DDI.Shared;
+using DDI.Shared.Models.Client.Security;
 using DDI.WebApi.Models.BindingModels;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -7,7 +8,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.General
 {

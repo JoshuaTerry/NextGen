@@ -1,11 +1,10 @@
-﻿using DDI.Shared.Enums.GL;
+﻿using DDI.Shared.Attributes.Models;
+using DDI.Shared.Enums.Core;
+using DDI.Shared.Enums.GL;
+using DDI.Shared.Models.Client.Core;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Shared.Attributes.Models;
-using System.Collections.Generic;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Enums.Core;
 
 namespace DDI.Shared.Models.Client.GL
 {
@@ -16,7 +15,11 @@ namespace DDI.Shared.Models.Client.GL
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [Index("IX_TransactionNumber", Order = 1, IsUnique = true)]
         public Int64 TransactionNumber { get; set; }
+
+        [Index("IX_TransactionNumber", Order = 2, IsUnique = true)]
+        public int LineNumber { get; set; }
 
         public Guid? LedgerAccountYearId { get; set; }
         [ForeignKey(nameof(LedgerAccountYearId))]
@@ -34,9 +37,7 @@ namespace DDI.Shared.Models.Client.GL
         public DateTime? TransactionDate { get; set; }
 
         [DecimalPrecision(14, 2)]
-        public decimal Amount { get; set; } 
-        
-        public int LineNumber { get; set; }
+        public decimal Amount { get; set; }         
 
         [MaxLength(255)]
         public string Description { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DDI.Logger;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace DDI.UI.Web.Code
 {
     public class ApiRoleProvider : RoleProvider
     {
+        private readonly ILogger _logger = LoggerManager.GetLogger(typeof(ApiRoleProvider));
         #region Properties
         public override string ApplicationName
         {
@@ -120,6 +122,7 @@ namespace DDI.UI.Web.Code
             }
             catch(Exception ex)
             {
+                _logger.LogError(ex);
                 return isInRole;
             }
         }
