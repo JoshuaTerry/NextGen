@@ -1533,7 +1533,7 @@ function EditNoteDetails(id) {
 
         CloseModal(modal);
 
-        $('.notesattachments').remove();
+        $('.attachmentscontainer').empty();
 
         ClearNoteTopicTagBox(modal);
 
@@ -1552,8 +1552,6 @@ function EditNoteDetails(id) {
 
     $('.savenotedetails').click(function () {
 
-        $('.notesattachments').remove();
-
         var topicsavelist = GetNoteTopicsToSave();
 
         var item = GetNoteDetailsToSave(modal);
@@ -1563,6 +1561,8 @@ function EditNoteDetails(id) {
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
             CloseModal(modal);
+
+            $('.attachmentscontainer').empty();
 
             $('.editnoteinfo').hide();
 

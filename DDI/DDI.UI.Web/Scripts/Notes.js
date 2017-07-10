@@ -15,23 +15,21 @@ function LoadNoteDetailsGrid(entityType) {
 
     if (currentEntity) {
 
-
         var columns = [
             { dataField: 'DisplayName', caption: 'Title' },
             { dataField: 'CreatedOn', caption: 'Created Date', dataType: 'date' },
             { dataField: 'CreatedBy', caption: 'Created By' }
         ];
 
+        $('.newnotesdetailmodallink').ready(function () {
 
-        CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, 'entity/' + currentEntity.Id + '/notes?fields=Id,CreatedBy,CreatedOn,DisplayName', null, EditNoteDetails, null, function (e) {
+            CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, 'entity/' + currentEntity.Id + '/notes?fields=Id,CreatedBy,CreatedOn,DisplayName', null, EditNoteDetails, null, function () {
 
-            NewNoteDetailsModal(entityType);
+                NewNoteDetailsModal(entityType);
 
-        });
+            });
 
-
-
-
+        })
        
     }
 
@@ -172,7 +170,6 @@ function GetNoteDetailsToSave(modal, entityType) {
         EntityType: entityType, 
         ContactMethodId: $(modal).find('.nd-ContactMethod').val(),
         NoteTopics: GetNoteTopicsToSave()
-
 
     };
 
