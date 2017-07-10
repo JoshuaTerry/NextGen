@@ -42,6 +42,12 @@ $(document).ready(function () {
         UploadFiles();
     });
 
+    $('.attachmentstab').click(function (e) {
+        e.preventDefault();
+        LoadAttachmentsTab(currentEntity.Id);
+    });
+
+
 });
 
 function UploadFiles(callback) {
@@ -371,9 +377,7 @@ function DisplayConstituentSideBar() {
     $('.FormattedName').text(currentEntity.FormattedName);
 
     GetConstituentPrimaryAddress();
-
-    GetConstituentPreferredContactInfo();
-
+    
 }
 
 function DisplayConstituentType() {
@@ -400,7 +404,8 @@ function DisplayConstituentType() {
 function GetConstituentPrimaryAddress() {
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id + '/constituentaddresses/' ,
+        url: WEB_API_ADDRESS + 'constituents/primary/' + currentEntity.Id ,
+       
         contentType: 'application/json',
         crossDomain: true,
         headers: GetApiHeaders(),
@@ -408,22 +413,8 @@ function GetConstituentPrimaryAddress() {
 
             currentaddress = data.Data;
 
-            for (i = 0; i < currentaddress.length; i++) { 
-
-                if (currentaddress[i].IsPrimary) {
-
-                    $('.Address').text(currentaddress[i].Address.AddressLine1);
-
-                    if (currentaddress[i].Address.AddressLine2 != null && currentaddress[i].Address.AddressLine2.length > 0) {
-
-                        $('.Address').append(currentaddress[i].Address.AddressLine2);
-
-                    }
-
-                    $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.State + ', ' + currentaddress[i].Address.PostalCode);
-
-                }
-            }
+            $('.Address').text(currentaddress);
+             
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
@@ -431,37 +422,6 @@ function GetConstituentPrimaryAddress() {
     });
 }
 
-function GetConstituentPreferredContactInfo() {
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        headers: GetApiHeaders(),
-        success: function (data) {
-
-            currentcontactinfo = data.Data.ContactInfo;
-
-            var preferredContactInfos = ''
-
-            for (i = 0; i < currentcontactinfo.length; i++) {
-
-                if (currentcontactinfo[i].IsPreferred) {
-
-                    preferredContactInfos += currentcontactinfo[i].Info + ' ';
-
-                }
-
-                $('.ContactInfo').text(preferredContactInfos);
-
-            }
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
 
 
 /* Demograpics Section */
@@ -965,7 +925,9 @@ function RelationshipLinkClicked(id) {
 }
 
 function LoadAttachmentsTab(id) {
+    
     container = $('.attachments');
+    container.empty();
     LoadAttachments(container, "contituentsgrid", id, null, NoteEntity[0]);
 }
 

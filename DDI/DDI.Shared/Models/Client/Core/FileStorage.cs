@@ -26,9 +26,7 @@ namespace DDI.Shared.Models.Client.Core
 
         [NotMapped]
         public override string DisplayName => $"{Name}.{Extension}";
-
         [MaxLength(128)]
         public string FileType { get; set; }
-
     }
 }

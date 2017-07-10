@@ -53,7 +53,7 @@ function NewNoteDetailsModal(entityType) {
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 1000,
+        width: 800,
         resizable: false
     });
 
@@ -367,7 +367,7 @@ function LoadNotesModal(id, entityType, cancelCallBack, saveCallBack)
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 750,
+        width: 1000,
         resizable: false
     });
 
@@ -411,7 +411,7 @@ function LoadNotesModal(id, entityType, cancelCallBack, saveCallBack)
 
         var item = GetNoteDetailsToSave(modal, entityType);
 
-        MakeServiceCall('PATCH', 'notes', item, function (data) {
+        MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
 
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
