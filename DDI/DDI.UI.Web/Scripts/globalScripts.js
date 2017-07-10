@@ -1455,7 +1455,7 @@ function EditNoteDetails(id) {
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 700,
+        width: 1000,
         resizable: false
     });
 
