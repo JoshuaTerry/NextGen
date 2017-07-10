@@ -15,25 +15,23 @@ function LoadNoteDetailsGrid(entityType) {
 
     if (currentEntity) {
 
+
         var columns = [
             { dataField: 'DisplayName', caption: 'Title' },
             { dataField: 'CreatedOn', caption: 'Created Date', dataType: 'date' },
             { dataField: 'CreatedBy', caption: 'Created By' }
         ];
 
+
         CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, 'entity/' + currentEntity.Id + '/notes?fields=Id,CreatedBy,CreatedOn,DisplayName', null, EditNoteDetails, null, function (e) {
-
-            var link = $('<a>')
-                .attr('href', '#')
-                .addClass('newmodallink')
-                .addClass('newnotesdetailmodallink')
-                .text('New Item');
-
-            $('.notedetailsgridcontainer').prepend($(link));
 
             NewNoteDetailsModal(entityType);
 
         });
+
+
+
+
        
     }
 

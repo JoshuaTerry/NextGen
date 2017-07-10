@@ -15,6 +15,7 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div>
         <h1>Note Detail</h1>
+        <a href="#" class="newmodallink newnotesdetailmodallink">New Item</a>
         <div class="notedetailsgridcontainer"></div>
     </div>
 </asp:Content>
