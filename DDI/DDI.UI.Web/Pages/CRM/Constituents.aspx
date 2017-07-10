@@ -19,7 +19,7 @@
     <li><a href="#">Import</a></li>
     <li><a href="#">Export</a></li>
     <li class="menu-break"></li>
-    <li><a href="#">Edit History</a></li>
+    <li><a href="#" class="newauditmodal">Edit History</a></li>
 
 </asp:Content>
 
@@ -35,9 +35,7 @@
                 <img />
                 <div class="changeconstituentpic" style="height: 0px; bottom: 0px; display: none;">Change Profile Pic</div>
             </div>
-            <div>
-                <a href="#" class="newauditmodal">Audit History</a>
-            </div>
+            
             <h1>Information</h1>
             <div class="constituentinformation">
                 <div>

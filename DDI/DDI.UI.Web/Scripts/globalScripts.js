@@ -425,7 +425,7 @@ function SaveNewConstituent(modal, addnew) {
                 currentEntity = data.Data;
 
                 sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
-                location.href = "Pages/CRM/Constituents.aspx";
+                location.href = "Constituents.aspx";
             }
 
         }

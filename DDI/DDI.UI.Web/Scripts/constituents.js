@@ -590,15 +590,15 @@ function LoadAddressesGrid() {
         { dataField: 'Address.AddressLine1', caption: 'Address' }
     ];
 
+    //LoadGrid('constituentaddressgridcontainer', 'constituentaddressgrid', columns, 'constituents/' + currentEntity.Id + '/constituentaddresses', 'constituentaddresses'
+    //    , null, null, '.addressmodal', '.addressmodal', 250, true, true, false, EditAddressModal);
+
     CustomLoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/constituentaddresses',
         null,
-        EditAddressModal);
-    
-    
-
+        EditAddressModal); 
 }
 
 function NewAddressModal() {
@@ -867,7 +867,7 @@ function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
     PopulateDropDown($('.' + name.toLowerCase() + "-ContactTypeId"), 'contacttypes/category/' + categoryid, null)
    
     LoadGrid( 'constituent' + name + 'gridcontainer', 'constituent' + name + 'grid', columns,  'contactinfo/' + categoryid + '/' + currentEntity.Id, 'contactinfo'
-        , null, name.toLowerCase() + '-', '.' + name.toLowerCase() + 'modal', '.' + name.toLowerCase() + 'modal', 250, false, true, false, null);
+        , null, name.toLowerCase() + '-', '.' + name.toLowerCase() + 'modal', '.' + name.toLowerCase() + 'modal', 250, true, true, false, null);
 
    
 }

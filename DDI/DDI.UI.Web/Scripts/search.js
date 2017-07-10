@@ -29,6 +29,15 @@ $(document).ready(function () {
         Resize();
     });
 
+    //$('.addconstituentitem').unbind();
+    //$('.addconstituentitem').click(function (e) {
+
+    //    e.preventDefault();
+
+    //    NewConstituentModal();
+
+    //});
+
 });
 
 function Resize() {

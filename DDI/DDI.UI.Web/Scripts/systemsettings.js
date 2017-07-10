@@ -385,11 +385,11 @@ function LoadClergySectionSettings() {
 
 function LoadConstituentTypesSectionSettings() {
 
-    var accordion = $('<div>').addClass('accordions');
+    var accordion = $('<div>');
     var types = $('<div>').addClass('constituenttypescontainer');
 
 
-    var header = $('<h1>').text('Constituent Types').appendTo($(accordion));
+    var header = $('<div>').text('For Magic Reasons the New Link ONLY appears when this has text in it ').appendTo($(accordion));
     $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
