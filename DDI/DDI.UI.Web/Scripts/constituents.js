@@ -288,6 +288,16 @@ function DisplayConstituentData() {
 
         GetNoteAlerts(shownotealert);
 
+        $('#tab-notes-main').click(function (e) {
+
+            $('.tabscontainer').tabs();
+
+            LoadDatePickers();
+
+            LoadNoteDetailsGrid('Constituent');
+
+        });
+
     }
 }
 

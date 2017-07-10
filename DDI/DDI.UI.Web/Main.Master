@@ -556,10 +556,11 @@
                     <label>Contact Date</label>
                     <input type="text" class="nd-ContactDate datepicker" />
                 </div>
-
-                 <div class="fieldblock">
+            
+                <div class="fieldblock">
+                    <input type="hidden" class="rs-Constituent1Id" />
                     <label>Primary Contact</label>
-                    <select class="nd-PrimaryContact"></select>
+                    <input type="text" class="rs-Constituent1Information constituentlookup" />
                 </div>
 
             </div>
@@ -567,8 +568,8 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Person Responsible</label>
-                    <select class="nd-PersonResponsible"></select>
+                    <label>User Responsible</label>
+                    <select class="nd-UserResponsible"></select>
                 </div>
 
                 <div class="fieldblock">
