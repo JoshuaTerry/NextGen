@@ -65,7 +65,7 @@
             <ul>
                 <li><a href="#tab-main" id="tab-main-link">Main</a></li>
                 <li id="tab-notes-main"><a href="~/Pages/Common/Notes.aspx" runat="server">Notes</a></li>
-                <li><a href="#tab-attachments">Attachments</a></li>
+                <li><a href="#tab-attachments" class="attachmentstab">Attachments</a></li>
                 <li><a href="#tab-relationships">Relationships</a></li>
                 <li style="display: none;"><a href="#tab-donor">Donor</a></li>
                 <li id="tab-investments-main"><a href="#tab-investments">Investments</a></li>

@@ -484,25 +484,26 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
     $(modal).find('.savebutton').unbind('click');
 
     $(modal).find('.savebutton').click(function () {
-        if (!ValidateFields(modal)) {
+        if (!ValidateFields(modal, function() {
+
+            previousEntity = currentEntity;
+            currentEntity = null;
+
+            var item = GetModalFieldsToSave(prefix);
+
+            MakeServiceCall('POST', route, item, function () {
+                DisplaySuccessMessage("Success", "Save successful.");
+
+                CloseModal(modal);
+
+                if (refreshGrid) {
+                    refreshGrid();
+                }
+            }, null);
+        }))
+        {
             return;
         } 
-
-        previousEntity = currentEntity;
-        currentEntity = null;
-
-        var item = GetModalFieldsToSave(prefix);
-
-        MakeServiceCall('POST', route, item, function () {
-            DisplaySuccessMessage("Success", "Save successful.");
-
-            CloseModal(modal);
-
-            if (refreshGrid) {
-                refreshGrid();
-            }
-        }, null);
-
     });
 
 }
