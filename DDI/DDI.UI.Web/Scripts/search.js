@@ -28,15 +28,7 @@ $(document).ready(function () {
     $(window).resize(function () {
         Resize();
     });
-
-    //$('.addconstituentitem').unbind();
-    //$('.addconstituentitem').click(function (e) {
-
-    //    e.preventDefault();
-
-    //    NewConstituentModal();
-
-    //});
+     
 
 });
 
