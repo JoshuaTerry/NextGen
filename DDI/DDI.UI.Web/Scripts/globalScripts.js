@@ -1553,16 +1553,6 @@ function EditNoteDetails(id) {
 
         MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
 
-            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function (data) {
-
-                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
-
-            }, function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
-
-            });
-
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
             CloseModal(modal);

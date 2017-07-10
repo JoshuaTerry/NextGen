@@ -51,6 +51,24 @@ namespace DDI.Services
             return base.Add(note);
         }
 
+        public override IDataResponse<Note> Update(Guid id, JObject changes)
+        {
+            Note note = UnitOfWork.GetById<Note>(id);
+            JToken topics = changes["NoteTopics"];
+            changes["NoteTopics"].Parent.Remove();
+
+            var addTopics = new List<NoteTopic>();
+            foreach (var topicId in topics)
+            {
+                var fullTopic = UnitOfWork.GetById<NoteTopic>((Guid)topicId["Id"]);
+                addTopics.Add(fullTopic);
+            }
+
+            note.NoteTopics = addTopics;
+
+            return base.Update(id, changes);
+        }
+
         public IDataResponse<List<Note>> GetAll(string parentEntityType)
         {
             var result = UnitOfWork.GetRepository<Note>().GetEntities().Where(n => n.EntityType == parentEntityType).ToList();

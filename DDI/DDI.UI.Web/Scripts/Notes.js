@@ -415,17 +415,7 @@ function LoadNotesModal(id, entityType, cancelCallBack, saveCallBack)
 
         var item = GetNoteDetailsToSave(modal, entityType);
 
-        MakeServiceCall('POST', 'notes', item, function (data) {
-
-            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function () {
-
-                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
-
-            }, function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
-
-            });
+        MakeServiceCall('PATCH', 'notes', item, function (data) {
 
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
