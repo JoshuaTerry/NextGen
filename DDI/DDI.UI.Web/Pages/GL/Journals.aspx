@@ -4,108 +4,83 @@
 
     <script type="text/javascript" src="../../Scripts/gljournals.js"></script>
     <script type="text/javascript" src="../../Scripts/data.js"></script>
-      <link rel="stylesheet" href="../../CSS/Journals.css" />
-    
-    
+    <link rel="stylesheet" href="../../CSS/Journals.css" />
 
-   
+
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-     <div class="searchcriteria">
-        
+    <div class="searchcriteria">
+
         <div class="scrollable">
             <fieldset>
-            <%--    <legend>Quick Search</legend>
-
-                <div class="fieldblock">
-                    <input type="text" class="searchQueryString" maxlength="128"/>
-                </div>--%>
-
-                                       
-
-               <%-- <div class="accordions nocontrols">--%>
-
-                      <div>
-                        <div class="fieldblock">
-                            <label>JournalType</label>
-                             <select class="searchjournaltype">
-                                    <option ></option>
-                                    <option value="0">Normal</option>
-                                    <option value="1">Recurring</option>
-                                    <option value="2">Template</option>
-                                   
-                             </select>
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Journal#</label>
-                            <input type="text" class="searchJournalNumber" maxlength="5"/>
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Transaction Date From</label>
-                            <input type="text" class="transactionDateFrom datepicker" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Transaction Date To</label>
-                            <input type="text" class="transactionDateTo datepicker" />
-                        </div>
-
-                       <%-- <div class="fieldblock">
-                            <label>Through</label>
-                             <input type="text" class="through datepicker" maxlength="20" />
-                        </div>--%>
-
-                        <%--<div class="fieldblock">
-                            <label>Created By</label>
-                            <select class="searchCreatedBy"></select>
-                        </div>--%>
-
-                        <div class="fieldblock">
-                            <label>Creation Date From</label>
-                              <input type="text" class="CreatedOnFrom datepicker" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Creation Date To</label>
-                              <input type="text" class="CreatedOnTo datepicker" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Status</label>
-                          <select class="searchjournalStatus">
-                                   <option ></option>
-                                    <option value="Active">Active</option>
-                                    <option value="Expired">Expired</option>
-                                    <option value="Approved">Approved</option>
-                                    <option value="Unapproved">Unapproved</option>
-                                    <option value="Posted">Posted</option>
-                                     <option value="Reversed">Reversed</option>
-                                    <option value="Unposted">Unposted</option>
-                                     <option value="Deleted">Deleted</option>
-                                                  
-                          </select>
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Journal Memo</label>
-                              <input type="text" class="searchComment" maxlength="128" />
-                        </div>
-
-                        <div class="fieldblock">
-                            <label>Line Item Memo</label>
-                            <input type="text" class="searchlineItemComment" maxlength="128" />
-                        </div>
 
 
-                             
-                  
+                <div>
+                    <div class="fieldblock">
+                        <label>Journal Type</label>
+                        <select class="searchjournaltype">
+                            <option value="">(All)</option>
+                            <option value="0">Normal</option>
+                            <option value="1">Recurring</option>
+                            <option value="2">Template</option>
+
+                        </select>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Journal No.</label>
+                        <input type="text" class="searchJournalNumber" maxlength="5" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Transaction Date From</label>
+                        <input type="text" class="transactionDateFrom datepicker" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Transaction Date To</label>
+                        <input type="text" class="transactionDateTo datepicker" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Creation Date From</label>
+                        <input type="text" class="CreatedOnFrom datepicker" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Creation Date To</label>
+                        <input type="text" class="CreatedOnTo datepicker" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Status</label>
+                        <select class="searchjournalStatus">
+                            <option value="">(All)</option>
+                            <option value="Active">Active</option>
+                            <option value="Expired">Expired</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Unapproved">Unapproved</option>
+                            <option value="Posted">Posted</option>
+                            <option value="Reversed">Reversed</option>
+                            <option value="Unposted">Unposted</option>
+                            <option value="Deleted">Deleted</option>
+
+                        </select>
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Journal Memo</label>
+                        <input type="text" class="searchComment" maxlength="128" />
+                    </div>
+
+                    <div class="fieldblock">
+                        <label>Line Item Memo</label>
+                        <input type="text" class="searchlineItemComment" maxlength="128" />
+                    </div>
 
                 </div>
-                
 
             </fieldset>
         </div>
@@ -115,20 +90,16 @@
             <input type="button" class="dosearch" value="Search" />
         </div>
 
-        </div>
-    
-    
-    <div class="searchresults">
+    </div>
+
+
+    <div class="searchresults" style="height: 670px;">
         <div class="buttons">
-            <%--<input type="button" class="addnewjournal" value="Add New Journal" />--%>
-             <a href="#" class="addnewjournal">Add New Journal</a>
+            <a href="#" class="addnewjournal newmodallink">New Journal</a>
         </div>
         <div class="scrollable">
             <div class="gridcontainer"></div>
         </div>
     </div>
-      
-  
-
 
 </asp:Content>

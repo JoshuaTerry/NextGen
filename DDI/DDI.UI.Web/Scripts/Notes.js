@@ -56,7 +56,7 @@ function NewNoteDetailsModal() {
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 500,
+        width: 800,
         resizable: false
     });
 
@@ -374,7 +374,7 @@ function LoadNotesModal(id, cancelCallBack, saveCallBack)
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 750,
+        width: 1000,
         resizable: false
     });
 
