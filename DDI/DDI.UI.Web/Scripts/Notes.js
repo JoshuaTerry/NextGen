@@ -55,7 +55,7 @@ function NewNoteDetailsModal(entityType) {
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 500,
+        width: 700,
         resizable: false
     });
 
@@ -177,8 +177,6 @@ function GetNoteDetailsToSave(modal, entityType) {
 
 
     };
-
-
 
     var item = JSON.stringify(rawitem);
 

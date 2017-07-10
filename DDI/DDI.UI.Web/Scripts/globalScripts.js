@@ -1455,7 +1455,7 @@ function EditNoteDetails(id) {
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 500,
+        width: 700,
         resizable: false
     });
 
@@ -1492,11 +1492,15 @@ function EditNoteDetails(id) {
                         MakeServiceCall('DELETE', 'notes/' + id + '/notetopics/' + topic.Id, null, null,
 
                             function (xhr, status, err) {
+
                                 DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+
                             });
 
                     }, function (xhr, status, err) {
+
                         DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+
                     });
 
                 });
@@ -1521,7 +1525,6 @@ function EditNoteDetails(id) {
 
         });
 
-
     });
 
     $('.cancelnotesmodal').click(function (e) {
@@ -1529,6 +1532,8 @@ function EditNoteDetails(id) {
         e.preventDefault();
 
         CloseModal(modal);
+
+        $('.notesattachments').remove();
 
         ClearNoteTopicTagBox(modal);
 
@@ -1546,6 +1551,8 @@ function EditNoteDetails(id) {
     $('.savenotedetails').unbind('click');
 
     $('.savenotedetails').click(function () {
+
+        $('.notesattachments').remove();
 
         var topicsavelist = GetNoteTopicsToSave();
 
