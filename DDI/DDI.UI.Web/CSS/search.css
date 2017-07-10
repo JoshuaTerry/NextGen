@@ -10,4 +10,4 @@
 .searchcriteria fieldset { background-color: white; }
 
 .searchresults { width: 82%; display: inline-block; margin: 10px 0 0 1%; background-color: white; vertical-align: top; }
-.searchresults div.scrollable { width: 100%; }
+.searchresults div.scrollable { width: 100%;  }
