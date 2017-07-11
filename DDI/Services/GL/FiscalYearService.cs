@@ -73,7 +73,9 @@ namespace DDI.Services.GL
             catch (Exception ex)
             {
                 Logger.LogError(ex.ToString());
-                return ProcessIDataResponseException(ex);
+                //return ProcessIDataResponseException(ex);
+                ProcessIDataResponseException(ex);
+                throw ex;
             }
             return response;
         }

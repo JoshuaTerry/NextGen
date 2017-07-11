@@ -236,7 +236,7 @@ namespace DDI.Data
                     throw ex;
                 }
             }
-            catch
+            catch 
             {
                 throw;
             }

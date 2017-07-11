@@ -3291,6 +3291,14 @@ function NewFiscalYearModal() {
         fiscalYearId = selectedRow.Id;
     }
     InitRequiredLabels('newfiscalyearmodal')
+    //default new name to start date year
+    $('.fn-NewFiscalYear').focus(function () {
+        if ($('.fn-NewFiscalYear').val() === '') {
+            if ($('.fn-StartDate').val() != '') {
+                $('.fn-NewFiscalYear').val($('.fn-StartDate').val().slice(-4))
+            }
+        }
+    })
     $('.newfiscalyearmodalbuttons').show();
 
     modal = $('.newfiscalyearmodal').dialog({

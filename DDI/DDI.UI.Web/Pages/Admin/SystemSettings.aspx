@@ -1349,13 +1349,13 @@
             </div>
 
             <div class="fieldblock">
-                <label>New Fiscal Year:</label>
-                <input type="text" class="fn-NewFiscalYear editable required" />
+                <label>Start Date:</label>
+                <input type="text" class="fn-StartDate editable date datepicker" maxlength="10" />
             </div>
 
             <div class="fieldblock">
-                <label>Start Date:</label>
-                <input type="text" class="fn-StartDate editable date datepicker" maxlength="10" />
+                <label>New Fiscal Year:</label>
+                <input type="text" class="fn-NewFiscalYear editable required" />
             </div>
 
             <div class="fieldblock">
