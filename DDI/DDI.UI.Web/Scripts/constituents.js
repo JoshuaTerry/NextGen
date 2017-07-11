@@ -305,6 +305,8 @@ function DisplayConstituentPicture() {
 
     var img = $('.constituentpic img');
 
+    $(img).attr('src', '');
+
     $.ajax({
         url: WEB_API_ADDRESS + 'constituentpicture/' + currentEntity.Id,
         method: 'GET',
@@ -323,6 +325,13 @@ function DisplayConstituentPicture() {
                 });
 
             }
+            else {
+                if (currentEntity.IsMasculine) {
+                    $(img).attr('src', '../../Images/Male.png');
+                } else {
+                    $(img).attr('src', '../../Images/Female.png');
+                }
+            }
 
         },
         error: function (xhr, status, err) {
@@ -331,7 +340,7 @@ function DisplayConstituentPicture() {
     });
 
     $('.constituentpic').on('mouseenter', function () {
-        $('.changeconstituentpic').stop().show().animate({ height: '50px', bottom: '0px', opacity: '.9' }, 100);
+        $('.changeconstituentpic').stop().show().animate({ height: '50px', bottom: '0px', opacity: '.7' }, 100);
     }).on('mouseleave', function () {
         $('.changeconstituentpic').stop().animate({ height: '0px', bottom: '0px', opacity: '0' }, 100);
     });
