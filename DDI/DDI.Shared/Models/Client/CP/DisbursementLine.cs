@@ -1,8 +1,8 @@
-﻿using DDI.Shared.Enums.CP;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DDI.Shared.Attributes.Models;
+using DDI.Shared.Enums.CP;
 
 namespace DDI.Shared.Models.Client.CP
 {
