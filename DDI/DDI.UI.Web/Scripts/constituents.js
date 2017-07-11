@@ -397,8 +397,7 @@ function GetConstituentPrimaryAddress() {
 
             currentaddress = data.Data;
 
-           
-            
+                  
             var curadd = currentaddress.split('\n');
 
             for (var i = 0; i < curadd.length; i++) {
@@ -412,12 +411,7 @@ function GetConstituentPrimaryAddress() {
                
             }
            
-
-
-            
-
-           
-             
+              
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
