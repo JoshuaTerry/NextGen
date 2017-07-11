@@ -569,8 +569,8 @@ function LoadAlternateIDTable() {
             { dataField: 'Name', caption: 'Name' }
     ];
 
-    LoadGrid('.alternateidgridcontainer', 'altidgrid', columns, 'constituents/' + currentEntity.Id + '/alternateids', 'alternateids'
-        , null, 'ai-', '.alternateidmodal', '.alternateidmodal', 250, false, true, false, null);
+    GridManager.LoadGrid('.alternateidgridcontainer', 'altidgrid', columns, 'constituents/' + currentEntity.Id + '/alternateids', 'alternateids'
+        , null, 'ai-', '.alternateidmodal', '.alternateidmodal', 250, true, true, false, null);
 }
 
 /* End Alternate Id Section */
