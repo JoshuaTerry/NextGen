@@ -42,6 +42,12 @@ $(document).ready(function () {
         UploadFiles();
     });
 
+    $('.attachmentstab').click(function (e) {
+        e.preventDefault();
+        LoadAttachmentsTab(currentEntity.Id);
+    });
+
+
 });
 
 function UploadFiles(callback) {
@@ -281,6 +287,16 @@ function DisplayConstituentData() {
         FormatFields();
 
         GetNoteAlerts(shownotealert);
+
+        $('#tab-notes-main').click(function (e) {
+
+            $('.tabscontainer').tabs();
+
+            LoadDatePickers();
+
+            LoadNoteDetailsGrid('Constituent');
+
+        });
 
     }
 }
@@ -922,7 +938,9 @@ function RelationshipLinkClicked(id) {
 }
 
 function LoadAttachmentsTab(id) {
+    
     container = $('.attachments');
+    container.empty();
     LoadAttachments(container, "contituentsgrid", id, null, NoteEntity[0]);
 }
 

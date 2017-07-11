@@ -35,9 +35,38 @@ namespace DDI.Services
         #region Public Methods
         public override IDataResponse<Note> Add(Note note)
         {
+           
+            var ntList = new List<NoteTopic>();
+            foreach(NoteTopic topic in note.NoteTopics)
+            {
+                var newTopic = UnitOfWork.GetById<NoteTopic>(topic.Id);
+                ntList.Add(newTopic);
+            }
+
+            note.NoteTopics.Clear();
+            ntList.ForEach(n => note.NoteTopics.Add(n));
+
             SetEntityType(note);
 
             return base.Add(note);
+        }
+
+        public override IDataResponse<Note> Update(Guid id, JObject changes)
+        {
+            Note note = UnitOfWork.GetById<Note>(id);
+            JToken topics = changes["NoteTopics"];
+            changes["NoteTopics"].Parent.Remove();
+
+            var addTopics = new List<NoteTopic>();
+            foreach (var topicId in topics)
+            {
+                var fullTopic = UnitOfWork.GetById<NoteTopic>((Guid)topicId["Id"]);
+                addTopics.Add(fullTopic);
+            }
+
+            note.NoteTopics = addTopics;
+
+            return base.Update(id, changes);
         }
 
         public IDataResponse<List<Note>> GetAll(string parentEntityType)
@@ -218,15 +247,7 @@ namespace DDI.Services
 
         private void SetEntityType(Note note)
         {
-            // As we expand, this will have to encompass more than just constituent
-            if (string.Compare(note.EntityType, "constituent", true) == 0)
-            {
-                note.EntityType = LinkedEntityHelper.GetEntityTypeName<Constituent>();
-            }
-            else
-            {
-                throw new TypeAccessException("Invalid Entity Type for Note");
-            }
+            note.EntityType = LinkedEntityHelper.GetParentEntity(note, UnitOfWork).ToString();
         }
 
         #endregion Private Methods

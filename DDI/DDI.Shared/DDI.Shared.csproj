@@ -128,12 +128,15 @@
     <Compile Include="Enums\CP\DisbursementLineType.cs" />
     <Compile Include="Enums\CP\DisbursementStatus.cs" />
     <Compile Include="Enums\CP\DisbursementType.cs" />
+    <Compile Include="Enums\CP\MiscReceiptType.cs" />
     <Compile Include="Enums\CP\ReceiptBatchDistributionMode.cs" />
     <Compile Include="Enums\CP\ReceiptBatchStatus.cs" />
     <Compile Include="Enums\CP\ReceiptBatchEntryMode.cs" />
     <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
     <Compile Include="Enums\CP\EFTAccountType.cs" />
+    <Compile Include="Models\Client\CP\MiscReceiptLine.cs" />
+    <Compile Include="Models\Client\CP\MiscReceipt.cs" />
     <Compile Include="Models\Client\CP\Receipt.cs" />
     <Compile Include="Enums\CP\ReceiptCategory.cs" />
     <Compile Include="Models\Client\CP\ReceiptBatch.cs" />
