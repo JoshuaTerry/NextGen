@@ -506,7 +506,7 @@ function LoadEducationGrid() {
     ];
 
     LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
-        , null, 'ed-', '.educationmodal', '.educationmodal', 350, false, false, false, null);
+        , null, 'ed-', '.educationmodal', '.educationmodal', 350, true, false, false, null);
 
     SetupSchoolAutocomplete();
     SetupDegreeAutoComplete();

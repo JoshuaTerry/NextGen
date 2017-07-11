@@ -1351,28 +1351,7 @@ function CancelEdit() {
 //
 // END EDITING
 
-// DELETING
-//
-
-function DeleteEntity(url, method, confirmationMessage) {
-    var okToDelete = confirm(confirmationMessage);
-    if (okToDelete === true) {
-        // delete the entity
-        MakeServiceCall(method, url, null, function (data) {
-
-            if (data.Data) {
-                // Display success
-                DisplaySuccessMessage('Success', 'This item was deleted.');
-
-            }
-
-        }, null);
-    };
-
-}
-
-//
-// END DELETING
+ 
 
 // MESSAGING
 //
