@@ -64,17 +64,25 @@ namespace DDI.Conversion.GL
 
                     string fundLegacyKey = importer.GetString(2);
                     string fundSegmentKey = importer.GetString(4);
+                    bool emptyFund = false;
+                    Guid fundSegmentId = Guid.Empty;
 
-                    Guid fundSegmentId;
-                    if (!SegmentIds.TryGetValue(fundSegmentKey, out fundSegmentId))
+                    if (string.IsNullOrWhiteSpace(fundSegmentKey))
                     {
-                        importer.LogError($"Invalid fund segment legacy key \"{fundSegmentKey}\".");
-                        continue;
+                        emptyFund = true;
+                    }
+                    else
+                    {
+                        if (!SegmentIds.TryGetValue(fundSegmentKey, out fundSegmentId))
+                        {
+                            importer.LogError($"Invalid fund segment legacy key \"{fundSegmentKey}\".");
+                            continue;
+                        }
                     }
 
                     Fund fund = new Fund();
                     fund.FiscalYearId = fiscalYearId;
-                    fund.FundSegmentId = fundSegmentId;
+                    fund.FundSegmentId = emptyFund ? null : (Guid?)fundSegmentId;
 
                     int fundBalKey = importer.GetInt(5);
                     int closeRevKey = importer.GetInt(6);

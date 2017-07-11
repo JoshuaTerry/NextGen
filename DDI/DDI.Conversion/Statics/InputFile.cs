@@ -89,7 +89,10 @@ namespace DDI.Conversion.Statics
         #endregion
 
         #region CP Files
+
         public static string CP_EFTInfo => "EFTInfo.csv";
+        public static string CP_EFTFormat => "EFTFormat.csv";
+
         #endregion
 
 

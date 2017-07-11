@@ -26,47 +26,38 @@ namespace DDI.Conversion.CP
     {
         public enum ConversionMethod
         {
-            Codes = 40001,
+            EFTFormats = 40001,
         }
 
-        // nacodes.record-cd sets - these are the ones that are being imported here.
-        private const int EFT_FORMAT_SET = 102;
-
-        private string _glDirectory;
         private string _cpDirectory;
 
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
             MethodsToRun = conversionMethods;
-            _glDirectory = Path.Combine(baseDirectory, DirectoryName.GL);
             _cpDirectory = Path.Combine(baseDirectory, DirectoryName.CP);
 
-            RunConversion(ConversionMethod.Codes, () => LoadLegacyCodes(InputFile.GL_FWCodes));
+            RunConversion(ConversionMethod.EFTFormats, () => LoadEFTFormats(InputFile.CP_EFTFormat));
         }
 
-        private void LoadLegacyCodes(string filename)
+        private void LoadEFTFormats(string filename)
         {
             DomainContext context = new DomainContext();
-            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            using (var importer = CreateFileImporter(_cpDirectory, filename, typeof(ConversionMethod)))
             {
                 while (importer.GetNextRow())
                 {
-                    int codeSet = importer.GetInt(0);
-                    string code = importer.GetString(1);
-                    string description = importer.GetString(2);
-                    int int1 = importer.GetInt(3);
-                    int int2 = importer.GetInt(4);
-                    string text1 = importer.GetString(5);
-                    string text2 = importer.GetString(6);
+                    string code = importer.GetString(0);
+                    string description = importer.GetString(1);
+                    bool isActive = importer.GetBool(2);
 
-                    switch (codeSet)
+                    if (string.IsNullOrWhiteSpace(code))
                     {
-                        case EFT_FORMAT_SET:
-                            context.CP_EFTFormats.AddOrUpdate(
-                                prop => prop.Code,
-                                new EFTFormat { Code = code, Name = description, IsActive = true });
-                            break;
+                        continue;
                     }
+
+                    context.CP_EFTFormats.AddOrUpdate(
+                        prop => prop.Code,
+                        new EFTFormat { Code = code, Name = description, IsActive = isActive });
                 }
             }
             context.SaveChanges();
