@@ -589,10 +589,7 @@ function LoadAddressesGrid() {
         { dataField: 'AddressType.DisplayName', caption: 'Type' },
         { dataField: 'Address.AddressLine1', caption: 'Address' }
     ];
-
-    //LoadGrid('constituentaddressgridcontainer', 'constituentaddressgrid', columns, 'constituents/' + currentEntity.Id + '/constituentaddresses', 'constituentaddresses'
-    //    , null, null, '.addressmodal', '.addressmodal', 250, true, true, false, EditAddressModal);
-
+     
     CustomLoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
