@@ -56,21 +56,21 @@ namespace DDI.WebApi.Controllers.GL
         }
         [HttpGet]
         [Route("api/v1/fiscalperiods/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/fiscalperiods")]
-        public IHttpActionResult Post([FromBody] FiscalPeriod entityToSave)
+        public override IHttpActionResult Post([FromBody] FiscalPeriod entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
         [Route("api/v1/fiscalperiods/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

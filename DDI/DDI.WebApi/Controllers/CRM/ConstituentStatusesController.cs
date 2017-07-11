@@ -16,7 +16,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/constituentstatuses")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
@@ -24,7 +24,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituentstatuses")]
-        public IHttpActionResult Post([FromBody] ConstituentStatus item)
+        public override IHttpActionResult Post([FromBody] ConstituentStatus item)
         {
             return base.Post(item);
         }
@@ -32,7 +32,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/constituentstatuses/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
