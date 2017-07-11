@@ -33,6 +33,12 @@ $(document).ready(function () {
         LoadJournalDetail();
     }
 
+    $('.newjournallinemodallink').click(function () {
+
+        JournalLineModal(null, true);
+
+    });
+
 });
 
 function LoadJournalDetail() {
@@ -129,7 +135,7 @@ function LoadJournalLineGrid(data) {
     //    });
     //});
 
-    LoadGridWithData('journallinegrid', '.journallinegridcontainer', columns, '', '', EditJournalLineModal, DeleteJournalLine, data.Data.JournalLines, function (data) {
+    LoadGridWithData('journallinegrid', '.journallinegridcontainer', columns, '', '', JournalLineModal, DeleteJournalLine, data.Data.JournalLines, function (data) {
         $('.journallinegrid').dxDataGrid({
             summary: {
                 totalItems: [
@@ -142,7 +148,7 @@ function LoadJournalLineGrid(data) {
 
 }
 
-function EditJournalLineModal(id) {
+function JournalLineModal(id, isNew) {
 
     if (editMode === 'display') {
         return
@@ -158,8 +164,10 @@ function EditJournalLineModal(id) {
         }
     });
 
-    LoadJournalLine(id);
-
+    if (!isNew) {
+        LoadJournalLine(id);
+    }
+    
     $('.canceljournallinemodal').click(function (e) {
 
         e.preventDefault();
@@ -171,12 +179,17 @@ function EditJournalLineModal(id) {
     $('.savejournalline').unbind('click');
 
     $('.savejournalline').click(function () {
-
-        var topicsavelist = GetNoteTopicsToSave();
-
+        
         var item = GetJournalLineToSave();
+        var method = 'POST';
+        var route = 'journalline';
 
-        MakeServiceCall('PATCH', 'JournalLine/' + id, item, function (data) {
+        if (id) {
+            method = 'PATCH';
+            route = 'journalline/' + id;
+        }
+
+        MakeServiceCall(method, route, item, function (data) {
 
             DisplaySuccessMessage('Success', 'Linked Account saved successfully.');
 
@@ -187,29 +200,6 @@ function EditJournalLineModal(id) {
         }, function (xhr, status, err) {
 
             DisplayErrorMessage('Error', 'An error occurred during saving the Linked Account.');
-        });
-
-    });
-
-    $('.savenewjournalline').unbind('click');
-
-    $('.savenewjournalline').click(function () {
-
-        var topicsavelist = GetNoteTopicsToSave();
-
-        var item = GetJournalLineToSave();
-
-        MakeServiceCall('PATCH', 'JournalLine/' + id, item, function (data) {
-
-            DisplaySuccessMessage('Success', 'Journal Line saved successfully.');
-
-            CloseModal(modal);
-
-            LoadJournalLineGrid();
-
-        }, function (xhr, status, err) {
-
-            DisplayErrorMessage('Error', 'An error occurred during saving the Journal Line.');
         });
 
     });

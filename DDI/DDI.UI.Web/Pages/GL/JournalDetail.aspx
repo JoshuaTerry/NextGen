@@ -123,18 +123,21 @@
             </div>
 
             <div class="twocolumn">
+
                 <div class="fieldblock">
                     <label>Amount: </label>
                     <input type="text" class="Amount editable money justright" />
                 </div>
 
-                <div class="fieldblock">
-                    <input type="radio" name="debitcreditradio" value="Debit" />
-                    <label>Debit</label>
-                </div>
-                <div class="fieldblock">
-                    <input type="radio" name="debitcreditradio" value="Credit" />
-                    <label>Credit</label>
+                <div>
+                    <div class="fieldblock">
+                        <input id="DebitOption" type="radio" name="debitcreditradio" value="Debit" />
+                        <label for="DebitOption" class="inline">Debit</label>
+                    </div>
+                    <div class="fieldblock">
+                        <input id="CreditOption" type="radio" name="debitcreditradio" value="Credit" />
+                        <label for="CreditOption" class="inline">Credit</label>
+                    </div>
                 </div>
 
             </div>

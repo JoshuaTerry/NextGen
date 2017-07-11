@@ -3,7 +3,7 @@
 
 $(document).ready(function () {
 
-    Resize();
+    // Resize();
  
     $('.clearsearch').click(function () {
         $('.searchcriteria div.fieldblock input').each(function () {

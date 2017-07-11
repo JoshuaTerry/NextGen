@@ -1,4 +1,6 @@
-﻿namespace DDI.Shared.Enums.INV
+﻿using System.ComponentModel;
+
+namespace DDI.Shared.Enums.INV
 {
     public enum InvestmentStatus
     {
