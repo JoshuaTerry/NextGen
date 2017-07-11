@@ -28,7 +28,7 @@ namespace DDI.Shared.Models.Client.CP
         [ForeignKey(nameof(FiscalYearId))]
         public FiscalYear FiscalYear { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(256)]
         public string Comment { get; set; }
 
         [DecimalPrecision(14, 2)]
