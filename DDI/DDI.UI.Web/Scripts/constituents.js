@@ -397,7 +397,26 @@ function GetConstituentPrimaryAddress() {
 
             currentaddress = data.Data;
 
-            $('.Address').text(currentaddress);
+           
+            
+            var curadd = currentaddress.split('\n');
+
+            for (var i = 0; i < curadd.length; i++) {
+
+                var insert =
+                    $('<span>', {
+                       text: curadd[i]
+                    });
+                    
+                 $('.Address').append(insert.text() + '<br />');
+               
+            }
+           
+
+
+            
+
+           
              
         },
         error: function (xhr, status, err) {
