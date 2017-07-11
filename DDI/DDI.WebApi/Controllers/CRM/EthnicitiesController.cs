@@ -1,5 +1,4 @@
-﻿using DDI.Services;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;

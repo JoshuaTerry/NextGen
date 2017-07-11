@@ -1,14 +1,10 @@
-﻿using DDI.Shared;
-using DDI.Shared.Statics;
-using System;
-using System.Web;
-using System.Web.Configuration;
-using System.Web.Http;
+﻿using DDI.Logger;
+using DDI.Services;
 using DDI.Shared.Enums;
 using DDI.Shared.Helpers;
-using DDI.Services;
-using DDI.Shared.Models.Client.Core;
-using DDI.Logger;
+using DDI.Shared.Statics;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {

@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using DDI.Shared.Helpers;
+using System;
 
 namespace DDI.Shared.Models
 {

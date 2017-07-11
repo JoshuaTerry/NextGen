@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\CoreConfiguration.cs" />
+    <Compile Include="Core\FileStorageLogic.cs" />
     <Compile Include="Core\NoteLogic.cs" />
     <Compile Include="Core\TransactionLogic.cs" />
     <Compile Include="Core\EntityNumberLogic.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="CRM\RegionLogic.cs" />
     <Compile Include="CRM\EducationLogic.cs" />
     <Compile Include="CRM\SalutationFormattingOptions.cs" />
+    <Compile Include="GL\PostingLogic.cs" />
     <Compile Include="GL\ClosingLogic.cs" />
     <Compile Include="GL\AccountGroupLogic.cs" />
     <Compile Include="GL\SegmentLogic.cs" />

@@ -29,30 +29,15 @@ $(document).ready(function () {
         addnewjournal();
     });
 
-    $(window).resize(function () {
-        Resize();
-    });
 
 });
 
 
 
-function Resize() {
-
-    var windowHeight = $(window).height();
-    var header = $('header').height();
-    var adjustedHeight = (windowHeight - header) - 90;
-
-    $('.searchcriteria div.scrollable').height(adjustedHeight);
-
-    $('.searchresults div.scrollable').height(adjustedHeight + 30);
-}
-
-
 function AddColumnHeaders() {
 
     var header = $('.searchresultstable thead');
-    var columns = ['ID', 'Journal#', 'JournalType', 'Tran Dt', 'Memo', 'Amount', 'Created By', 'Created Date', 'Status'];
+    var columns = ['ID', 'Journal No.', 'JournalType', 'Tran Dt', 'Memo', 'Amount', 'Created By', 'Created Date', 'Status'];
     var tr = $('<tr>');
 
     $(columns).each(function () {
@@ -85,16 +70,37 @@ function DoSearch() {
 
                 $('.gridcontainer').dxDataGrid({
                     dataSource: data.Data,
+                    key: "Id",
+                    type: "array",
                     columns: [
-                        { dataField: 'ID', caption: 'ID', alignment: 'right', width: '100px' },
-                        { dataField: 'JournalNumber', caption: 'Journal#' },
-                        { dataField: 'JournalType', caption: 'Type' },
-                        { dataField: 'TransactionDate', caption: 'Tran Dt' },
+                          { dataField: 'JournalNumber', caption: 'Journal No.' },
+                             {
+                                 caption: 'Type', cellTemplate: function (container, options) {
+
+                                     var JournalType;
+
+                                     switch (options.data.JournalType) {
+                                         case 0:
+                                             JournalType = "Normal";
+                                             break;
+                                         case 1:
+                                             JournalType = "Recurring";
+                                             break;
+                                         case 2:
+                                             JournalType = "Template";
+                                             break;
+                                     }
+
+                                     $('<label>').text(JournalType).appendTo(container);
+                                 }
+                             },
+
+                        { dataField: 'TransactionDate', caption: 'Tran Dt', dataType: 'date' },
                         { dataField: 'Comment', caption: 'Memo' },
                         { dataField: 'Amount', caption: 'Amount' },
                         { dataField: 'CreatedBy', caption: 'Created By' },
-                        { dataField: 'CreatedOn', caption: 'Year' },
-
+                        { dataField: 'CreatedOn', caption: 'Created On', dataType: 'date' },
+                        { dataField: 'Status', caption: 'Status' }
                     ],
                     paging: {
                         pageSize: 15
@@ -115,9 +121,10 @@ function DoSearch() {
                     },
 
                     onRowClick: function (info) {
-                     
-                       DisplayJournals(info.values[0]);
-                    }
+
+                        DisplayJournals(info.values[0]);
+                    },
+                    columnAutoWidth: true,
                 });
 
             }
@@ -152,14 +159,21 @@ function GetSearchParameters() {
         }
     });
 
-    p += 'limit=100&';
-    p += 'fields=JournalNumber,JournalType,TransactionDate,Comment,Amount,CreatedBy,CreatedOn,&';
+    p += 'limit=100&' + 'BusinessUnitId=' + currentBusinessUnitId;
+    p += '&fields=JournalNumber,JournalType,TransactionDate,Comment,Amount,CreatedBy,CreatedOn,Status&';
 
     p = p.substring(0, p.length - 1);
 
     return p;
 
 }
+
+function LoadCreatedBy() {
+
+    PopulateDropDown('.searchCreatedBy', 'CreatedBy', '', '');
+
+}
+
 
 function DisplayJournals(id) {
 
@@ -168,9 +182,9 @@ function DisplayJournals(id) {
 
 }
 
-function addnewjournal() {
+function AddNewJournal(id) {
 
-    sessionStorage.setItem("JOURNAL_ID", '');
+    sessionStorage.setItem("JOURNAL_ID", id);
     location.href = "JournalEntry.aspx";
 
 }

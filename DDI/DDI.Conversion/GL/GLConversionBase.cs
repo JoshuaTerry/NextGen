@@ -199,7 +199,7 @@ namespace DDI.Conversion.GL
                 Guid id;
                 if (!_ledgerAccountIds.TryGetValue(legacyKey, out id))
                 {
-                    importer.LogError($"Invalid legacy G/L account ID \"{legacyKey}\"");
+                    importer.LogError($"Invalid legacy GL account ID \"{legacyKey}\"");
                     return null;
                 }
 

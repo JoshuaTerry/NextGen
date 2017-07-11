@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Web.Http;
-using System.Web.Routing;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models;
@@ -15,6 +10,11 @@ using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Http;
+using System.Web.Routing;
 
 namespace DDI.WebApi.Controllers.GL
 {

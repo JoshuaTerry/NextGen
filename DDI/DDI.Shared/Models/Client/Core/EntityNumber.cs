@@ -1,8 +1,7 @@
-﻿using System;
+﻿using DDI.Shared.Enums.Core;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Shared.Enums.Core;
-using DDI.Shared.Models.Client.GL;
 
 namespace DDI.Shared.Models.Client.Core
 {
