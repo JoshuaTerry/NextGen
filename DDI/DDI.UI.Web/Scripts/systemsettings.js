@@ -385,11 +385,9 @@ function LoadClergySectionSettings() {
 
 function LoadConstituentTypesSectionSettings() {
 
-    var accordion = $('<div>');
-    var types = $('<div>').addClass('constituenttypescontainer');
+    var header = $('<div>').attr('style', 'text-align: right;').appendTo($('.gridcontainer'));
+    var types = $('<div>').addClass('constituenttypescontainer').appendTo($('.gridcontainer'));
 
-
-    var header = $('<div>').text('For Magic Reasons the New Link ONLY appears when this has text in it ').appendTo($(accordion));
     $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
@@ -448,13 +446,7 @@ function LoadConstituentTypesSectionSettings() {
         })
         .appendTo($(header));
 
-    $(types).appendTo($(accordion));
-
     LoadConstituentTypeSettingsGrid();
-
-    $(accordion).appendTo($('.gridcontainer'));
-
-    LoadAccordions();
 
 }
 
