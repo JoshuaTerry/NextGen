@@ -385,11 +385,9 @@ function LoadClergySectionSettings() {
 
 function LoadConstituentTypesSectionSettings() {
 
-    var accordion = $('<div>').addClass('accordions');
-    var types = $('<div>').addClass('constituenttypescontainer');
+    var header = $('<div>').attr('style', 'text-align: right;').appendTo($('.gridcontainer'));
+    var types = $('<div>').addClass('constituenttypescontainer').appendTo($('.gridcontainer'));
 
-
-    var header = $('<h1>').text('Constituent Types').appendTo($(accordion));
     $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
@@ -416,45 +414,40 @@ function LoadConstituentTypesSectionSettings() {
             $('.submitconsttype').unbind('click');
 
             $('.submitconsttype').click(function () {
-
-                var item = {
-                    Code: $(modal).find('.consttype-Code').val(),
-                    Name: $(modal).find('.consttype-Name').val(),
-                    Category: $(modal).find('.consttype-Category').val(),
-                    NameFormat: $(modal).find('.consttype-NameFormat').val(),
-                    SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
-                    SalutationInformal: $(modal).find('.consttype-SalutationInformal').val(),
-                    IsActive: true,
-                    IsRequired: true
-                }
-
-                MakeServiceCall('POST', 'constituenttypes', item, function (data) {
-
-                    if (data.Data) {
-                        DisplaySuccessMessage('Success', 'Constituent Type saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadConstituentTypeSettingsGrid();
+                ValidateFields(modal, function () {
+                    var item = {
+                        Code: $(modal).find('.consttype-Code').val(),
+                        Name: $(modal).find('.consttype-Name').val(),
+                        Category: $(modal).find('.consttype-Category').val(),
+                        NameFormat: $(modal).find('.consttype-NameFormat').val(),
+                        SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
+                        SalutationInformal: $(modal).find('.consttype-SalutationInformal').val(),
+                        IsActive: true,
+                        IsRequired: true
                     }
+                    item = JSON.stringify(item);
+                    MakeServiceCall('POST', 'constituenttypes', item, function (data) {
 
-                }, function (xhr, status, err) {
+                        if (data.Data) {
+                            DisplaySuccessMessage('Success', 'Constituent Type saved successfully.');
 
-                    DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+                            CloseModal(modal);
 
+                            LoadConstituentTypeSettingsGrid();
+                        }
+
+                    }, function (xhr, status, err) {
+
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+
+                    });
                 });
 
             });
         })
         .appendTo($(header));
 
-    $(types).appendTo($(accordion));
-
     LoadConstituentTypeSettingsGrid();
-
-    $(accordion).appendTo($('.gridcontainer'));
-
-    LoadAccordions();
 
 }
 
@@ -633,28 +626,29 @@ function EditConstituentType(id) {
     $('.submitconsttype').unbind('click');
 
     $('.submitconsttype').click(function () {
-
-        var item = {
-            Code: $(modal).find('.consttype-Code').val(),
-            Name: $(modal).find('.consttype-Name').val(),
-            Category: $(modal).find('.consttype-Category').val(),
-            NameFormat: $(modal).find('.consttype-NameFormat').val(),
-            SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
-            SalutationInformal: $(modal).find('.consttype-SalutationInformal').val()
-        }
-
-        MakeServiceCall('PATCH', 'constituenttypes/' + id, item, function (data) {
-
-            if (data.Data) {
-                DisplaySuccessMessage('Success', 'Constituent type saved successfully.');
-
-                CloseModal(modal);
-
-                LoadConstituentTypeSettingsGrid();
+        ValidateFields(modal, function () {
+            var item = {
+                Code: $(modal).find('.consttype-Code').val(),
+                Name: $(modal).find('.consttype-Name').val(),
+                Category: $(modal).find('.consttype-Category').val(),
+                NameFormat: $(modal).find('.consttype-NameFormat').val(),
+                SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
+                SalutationInformal: $(modal).find('.consttype-SalutationInformal').val()
             }
+            item = JSON.stringify(item);
+            MakeServiceCall('PATCH', 'constituenttypes/' + id, item, function (data) {
 
-        }, null);
+                if (data.Data) {
+                    DisplaySuccessMessage('Success', 'Constituent type saved successfully.');
 
+                    CloseModal(modal);
+
+                    LoadConstituentTypeSettingsGrid();
+                }
+
+            }, null);
+
+        });
     });
 
 }

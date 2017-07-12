@@ -28,6 +28,7 @@ $(document).ready(function () {
     $(window).resize(function () {
         Resize();
     });
+     
 
 });
 
@@ -98,7 +99,7 @@ function DoSearch() {
                 DisplayConstituent(data.Data[0].ConstituentNumber);
             }
             else {
-
+                //
                 $('.gridcontainer').dxDataGrid({
                     dataSource: data.Data,
                     columns: [
