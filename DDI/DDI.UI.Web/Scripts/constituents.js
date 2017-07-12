@@ -999,7 +999,7 @@ function NewRelationshipModal() {
 
 function PrePopulateNewRelationshipModal(modal) {
     $(modal).find('.rs-Constituent2Id').val(currentEntity.Id);
-    $(modal).find('.rs-Constituent2Name').val(currentEntity.FormattedName);
+    $(modal).find('.rs-Constituent2Information').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {
