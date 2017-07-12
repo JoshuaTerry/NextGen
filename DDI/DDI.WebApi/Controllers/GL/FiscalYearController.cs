@@ -141,7 +141,7 @@ namespace DDI.WebApi.Controllers.GL
             }
             catch (Exception ex)
             {
-                //base.Logger.LogError(ex);
+                base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
         }
