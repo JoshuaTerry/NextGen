@@ -7,6 +7,12 @@
 
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
+
+    <li><a href="#" class="addconstituent">Add Constituent</a></li> 
+
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="searchcriteria">
@@ -23,9 +29,6 @@
 
             <fieldset>
                 <legend>Advanced Search</legend>
-
-                
-
                 <div class="accordions nocontrols">
 
                     <h1>CRM</h1>
@@ -125,12 +128,7 @@
                             <input type="text" class="searchcreatedto datepicker" maxlength="10" />
                         </div>
                     </div>
-
-                    <h1>Donations</h1>
-                    <div>
-
-                    </div>
-
+                               
                 </div>
                 
 

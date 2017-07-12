@@ -128,7 +128,7 @@ function DeleteAttachment(container, Id,gridcontainername, entityId, noteId, ent
 
 function ViewNoteDetail(container, gridcontainername, entityId, noteId, entityType)
 {
-    LoadNotesModal(noteId, function (e) {
+    LoadNotesModal(noteId, entityType, function (e) {
 
         $(container).empty();
         LoadAttachments(container, gridcontainername, entityId, null, entityType)

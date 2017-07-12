@@ -235,8 +235,7 @@ namespace DDI.Conversion.Core
                     tran.TransactionId = tranId;
                     tran.EntityType = importer.GetString(0, 128);
                     tran.Relationship = importer.GetEnum<EntityTransactionRelationship>(2);
-                    tran.Category = importer.GetEnum<EntityTransactionCategory>(3);
-                    tran.AmountType = importer.GetEnum<TransactionAmountType>(4);
+                    tran.AmountType = importer.GetEnum<TransactionAmountType>(3);
                     tran.ParentEntityId = entityId;
                     tran.AssignPrimaryKey();
 

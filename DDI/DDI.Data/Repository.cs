@@ -159,15 +159,16 @@ namespace DDI.Data
         public TElement GetReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class
         {
             var entry = _context.Entry(entity);
-
             if (entry.State == System.Data.Entity.EntityState.Detached || entry.State == System.Data.Entity.EntityState.Added)
             {
                 var method = property.Compile();
-                return method.Invoke(entity);
+                TElement returnValue = method.Invoke(entity);
+                if (returnValue != null || entry.State != System.Data.Entity.EntityState.Added)
+                {
+                    return returnValue;
+                }
             }
-
             var reference = entry.Reference(property);
-
             if (!reference.IsLoaded)
                 reference.Load();
             return reference.CurrentValue;
@@ -254,11 +255,8 @@ namespace DDI.Data
                     IAuditableEntity auditableEntity = entity as IAuditableEntity;
                     if (auditableEntity != null)
                     {
-                        string userName = Thread.CurrentPrincipal?.Identity.Name;
-                        auditableEntity.CreatedBy = userName;
-                        auditableEntity.LastModifiedBy = userName;
+                        auditableEntity.CreatedBy = UserHelper.GetCurrentUserDisplayName(); 
                         auditableEntity.CreatedOn = DateTime.UtcNow;
-                        auditableEntity.LastModifiedOn = DateTime.UtcNow;
                     }
                     // Add it only if not already added.
                     EntitySet.Add(entity);
@@ -284,7 +282,7 @@ namespace DDI.Data
                 IAuditableEntity auditableEntity = entity as IAuditableEntity;
                 if (auditableEntity != null)
                 {
-                    auditableEntity.LastModifiedBy = Thread.CurrentPrincipal?.Identity.Name;
+                    auditableEntity.LastModifiedBy = UserHelper.GetCurrentUserDisplayName();
                     auditableEntity.LastModifiedOn = DateTime.UtcNow;
                 }
                 Attach(entity, System.Data.Entity.EntityState.Modified);
@@ -322,7 +320,15 @@ namespace DDI.Data
             }
 
             action?.Invoke(entity);
+
+            IAuditableEntity auditableEntity = entity as IAuditableEntity;
+            if (auditableEntity != null)
+            {
+                auditableEntity.LastModifiedBy = UserHelper.GetCurrentUserDisplayName();
+                auditableEntity.LastModifiedOn = DateTime.UtcNow;
+            }
         }
+
         public List<string> GetModifiedProperties(T entity)
         {
             var list = new List<string>();
