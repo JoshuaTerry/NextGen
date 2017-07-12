@@ -369,8 +369,9 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
                     .attr('title', 'Delete')
                     .click(function (e) {
                         e.preventDefault();
-
-                        deleteMethod(options.data.Id);
+                        ConfirmModal('Are you sure you want to delete this item?', function () {
+                            deleteMethod(options.data.Id);
+                        }, null); 
                     })
                     .appendTo(container);
             }

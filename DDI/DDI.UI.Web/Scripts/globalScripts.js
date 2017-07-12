@@ -626,38 +626,27 @@ function CloseModal(modal) {
 }
 
 function ConfirmModal(message, yes, no) {
-
     modal = $('.confirmmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 450,
         resizable: false
     });
-
     $(modal).find('.confirmmessage').html(message);
-
     $('.confirmyes').unbind('click');
-
-    if (yes) {
-
-        $('.confirmyes').click(function () {
-            CloseModal(modal);
+    $('.confirmyes').click(function () {
+        if (yes) {
             yes();
-        });
-
-    }
-
+        }
+        CloseModal(modal);
+    });
     $('.confirmno').unbind('click');
-
-    if (no) {
-
-        $('.confirmno').click(function () {
-            CloseModal(modal);
+    $('.confirmno').click(function () {
+        if (no) {
             no();
-        });
-
-    }
-
+        }
+        CloseModal(modal);
+    });
 }
 
 function ClearFields(container) {
