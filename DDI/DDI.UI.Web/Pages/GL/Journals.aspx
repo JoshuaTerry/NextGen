@@ -13,7 +13,7 @@
 
     <div class="searchcriteria">
 
-        <div class="scrollable">
+        <div >
             <fieldset>
 
 
@@ -25,9 +25,12 @@
                             <option value="0">Normal</option>
                             <option value="1">Recurring</option>
                             <option value="2">Template</option>
+                            
 
                         </select>
+                        <br />
                     </div>
+                   
 
                     <div class="fieldblock">
                         <label>Journal No.</label>
