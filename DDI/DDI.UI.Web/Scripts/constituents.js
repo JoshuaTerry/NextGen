@@ -397,6 +397,7 @@ function DisplayConstituentType() {
 
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
+        $('.OrganizationSettingsSection').hide();
         $('.individualConstituent').show();
         $('.DBASettingsSection').hide();
     } else {
@@ -606,6 +607,10 @@ function LoadContactInfo() {
 
 function LoadAddressesGrid() {
 
+    
+    
+
+    
     var columns = [
         { dataField: 'IsPrimary', caption: 'Is Primary' },
         { dataField: 'AddressType.DisplayName', caption: 'Type' },
@@ -617,12 +622,15 @@ function LoadAddressesGrid() {
         columns,
         'constituents/' + currentEntity.Id + '/constituentaddresses',
         null,
-        EditAddressModal); 
+        EditAddressModal, DeleteAddress, AddressGridComplete); 
+   
 }
 
-function NewAddressModal() {
-
-    $('.newaddressmodallink').click(function (e) {
+function AddressGridComplete() {
+    var cagc = $('.constituentaddressgridcontainer');
+    var cag = $('.constituentaddressgrid');
+    var header = $('<div>').attr('style', 'text-align: right;').prependTo($(cagc));
+    $('<a>').attr('href', '#').addClass('newmodallink modallink newbutton').text('New Item').click(function (e) {
 
         e.preventDefault();
 
@@ -686,11 +694,29 @@ function NewAddressModal() {
 
         AutoZip(modal, '.na-');
 
-    });
+    }).appendTo($(header));
 
     PopulateAddressTypesInModal(null);
 
-    PopulateCountriesInModal(null);
+    PopulateCountriesInModal(null); 
+}
+function DeleteAddress(id)
+{
+    MakeServiceCall('DELETE', 'constituentaddresses/' + id, null, function (data) {
+
+        DisplaySuccessMessage('Success', 'Constituent Address deleted successfully.');
+
+        LoadAddressesGrid();
+
+    },
+        function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Address.');
+        }
+    );
+}
+function NewAddressModal() {
+
+    
 
 }
 
