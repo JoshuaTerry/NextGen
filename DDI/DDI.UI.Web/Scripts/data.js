@@ -15,6 +15,10 @@ function GetApiHeaders() {
 
 function MakeServiceCall(method, route, item, successCallback, errorCallback) {
 
+    if (item) {
+        item = JSON.stringify(item);
+    }
+
     $.ajax({
         url: WEB_API_ADDRESS + route,
         method: method,
@@ -32,6 +36,9 @@ function MakeServiceCall(method, route, item, successCallback, errorCallback) {
             }
             else {
                 DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+                if (errorCallback) {
+                    errorCallback();
+                }
             }
 
         },
