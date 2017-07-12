@@ -236,6 +236,9 @@
                    <h1 class="DemographicSettingsSection"><span class="DemographicSettingsSectionLabel">Demographics</span></h1>
                     
                     <div class="editcontainer">
+                        <div>
+                             <label>&nbsp;</label>
+                        </div>
                         <div class="fieldblock">
                             <label>Denomination</label>
                             <div class="editable tagbox denominations"></div>
