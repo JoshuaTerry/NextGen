@@ -7,6 +7,7 @@
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
     <script type="text/javascript" src="..\..\Scripts\attachments.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\gridManager.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
 
 </asp:Content>
@@ -19,7 +20,7 @@
     <li><a href="#">Import</a></li>
     <li><a href="#">Export</a></li>
     <li class="menu-break"></li>
-    <li><a href="#">Edit History</a></li>
+    <li><a href="#" class="newauditmodal">Edit History</a></li>
 
 </asp:Content>
 
@@ -35,9 +36,7 @@
                 <img />
                 <div class="changeconstituentpic" style="height: 0px; bottom: 0px; display: none;">Change Profile Pic</div>
             </div>
-            <div>
-                <a href="#" class="newauditmodal">Audit History</a>
-            </div>
+            
             <h1>Information</h1>
             <div class="constituentinformation">
                 <div>
@@ -494,7 +493,7 @@
 
                         <div class="accordions contactinfocontainer">
 
-                            <h1>Addresses<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>
+                            <h1>Addresses</h1><%--<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>--%>
                             <div>
                                 <div class="constituentaddressgridcontainer"></div>
                             </div>
@@ -792,9 +791,9 @@
             
             <input type="hidden" class="dba-ConstituentId parentid" />
 
-            <div class="fieldblock">
-                <label class="required">DBA Name:</label>
-                <input type="text" required="required" class="dba-Name" maxlength="128" />
+            <div class="fieldblock required">
+                <label>DBA Name:</label>
+                <input type="text" class="dba-Name" maxlength="128" />
             </div>
 
             <div class="twocolumn">
@@ -827,44 +826,44 @@
 
         <div class="modalcontent">
 
-            <div class="fieldblock">
-                <label class="required">Description</label>
-                <input type="text" required="required" class="pp-Description" maxlength="128" />
+            <div class="fieldblock required">
+                <label>Description</label>
+                <input type="text" class="pp-Description" maxlength="128" />
             </div>
 
-            <div class="fieldblock">
-                <label class="required">Bank Name</label>
-                <input type="text" required="required" class="pp-BankName" maxlength="128" />
-            </div>
-
-            <div class="twocolumn">
-
-                <div class="fieldblock">
-                    <label class="required">Routing Number</label>
-                    <input type="text" required="required" class="pp-RoutingNumber" maxlength="64" />
-                </div>
-
-                <div class="fieldblock">
-                    <label class="required">Account Number</label>
-                    <input type="text" required="required" class="pp-BankAccount" maxlength="64" />
-                </div>
-
+            <div class="fieldblock required">
+                <label>Bank Name</label>
+                <input type="text" class="pp-BankName" maxlength="128" />
             </div>
 
             <div class="twocolumn">
 
-                <div class="fieldblock">
-                    <label class="required">Account Type</label>
-                    <select class="pp-AccountType" required="required">
+                <div class="fieldblock required">
+                    <label>Routing Number</label>
+                    <input type="text" class="pp-RoutingNumber" maxlength="64" />
+                </div>
+
+                <div class="fieldblock required">
+                    <label>Account Number</label>
+                    <input type="text"  class="pp-BankAccount" maxlength="64" />
+                </div>
+
+            </div>
+
+            <div class="twocolumn">
+
+                <div class="fieldblock required">
+                    <label>Account Type</label>
+                    <select class="pp-AccountType" >
                         <option value=""></option>
                         <option value="0">Checking Account</option>
                         <option value="1">Savings Account</option>
                     </select>
                 </div>
 
-                <div class="fieldblock">
-                    <label class="required">EFT Format</label>
-                    <select class="pp-EFTFormatId eftformats" required="required"></select>
+                <div class="fieldblock required">
+                    <label>EFT Format</label>
+                    <select class="pp-EFTFormatId eftformats" ></select>
                 </div>
 
             </div>
@@ -905,14 +904,14 @@
             
             <input type="hidden" class="phone-ConstituentId parentid" />
 
-            <div class="fieldblock">
-                <label class="required">Type:</label>
-                <select class="phone-ContactTypeId" required="required"></select>
+            <div class="fieldblock required">
+                <label>Type:</label>
+                <select class="phone-ContactTypeId" ></select>
             </div>
 
-            <div class="fieldblock">
-                <label class="required">Phone:</label>
-                <input type="text" required="required" class="phone-Info" maxlength="128" />
+            <div class="fieldblock required">
+                <label>Phone:</label>
+                <input type="text"  class="phone-Info" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -940,14 +939,14 @@
             
             <input type="hidden" class="email-ConstituentId parentid" />
 
-            <div class="fieldblock">
-                <label class="required">Type:</label>
-                <select class="email-ContactTypeId" required="required"></select>
+            <div class="fieldblock required">
+                <label>Type:</label>
+                <select class="email-ContactTypeId" ></select>
             </div>
 
-            <div class="fieldblock">
-                <label class="required">Email:</label>
-                <input type="email" class="email-Info" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" title="Invalid Email Address" maxlength="255" />
+            <div class="fieldblock required">
+                <label>Email:</label>
+                <input type="email" class="email-Info"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" title="Invalid Email Address" maxlength="255" />
             </div>
 
             <div class="fieldblock">
@@ -975,14 +974,14 @@
 
             <input type="hidden" class="web-ConstituentId parentid" />
             
-            <div class="fieldblock">
-                <label class="required">Type:</label>
-                <select class="web-ContactTypeId" required="required" ></select>
+            <div class="fieldblock required">
+                <label>Type:</label>
+                <select class="web-ContactTypeId"></select>
             </div>
 
-            <div class="fieldblock">
-                <label class="required">Web Site:</label>
-                <input type="text" required="required" class="web-Info" />
+            <div class="fieldblock required">
+                <label>Web Site:</label>
+                <input type="text" class="web-Info" />
             </div>
 
             <div class="fieldblock">
@@ -1010,14 +1009,14 @@
 
             <input type="hidden" class="person-ConstituentId parentid" />
             
-            <div class="fieldblock">
-                <label class="required">Type:</label>
-                <select class="person-ContactTypeId" required="required"></select>
+            <div class="fieldblock required">
+                <label>Type:</label>
+                <select class="person-ContactTypeId"></select>
             </div>
 
-            <div class="fieldblock">
-                <label class="required">Info:</label>
-                <input type="text" required="required" class="person-Info" maxlength="128" />
+            <div class="fieldblock required">
+                <label>Info:</label>
+                <input type="text" class="person-Info" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -1043,14 +1042,14 @@
 
         <div class="modalcontent">
             
-            <div class="fieldblock">
-                <label class="required">Type:</label>
-                <select class="sm-ContactTypeId" required="required"></select>
+            <div class="fieldblock required">
+                <label>Type:</label>
+                <select class="sm-ContactTypeId"></select>
             </div>
 
-            <div class="fieldblock">
-                <label class="required">URL:</label>
-                <input type="text" required="required" class="sm-Info" />
+            <div class="fieldblock required">
+                <label>URL:</label>
+                <input type="text" class="sm-Info" />
             </div>
 
             <div class="fieldblock">
@@ -1078,14 +1077,14 @@
 
             <input type="hidden" class="other-ConstituentId parentid" />
             
-            <div class="fieldblock">
-                <label class="required">Type:</label>
-                <select class="other-ContactTypeId" required="required"></select>
+            <div class="fieldblock required">
+                <label>Type:</label>
+                <select class="other-ContactTypeId"></select>
             </div>
 
-            <div class="fieldblock">
-                <label class="required">Info:</label>
-                <input type="text" required="required" class="other-Info" maxlength="128" />
+            <div class="fieldblock required">
+                <label>Info:</label>
+                <input type="text" class="other-Info" maxlength="128" />
             </div>
 
             <div class="fieldblock">
@@ -1095,7 +1094,7 @@
 
             <div class="fieldblock">
                 <label>Comment:</label>
-                <input type="text"  class="other-Comment" />
+                <input type="text" maxlength="256"  class="other-Comment" />
             </div>
 
             <div class="modalbuttons">
@@ -1142,16 +1141,16 @@
 
         <div class="modalcontent">
             
-            <div class="fieldblock">
-                <label class="required">Major</label>
-                <input type="text" required="required" class="ed-Major" maxlength="128" />
+            <div class="fieldblock required">
+                <label>Major</label>
+                <input type="text" class="ed-Major" maxlength="128" />
             </div>
 
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label class="required">Start Date</label>
-                    <input type="text" required="required" class="ed-StartDate datepicker" maxlength="10" />
+                    <label>Start Date</label>
+                    <input type="text" class="ed-StartDate datepicker" maxlength="10" />
                 </div>
 
                 <div class="fieldblock">
@@ -1162,12 +1161,12 @@
             </div>
 
             <div class="twocolumn">
-                <div class="fieldblock">
-                    <label class="required">School</label>
-                    <input type="text" required="required" class="ed-SchoolOther schoolLookup" />
+                <div class="fieldblock required">
+                    <label>School</label>
+                    <input type="text" class="ed-SchoolOther schoolLookup" />
                 </div>
 
-                <div class="fieldblock">
+                <div class="fieldblock ">
                     <label>Degree</label>
                     <input type="text" class="ed-DegreeOther degreeLookup" />
                 </div>

@@ -64,7 +64,13 @@ namespace DDI.Shared.Models.Client.CP
 
         public bool IsImmediate { get; set; }
 
-        public bool IsManual { get; set; } 
+        public bool IsManual { get; set; }
+
+        [MaxLength(4)]
+        public string ModuleCode { get; set; }
+
+        [MaxLength(4)]
+        public string CheckForm { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? ClearDate { get; set; }

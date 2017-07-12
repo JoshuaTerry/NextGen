@@ -21,8 +21,6 @@ namespace DDI.Shared.Models.Client.Core
 
         public EntityTransactionRelationship Relationship { get; set; }
 
-        public EntityTransactionCategory Category { get; set; }
-
         public TransactionAmountType AmountType { get; set; }
 
         public Guid? TransactionId { get; set; }

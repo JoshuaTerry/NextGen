@@ -255,11 +255,8 @@ namespace DDI.Data
                     IAuditableEntity auditableEntity = entity as IAuditableEntity;
                     if (auditableEntity != null)
                     {
-                        string userName = Thread.CurrentPrincipal?.Identity.Name;
-                        auditableEntity.CreatedBy = userName;
-                        auditableEntity.LastModifiedBy = userName;
+                        auditableEntity.CreatedBy = UserHelper.GetCurrentUserDisplayName(); 
                         auditableEntity.CreatedOn = DateTime.UtcNow;
-                        auditableEntity.LastModifiedOn = DateTime.UtcNow;
                     }
                     // Add it only if not already added.
                     EntitySet.Add(entity);
@@ -285,7 +282,7 @@ namespace DDI.Data
                 IAuditableEntity auditableEntity = entity as IAuditableEntity;
                 if (auditableEntity != null)
                 {
-                    auditableEntity.LastModifiedBy = Thread.CurrentPrincipal?.Identity.Name;
+                    auditableEntity.LastModifiedBy = UserHelper.GetCurrentUserDisplayName();
                     auditableEntity.LastModifiedOn = DateTime.UtcNow;
                 }
                 Attach(entity, System.Data.Entity.EntityState.Modified);
@@ -323,7 +320,15 @@ namespace DDI.Data
             }
 
             action?.Invoke(entity);
+
+            IAuditableEntity auditableEntity = entity as IAuditableEntity;
+            if (auditableEntity != null)
+            {
+                auditableEntity.LastModifiedBy = UserHelper.GetCurrentUserDisplayName();
+                auditableEntity.LastModifiedOn = DateTime.UtcNow;
+            }
         }
+
         public List<string> GetModifiedProperties(T entity)
         {
             var list = new List<string>();

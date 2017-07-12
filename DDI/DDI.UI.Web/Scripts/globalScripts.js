@@ -425,7 +425,7 @@ function SaveNewConstituent(modal, addnew) {
                 currentEntity = data.Data;
 
                 sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
-                location.href = "Pages/CRM/Constituents.aspx";
+                location.href = "Constituents.aspx";
             }
 
         }
@@ -626,38 +626,27 @@ function CloseModal(modal) {
 }
 
 function ConfirmModal(message, yes, no) {
-
     modal = $('.confirmmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 450,
         resizable: false
     });
-
     $(modal).find('.confirmmessage').html(message);
-
     $('.confirmyes').unbind('click');
-
-    if (yes) {
-
-        $('.confirmyes').click(function () {
-            CloseModal(modal);
+    $('.confirmyes').click(function () {
+        if (yes) {
             yes();
-        });
-
-    }
-
+        }
+        CloseModal(modal);
+    });
     $('.confirmno').unbind('click');
-
-    if (no) {
-
-        $('.confirmno').click(function () {
-            CloseModal(modal);
+    $('.confirmno').click(function () {
+        if (no) {
             no();
-        });
-
-    }
-
+        }
+        CloseModal(modal);
+    });
 }
 
 function ClearFields(container) {
@@ -1351,28 +1340,7 @@ function CancelEdit() {
 //
 // END EDITING
 
-// DELETING
-//
-
-function DeleteEntity(url, method, confirmationMessage) {
-    var okToDelete = confirm(confirmationMessage);
-    if (okToDelete === true) {
-        // delete the entity
-        MakeServiceCall(method, url, null, function (data) {
-
-            if (data.Data) {
-                // Display success
-                DisplaySuccessMessage('Success', 'This item was deleted.');
-
-            }
-
-        }, null);
-    };
-
-}
-
-//
-// END DELETING
+ 
 
 // MESSAGING
 //

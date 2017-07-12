@@ -96,7 +96,7 @@ function DoSearch() {
 
                         { dataField: 'TransactionDate', caption: 'Tran Dt', dataType: 'date' },
                         { dataField: 'Comment', caption: 'Memo' },
-                        { dataField: 'Amount', caption: 'Amount' },
+                        { dataField: 'Amount', caption: 'Amount', format: { type: 'currency', precision: 2 } },
                         { dataField: 'CreatedBy', caption: 'Created By' },
                         { dataField: 'CreatedOn', caption: 'Created On', dataType: 'date' },
                         { dataField: 'Status', caption: 'Status' }
