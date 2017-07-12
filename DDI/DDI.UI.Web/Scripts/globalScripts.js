@@ -1455,7 +1455,7 @@ function EditNoteDetails(id) {
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 500,
+        width: 1000,
         resizable: false
     });
 
@@ -1492,11 +1492,15 @@ function EditNoteDetails(id) {
                         MakeServiceCall('DELETE', 'notes/' + id + '/notetopics/' + topic.Id, null, null,
 
                             function (xhr, status, err) {
+
                                 DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+
                             });
 
                     }, function (xhr, status, err) {
+
                         DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+
                     });
 
                 });
@@ -1521,7 +1525,6 @@ function EditNoteDetails(id) {
 
         });
 
-
     });
 
     $('.cancelnotesmodal').click(function (e) {
@@ -1530,7 +1533,11 @@ function EditNoteDetails(id) {
 
         CloseModal(modal);
 
+        $('.attachmentscontainer').empty();
+
         ClearNoteTopicTagBox(modal);
+
+        $('.tagdropdowncontainer').hide();
 
         $('.editnoteinfo').hide();
 
@@ -1551,19 +1558,11 @@ function EditNoteDetails(id) {
 
         MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
 
-            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function (data) {
-
-                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
-
-            }, function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
-
-            });
-
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
             CloseModal(modal);
+
+            $('.attachmentscontainer').empty();
 
             $('.editnoteinfo').hide();
 
