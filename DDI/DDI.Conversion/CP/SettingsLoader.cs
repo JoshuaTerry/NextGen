@@ -1,28 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Business.Core;
+using DDI.Business.CP;
+using DDI.Conversion.GL;
 using DDI.Conversion.Statics;
 using DDI.Data;
 using DDI.Shared;
-using DDI.Shared.Enums.Common;
 using DDI.Shared.Enums.CP;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Common;
-using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CP;
-using DDI.Business.CP;
-using DDI.Conversion.GL;
 
 namespace DDI.Conversion.CP
-{    
+{
     internal class SettingsLoader : GLConversionBase
     {
         public enum ConversionMethod

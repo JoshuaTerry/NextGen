@@ -96,6 +96,7 @@ namespace DDI.Conversion.Statics
         public static string CP_BankAccounts => "BankAccount.csv";
         public static string CP_ReceiptTypes => "ReceiptType.csv";
         public static string CP_ReceiptBatchTypes => "ReceiptBatchType.csv";
+        public static string CP_ReceiptBatches => "ReceiptBatch.csv";
 
         #endregion
 
