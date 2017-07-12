@@ -127,12 +127,12 @@ namespace DDI.Conversion.GL
                 legacyIdFile.Dispose();
                 outputFile.Dispose();
             }
+
+            context.Dispose();
         }
 
         private void ConvertAccountGroups(string filename)
         {
-            DomainContext context = new DomainContext();
-
             LoadFiscalYearIds();
             var groupLinks = new Dictionary<int, int>();
             var groups = new Dictionary<int, AccountGroup>();
@@ -199,12 +199,11 @@ namespace DDI.Conversion.GL
                 legacyIdFile.Dispose();
                 outputFile.Dispose();
             }
+            
         }
 
         private void ConvertAccounts(string filename)
         {
-            DomainContext context = new DomainContext();
-
             LoadFiscalYearIds();
             LoadAccountGroupIds();
             LoadSegmentIds();
@@ -334,8 +333,6 @@ namespace DDI.Conversion.GL
 
         private void ConvertLedgerAccounts(string filename)
         {
-            DomainContext context = new DomainContext();
-
             LoadLedgerIds();
             var outputFile = new FileExport<LedgerAccount>(Path.Combine(OutputDirectory, OutputFile.GL_LedgerAccountFile), false);
             var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_LedgerAccountIdMappingFile), false, true);
@@ -378,8 +375,6 @@ namespace DDI.Conversion.GL
 
         private void ConvertLedgerAccountYears(string filename)
         {
-            DomainContext context = new DomainContext();
-
             LoadFiscalYearIds();
             LoadLedgerAccountIds();
             LoadAccountIds();
@@ -442,8 +437,6 @@ namespace DDI.Conversion.GL
 
         private void ConvertAccountPriorYears(string filename)
         {
-            DomainContext context = new DomainContext();
-
             LoadFiscalYearIds();
             LoadAccountIds();
 
@@ -564,12 +557,11 @@ namespace DDI.Conversion.GL
             }
 
             outputFile.Dispose();
+            context.Dispose();
         }
 
         private void ConvertAccountBudgets(string filename)
         {
-            DomainContext context = new DomainContext();
-
             LoadFiscalYearIds();
             LoadAccountIds();
 

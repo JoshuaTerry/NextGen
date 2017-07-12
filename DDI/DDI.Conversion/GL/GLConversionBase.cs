@@ -53,7 +53,7 @@ namespace DDI.Conversion.GL
         }
 
         /// <summary>
-        /// Load legacy ledger IDs into a dictionary.
+        /// Load legacy business unit IDs into a dictionary.
         /// </summary>
         protected void LoadBusinessUnitIds()
         {

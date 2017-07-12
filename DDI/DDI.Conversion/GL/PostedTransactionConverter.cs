@@ -33,8 +33,6 @@ namespace DDI.Conversion.GL
 
         private void ConvertPostedTransactions(string filename, bool append)
         {
-            DomainContext context = new DomainContext();
-
             LoadFiscalYearIds();
             LoadLedgerAccountYearIds();
             

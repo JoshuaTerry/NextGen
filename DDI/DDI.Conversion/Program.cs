@@ -109,7 +109,12 @@ namespace DDI.Conversion
             //Run<GL.JournalSearchIndexer>(new ConversionMethodArgs(GL.JournalSearchIndexer.ConversionMethod.IndexJournals));
             //Run<Core.NoteSearchIndexer>(new ConversionMethodArgs(Core.NoteSearchIndexer.ConversionMethod.IndexNotes));
 
-            Run<CP.SettingsLoader>();
+            //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.Configuration));
+            //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.EFTFormats));
+            Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.BankAccounts));
+            //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.ReceiptTypes));
+            Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.ReceiptBatchTypes));
+
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
 
             // Post-conversion tasks

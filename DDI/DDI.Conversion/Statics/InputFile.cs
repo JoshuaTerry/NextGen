@@ -92,6 +92,10 @@ namespace DDI.Conversion.Statics
 
         public static string CP_EFTInfo => "EFTInfo.csv";
         public static string CP_EFTFormat => "EFTFormat.csv";
+        public static string CP_Settings => "CPSettings.csv";
+        public static string CP_BankAccounts => "BankAccount.csv";
+        public static string CP_ReceiptTypes => "ReceiptType.csv";
+        public static string CP_ReceiptBatchTypes => "ReceiptBatchType.csv";
 
         #endregion
 

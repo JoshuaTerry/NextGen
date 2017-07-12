@@ -38,8 +38,6 @@ namespace DDI.Conversion.GL
 
         private void ConvertFunds(string filename)
         {
-            DomainContext context = new DomainContext();
-
             LoadFiscalYearIds();
             LoadLedgerAccountIds();
             LoadSegmentIds();
@@ -136,8 +134,6 @@ namespace DDI.Conversion.GL
 
         private void ConvertFundFromTos(string filename)
         {
-            DomainContext context = new DomainContext();
-
             LoadFiscalYearIds();
             LoadLedgerAccountIds();
             LoadFundIds();
@@ -220,76 +216,77 @@ namespace DDI.Conversion.GL
 
         private void ConvertBusinessUnitFromTos(string filename)
         {
-            DomainContext context = new DomainContext();
-
-            LoadLedgerIds();
-            LoadFiscalYearIds();
-            LoadLedgerAccountIds();
-
-            var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.BusinessUnit));
-
-            var outputFile = new FileExport<BusinessUnitFromTo>(Path.Combine(OutputDirectory, OutputFile.GL_BusinessUnitFromToFile), false);
-
-            outputFile.AddHeaderRow();
-
-            using (var importer = CreateFileImporter(GLDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
+                LoadLedgerIds();
+                LoadFiscalYearIds();
+                LoadLedgerAccountIds();
 
-                while (importer.GetNextRow())
+                var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.BusinessUnit));
+
+                var outputFile = new FileExport<BusinessUnitFromTo>(Path.Combine(OutputDirectory, OutputFile.GL_BusinessUnitFromToFile), false);
+
+                outputFile.AddHeaderRow();
+
+                using (var importer = CreateFileImporter(GLDirectory, filename, typeof(ConversionMethod)))
                 {
-                    Guid? fiscalYearId = GetFiscalYearId(importer, 0);
+                    int count = 1;
 
-                    if (fiscalYearId == null)
+                    while (importer.GetNextRow())
                     {
-                        continue;
-                    }
+                        Guid? fiscalYearId = GetFiscalYearId(importer, 0);
 
-                    Guid? businessUnitId = GetBusinessUnitId(importer, 0, ledgers);
-                    if (businessUnitId == null)
-                    { 
-                        importer.LogError($"Invalid or null business unit for BusinessUnitFromTo.");
-                        continue;
-                    }
-
-                    BusinessUnitFromTo fromTo = new BusinessUnitFromTo();
-                    fromTo.FiscalYearId = fiscalYearId;
-                    fromTo.BusinessUnitId = businessUnitId;
-                    fromTo.OffsettingBusinessUnitId = GetBusinessUnitId(importer, 2, ledgers);
-
-                    int fromAccountKey = importer.GetInt(3);
-                    if (fromAccountKey > 0)
-                    {
-                        Guid accountId;
-                        if (!LedgerAccountIds.TryGetValue(fromAccountKey, out accountId))
+                        if (fiscalYearId == null)
                         {
-                            importer.LogError($"Invalid 'due from' ledger account legacy key \"{fromAccountKey}\".");
                             continue;
                         }
-                        fromTo.FromLedgerAccountId = accountId;
-                    }
 
-                    int toAccountKey = importer.GetInt(4);
-                    if (toAccountKey > 0)
-                    {
-                        Guid accountId;
-                        if (!LedgerAccountIds.TryGetValue(toAccountKey, out accountId))
+                        Guid? businessUnitId = GetBusinessUnitId(importer, 0, ledgers);
+                        if (businessUnitId == null)
                         {
-                            importer.LogError($"Invalid 'due to' ledger account legacy key \"{toAccountKey}\".");
+                            importer.LogError($"Invalid or null business unit for BusinessUnitFromTo.");
                             continue;
                         }
-                        fromTo.ToLedgerAccountId = accountId;
+
+                        BusinessUnitFromTo fromTo = new BusinessUnitFromTo();
+                        fromTo.FiscalYearId = fiscalYearId;
+                        fromTo.BusinessUnitId = businessUnitId;
+                        fromTo.OffsettingBusinessUnitId = GetBusinessUnitId(importer, 2, ledgers);
+
+                        int fromAccountKey = importer.GetInt(3);
+                        if (fromAccountKey > 0)
+                        {
+                            Guid accountId;
+                            if (!LedgerAccountIds.TryGetValue(fromAccountKey, out accountId))
+                            {
+                                importer.LogError($"Invalid 'due from' ledger account legacy key \"{fromAccountKey}\".");
+                                continue;
+                            }
+                            fromTo.FromLedgerAccountId = accountId;
+                        }
+
+                        int toAccountKey = importer.GetInt(4);
+                        if (toAccountKey > 0)
+                        {
+                            Guid accountId;
+                            if (!LedgerAccountIds.TryGetValue(toAccountKey, out accountId))
+                            {
+                                importer.LogError($"Invalid 'due to' ledger account legacy key \"{toAccountKey}\".");
+                                continue;
+                            }
+                            fromTo.ToLedgerAccountId = accountId;
+                        }
+
+                        fromTo.AssignPrimaryKey();
+
+                        outputFile.AddRow(fromTo);
+
+                        count++;
                     }
-
-                    fromTo.AssignPrimaryKey();
-
-                    outputFile.AddRow(fromTo);
-
-                    count++;
                 }
-            }
 
-            outputFile.Dispose();
+                outputFile.Dispose();
+            }
         }
 
         /// <summary>
