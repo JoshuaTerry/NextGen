@@ -1134,8 +1134,6 @@ function DeleteContactCategory(id) {
         }
 
     });
-
-
 }
 
 function LoadContactCategory(id) {
