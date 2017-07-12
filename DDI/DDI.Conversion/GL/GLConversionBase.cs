@@ -183,6 +183,33 @@ namespace DDI.Conversion.GL
             return ledgerId;
         }
 
+        protected Guid? GetBusinessUnitId(FileImport importer, int column)
+        {
+            Guid? unitId = null;
+
+            // Legacy company ID
+            string code = importer.GetString(column);
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                return null;
+            }
+
+            if (_businessUnitIds != null)
+            {
+                int cid = 0;
+                Guid id;
+                if (!int.TryParse(code, out cid) || !_businessUnitIds.TryGetValue(cid, out id))
+                {
+                    importer.LogError($"Invalid legacy company ID \"{code}\"");
+                    return null;
+                }
+
+                unitId = id;
+            }
+
+            return unitId;
+        }
+
         protected Guid? GetLedgerAccountId(FileImport importer, int column)
         {
             Guid? accountId = null;

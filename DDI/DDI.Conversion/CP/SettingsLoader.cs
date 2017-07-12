@@ -197,19 +197,7 @@ namespace DDI.Conversion.CP
 
                     ba.Code = code;
                     ba.Name = description;
-
-                    int unit = importer.GetInt(2);
-                    if (unit > 0)
-                    {
-                        Guid unitId;
-                        if (!BusinessUnitIds.TryGetValue(unit, out unitId))
-                        {
-                            importer.LogError($"Invalid business unit \"{unit}\".");
-                            continue;
-                        }
-                        ba.BusinessUnitId = unitId;
-                    }
-
+                    ba.BusinessUnitId = GetBusinessUnitId(importer, 2);
                     ba.CompanyName = importer.GetString(3, 30);
                     
                     int debitAccountKey = importer.GetInt(4);

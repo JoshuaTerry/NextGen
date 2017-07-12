@@ -30,6 +30,7 @@ namespace DDI.Conversion.CP
 
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
+            Initialize(baseDirectory);
             MethodsToRun = conversionMethods;
             _cpDirectory = Path.Combine(baseDirectory, DirectoryName.CP);
             _cpOutputDirectory = Path.Combine(DirectoryName.OutputDirectory, DirectoryName.CP);
@@ -40,14 +41,13 @@ namespace DDI.Conversion.CP
         private void ConvertReceiptBatches(string filename, bool append)
         {
             DomainContext context = new DomainContext();
-            char[] commaDelimiter = { ',' };
 
             LoadBusinessUnitIds();
 
-            // Load the EFT formats
             var batchTypes = LoadEntities(context.CP_ReceiptBatchTypes);
             var bankAccounts = LoadLegacyIds(_cpOutputDirectory, OutputFile.CP_BankAccountIdMappingFile);
-            /*
+            var users = LoadEntities(context.Users);
+
             using (var importer = CreateFileImporter(_cpDirectory, filename, typeof(ConversionMethod)))
             {                
                 var outputFile = new FileExport<ReceiptBatch>(Path.Combine(_cpOutputDirectory, OutputFile.CP_ReceiptBatchFile), append);
@@ -66,99 +66,66 @@ namespace DDI.Conversion.CP
                 {
                     count++;
 
-                    int constituentNum;
-                    string constituentNumText = importer.GetString(0);
-                
-                    if (!int.TryParse(constituentNumText, out constituentNum))
-                    {
-                        // non-blank invalid constituent number is probably a header row and can be skipped.
-                        continue;
-                    }
+                    var batch = new ReceiptBatch();
+                    batch.BusinessUnitId = GetBusinessUnitId(importer, 0);
+                    batch.BatchNumber = importer.GetInt(1);
+                    batch.Name = importer.GetString(2, 256);
+                    batch.EntryMode = importer.GetEnum<ReceiptBatchEntryMode>(4);
+                    batch.Status = importer.GetEnum<ReceiptBatchStatus>(6);
+                    batch.DistributionMode = importer.GetEnum<ReceiptBatchDistributionMode>(7);
+                    batch.EffectiveDate = importer.GetDate(8);
+                    batch.TransactionDate = importer.GetDate(9);
+                    batch.CreatedOn = importer.GetDateTime(10);
+                    batch.CreatedBy = importer.GetString(11, 64);
 
-                    Guid? constituentId = null;
-
-                    // Not all EFTInfo rows have a constituent number (PIN).  If PIN > 0, grab the constituent.
-                    if (constituentNum > 0)
+                    string acct = importer.GetString(3);
+                    if (!string.IsNullOrWhiteSpace(acct))
                     {
-                        constituentId = _constituentIds.GetValueOrDefault(constituentNum);
-                        if (constituentId == null || constituentId.Value == Guid.Empty)
+                        Guid id;
+                        if (bankAccounts.TryGetValue(acct, out id))
                         {
-                            importer.LogError($"Invalid constituent number {constituentNum}.");
-                            continue;
+                            batch.BankAccountId = id;
+                        }
+                        else
+                        {
+                            importer.LogError($"Invalid bank account {acct}.");
                         }
                     }
 
-                    string description = importer.GetString(1, 128);
-                    string bankName = importer.GetString(2, 128);
-                    string bankAccount = importer.GetString(3, 64);
-                    string routingNumber = importer.GetString(4, 64);
-                    string tranCode = importer.GetString(5);
-                    string formatCode = importer.GetString(6);
-                    string legacyId = importer.GetString(7);
-                    string statusCode = importer.GetString(8);
-
-                    var eftInfo = new PaymentMethod();
-                    eftInfo.Category = PaymentMethodCategory.EFT;
-                    eftInfo.BankAccount = bankAccount;
-                    eftInfo.BankName = bankName;
-                    eftInfo.RoutingNumber = routingNumber;
-                    eftInfo.Description = description;
-                    
-                    if (tranCode == "22")
+                    string batchType = importer.GetString(5);
+                    if (!string.IsNullOrWhiteSpace(batchType))
                     {
-                        eftInfo.AccountType = EFTAccountType.Checking;
-                    }
-                    else if (tranCode == "32")
-                    {
-                        eftInfo.AccountType = EFTAccountType.Savings;
-                    }
-                    else
-                    {
-                        importer.LogError($"Invalid tran code \"{tranCode}\".");
-                    }
-
-                    EFTFormat format = null;
-                    if (!string.IsNullOrWhiteSpace(formatCode))
-                    {
-                        format = formats.FirstOrDefault(p => p.Code == formatCode);
-                        if (format == null)
+                        batch.BatchTypeId = batchTypes.FirstOrDefault(p => p.Code == batchType)?.Id;
+                        if (batch.BatchTypeId == null)
                         {
-                            importer.LogError($"Invalid EFT format code \"{format}\".");
+                            importer.LogError($"Invalid cash receipt batch type code {batchType}.");
                         }
                     }
 
-                    eftInfo.EFTFormatId = format?.Id;
-                    
-                    switch(statusCode)
+                    if (!string.IsNullOrWhiteSpace(batch.CreatedBy))
                     {
-                        case "I": eftInfo.Status = PaymentMethodStatus.Inactive; break;
-                        case "P": eftInfo.Status = PaymentMethodStatus.PrenoteRequired; break;
-                        case "S": eftInfo.Status = PaymentMethodStatus.PrenoteSent; break;
-                        default:
-                            eftInfo.Status = PaymentMethodStatus.Active; break;
+                        batch.EnteredById = GetUserByName(users, batch.CreatedBy)?.Id;
                     }
-                                        
-                    eftInfo.AssignPrimaryKey();
 
-                    outputFile.AddRow(eftInfo);
-
-                    legacyIdFile.AddRow(new LegacyToID(legacyId, eftInfo.Id));
-
-                    if (count % 1000 == 0)
+                    string inUseBy = importer.GetString(12);
+                    if (!string.IsNullOrWhiteSpace(inUseBy))
                     {
-                        joinOutputFile.Flush();
-                        outputFile.Flush();
-                        importer.LogDebug($"{count} Loaded");
+                        batch.InUseById = GetUserByName(users, inUseBy)?.Id;
                     }
+
+                    batch.AssignPrimaryKey();
+
+                    outputFile.AddRow(batch);
+
+                    legacyIdFile.AddRow(new LegacyToID(batch.BatchNumber, batch.Id));
                 }
 
-                joinOutputFile.Dispose();
                 outputFile.Dispose();
                 legacyIdFile.Dispose();
             }
 
             context.Dispose();
-            */
+            
         }
 
     }
