@@ -1253,7 +1253,7 @@ function GetEditedFields(editcontainer) {
 
     $(editcontainer).find('input.editable').each(function () {
 
-        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var property = $(this).prop('class').replace('editable ', '').split(' ');
         var propertyName = property[0]
         var value = '';
 
@@ -1278,7 +1278,7 @@ function GetEditedFields(editcontainer) {
     });
 
     $(editcontainer).find('select').each(function () {
-        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var property = $(this).prop('class').replace('editable ', '').split(' ');
         var propertyName = property[0]
         var value = $(this).val();
 
@@ -1315,22 +1315,17 @@ function SaveTagBoxes(editcontainer) {
 
         });
 
-        SaveChildCollection(idCollection, WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/' + route);
+        if (idCollection.length > 0) {
+            SaveChildCollection(idCollection, 'constituents/' + currentEntity.Id + '/' + route);
+        }
+
 
     });
 
 }
 
 function SaveChildCollection(children, route) {
-    MakeServiceCall('POST', SAVE_ROUTE + currentEntity.Id, JSON.stringify({ ChildIds: children }), function (data) {
-
-        if (data.Data) {
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-
-        }
-
-    }, null);
+     MakeServiceCall('POST', route, JSON.stringify({ ChildIds: children }), null, null);
 }
 
 function CancelEdit() {

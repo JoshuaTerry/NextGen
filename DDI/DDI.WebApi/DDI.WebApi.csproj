@@ -364,10 +364,13 @@
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Solution Files\DevExtreme.AspNet.Mvc.dll" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>

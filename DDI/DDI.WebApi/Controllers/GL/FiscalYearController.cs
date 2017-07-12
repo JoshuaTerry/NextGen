@@ -16,7 +16,7 @@ namespace DDI.WebApi.Controllers.GL
     public class FiscalYearController : GenericController<FiscalYear>
     {
         public FiscalYearController(IService<FiscalYear> service) : base(service) { }
-        
+
         private string _fieldsForAll = null;
 
         protected override string FieldsForList => $"{nameof(FiscalYear.Id)},{nameof(FiscalYear.Name)},{nameof(FiscalYear.Status)}";
@@ -40,7 +40,7 @@ namespace DDI.WebApi.Controllers.GL
             return new Expression<Func<FiscalYear, object>>[]
             {
                 p => p.FiscalPeriods,
-                p => p.Ledger                
+                p => p.Ledger
             };
         }
 
@@ -90,7 +90,7 @@ namespace DDI.WebApi.Controllers.GL
 
                 return FinalizeResponse(result, ConvertFieldList(fields, FieldsForSingle));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
@@ -135,7 +135,15 @@ namespace DDI.WebApi.Controllers.GL
         [Route("api/v1/fiscalyears/{sourceFiscalYearId}/copy")]
         public IHttpActionResult Copy(Guid sourceFiscalYearId, [FromBody] FiscalYearTemplate newFiscalYear)
         {
-            return FinalizeResponse(((FiscalYearService)Service).CopyFiscalYear(sourceFiscalYearId, newFiscalYear), FieldsForSingle);
+            try
+            {
+                return FinalizeResponse(((FiscalYearService)Service).CopyFiscalYear(sourceFiscalYearId, newFiscalYear), FieldsForSingle);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpPatch]
