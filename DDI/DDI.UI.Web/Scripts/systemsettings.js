@@ -3658,7 +3658,6 @@ function EditBusinessUnit(buFromToInfo) {
 
                 e.preventDefault();
                 CloseModal(modal);
-                PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
 
                 $('.bus-FromLedgerAccount').empty();
                 $('.bus-ToLedgerAccount').empty();
@@ -3704,8 +3703,7 @@ function EditBusinessUnit(buFromToInfo) {
         $('.cancelbusinessunitduedetailsmodal').click(function (e) {
             e.preventDefault();
             CloseModal(modal);
-            PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
-
+          
             $('.bus-FromLedgerAccount').empty();
             $('.bus-ToLedgerAccount').empty();
         });
@@ -3760,8 +3758,7 @@ function EditFundDue(fundDueInfo) {
             $('.cancelfundduemodal').click(function (e) {
                 e.preventDefault();
                 CloseModal(modal);
-                PopulateFundDueFromFund($('.selectfund').val());
-
+               
                 $('.fn-DueFromAccount').empty();
                 $('.fn-DueToAccount').empty();
             });
@@ -3806,8 +3803,7 @@ function EditFundDue(fundDueInfo) {
         $('.cancelfundduemodal').click(function (e) {
             e.preventDefault();
             CloseModal(modal);
-            PopulateFundDueFromFund($('.selectfund').val());
-
+           
             $('.fn-DueFromAccount').empty();
             $('.fn-DueToAccount').empty();
         });
