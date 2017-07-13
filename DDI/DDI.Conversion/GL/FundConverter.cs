@@ -42,8 +42,8 @@ namespace DDI.Conversion.GL
             LoadLedgerAccountIds();
             LoadSegmentIds();
 
-            var outputFile = new FileExport<Fund>(Path.Combine(OutputDirectory, OutputFile.GL_FundFile), false);
-            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_FundIdMappingFile), false, true);
+            var outputFile = new FileExport<Fund>(Path.Combine(GLOutputDirectory, OutputFile.GL_FundFile), false);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(GLOutputDirectory, OutputFile.GL_FundIdMappingFile), false, true);
 
             outputFile.AddHeaderRow();
 
@@ -138,7 +138,7 @@ namespace DDI.Conversion.GL
             LoadLedgerAccountIds();
             LoadFundIds();
 
-            var outputFile = new FileExport<FundFromTo>(Path.Combine(OutputDirectory, OutputFile.GL_FundFromToFile), false);
+            var outputFile = new FileExport<FundFromTo>(Path.Combine(GLOutputDirectory, OutputFile.GL_FundFromToFile), false);
 
             outputFile.AddHeaderRow();
 
@@ -224,7 +224,7 @@ namespace DDI.Conversion.GL
 
                 var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.BusinessUnit));
 
-                var outputFile = new FileExport<BusinessUnitFromTo>(Path.Combine(OutputDirectory, OutputFile.GL_BusinessUnitFromToFile), false);
+                var outputFile = new FileExport<BusinessUnitFromTo>(Path.Combine(GLOutputDirectory, OutputFile.GL_BusinessUnitFromToFile), false);
 
                 outputFile.AddHeaderRow();
 
@@ -318,7 +318,7 @@ namespace DDI.Conversion.GL
         {
             if (_fundIds == null)
             {
-                _fundIds = LoadLegacyIds(OutputDirectory, OutputFile.GL_FundIdMappingFile);
+                _fundIds = LoadLegacyIds(GLOutputDirectory, OutputFile.GL_FundIdMappingFile);
             }
         }
 

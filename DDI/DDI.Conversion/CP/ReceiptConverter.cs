@@ -10,6 +10,7 @@ using DDI.Shared.Extensions;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Enums.CP;
 using DDI.Conversion.GL;
+using DDI.Conversion.Core;
 
 namespace DDI.Conversion.CP
 {
@@ -33,6 +34,7 @@ namespace DDI.Conversion.CP
 
         private string _cpDirectory;
         private string _cpOutputDirectory;
+        private Dictionary<string, Guid> _receiptIds;
 
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
         {
@@ -43,6 +45,10 @@ namespace DDI.Conversion.CP
  
             RunConversion(ConversionMethod.ReceiptBatches, () => ConvertReceiptBatches(InputFile.CP_ReceiptBatches, false));
             RunConversion(ConversionMethod.Receipts, () => ConvertReceipts(InputFile.CP_Receipts, false));
+            RunConversion(ConversionMethod.ReceiptTransactions, () => ConvertTransactions(InputFile.CP_ReceiptTransactions, InputFile.CP_ReceiptEntityTransactions, false));
+            RunConversion(ConversionMethod.ReceiptEntityNumbers, () => ConvertEntityNumbers(InputFile.CP_ReceiptEntityNumbers));
+            RunConversion(ConversionMethod.ReceiptFileStorage, () => ConvertFileStorage(InputFile.CP_ReceiptFileStorage, true));
+            RunConversion(ConversionMethod.ReceiptAttachments, () => ConvertAttachments(InputFile.CP_ReceiptAttachments, false));
         }
 
         private void ConvertReceiptBatches(string filename, bool append)
@@ -167,7 +173,7 @@ namespace DDI.Conversion.CP
                         continue;
                     }
 
-                    int batchNumber = importer.GetInt(2);
+                    int batchNumber = importer.GetInt(1);
                     Guid batchId;
                     if (!batches.TryGetValue(batchNumber.ToString(), out batchId))
                     {
@@ -176,23 +182,23 @@ namespace DDI.Conversion.CP
                     }
 
                     var receipt = new Receipt();
-                    receipt.ReceiptNumber = importer.GetInt(3);
+                    receipt.ReceiptNumber = importer.GetInt(2);
                     receipt.ReceiptBatchId = batchId;
-                    receipt.Amount = importer.GetDecimal(4);
-                    receipt.Reference = importer.GetString(5, 128);
-                    receipt.IsProcessed = importer.GetBool(6);
-                    receipt.IsReversed = importer.GetBool(7);
-                    receipt.AccountNumber = importer.GetString(9, 64);
-                    receipt.RoutingNumber = importer.GetString(10, 64);
-                    receipt.CheckNumber = importer.GetString(11, 30);
-                    receipt.TransactionDate = importer.GetDate(12);
-                    ImportCreatedModifiedInfo(receipt, importer, 13);
+                    receipt.Amount = importer.GetDecimal(3);
+                    receipt.Reference = importer.GetString(4, 128);
+                    receipt.IsProcessed = importer.GetBool(5);
+                    receipt.IsReversed = importer.GetBool(6);
+                    receipt.AccountNumber = importer.GetString(8, 64);
+                    receipt.RoutingNumber = importer.GetString(9, 64);
+                    receipt.CheckNumber = importer.GetString(10, 30);
+                    receipt.TransactionDate = importer.GetDate(11);
+                    ImportCreatedModifiedInfo(receipt, importer, 12);
 
-                    string receiptType = importer.GetString(8);
+                    string receiptType = importer.GetString(7);
                     if (!string.IsNullOrWhiteSpace(receiptType))
                     {
-                        receipt.ReceiptType = receiptTypes.FirstOrDefault(p => p.Code == receiptType);
-                        if (receipt.ReceiptType == null)
+                        receipt.ReceiptTypeId = receiptTypes.FirstOrDefault(p => p.Code == receiptType)?.Id;
+                        if (receipt.ReceiptTypeId == null)
                         {
                             importer.LogError($"Invalid cash receipt type \"{receiptType}\".");
                         }
@@ -211,6 +217,50 @@ namespace DDI.Conversion.CP
 
             context.Dispose();
 
+        }
+
+        private void ConvertTransactions(string transactionFilename, string entityTransactionFilename, bool append)
+        {
+            LoadFiscalYearIds();
+            LoadLedgerAccountYearIds();
+            LoadReceiptIds();
+
+            var tranConverter = new TransactionConverter(FiscalYearIds, LedgerAccountYearIds);
+            tranConverter.ConvertTransactions(() => CreateFileImporter(_cpDirectory, transactionFilename, typeof(ConversionMethod)),
+                                               () => CreateFileImporter(_cpDirectory, entityTransactionFilename, typeof(ConversionMethod)),
+                                               "Receipt", _receiptIds, append);
+        }
+
+        private void ConvertEntityNumbers(string filename)
+        {
+            LoadBusinessUnitIds();
+            LoadFiscalYearIds();
+
+            var converter = new EntityNumberConverter(BusinessUnitIds, FiscalYearIds);
+            converter.ConvertEntityNumbers(() => CreateFileImporter(_cpDirectory, filename, typeof(ConversionMethod)));
+        }
+
+        private void ConvertFileStorage(string filename, bool append)
+        {
+            var attachmentConverter = new AttachmentConverter();
+
+            attachmentConverter.ConvertFileStorage(() => CreateFileImporter(_cpDirectory, filename, typeof(ConversionMethod)), append);
+        }
+
+        private void ConvertAttachments(string filename, bool append)
+        {
+            var attachmentConverter = new AttachmentConverter();
+            LoadReceiptIds();
+            attachmentConverter.ConvertAttachments(() => CreateFileImporter(_cpDirectory, filename, typeof(ConversionMethod)),
+                "Receipt", _receiptIds, append);
+        }
+
+        private void LoadReceiptIds()
+        {
+            if (_receiptIds == null)
+            {
+                _receiptIds = LoadLegacyIds(_cpOutputDirectory, OutputFile.CP_ReceiptMappingFile);
+            }
         }
 
     }

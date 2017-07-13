@@ -37,7 +37,7 @@ namespace DDI.Conversion.GL
             Initialize(baseDirectory);
 
             // Make sure the IS Payload directory exists.
-            Directory.CreateDirectory(OutputDirectory);
+            Directory.CreateDirectory(GLOutputDirectory);
 
             RunConversion(ConversionMethod.Segments, () => ConvertSegments(InputFile.GL_Segments));
             RunConversion(ConversionMethod.AccountGroups, () => ConvertAccountGroups(InputFile.GL_AccountGroups));
@@ -113,8 +113,8 @@ namespace DDI.Conversion.GL
                 }
 
                 // Dump segments
-                var outputFile = new FileExport<Segment>(Path.Combine(OutputDirectory, OutputFile.GL_SegmentFile), false);
-                var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_SegmentIdMappingFile), false, true);
+                var outputFile = new FileExport<Segment>(Path.Combine(GLOutputDirectory, OutputFile.GL_SegmentFile), false);
+                var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(GLOutputDirectory, OutputFile.GL_SegmentIdMappingFile), false, true);
 
                 outputFile.AddHeaderRow();
 
@@ -185,8 +185,8 @@ namespace DDI.Conversion.GL
                 }
 
                 // Dump account groups
-                var outputFile = new FileExport<AccountGroup>(Path.Combine(OutputDirectory, OutputFile.GL_AccountGroupFile), false);
-                var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_AccountGroupIdMappingFile), false, true);
+                var outputFile = new FileExport<AccountGroup>(Path.Combine(GLOutputDirectory, OutputFile.GL_AccountGroupFile), false);
+                var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(GLOutputDirectory, OutputFile.GL_AccountGroupIdMappingFile), false, true);
 
                 outputFile.AddHeaderRow();
 
@@ -210,9 +210,9 @@ namespace DDI.Conversion.GL
             var accounts = new Dictionary<string, Account>();
             var closingAccounts = new Dictionary<string, string>();
 
-            var outputFile = new FileExport<Account>(Path.Combine(OutputDirectory, OutputFile.GL_AccountFile), false);
-            var segmentOutputFile = new FileExport<AccountSegment>(Path.Combine(OutputDirectory, OutputFile.GL_AccountSegmentFile), false);
-            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_AccountIdMappingFile), false, true);
+            var outputFile = new FileExport<Account>(Path.Combine(GLOutputDirectory, OutputFile.GL_AccountFile), false);
+            var segmentOutputFile = new FileExport<AccountSegment>(Path.Combine(GLOutputDirectory, OutputFile.GL_AccountSegmentFile), false);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(GLOutputDirectory, OutputFile.GL_AccountIdMappingFile), false, true);
 
             outputFile.AddHeaderRow();
             segmentOutputFile.AddHeaderRow();
@@ -334,8 +334,8 @@ namespace DDI.Conversion.GL
         private void ConvertLedgerAccounts(string filename)
         {
             LoadLedgerIds();
-            var outputFile = new FileExport<LedgerAccount>(Path.Combine(OutputDirectory, OutputFile.GL_LedgerAccountFile), false);
-            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_LedgerAccountIdMappingFile), false, true);
+            var outputFile = new FileExport<LedgerAccount>(Path.Combine(GLOutputDirectory, OutputFile.GL_LedgerAccountFile), false);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(GLOutputDirectory, OutputFile.GL_LedgerAccountIdMappingFile), false, true);
 
             outputFile.AddHeaderRow();
 
@@ -379,8 +379,8 @@ namespace DDI.Conversion.GL
             LoadLedgerAccountIds();
             LoadAccountIds();
 
-            var outputFile = new FileExport<LedgerAccountYear>(Path.Combine(OutputDirectory, OutputFile.GL_LedgerAccountYearFile), false);
-            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_LedgerAccountYearIdMappingFile), false, true);
+            var outputFile = new FileExport<LedgerAccountYear>(Path.Combine(GLOutputDirectory, OutputFile.GL_LedgerAccountYearFile), false);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(GLOutputDirectory, OutputFile.GL_LedgerAccountYearIdMappingFile), false, true);
 
             outputFile.AddHeaderRow();
 
@@ -440,7 +440,7 @@ namespace DDI.Conversion.GL
             LoadFiscalYearIds();
             LoadAccountIds();
 
-            var outputFile = new FileExport<AccountPriorYear>(Path.Combine(OutputDirectory, OutputFile.GL_AccountPriorYearFile), false);
+            var outputFile = new FileExport<AccountPriorYear>(Path.Combine(GLOutputDirectory, OutputFile.GL_AccountPriorYearFile), false);
 
             outputFile.AddHeaderRow();
 
@@ -495,7 +495,7 @@ namespace DDI.Conversion.GL
             LoadLedgerAccountIds();
             IList<User> users = LoadEntities(context.Users);
 
-            var outputFile = new FileExport<LedgerAccountMerge>(Path.Combine(OutputDirectory, OutputFile.GL_LedgerAccountMergeFile), false);
+            var outputFile = new FileExport<LedgerAccountMerge>(Path.Combine(GLOutputDirectory, OutputFile.GL_LedgerAccountMergeFile), false);
 
             outputFile.AddHeaderRow();
 
@@ -565,7 +565,7 @@ namespace DDI.Conversion.GL
             LoadFiscalYearIds();
             LoadAccountIds();
 
-            var outputFile = new FileExport<AccountBudgetFlattened>(Path.Combine(OutputDirectory, OutputFile.GL_AccountBudgetFile), false);
+            var outputFile = new FileExport<AccountBudgetFlattened>(Path.Combine(GLOutputDirectory, OutputFile.GL_AccountBudgetFile), false);
 
             outputFile.AddHeaderRow();
 
@@ -661,7 +661,7 @@ namespace DDI.Conversion.GL
             if (_accountGroupIds == null)
             {
                 _accountGroupIds = new Dictionary<int, Guid>();
-                _accountGroupIds = LoadIntLegacyIds(OutputDirectory, OutputFile.GL_AccountGroupIdMappingFile);
+                _accountGroupIds = LoadIntLegacyIds(GLOutputDirectory, OutputFile.GL_AccountGroupIdMappingFile);
             }
         }
 
@@ -673,7 +673,7 @@ namespace DDI.Conversion.GL
         {
             if (_accountIds == null)
             {
-                _accountIds = LoadLegacyIds(OutputDirectory, OutputFile.GL_AccountIdMappingFile);
+                _accountIds = LoadLegacyIds(GLOutputDirectory, OutputFile.GL_AccountIdMappingFile);
             }
         }
 

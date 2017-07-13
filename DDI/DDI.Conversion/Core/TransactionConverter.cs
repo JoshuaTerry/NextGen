@@ -212,7 +212,7 @@ namespace DDI.Conversion.Core
                 {
                     Guid entityId, tranId;
 
-                    string tranKey = importer.GetString(5);
+                    string tranKey = importer.GetString(4);
                     if (string.IsNullOrWhiteSpace(tranKey))
                     {
                         continue;

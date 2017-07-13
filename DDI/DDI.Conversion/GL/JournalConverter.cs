@@ -55,7 +55,7 @@ namespace DDI.Conversion.GL
             LoadFiscalYearIds();
             LoadLedgerAccountYearIds();
             LoadJournalIds();
-            _journalIds.AddRange(LoadLegacyIds(OutputDirectory, OutputFile.GL_JournalLineMappingFile));
+            _journalIds.AddRange(LoadLegacyIds(GLOutputDirectory, OutputFile.GL_JournalLineMappingFile));
 
             var tranConverter = new TransactionConverter(FiscalYearIds, LedgerAccountYearIds);
             tranConverter.ConvertTransactions(() => CreateFileImporter(GLDirectory, transactionFilename, typeof(ConversionMethod)),
@@ -114,8 +114,8 @@ namespace DDI.Conversion.GL
                 LoadLedgerIds();
                 LoadFiscalYearIds();
 
-                var outputFile = new FileExport<Journal>(Path.Combine(OutputDirectory, OutputFile.GL_JournalFile), append);
-                var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_JournalMappingFile), append, true);
+                var outputFile = new FileExport<Journal>(Path.Combine(GLOutputDirectory, OutputFile.GL_JournalFile), append);
+                var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(GLOutputDirectory, OutputFile.GL_JournalMappingFile), append, true);
 
                 var journalIds = new Dictionary<string, Guid>();  // For mapping journal legacy keys to Guids.
 
@@ -218,8 +218,8 @@ namespace DDI.Conversion.GL
                 LoadLedgerAccountIds();
                 LoadFundIds();
 
-                var outputFile = new FileExport<JournalLine>(Path.Combine(OutputDirectory, OutputFile.GL_JournalLineFile), append);
-                var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_JournalLineMappingFile), append, true);
+                var outputFile = new FileExport<JournalLine>(Path.Combine(GLOutputDirectory, OutputFile.GL_JournalLineFile), append);
+                var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(GLOutputDirectory, OutputFile.GL_JournalLineMappingFile), append, true);
 
                 if (!append)
                 {
@@ -311,7 +311,7 @@ namespace DDI.Conversion.GL
         {
             if (_journalIds == null)
             {
-                _journalIds = LoadLegacyIds(OutputDirectory, OutputFile.GL_JournalMappingFile);                     
+                _journalIds = LoadLegacyIds(GLOutputDirectory, OutputFile.GL_JournalMappingFile);                     
             }
         }
 
@@ -325,7 +325,7 @@ namespace DDI.Conversion.GL
         {
             if (_fundIds == null)
             {
-                _fundIds = LoadLegacyIds(OutputDirectory, OutputFile.GL_FundIdMappingFile);
+                _fundIds = LoadLegacyIds(GLOutputDirectory, OutputFile.GL_FundIdMappingFile);
             }
         }
 

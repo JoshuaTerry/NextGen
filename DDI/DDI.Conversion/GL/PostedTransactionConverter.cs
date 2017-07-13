@@ -36,8 +36,8 @@ namespace DDI.Conversion.GL
             LoadFiscalYearIds();
             LoadLedgerAccountYearIds();
             
-            var outputFile = new FileExport<PostedTransaction>(Path.Combine(OutputDirectory, OutputFile.GL_PostedTransactionFile), append);
-            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(OutputDirectory, OutputFile.GL_PostedTransactionMappingFile), append, true);
+            var outputFile = new FileExport<PostedTransaction>(Path.Combine(GLOutputDirectory, OutputFile.GL_PostedTransactionFile), append);
+            var legacyIdFile = new FileExport<LegacyToID>(Path.Combine(GLOutputDirectory, OutputFile.GL_PostedTransactionMappingFile), append, true);
 
             if (!append)
             {

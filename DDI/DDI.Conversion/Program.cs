@@ -114,7 +114,13 @@ namespace DDI.Conversion
             //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.BankAccounts));
             //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.ReceiptTypes));
             //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.ReceiptBatchTypes));
-            Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptBatches));
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptBatches));
+
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.Receipts));
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptTransactions));
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptEntityNumbers));
+            Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptFileStorage));
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptAttachments));
 
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
 
