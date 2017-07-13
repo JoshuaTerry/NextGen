@@ -276,20 +276,12 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
 function LoadSelectedAccount(container, value)
 {
     $(container).find(".gridContainer").hide();
-    if (value != undefined) {
-        MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
+    MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
             $(container).find(".accountnumber").val(data.Data.AccountNumber);
             $(container).find(".hidaccountid").val(data.Data.Id);
             $(container).find(".hidaccountnumber").val(data.Data.AccountNumber);
-            $(container).find(".accountdescription").text(data.Data.Name);
-        }, null);
-    }
-    else{
-        $(container).find(".accountnumber").val("");
-        $(container).find(".hidaccountid").val("");
-        $(container).find(".hidaccountnumber").val("");
-        $(container).find(".accountdescription").text("");
-    }
+            $(container).find(".accountdescription").text(data.Data.Name);          
+    }, null);
 }
 
 function LoadNewAccountNumber(container, accountNumber,fiscalYearId)
