@@ -172,12 +172,11 @@ namespace DDI.WebApi.Controllers.GL
             return base.Delete(id);
         }
 
-        [HttpPost]
-        [Route("api/v1/accounts/budget/import")]
-        public IHttpActionResult Post([FromBody] Guid fileId, [FromBody] Guid fiscalYearId, [FromBody] MappableEntityField[] fields)
-        {
-            var import = new BudgetImportService();
-            return Ok(import.ImportBudgets(fileId, fiscalYearId, fields));
-        }
+        //[HttpPost]
+        //[Route("api/v1/accounts/budget/import")]
+        //public IHttpActionResult Post([FromBody] MappableEntityField[] fields)
+        //{
+        //    return base.Post(item);
+        //}
     }
 }
