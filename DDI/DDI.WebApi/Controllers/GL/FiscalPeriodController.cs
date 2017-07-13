@@ -17,7 +17,7 @@ namespace DDI.WebApi.Controllers.GL
 
         private const string ROUTENAME_GETALLBYYEAR = RouteNames.FiscalYear + RouteNames.FiscalPeriod + RouteVerbs.Get;
 
-        protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";
+        protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.FiscalYearId)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.FiscalYear);
 

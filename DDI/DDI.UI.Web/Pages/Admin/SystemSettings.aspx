@@ -1126,7 +1126,6 @@
     <div class="fiscalperiodmodal" title="Fiscal Period" style="display: none;">
         <div class="modalcontent">
 
-            <input type="hidden" class="fp-Id" />
             <input type="hidden" class="fp-FiscalYearId" />
 
             <div class="fieldblock">

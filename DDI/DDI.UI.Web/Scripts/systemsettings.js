@@ -3063,11 +3063,12 @@ function LoadFiscalYearSectionSettings() {
 }
 
 function LoadFiscalPeriods(info) {
-
+    var fiscalYearId = "";
     if (!info) {
         var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
         info = dataGrid.getSelectedRowsData();
         selectedRow = info[0];
+
     } else {
         selectedRow = info.data;
     }
@@ -3101,6 +3102,7 @@ function LoadFiscalPeriods(info) {
     LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, function (data) {
 
         $('.fiscalperiodscontainer').show();
+        $('.fp-FiscalYearId').val(fiscalYearId)
 
     });
 
