@@ -175,8 +175,6 @@ function JournalLineModal(id, isNew) {
 
     $('.savejournalline').click(function () {
 
-        debugger;
-
         var item = GetJournalLineToSave();
         var method = 'POST';
         var route = 'journalline';
@@ -203,6 +201,8 @@ function JournalLineModal(id, isNew) {
 }
 
 function GetJournalLineToSave() {
+
+    debugger;
 
     var amount = $('.Amount').val();
 
@@ -265,24 +265,15 @@ function LoadJournalLine(id) {
 
 function DeleteJournalLine(id) {
     
-    ConfirmModal('Are you sure you want to delete this Journal Line?', function () {
+    MakeServiceCall('DELETE', 'journalline/' + id, null, function (data) {
         
-        MakeServiceCall('DELETE', 'journallines/' + id, null, function (data) {
+        DisplaySuccessMessage('Success', 'Journal Line deleted successfully.');
+            
+        CloseModal(modal);
 
-            if (data.Data) {
-                DisplaySuccessMessage('Success', 'Journal Line deleted successfully.');
+        LoadJournalLineGrid();
 
-                CloseModal(modal);
-
-                LoadJournalLineGrid();
-            }
-
-        }, null);
-
-    }, function () {
-        // no
-
-    });
+    }, null);
     
 }
 

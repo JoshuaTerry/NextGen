@@ -23,6 +23,7 @@ namespace DDI.WebApi.Controllers.GL
                 c => c.LedgerAccount,
                 c => c.SourceBusinessUnit,
                 c => c.SourceFund,
+                c => c.SourceFund.FundSegment,
                 c => c.Journal
             };
         }
