@@ -105,6 +105,7 @@ function GetFieldMappings() {
 
     PopulateDropDown('.mappings', 'savedentitymapping', '', '', null, null, null);
 
+    // Populate the mappingcolumns amd importfilecolumns
 }
 
 function SaveFieldMapping() {

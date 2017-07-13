@@ -31,6 +31,10 @@
 
                 //call the import utility to get the file
 
+                // Load Custom Step content before calling DisplayImportWizardMOdal();
+                var customContainer = $('.customstepcontent');
+
+
                 //gather up the mapping information and file
                 DisplayImportWizardModal();
 
