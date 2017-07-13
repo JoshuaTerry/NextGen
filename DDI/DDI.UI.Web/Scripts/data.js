@@ -539,21 +539,27 @@ function EditEntity(route, prefix, id, modalClass, modalWidth, refreshGrid) {
 
     $(modal).find('.savebutton').click(function () {
 
-        if (ValidateForm($(modal).attr('class').split(" ")[0]) == false) {
+        if (!ValidateFields(modal, function () {
+
+            var item = GetModalFieldsToSave(prefix);
+
+            MakeServiceCall('PATCH', route + '/' + id, item, function () {
+                DisplaySuccessMessage("Save successful.");
+
+                CloseModal(modal);
+
+                if (refreshGrid) {
+                    refreshGrid();
+                }
+            }, null);
+
+        })) {
             return;
-        }
+        } 
 
-        var item = GetModalFieldsToSave(prefix);
-        
-        MakeServiceCall('PATCH', route + '/' + id, item, function () {
-            DisplaySuccessMessage("Save successful.");
 
-            CloseModal(modal);
 
-            if (refreshGrid) {
-                refreshGrid();
-            }
-        }, null);
+       
 
     });
 
