@@ -3,9 +3,7 @@
 
 $(document).ready(function () {
 
-    //Resize();
-    
- 
+   
     $('.clearsearch').click(function () {
         $('.searchcriteria div.fieldblock input').each(function () {
             $(this).val('');
@@ -30,24 +28,9 @@ $(document).ready(function () {
         addnewjournal();
     });
 
-    //$(window).resize(function () {
-    //    Resize();
-    //});
 
 });
 
-
-
-//function Resize() {
-
-//    var windowHeight = $(window).height();
-//    var header = $('header').height();
-//    var adjustedHeight = (windowHeight - header) - 90;
-
-//    $('.searchcriteria div.scrollable').height(adjustedHeight);
-
-//    $('.searchresults div.scrollable').height(adjustedHeight + 30);
-//}
 
 
 function AddColumnHeaders() {
@@ -86,39 +69,37 @@ function DoSearch() {
 
                 $('.gridcontainer').dxDataGrid({
                     dataSource: data.Data,
-                     key: "Id",
-                    type:"array",
+                    key: "Id",
+                    type: "array",
                     columns: [
-                       // { dataField: 'ID', caption: 'ID', alignment: 'right', width: '100px' },
-                        { dataField: 'JournalNumber', caption: 'Journal No.' },
-                       // { dataField: 'JournalType', caption: 'Type' },
-                       {
-                           caption: 'Type', cellTemplate: function (container, options) {
+                          { dataField: 'JournalNumber', caption: 'Journal No.' },
+                             {
+                                 caption: 'Type', cellTemplate: function (container, options) {
 
-                               var JournalType;
+                                     var JournalType;
 
-                               switch (options.data.JournalType) {
-                                   case 0:
-                                       JournalType = "Normal";
-                                       break;
-                                   case 1:
-                                       JournalType = "Recurring";
-                                       break;
-                                   case 2:
-                                       JournalType = "Template";
-                                       break;
-                               }
+                                     switch (options.data.JournalType) {
+                                         case 0:
+                                             JournalType = "Normal";
+                                             break;
+                                         case 1:
+                                             JournalType = "Recurring";
+                                             break;
+                                         case 2:
+                                             JournalType = "Template";
+                                             break;
+                                     }
 
-                               $('<label>').text(JournalType).appendTo(container);
-                           }
-                       },
-                       
+                                     $('<label>').text(JournalType).appendTo(container);
+                                 }
+                             },
+
                         { dataField: 'TransactionDate', caption: 'Tran Dt', dataType: 'date' },
                         { dataField: 'Comment', caption: 'Memo' },
-                        { dataField: 'Amount', caption: 'Amount' },
-                        { dataField: 'CreatedBy', caption: 'Created By'},
+                        { dataField: 'Amount', caption: 'Amount', format: { type: 'currency', precision: 2 } },
+                        { dataField: 'CreatedBy', caption: 'Created By' },
                         { dataField: 'CreatedOn', caption: 'Created On', dataType: 'date' },
-                        { dataField: 'Status', caption: 'Status'}
+                        { dataField: 'Status', caption: 'Status' }
                     ],
                     paging: {
                         pageSize: 15
@@ -139,8 +120,8 @@ function DoSearch() {
                     },
 
                     onRowClick: function (info) {
-                     
-                       DisplayJournals(info.values[0]);
+
+                        DisplayJournals(info.values[0]);
                     },
                     columnAutoWidth: true,
                 });
@@ -189,7 +170,7 @@ function GetSearchParameters() {
 function LoadCreatedBy() {
 
     PopulateDropDown('.searchCreatedBy', 'CreatedBy', '', '');
-   
+
 }
 
 
@@ -201,8 +182,7 @@ function DisplayJournals(id) {
 }
 
 function addnewjournal() {
-
-   // sessionStorage.setItem("ID", id);
+    //need to ridirect to Journal Edit 
     location.href = "../Admin/SystemSettings.aspx";
 
 }

@@ -174,9 +174,10 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpPost]
         [Route("api/v1/accounts/budget/import")]
-        public IHttpActionResult Post([FromBody] MappableEntityField[] fields)
+        public IHttpActionResult Post([FromBody] Guid fileId, [FromBody] Guid fiscalYearId, [FromBody] MappableEntityField[] fields)
         {
-            return base.Post(item);
+            var import = new BudgetImportService();
+            return Ok(import.ImportBudgets(fileId, fiscalYearId, fields));
         }
     }
 }

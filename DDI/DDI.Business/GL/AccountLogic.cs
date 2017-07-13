@@ -462,13 +462,19 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Get the default LedgerAccountYear for a LedgerAccount based on a fiscal year
+        /// Get the default LedgerAccountYear for a LedgerAccount based on a fiscal year.  
+        /// If necessary, a similar fiscal year in the LedgerAccount's ledger is used instead.
         /// </summary>
-        public LedgerAccountYear GetLedgerAccountYear(LedgerAccount account, Guid? yearId)
+        public LedgerAccountYear GetLedgerAccountYear(LedgerAccount account, FiscalYear year)
         {
-            if (account == null || yearId == null)
+            if (account?.LedgerId == null || year == null)
             {
                 return null;
+            }
+
+            if (year.LedgerId != account.LedgerId)
+            {
+                year = UnitOfWork.GetBusinessLogic<FiscalYearLogic>().GetFiscalYearForLedger(year, account.LedgerId.Value);
             }
 
             if (account.LedgerAccountYears == null)
@@ -476,19 +482,40 @@ namespace DDI.Business.GL
                 UnitOfWork.LoadReference(account, p => p.LedgerAccountYears);
             }
 
-            return account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == yearId && p.IsMerge == false)
+            return account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == year.Id && p.IsMerge == false)
                     ??
-                   account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == yearId);
+                   account.LedgerAccountYears.FirstOrDefault(p => p.FiscalYearId == year.Id);
         }
 
         /// <summary>
-        /// Get the default LedgerAccountYear for a LedgerAccount based on a fiscal year
+        /// Get the default LedgerAccountYear for a LedgerAccount Id based on a fiscal year.  
+        /// If necessary, a similar fiscal year in the LedgerAccount's ledger is used instead.
         /// </summary>
-        public LedgerAccountYear GetLedgerAccountYear(LedgerAccount account, FiscalYear year)
+        public LedgerAccountYear GetLedgerAccountYear(Guid? ledgerAccountId, FiscalYear year)
         {
-            return GetLedgerAccountYear(account, year?.Id);
+            if (year == null || ledgerAccountId == null)
+            {
+                return null;
+            }
+            return GetLedgerAccountYear(UnitOfWork.GetById<LedgerAccount>(ledgerAccountId.Value), year);
         }
-		
+
+        /// <summary>
+        /// Get the default LedgerAccountYear for a LedgerAccount Id and fiscal year Id.  Both must refer to the same ledger.
+        /// </summary>
+        public LedgerAccountYear GetLedgerAccountYear(Guid? ledgerAccountId, Guid? yearId)
+        {
+            if (yearId == null || ledgerAccountId == null)
+            {
+                return null;
+            }
+
+            return
+                UnitOfWork.FirstOrDefault<LedgerAccountYear>(p => p.LedgerAccountId == ledgerAccountId && p.FiscalYearId == yearId && p.IsMerge == false)
+                 ??
+                UnitOfWork.FirstOrDefault<LedgerAccountYear>(p => p.LedgerAccountId == ledgerAccountId && p.FiscalYearId == yearId);
+        }
+
         public string GetAccountNumber(LedgerAccount ledgerAccount, FiscalYear year)
         {
             if (ledgerAccount == null)
@@ -529,13 +556,13 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Validate a G/L account number.
+        /// Validate a GL account number.
         /// </summary>
         /// <param name="ledgerObject">A ledger or fiscal year.</param>
-        /// <param name="accountNumber">G/L account as a string value.</param>
+        /// <param name="accountNumber">GL account as a string value.</param>
         /// <param name="allowBusinessUnitOverride">True to allow XXXX: business unit prefix.</param>
-        /// <param name="allowNewSegments">True to allow for new G/L account segments</param>
-        /// <param name="validateAccount">True to throw an exception of G/L account doesn't exist.</param>
+        /// <param name="allowNewSegments">True to allow for new GL account segments</param>
+        /// <param name="validateAccount">True to throw an exception of GL account doesn't exist.</param>
         public ValidatedAccount ValidateAccountNumber(IEntity ledgerObject, string accountNumber, bool allowBusinessUnitOverride = true, bool allowNewSegments = false, bool validateAccount = true)
         {
             ValidatedAccount result = new ValidatedAccount();
@@ -740,7 +767,7 @@ namespace DDI.Business.GL
                 }
             }
 
-            // Reformat the G/L account
+            // Reformat the GL account
             StringBuilder sb = new StringBuilder();
 
             for (int index = 0; index < result.SegmentCodes.Count; index++)
@@ -792,7 +819,7 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Get the list of prior year accounts for a G/L account.  Prior year accounts include a factor (0 &lt x &lt= 1) that must be multiplied by the balance or activity figures. 
+        /// Get the list of prior year accounts for a GL account.  Prior year accounts include a factor (0 &lt x &lt= 1) that must be multiplied by the balance or activity figures. 
         /// </summary>
         /// <returns></returns>
         public List<MappedAccount> GetPriorYearAccounts(Account account, FiscalYear priorYear = null)
@@ -833,7 +860,7 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Get the list of next year accounts for a G/L account.  Next year accounts include a factor (0 &lt x &lt= 1) that must be multiplied by the balance or activity figures. 
+        /// Get the list of next year accounts for a GL account.  Next year accounts include a factor (0 &lt x &lt= 1) that must be multiplied by the balance or activity figures. 
         /// </summary>
         /// <returns></returns>
         public List<MappedAccount> GetNextYearAccounts(Account account, FiscalYear nyear = null)
@@ -1055,7 +1082,7 @@ namespace DDI.Business.GL
         		
 
         /// <summary>
-        /// Get the specific or default closing account for a G/L account.
+        /// Get the specific or default closing account for a GL account.
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
@@ -1069,7 +1096,7 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Get the default closing account for a G/L account.
+        /// Get the default closing account for a GL account.
         /// </summary>
         public Account GetDefaultClosingAccount(Account account)
         {

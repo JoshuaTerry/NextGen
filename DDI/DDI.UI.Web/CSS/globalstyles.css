@@ -20,8 +20,8 @@ a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-ev
 
 /* END ICONS */
 
-.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
-.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; }
+.newbutton { display: inline-block; margin: -1px 0 0 0; padding: 0px; }
+.editbutton { display: inline-block; margin: -1px 0 0 0; padding: 0px; }
 .editbuttoninline { display: inline-block; margin: 0 0 0 2px; padding: 0px; }
 .newbuttoninline { display: inline-block; margin: -1px 0 0 0; padding: 0px; }
 
@@ -127,6 +127,7 @@ div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px;
 .ui-state-active { background-color: #0f75b4 !important; border-color: #0f75b4 !important; }
 .accordion-buttons { text-align: right; }
 .accordion-buttons a { display: inline-block; padding: 3px 5px; color: #0f75b4; }
+.ui-accordion-header a.newbutton { float: right; }
 
 .dashboard { width: 10%; display: inline-block; background-color: white; vertical-align: top; }
 
@@ -166,7 +167,7 @@ div.fieldblock.inline input[type="checkbox"] { vertical-align: sub; width: 15px;
 .dx-state-disabled.dx-widget, .dx-state-disabled .dx-widget { opacity: 1; }
 /* END TAG BOX CONTROL */
 
-.tagselect, .noteTopicSelect { width: 97% !important; border: solid 1px black; min-height: 15px; background-color: white; display: inline-block; }
+.tagselect, .noteTopicSelect { width: 96% !important; border: solid 1px black; min-height: 15px; background-color: white; display: inline-block; }
 .tagselect.disabled { border: solid 1px transparent; border-top: solid 1px #000000; background-color: #eee; color: #000000; }
 .tagselect div {  }
 .tagselect div.dx-tag-content span, .noteTopicSelect div.dx-tag-content span{ display: block; margin-top: 5px; }

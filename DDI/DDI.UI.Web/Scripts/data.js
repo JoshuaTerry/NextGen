@@ -336,7 +336,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
     $(container).html('');
 
     var datagrid = $('<div>').addClass(grid);
-
+     
     if (editMethod) {
         columns.push({
             width: '100px',
@@ -344,7 +344,9 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
             cellTemplate: function(container, options) {
                 $('<a/>')
                     .addClass('editthing')
-                    .text('Edit')
+                    .addClass('actionbuttons')
+                    .addClass('editbutton')
+                    .attr('title', 'Edit')
                     .click(function(e) {
                         e.preventDefault();
 
@@ -362,11 +364,14 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
             cellTemplate: function (container, options) {
                 $('<a/>')
                     .addClass('editthing')
-                    .text('Delete')
+                    .addClass('actionbuttons')
+                    .addClass('deletebutton')
+                    .attr('title', 'Delete')
                     .click(function (e) {
                         e.preventDefault();
-
-                        deleteMethod(options.data.Id);
+                        ConfirmModal('Are you sure you want to delete this item?', function () {
+                            deleteMethod(options.data.Id);
+                        }, null); 
                     })
                     .appendTo(container);
             }
@@ -484,25 +489,26 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
     $(modal).find('.savebutton').unbind('click');
 
     $(modal).find('.savebutton').click(function () {
-        if (!ValidateFields(modal)) {
+        if (!ValidateFields(modal, function() {
+
+            previousEntity = currentEntity;
+            currentEntity = null;
+
+            var item = GetModalFieldsToSave(prefix);
+
+            MakeServiceCall('POST', route, item, function () {
+                DisplaySuccessMessage("Success", "Save successful.");
+
+                CloseModal(modal);
+
+                if (refreshGrid) {
+                    refreshGrid();
+                }
+            }, null);
+        }))
+        {
             return;
         } 
-
-        previousEntity = currentEntity;
-        currentEntity = null;
-
-        var item = GetModalFieldsToSave(prefix);
-
-        MakeServiceCall('POST', route, item, function () {
-            DisplaySuccessMessage("Success", "Save successful.");
-
-            CloseModal(modal);
-
-            if (refreshGrid) {
-                refreshGrid();
-            }
-        }, null);
-
     });
 
 }
