@@ -18,6 +18,8 @@ namespace DDI.Shared.Models.Client.Audit
         {
             get { return ObjectChanges; }
         }
+
+        [MaxLength(64)]
         public string UserName { get; set; }  
 
         public User User { get; set; }

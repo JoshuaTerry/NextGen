@@ -73,12 +73,17 @@
   <ItemGroup>
     <Compile Include="CommonContext.cs" />
     <Compile Include="CommonDataCache.cs" />
+    <Compile Include="Conventions\StringLengthRequiredConvention.cs" />
     <Compile Include="Conventions\DecimalPrecisionAttributeConvention.cs" />
     <Compile Include="CustomDbConfiguration.cs" />
     <Compile Include="DomainContext.cs" />
     <Compile Include="DomainContextAdapter.cs" />
     <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
+    <Compile Include="Migrations\Client\201707131449488_CP_v2.cs" />
+    <Compile Include="Migrations\Client\201707131449488_CP_v2.Designer.cs">
+      <DependentUpon>201707131449488_CP_v2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201707112100092_CP_v1.cs" />
     <Compile Include="Migrations\Client\201707112100092_CP_v1.Designer.cs">
       <DependentUpon>201707112100092_CP_v1.cs</DependentUpon>
@@ -139,6 +144,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Client\201707131449488_CP_v2.resx">
+      <DependentUpon>201707131449488_CP_v2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201707112100092_CP_v1.resx">
       <DependentUpon>201707112100092_CP_v1.cs</DependentUpon>
     </EmbeddedResource>

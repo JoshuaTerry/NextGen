@@ -276,6 +276,7 @@ namespace DDI.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
+            modelBuilder.Conventions.Add(new StringLengthRequiredConvention());
         }
 
         public ISaveResult<ChangeSet> Save(User author)

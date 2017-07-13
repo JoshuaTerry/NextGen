@@ -17,6 +17,7 @@ namespace DDI.Shared.Models.Client.CP
         [DecimalPrecision(14, 2)]
         public decimal Amount { get; set; }
 
+        [MaxLength(128)]
         public string Reference { get; set; }
 
         public bool IsProcessed { get; set; } 
