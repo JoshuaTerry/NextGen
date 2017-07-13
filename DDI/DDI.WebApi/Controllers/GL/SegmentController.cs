@@ -1,20 +1,17 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Web.Http;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq.Expressions;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
     [Authorize]
     public class SegmentController : GenericController<Segment>
     {
-        private const string ROUTENAME_GETALL = RouteNames.FiscalYear + RouteNames.Segment + RouteVerbs.Get;
-        private const string ROUTENAME_GETALLFORPARENT = RouteNames.FiscalYear + RouteNames.Segment + RouteNames.SegmentChildren + RouteVerbs.Get;
-
         protected override string FieldsForList => $"{nameof(Segment.Id)},{nameof(Segment.Code)},{nameof(Segment.Name)},{nameof(Segment.DisplayName)}";
 
         protected override string FieldsForAll => FieldListBuilder
@@ -42,7 +39,7 @@ namespace DDI.WebApi.Controllers.GL
 
 
         [HttpGet]
-        [Route("api/v1/fiscalyears/{yearid}/segments/level/{level}", Name = ROUTENAME_GETALL)]
+        [Route("api/v1/fiscalyears/{yearid}/segments/level/{level}")]
         public IHttpActionResult GetAll(Guid yearId, string level, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             var search = new PageableSearch(offset, limit, orderBy);
@@ -50,7 +47,7 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var result = Service.GetSegmentSearch(yearId, null, level, search);
-                return FinalizeResponse(result, ROUTENAME_GETALL, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(result, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -61,7 +58,7 @@ namespace DDI.WebApi.Controllers.GL
 
 
         [HttpGet]
-        [Route("api/v1/fiscalyears/{yearid}/segments/{parentId}/level/{level}", Name = ROUTENAME_GETALLFORPARENT)]
+        [Route("api/v1/fiscalyears/{yearid}/segments/{parentId}/level/{level}")]
         public IHttpActionResult GetAllForParent(Guid yearId, Guid? parentId, string level, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             var search = new PageableSearch(offset, limit, orderBy);
@@ -69,7 +66,7 @@ namespace DDI.WebApi.Controllers.GL
             try
             {
                 var result = Service.GetSegmentSearch(yearId, parentId, level, search);
-                return FinalizeResponse(result, ROUTENAME_GETALLFORPARENT, search, ConvertFieldList(fields, FieldsForList));
+                return FinalizeResponse(result, search, ConvertFieldList(fields, FieldsForList));
             }
             catch (Exception ex)
             {
@@ -79,28 +76,28 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         [HttpGet]
-        [Route("api/v1/segments/{id}", Name = RouteNames.Segment + RouteVerbs.Get)]
+        [Route("api/v1/segments/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = "all")
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/segments", Name = RouteNames.Segment + RouteVerbs.Post)]
+        [Route("api/v1/segments")]
         public IHttpActionResult Post([FromBody] Segment item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/segments/{id}", Name = RouteNames.Segment + RouteVerbs.Patch)]
+        [Route("api/v1/segments/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/segments/{id}", Name = RouteNames.Segment + RouteVerbs.Delete)]
+        [Route("api/v1/segments/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);

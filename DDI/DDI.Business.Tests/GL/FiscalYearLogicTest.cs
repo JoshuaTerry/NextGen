@@ -133,6 +133,14 @@ namespace DDI.Business.Tests.GL
             Assert.AreEqual(0, periodNumber, "invalid date returns zero.");
 
             AssertThrowsException<ArgumentNullException>(() => _bl.GetFiscalPeriodNumber(null, DateTime.Parse(INVALID_DATE)), "Null year throws exception.");
+
+            periodNumber = _bl.GetFiscalPeriodNumber(year, DateTime.Parse($"12/31/{FiscalYearDataSource.OPEN_YEAR}"));
+            Assert.AreEqual(12, periodNumber, "12/31 is period 12 in an open fiscal year.");
+
+            year = _fiscalYears.FirstOrDefault(p => p.Ledger.Code == BusinessUnitDataSource.UNIT_CODE1 && p.Name == FiscalYearDataSource.CLOSED_YEAR);
+            periodNumber = _bl.GetFiscalPeriodNumber(year, DateTime.Parse($"12/31/{FiscalYearDataSource.CLOSED_YEAR}"));
+            Assert.AreEqual(13, periodNumber, "12/31 is period 13 in a closed fiscal year.");
+
         }
 
         [TestMethod, TestCategory(TESTDESCR)]

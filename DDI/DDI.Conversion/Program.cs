@@ -71,6 +71,11 @@ namespace DDI.Conversion
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Relationships));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Tags));
             //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.CustomFieldData));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Notes));
+
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.FileStorage));
+            //Run<CRM.ConstituentConverter>(new ConversionMethodArgs(CRM.ConstituentConverter.ConversionMethod.Attachments));
+
 
             //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnits));
             //Run<GL.SettingsLoader>(new ConversionMethodArgs(GL.SettingsLoader.ConversionMethod.BusinessUnitUsers));
@@ -98,6 +103,9 @@ namespace DDI.Conversion
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalNotes));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalEntityNumbers));
 
+            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.FileStorage));
+            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.Attachments));
+
             //Run<GL.JournalSearchIndexer>(new ConversionMethodArgs(GL.JournalSearchIndexer.ConversionMethod.IndexJournals));
             //Run<Core.NoteSearchIndexer>(new ConversionMethodArgs(Core.NoteSearchIndexer.ConversionMethod.IndexNotes));
 
@@ -107,13 +115,6 @@ namespace DDI.Conversion
             // Post-conversion tasks
 
             //Run<CRM.ConstituentSearchIndexer>();
-
-            var uow = new UnitOfWorkEF();
-            var bl = uow.GetBusinessLogic<Business.GL.ClosingLogic>();
-            var fy = uow.FirstOrDefault<FiscalYear>(p => p.Name == "2014" && p.Ledger.Code == "DCEF");
-            bl.CloseFiscalYear(fy.Id);
-
-            //bl.CreateNewFiscalYear(new Guid("1a67ed6f-0fd8-47cd-9476-dc09d94e5f28"), "2017", DateTime.Parse("1/1/2017"), false);
 
 
 

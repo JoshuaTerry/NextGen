@@ -1,10 +1,8 @@
-﻿using System;
+﻿using DDI.Shared.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DDI.Shared.Extensions;
 
 namespace DDI.Shared
 {

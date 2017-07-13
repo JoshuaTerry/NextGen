@@ -425,7 +425,7 @@ function SaveNewConstituent(modal, addnew) {
                 currentEntity = data.Data;
 
                 sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
-                location.href = "Pages/CRM/Constituents.aspx";
+                location.href = "Constituents.aspx";
             }
 
         }
@@ -626,38 +626,27 @@ function CloseModal(modal) {
 }
 
 function ConfirmModal(message, yes, no) {
-
     modal = $('.confirmmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 450,
         resizable: false
     });
-
     $(modal).find('.confirmmessage').html(message);
-
     $('.confirmyes').unbind('click');
-
-    if (yes) {
-
-        $('.confirmyes').click(function () {
-            CloseModal(modal);
+    $('.confirmyes').click(function () {
+        if (yes) {
             yes();
-        });
-
-    }
-
+        }
+        CloseModal(modal);
+    });
     $('.confirmno').unbind('click');
-
-    if (no) {
-
-        $('.confirmno').click(function () {
-            CloseModal(modal);
+    $('.confirmno').click(function () {
+        if (no) {
             no();
-        });
-
-    }
-
+        }
+        CloseModal(modal);
+    });
 }
 
 function ClearFields(container) {
@@ -1264,7 +1253,7 @@ function GetEditedFields(editcontainer) {
 
     $(editcontainer).find('input.editable').each(function () {
 
-        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var property = $(this).prop('class').replace('editable ', '').split(' ');
         var propertyName = property[0]
         var value = '';
 
@@ -1289,7 +1278,7 @@ function GetEditedFields(editcontainer) {
     });
 
     $(editcontainer).find('select').each(function () {
-        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var property = $(this).prop('class').replace('editable ', '').split(' ');
         var propertyName = property[0]
         var value = $(this).val();
 
@@ -1326,22 +1315,17 @@ function SaveTagBoxes(editcontainer) {
 
         });
 
-        SaveChildCollection(idCollection, WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/' + route);
+        if (idCollection.length > 0) {
+            SaveChildCollection(idCollection, 'constituents/' + currentEntity.Id + '/' + route);
+        }
+
 
     });
 
 }
 
 function SaveChildCollection(children, route) {
-    MakeServiceCall('POST', SAVE_ROUTE + currentEntity.Id, JSON.stringify({ ChildIds: children }), function (data) {
-
-        if (data.Data) {
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-
-        }
-
-    }, null);
+     MakeServiceCall('POST', route, JSON.stringify({ ChildIds: children }), null, null);
 }
 
 function CancelEdit() {
@@ -1351,28 +1335,7 @@ function CancelEdit() {
 //
 // END EDITING
 
-// DELETING
-//
-
-function DeleteEntity(url, method, confirmationMessage) {
-    var okToDelete = confirm(confirmationMessage);
-    if (okToDelete === true) {
-        // delete the entity
-        MakeServiceCall(method, url, null, function (data) {
-
-            if (data.Data) {
-                // Display success
-                DisplaySuccessMessage('Success', 'This item was deleted.');
-
-            }
-
-        }, null);
-    };
-
-}
-
-//
-// END DELETING
+ 
 
 // MESSAGING
 //
@@ -1455,7 +1418,7 @@ function EditNoteDetails(id) {
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 500,
+        width: 1000,
         resizable: false
     });
 
@@ -1492,11 +1455,15 @@ function EditNoteDetails(id) {
                         MakeServiceCall('DELETE', 'notes/' + id + '/notetopics/' + topic.Id, null, null,
 
                             function (xhr, status, err) {
+
                                 DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+
                             });
 
                     }, function (xhr, status, err) {
+
                         DisplayErrorMessage('Error', 'An error occurred during saving the note topics.');
+
                     });
 
                 });
@@ -1521,7 +1488,6 @@ function EditNoteDetails(id) {
 
         });
 
-
     });
 
     $('.cancelnotesmodal').click(function (e) {
@@ -1530,7 +1496,11 @@ function EditNoteDetails(id) {
 
         CloseModal(modal);
 
+        $('.attachmentscontainer').empty();
+
         ClearNoteTopicTagBox(modal);
+
+        $('.tagdropdowncontainer').hide();
 
         $('.editnoteinfo').hide();
 
@@ -1551,19 +1521,11 @@ function EditNoteDetails(id) {
 
         MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
 
-            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function (data) {
-
-                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
-
-            }, function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note topics.');
-
-            });
-
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
             CloseModal(modal);
+
+            $('.attachmentscontainer').empty();
 
             $('.editnoteinfo').hide();
 
@@ -1629,7 +1591,7 @@ function BusinessUnitModal() {
         $('.savebusinessunit').click(function (e) {
 
 
-            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit', null, function (data) {
+            MakeServiceCall('GET', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit/username', null, function (data) {
 
                 businessunits = data.Data
 
@@ -1663,7 +1625,7 @@ function BusinessUnitModal() {
 
 function LoadBusinessUnitDropDown() {
 
-    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit', '<Please Select>', null, currentBusinessUnitId, null, null);
+    PopulateDropDown('.bu-currentbu', 'users/' + sessionStorage.getItem('CURRENT_USER_NAME') + '/businessunit/username', '<Please Select>', null, currentBusinessUnitId, null, null);
     
 }
 
@@ -1708,37 +1670,27 @@ function RemoveValidation(formClassName) {
 // END FORM VALIDATION
 
 // DYNAMIC MARKUP
-//
-//function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer) {
 
-//    var fieldblock = $('<div>').addClass('fieldblock');
-//    $('<label>').text(labelText).appendTo(fieldblock);
-//    $(controlType).addClass(controlClass).appendTo(fieldblock);
-//    $(fieldblock).appendTo(appendContainer);
-
-//}
-
-function ValidateFields(containerClass, saveFunction) {
-    var validFields = true;
+function ValidateFields(containerClass, saveFunction) { 
     
     // required items
     $(containerClass).find('.required input').each(ValidateField);
     $(containerClass).find('.required select').each(ValidateField);
 
-    if (validFields && saveFunction != null) {
-        saveFunction;
-    }
+    validFields = ($(containerClass).find('.validateerror').length == 0);
 
-    return validFields;
+    if (validFields && saveFunction != null) {
+        saveFunction();
+    } 
 }
 
-function ValidateField(index, el) {
+function ValidateField(index, el) {    
     var errorId = "errlbl" + $(this).attr('class').split(" ")[0];
     $("#" + errorId).remove();
     if ($(this).val() === "" || $(this).val() == null) {
         $(this).parent().append('<label class="validateerror" id="' + errorId + '">Required</label>');
         validFields = false;
-    }
+    } 
 }
 
 function CreateBasicFieldBlock(labelText, controlType, controlClass, appendContainer, isRequired, maxlength) {
@@ -1772,6 +1724,10 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancel
 }
 //
 // END DYNAMIC MARKUP
+
+
+// FORMATTING
+//
 
 function MaskFields() {
     $('.date').mask('00/00/0000');
@@ -1823,4 +1779,79 @@ function FormatDateTimeStrings(str) {
     } while (result);    
 
     return str;
+
 }
+
+//
+// END FORMATTING
+
+/* Audit Section */
+
+function ShowAuditData(id) {
+
+    $('.newauditmodal').click(function (e) {
+
+        e.preventDefault();
+        var modal = $('.auditmodal').dialog({
+            closeOnEscape: false,
+            modal: true,
+            width: 800,
+            height: 600,
+            resizable: true
+        });
+
+        LoadAuditTable(id);
+    });
+    $('.cancelmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.queryAudit').unbind('click');
+
+    $('.queryAudit').click(function () {
+
+        $.ajax({
+            type: 'GET',
+            url: WEB_API_ADDRESS + 'audit/flat/' + id,
+            data: item,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            headers: GetApiHeaders(),
+            success: function (data) {
+
+                LoadAuditTable(id);
+
+            },
+            error: function (xhr, status, err) {
+                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+            }
+        });
+
+    });
+
+}
+
+function LoadAuditTable(id) {
+    var start = $(modal).find('.na-StartDate').val();
+    var end = $(modal).find('.na-EndDate').val();
+    var route = 'audit/flat/' + id;
+    var columns = [
+        { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0 },
+        { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
+        { dataField: 'User' },
+        { dataField: 'ChangeType', width: '100px' },
+        { dataField: 'Property' },
+        { dataField: 'OldValue', caption: 'Old Value' },
+        { dataField: 'OldDisplayName', caption: 'Old Display Name' },
+        { dataField: 'NewValue', caption: 'New Value' },
+        { dataField: 'NewDisplayName', caption: 'New Display Name' }
+    ];
+
+    CustomLoadGrid('auditgrid', '.auditgridcontainer', columns, route, '', '', '', null);
+
+}
+/* End Audit Section */

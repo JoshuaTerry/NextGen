@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -27,7 +26,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         private Expression<Func<ConstituentAddress, object>>[] DataIncludes()
         {
-            Expression<Func<ConstituentAddress, object>>[] includes = 
+            Expression<Func<ConstituentAddress, object>>[] includes =
             {
                 a => a.Address,
                 a => a.AddressType,
@@ -40,35 +39,35 @@ namespace DDI.WebApi.Controllers.CRM
         }
 
         [HttpGet]
-        [Route("api/v1/constituentAddresses", Name = RouteNames.ConstituentAddress)]
+        [Route("api/v1/constituentAddresses")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(RouteNames.ConstituentAddress, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Get)]
+        [Route("api/v1/constituentaddresses/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
-        [Route("api/v1/constituentaddresses", Name = RouteNames.ConstituentAddress + RouteVerbs.Post)]
+        [Route("api/v1/constituentaddresses")]
         public IHttpActionResult Post([FromBody] ConstituentAddress item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
-        [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Patch)]
+        [Route("api/v1/constituentaddresses/{id}")]
         public IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
 
         [HttpDelete]
-        [Route("api/v1/constituentaddresses/{id}", Name = RouteNames.ConstituentAddress + RouteVerbs.Delete)]
+        [Route("api/v1/constituentaddresses/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
@@ -76,7 +75,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/constituentaddresses/constituents/{id}")]
-        [Route("api/v1/constituents/{id}/constituentaddresses", Name = RouteNames.Constituent + RouteNames.ConstituentAddress)]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
+        [Route("api/v1/constituents/{id}/constituentaddresses")]  //Only the routename that matches the Model needs to be defined so that HATEAOS can create the link
         public IHttpActionResult GetByConstituentId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -84,7 +83,7 @@ namespace DDI.WebApi.Controllers.CRM
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search, fields);
-                return FinalizeResponse(response, RouteNames.Constituent + RouteNames.ConstituentAddress, search, fields);
+                return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
             {

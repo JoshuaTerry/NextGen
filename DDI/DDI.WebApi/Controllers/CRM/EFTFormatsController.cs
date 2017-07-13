@@ -1,8 +1,8 @@
-﻿using System;
-using System.Web.Http;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Statics;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -17,7 +17,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Route("api/v1/eftformats")]
         public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll("", limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]

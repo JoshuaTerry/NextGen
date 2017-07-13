@@ -11,19 +11,7 @@ var NoteEntity = {
     26: 'Accounting'
 };
 
-$(document).ready(function () {
-
-    $('.tabscontainer').tabs();
-
-    LoadDatePickers()
-
-    LoadNoteDetailsGrid();
-
-    NewNoteDetailsModal();
-
-});
-
-function LoadNoteDetailsGrid() {
+function LoadNoteDetailsGrid(entityType) {
 
     if (currentEntity) {
 
@@ -33,30 +21,37 @@ function LoadNoteDetailsGrid() {
             { dataField: 'CreatedBy', caption: 'Created By' }
         ];
 
-        CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, 'entity/' + currentEntity.Id + '/notes?fields=Id,CreatedBy,CreatedOn,DisplayName', null, EditNoteDetails, null, null);
+        $('.newnotesdetailmodallink').ready(function () {
 
-        PopulateDropDown('.nd-Category', 'notecategories', '', '', '');
-        PopulateDropDown('.nd-NoteCode', 'notecodes', '', '');
-        PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
+            CustomLoadGrid('notedetailsgrid', '.notedetailsgridcontainer', columns, 'entity/' + currentEntity.Id + '/notes?fields=Id,CreatedBy,CreatedOn,DisplayName', null, EditNoteDetails, null, function () {
 
+                NewNoteDetailsModal(entityType);
+
+            });
+
+        })
+       
     }
 
 }
 
-function NewNoteDetailsModal() {
+function NewNoteDetailsModal(entityType) {
+
+    $('.newnotesdetailmodallink').unbind('click');
 
     $('.newnotesdetailmodallink').click(function (e) {
 
     PopulateDropDown('.nd-Category', 'notecategories/', '', '');
     PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
     PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
+    PopulateDropDown('.nd-UserResponsible', 'users', '', '');
 
     e.preventDefault();
 
     var modal = $('.notesdetailmodal').dialog({
         closeOnEscape: false,
         modal: true,
-        width: 500,
+        width: 800,
         resizable: false
     });
 
@@ -86,24 +81,12 @@ function NewNoteDetailsModal() {
     });
 
     $('.savenotedetails').unbind('click');
-
+    
     $('.savenotedetails').click(function () {
 
-        var topicsavelist = GetNoteTopicsToSave();
-
-        var item = GetNoteDetailsToSave(modal);
+        var item = GetNoteDetailsToSave(modal, entityType);
 
         MakeServiceCall('POST', 'notes', item, function (data) {
-
-            MakeServiceCall('POST', 'notes/' + data.Data.Id + '/notetopics/', JSON.stringify(topicsavelist), function () {
-
-                DisplaySuccessMessage('Success', 'Note topics saved successfully.');
-
-            }, function (xhr, status, err) {
-
-                DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
-
-            });
 
             DisplaySuccessMessage('Success', 'Note Details saved successfully.');
 
@@ -133,6 +116,8 @@ function NewNoteDetailsModal() {
 
 function LoadNoteDetails(id) {
 
+    $('.attachmentscontainer').empty()
+
     MakeServiceCall('GET', 'notes/' + id, null, function (data) {
 
         LoadSelectedNoteTopics(id);
@@ -140,6 +125,7 @@ function LoadNoteDetails(id) {
         PopulateDropDown('.nd-Category', 'notecategories', '', '', data.Data.CategoryId);
         PopulateDropDown('.nd-NoteCode', 'notecodes', '', '', data.Data.NoteCodeId);
         PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '', data.Data.ContactMethodId);
+        PopulateDropDown('.nd-UserResponsible', 'users', '', '', data.Data.UserResponsibleId);
 
         $('.nd-Title').val(data.Data.Title),
         $('.nd-Description').val(data.Data.Text),
@@ -151,6 +137,14 @@ function LoadNoteDetails(id) {
         $('.nd-UpdatedBy').text(data.Data.LastModifiedBy),
         $('.nd-CreatedOn').text(FormatJSONDate(data.Data.CreatedOn)),
         $('.nd-UpdatedOn').text(FormatJSONDate(data.Data.LastModifiedOn))
+        LoadAttachments($('.attachmentscontainer'), "notesattachments", currentEntity.Id , id);
+        if (data.Data.PrimaryContact != null) {
+            var constituentLabel = data.Data.PrimaryContact.ConstituentNumber + ": " + data.Data.PrimaryContact.Name + ", " + data.Data.PrimaryContact.PrimaryAddress;
+            $('.rs-Constituent1Information').val(constituentLabel);
+        }
+        else {
+            $(modal).find('.rs-Constituent1Information').empty();
+        }
 
 
     }, function (xhr, status, err) {
@@ -159,7 +153,7 @@ function LoadNoteDetails(id) {
 
 }
 
-function GetNoteDetailsToSave(modal) {
+function GetNoteDetailsToSave(modal, entityType) {
 
     var rawitem = {
 
@@ -170,9 +164,12 @@ function GetNoteDetailsToSave(modal) {
         CategoryId: $(modal).find('.nd-Category').val(),
         ContactDate: $(modal).find('.nd-ContactDate').val(),
         NoteCodeId: $(modal).find('.nd-NoteCode').val(),
+        UserResponsibleId: $(modal).find('.nd-UserResponsible').val(),
+        PrimaryContactId: $(modal).find('.rs-Constituent1Id').val(),
         ParentEntityId: currentEntity.Id,
-        EntityType: NoteEntity[0],
+        EntityType: entityType, 
         ContactMethodId: $(modal).find('.nd-ContactMethod').val(),
+        NoteTopics: GetNoteTopicsToSave()
 
     };
 
@@ -267,7 +264,7 @@ function ClearNoteTopicTagBox(modal) {
 function StyleAndSetupIndividualTags(topic, DeleteFunction) { 
 
     var t = $('<div>').addClass('dx-tag-content').attr('id', topic.Id).appendTo($('.noteTopicSelect')); 
-    $('<span>').text(topic.Name).appendTo($(t));
+    $('<span>').text(topic.DisplayName).appendTo($(t));
     $('<div>').addClass('dx-tag-remove-button')
         .click(DeleteFunction)
         .appendTo($(t));
@@ -306,17 +303,14 @@ function LoadSelectedNoteTopics(id) {
 } 
 
 function GetNoteTopicsToSave() {
-    var topicidobject = { 
         
-        TopicIds: []
+        TopicIds = []
             
-     };
-
     var divs = $('.noteTopicSelect').children('div');
 
-    $.map(divs, function (divid) { topicidobject.TopicIds.push(divid.id) });
+    $.map(divs, function (divid) { TopicIds.push({ "Id":  divid.id  }) });
 
-    return topicidobject;
+    return TopicIds;
 
 }
 
@@ -357,3 +351,89 @@ function CreateMultiSelectTopics(topics, container) {
 
 /* End NoteTopics */
 
+/* Loading Notes Modal Independently from Notes grid*/
+function LoadNotesModal(id, entityType, cancelCallBack, saveCallBack)
+{
+    
+    PopulateDropDown('.nd-Category', 'notecategories/', '', '');
+    PopulateDropDown('.nd-NoteCode', 'notecodes/', '', '');
+    PopulateDropDown('.nd-ContactMethod', 'notecontactcodes', '', '');
+
+    //e.preventDefault();
+
+    var modal = $('.notesdetailmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 1000,
+        resizable: false
+    });
+
+    LoadNoteDetails(id);
+    
+    $('.noteTopicSelectImage').unbind('click');
+
+    $('.noteTopicSelectImage').click(function (e) {
+
+        SaveNewNoteTopics(modal);
+
+    });
+
+    $('.cancelnotesmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+        ClearNoteTopicTagBox(modal);
+
+        $('.editnoteinfo').hide();
+
+        $('.nd-CreatedBy').text('');
+        $('.nd-UpdatedBy').text('');
+        $('.nd-CreatedOn').text('');
+        $('.nd-UpdatedOn').text('');
+
+        if (cancelCallBack)
+        {
+            cancelCallBack();
+        }
+
+    });
+
+    $('.savenotedetails').unbind('click');
+
+    $('.savenotedetails').click(function () {
+
+        var topicsavelist = GetNoteTopicsToSave();
+
+        var item = GetNoteDetailsToSave(modal, entityType);
+
+        MakeServiceCall('PATCH', 'notes/' + id, item, function (data) {
+
+            DisplaySuccessMessage('Success', 'Note Details saved successfully.');
+
+            CloseModal(modal);
+
+            $('.editnoteinfo').hide();
+
+            $('.nd-CreatedBy').text('');
+            $('.nd-UpdatedBy').text('');
+            $('.nd-CreatedOn').text('');
+            $('.nd-UpdatedOn').text('');
+
+            ClearNoteTopicTagBox(modal);
+
+            LoadNoteDetailsGrid();
+
+            if (saveCallBack) {
+                saveCallBack();
+            }
+
+        }, function (xhr, status, err) {
+
+            DisplayErrorMessage('Error', 'An error occurred during saving the Note Details.');
+
+        });
+
+    });
+}

@@ -1,15 +1,12 @@
-﻿using DDI.Services;
+﻿using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Services.Search;
-using DDI.Shared.Helpers;
-using System.Linq;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -28,7 +25,17 @@ namespace DDI.WebApi.Controllers.General
             .Exclude(p => p.ContactMethod)
             .Exclude(p => p.NoteCode)
             .Include(p => p.NoteTopics.First().Id)
-            .Include(p => p.NoteTopics.First().DisplayName);
+            .Include(p => p.NoteTopics.First().DisplayName)
+            .Include(p => p.PrimaryContact);
+
+        protected override Expression<Func<Note, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Note, object>>[]
+            {
+                n => n.NoteTopics,
+                n => n.PrimaryContact
+            };
+        }
 
         #endregion Public Properties
 
@@ -46,14 +53,14 @@ namespace DDI.WebApi.Controllers.General
 
 
         [HttpDelete]
-        [Route("api/v1/notes/{id}", Name = RouteNames.Note + RouteVerbs.Delete)]
+        [Route("api/v1/notes/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
         }
 
         [HttpGet]
-        [Route("api/v1/notes", Name = RouteNames.Note)]
+        [Route("api/v1/notes")]
         public IHttpActionResult GetAll(string title = null,
                                         string text = null,
                                         Guid? categoryId = null,
@@ -90,18 +97,18 @@ namespace DDI.WebApi.Controllers.General
                 OrderBy = orderBy
             };
 
-            return base.GetAll(RouteNames.Note, search, fields);
+            return base.GetAll(search, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/notes/{id}", Name = RouteNames.Note + RouteVerbs.Get)]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        [Route("api/v1/notes/{id}")]
+        public IHttpActionResult GetById(Guid id, string fields = "all")
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/entity/{parentid}/notes", Name = RouteNames.Entity + RouteNames.Note)]
+        [Route("api/v1/entity/{parentid}/notes")]
         public IHttpActionResult GetByEntityId(Guid parentId, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             try
@@ -110,7 +117,7 @@ namespace DDI.WebApi.Controllers.General
                 fields = ConvertFieldList(fields, FieldsForList);
                 var result = Service.GetAllWhereExpression(nd => nd.ParentEntityId == parentId, search, fields);
 
-                return FinalizeResponse(result, RouteNames.Entity + RouteNames.Note, search, fields);
+                return FinalizeResponse(result, search, fields);
             }
             catch (Exception ex)
             {
@@ -120,7 +127,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/entity/{parentid}/notes/alert", Name = RouteNames.Entity + RouteNames.Note + RouteNames.Alert)]
+        [Route("api/v1/entity/{parentid}/notes/alert")]
         public IHttpActionResult GetNotesWithinAlertDateRange(Guid parentId)
         {
             try
@@ -128,7 +135,7 @@ namespace DDI.WebApi.Controllers.General
                 var search = PageableSearch.Max;
                 var result = Service.GetNotesInAlertDateRange(parentId);
 
-                return FinalizeResponse(result, RouteNames.Entity + RouteNames.Note + RouteNames.Alert, search,
+                return FinalizeResponse(result, search,
                     $"{nameof(Note.Id)},{nameof(Note.AlertStartDate)},{nameof(Note.AlertEndDate)},{nameof(Note.Title)}");
             }
             catch (Exception ex)
@@ -140,14 +147,14 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpPatch]
-        [Route("api/v1/notes/{id}", Name = RouteNames.Note + RouteVerbs.Patch)]
+        [Route("api/v1/notes/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpPost]
-        [Route("api/v1/notes", Name = RouteNames.Note + RouteVerbs.Post)]
+        [Route("api/v1/notes")]
         public IHttpActionResult Post([FromBody] Note entityToSave)
         {
             return base.Post(entityToSave);
@@ -157,13 +164,7 @@ namespace DDI.WebApi.Controllers.General
 
         #region Protected Methods
 
-        protected override Expression<Func<Note, object>>[] GetDataIncludesForSingle()
-        {
-            return new Expression<Func<Note, object>>[]
-            {
-                n => n.NoteTopics
-            };
-        }
+
 
         #endregion Protected Methods
     }

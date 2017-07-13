@@ -1,10 +1,10 @@
-﻿using System;
-using System.Web.Http;
-using System.Web.Http.Routing;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models;
 using DDI.Shared.Statics;
+using System;
+using System.Web.Http;
+using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Controllers
 {
@@ -12,7 +12,7 @@ namespace DDI.WebApi.Controllers
     {
         public GenericController(IService<T> serviceBase) : base(serviceBase) { }
          
-        public IHttpActionResult GetAll(string routeName, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null, UrlHelper urlHelper = null)
+        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             var search = new PageableSearch()
             {
@@ -21,16 +21,15 @@ namespace DDI.WebApi.Controllers
                 OrderBy = orderBy
             };
 
-            return GetAll(routeName, search, fields, urlHelper ?? GetUrlHelper());
+            return GetAll(search, fields);
         }
 
-        public IHttpActionResult GetAll(string routeName, IPageable search, string fields = null, UrlHelper urlHelper = null)
+        public IHttpActionResult GetAll(IPageable search, string fields = null)
         {
             try
-            {
-                urlHelper = urlHelper ?? GetUrlHelper();
+            { 
                 fields = ConvertFieldList(fields, FieldsForList);
-                return FinalizeResponse(Service.GetAll(fields, search), routeName, search, fields, urlHelper);
+                return FinalizeResponse(Service.GetAll(fields, search), search, fields);
             }
             catch (Exception ex)
             {

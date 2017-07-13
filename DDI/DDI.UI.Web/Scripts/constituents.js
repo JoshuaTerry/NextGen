@@ -42,6 +42,12 @@ $(document).ready(function () {
         UploadFiles();
     });
 
+    $('.attachmentstab').click(function (e) {
+        e.preventDefault();
+        LoadAttachmentsTab(currentEntity.Id);
+    });
+
+
 });
 
 function UploadFiles(callback) {
@@ -260,6 +266,8 @@ function DisplayConstituentData() {
 
         LoadAlternateIDTable();
 
+        LoadAttachmentsTab(id)
+
         LoadRelationshipsTab();
 
         LoadInvestmentsGrid();
@@ -280,12 +288,24 @@ function DisplayConstituentData() {
 
         GetNoteAlerts(shownotealert);
 
+        $('#tab-notes-main').click(function (e) {
+
+            $('.tabscontainer').tabs();
+
+            LoadDatePickers();
+
+            LoadNoteDetailsGrid('Constituent');
+
+        });
+
     }
 }
 
 function DisplayConstituentPicture() {
 
     var img = $('.constituentpic img');
+
+    $(img).attr('src', '');
 
     $.ajax({
         url: WEB_API_ADDRESS + 'constituentpicture/' + currentEntity.Id,
@@ -305,6 +325,13 @@ function DisplayConstituentPicture() {
                 });
 
             }
+            else {
+                if (currentEntity.IsMasculine) {
+                    $(img).attr('src', '../../Images/Male.png');
+                } else {
+                    $(img).attr('src', '../../Images/Female.png');
+                }
+            }
 
         },
         error: function (xhr, status, err) {
@@ -313,7 +340,7 @@ function DisplayConstituentPicture() {
     });
 
     $('.constituentpic').on('mouseenter', function () {
-        $('.changeconstituentpic').stop().show().animate({ height: '50px', bottom: '0px', opacity: '.9' }, 100);
+        $('.changeconstituentpic').stop().show().animate({ height: '50px', bottom: '0px', opacity: '.7' }, 100);
     }).on('mouseleave', function () {
         $('.changeconstituentpic').stop().animate({ height: '0px', bottom: '0px', opacity: '0' }, 100);
     });
@@ -359,9 +386,7 @@ function DisplayConstituentSideBar() {
     $('.FormattedName').text(currentEntity.FormattedName);
 
     GetConstituentPrimaryAddress();
-
-    GetConstituentPreferredContactInfo();
-
+    
 }
 
 function DisplayConstituentType() {
@@ -372,6 +397,7 @@ function DisplayConstituentType() {
 
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
+        $('.OrganizationSettingsSection').hide();
         $('.individualConstituent').show();
         $('.DBASettingsSection').hide();
     } else {
@@ -388,7 +414,8 @@ function DisplayConstituentType() {
 function GetConstituentPrimaryAddress() {
     $.ajax({
         type: 'GET',
-        url: WEB_API_ADDRESS + SAVE_ROUTE + currentEntity.Id + '/constituentaddresses/' ,
+        url: WEB_API_ADDRESS + 'constituents/primary/' + currentEntity.Id ,
+       
         contentType: 'application/json',
         crossDomain: true,
         headers: GetApiHeaders(),
@@ -396,22 +423,21 @@ function GetConstituentPrimaryAddress() {
 
             currentaddress = data.Data;
 
-            for (i = 0; i < currentaddress.length; i++) { 
+                  
+            var curadd = currentaddress.split('\n');
 
-                if (currentaddress[i].IsPrimary) {
+            for (var i = 0; i < curadd.length; i++) {
 
-                    $('.Address').text(currentaddress[i].Address.AddressLine1);
-
-                    if (currentaddress[i].Address.AddressLine2 != null && currentaddress[i].Address.AddressLine2.length > 0) {
-
-                        $('.Address').append(currentaddress[i].Address.AddressLine2);
-
-                    }
-
-                    $('.CityStateZip').text(currentaddress[i].Address.City + ', ' + currentaddress[i].Address.State + ', ' + currentaddress[i].Address.PostalCode);
-
-                }
+                var insert =
+                    $('<span>', {
+                       text: curadd[i]
+                    });
+                    
+                 $('.Address').append(insert.text() + '<br />');
+               
             }
+           
+              
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
@@ -419,37 +445,6 @@ function GetConstituentPrimaryAddress() {
     });
 }
 
-function GetConstituentPreferredContactInfo() {
-    $.ajax({
-        type: 'GET',
-        url: WEB_API_ADDRESS + 'constituents/' + currentEntity.Id,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        headers: GetApiHeaders(),
-        success: function (data) {
-
-            currentcontactinfo = data.Data.ContactInfo;
-
-            var preferredContactInfos = ''
-
-            for (i = 0; i < currentcontactinfo.length; i++) {
-
-                if (currentcontactinfo[i].IsPreferred) {
-
-                    preferredContactInfos += currentcontactinfo[i].Info + ' ';
-
-                }
-
-                $('.ContactInfo').text(preferredContactInfos);
-
-            }
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-        }
-    });
-
-}
 
 
 /* Demograpics Section */
@@ -525,7 +520,7 @@ function LoadEducationGrid() {
     ];
 
     LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
-        , null, 'ed-', '.educationmodal', '.educationmodal', 350, false, false, false, null);
+        , null, 'ed-', '.educationmodal', '.educationmodal', 350, true, false, false, null);
 
     SetupSchoolAutocomplete();
     SetupDegreeAutoComplete();
@@ -590,81 +585,6 @@ function PopulateUserIdDropDown() {
 
 /* End Professional Section */
 
-/* Audit Section */
-function ShowAuditData(id) {
-
-    $('.newauditmodal').click(function (e) {
-
-        e.preventDefault();
-    var modal = $('.auditmodal').dialog({
-        closeOnEscape: false,
-        modal: true,
-        width: 800,
-        height: 600,
-        resizable: true
-    });
-
-    LoadAuditTable(id, modal);
-    });
-    $('.cancelmodal').click(function (e) {
-
-        e.preventDefault();
-
-        CloseModal(modal);
-
-    });
-
-    $('.queryAudit').unbind('click');
-
-    $('.queryAudit').click(function () {
-
-        $.ajax({
-            type: 'GET',
-            url: WEB_API_ADDRESS + 'audit/flat/' + id,
-            data: item,
-            contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            headers: GetApiHeaders(),
-            success: function (data) {
-
-                LoadAuditTable();
-
-            },
-            error: function (xhr, status, err) {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
-            }
-        });
-
-    });
-
-}
-
-function LoadAuditTable() {
-    var id = currentEntity.Id;
-    var start = $(modal).find('.na-StartDate').val();
-    var end = $(modal).find('.na-EndDate').val();
-    var route = 'audit/flat/' + id;
-    var columns = [
-            { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0  },
-            { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
-            { dataField: 'User' }, 
-            { dataField: 'ChangeType', width: '100px' },  
-            { dataField: 'Property' },
-            { dataField: 'OldValue', caption: 'Old Value' },
-            { dataField: 'OldDisplayName', caption: 'Old Display Name' },
-            { dataField: 'NewValue', caption: 'New Value' },
-            { dataField: 'NewDisplayName', caption: 'New Display Name' }
-    ];
-
-    LoadAuditGrid('auditgrid',
-       'auditgridcontainer',
-       columns,
-       route,
-       false);
-     
-}
-/* End Audit Section */
-
 /* Alternate Id Section */
 function LoadAlternateIDTable() {
 
@@ -672,8 +592,8 @@ function LoadAlternateIDTable() {
             { dataField: 'Name', caption: 'Name' }
     ];
 
-    LoadGrid('.alternateidgridcontainer', 'altidgrid', columns, 'constituents/' + currentEntity.Id + '/alternateids', 'alternateids'
-        , null, 'ai-', '.alternateidmodal', '.alternateidmodal', 250, false, true, false, null);
+    GridManager.LoadGrid('.alternateidgridcontainer', 'altidgrid', columns, 'constituents/' + currentEntity.Id + '/alternateids', 'alternateids'
+        , null, 'ai-', '.alternateidmodal', '.alternateidmodal', 250, true, true, false, null);
 }
 
 /* End Alternate Id Section */
@@ -687,26 +607,30 @@ function LoadContactInfo() {
 
 function LoadAddressesGrid() {
 
+    
+    
+
+    
     var columns = [
         { dataField: 'IsPrimary', caption: 'Is Primary' },
         { dataField: 'AddressType.DisplayName', caption: 'Type' },
         { dataField: 'Address.AddressLine1', caption: 'Address' }
     ];
-
+     
     CustomLoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/constituentaddresses',
         null,
-        EditAddressModal);
-    
-    
-
+        EditAddressModal, DeleteAddress, AddressGridComplete); 
+   
 }
 
-function NewAddressModal() {
-
-    $('.newaddressmodallink').click(function (e) {
+function AddressGridComplete() {
+    var cagc = $('.constituentaddressgridcontainer');
+    var cag = $('.constituentaddressgrid');
+    var header = $('<div>').attr('style', 'text-align: right;').prependTo($(cagc));
+    $('<a>').attr('href', '#').addClass('newmodallink modallink newbutton').text('New Item').click(function (e) {
 
         e.preventDefault();
 
@@ -770,11 +694,29 @@ function NewAddressModal() {
 
         AutoZip(modal, '.na-');
 
-    });
+    }).appendTo($(header));
 
     PopulateAddressTypesInModal(null);
 
-    PopulateCountriesInModal(null);
+    PopulateCountriesInModal(null); 
+}
+function DeleteAddress(id)
+{
+    MakeServiceCall('DELETE', 'constituentaddresses/' + id, null, function (data) {
+
+        DisplaySuccessMessage('Success', 'Constituent Address deleted successfully.');
+
+        LoadAddressesGrid();
+
+    },
+        function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Address.');
+        }
+    );
+}
+function NewAddressModal() {
+
+    
 
 }
 
@@ -970,7 +912,7 @@ function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
     PopulateDropDown($('.' + name.toLowerCase() + "-ContactTypeId"), 'contacttypes/category/' + categoryid, null)
    
     LoadGrid( 'constituent' + name + 'gridcontainer', 'constituent' + name + 'grid', columns,  'contactinfo/' + categoryid + '/' + currentEntity.Id, 'contactinfo'
-        , null, name.toLowerCase() + '-', '.' + name.toLowerCase() + 'modal', '.' + name.toLowerCase() + 'modal', 250, false, true, false, null);
+        , null, name.toLowerCase() + '-', '.' + name.toLowerCase() + 'modal', '.' + name.toLowerCase() + 'modal', 250, true, true, false, null);
 
    
 }
@@ -1025,6 +967,13 @@ function RelationshipLinkClicked(id) {
 
     GetConstituentData($('.hidconstituentid').val());
 
+}
+
+function LoadAttachmentsTab(id) {
+    
+    container = $('.attachments');
+    container.empty();
+    LoadAttachments(container, "contituentsgrid", id, null, NoteEntity[0]);
 }
 
 function LoadRelationshipsTab() {

@@ -1,9 +1,7 @@
-﻿using System;
+﻿using DDI.Shared.Models.Client.Security;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Shared.Enums.Core;
-using DDI.Shared.Models.Client.GL;
-using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Shared.Models.Client.Core
 {

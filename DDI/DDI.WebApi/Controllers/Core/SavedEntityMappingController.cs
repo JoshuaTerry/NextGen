@@ -1,14 +1,9 @@
-﻿using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CRM;
+﻿using DDI.Services;
+using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
-using System.Net;
-using System.Net.Http;
-using System.IO;
-using DDI.Shared;
-using DDI.Services;
 
 namespace DDI.WebApi.Controllers.Core
 {
@@ -23,7 +18,7 @@ namespace DDI.WebApi.Controllers.Core
         [Route("api/v1/savedentitymapping")]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
-            return base.GetAll(string.Empty, limit, offset, orderBy, fields);
+            return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]

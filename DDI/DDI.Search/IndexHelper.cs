@@ -53,7 +53,7 @@ namespace DDI.Search
             _indexVersions = new Dictionary<string, string>
             {
                 { IndexSuffixes.CRM, "2.4" },
-                { IndexSuffixes.GL, "1.0" },
+                { IndexSuffixes.GL, "1.1" },
                 { IndexSuffixes.CORE, "1.0" }
             };
         }

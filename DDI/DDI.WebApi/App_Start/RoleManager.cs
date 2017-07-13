@@ -1,12 +1,10 @@
 using DDI.Services.Security;
+using DDI.Shared;
 using DDI.Shared.Models.Client.Security;
-using DDI.WebApi.Models;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System;
-using DDI.Shared;
 
 namespace DDI.WebApi
 {

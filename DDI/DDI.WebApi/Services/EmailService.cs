@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Mail;
-using System.Runtime.Remoting;
+﻿using System.Net.Mail;
 using System.Web.Configuration;
 
 namespace DDI.WebApi.Services
