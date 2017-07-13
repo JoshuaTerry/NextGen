@@ -3002,7 +3002,7 @@ function LoadFiscalYearSectionSettings() {
     PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, 'Please Select', '', $('.LedgerId').val(), function () {
 
         LoadFiscalYearGrid();
-        $('.fy-LedgerId').val(ledgerid);
+        $('.fy-LedgerId').val($('.LedgerId').val());
 
     }, function (element, data) {
 
@@ -3015,12 +3015,11 @@ function LoadFiscalYearSectionSettings() {
 }
 
 function LoadFiscalYearGrid() {
-
-        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status&orderby=-Name', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, function (data) {
+       
     var ledgerid = $('.LedgerId').val();
 
     var columns = [
-        { dataField: 'Name', caption: 'Name' },
+        { dataField: 'Name', caption: 'Name', sortOrder: 'desc' },
         {
             caption: 'Status', cellTemplate: function (container, options) {
 
@@ -3053,6 +3052,7 @@ function LoadFiscalYearGrid() {
 
         if (data.Data.length > 0) {
             $('.fiscalyearcontainer').show();
+            $('.fiscalperiodscontainer').hide();
         }
         else {
             $('.fiscalyearcontainer').hide();
@@ -3067,9 +3067,10 @@ function LoadFiscalPeriods(info) {
         var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
         info = dataGrid.getSelectedRowsData();
         selectedRow = info[0];
-
+        fiscalYearId = info[0].Id;
     } else {
         selectedRow = info.data;
+        fiscalYearId = info.data.Id;
     }
 
     var columns = [
