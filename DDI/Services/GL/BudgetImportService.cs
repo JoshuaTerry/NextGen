@@ -12,6 +12,7 @@ namespace DDI.Services.GL
 {
     public class BudgetImportService
     {
+<<<<<<< Updated upstream
         private IUnitOfWork _uow = new UnitOfWorkEF();
         public IDataResponse ImportBudgets(Guid fileId, Guid fiscalYearId, MappableEntityField[] fields)
         {
@@ -19,9 +20,18 @@ namespace DDI.Services.GL
             var importFile = GetImportFile(fileId);
             if (!fields.Any(f => f.PropertyName == "Account"))
                 throw new Exception("No Account Mapping Specified.");
+=======
+        //private IUnitOfWork _uow = new UnitOfWorkEF();
+        //public void ImportBudgets(Guid fileId, MappableEntityField[] fields)
+        //{
+        //    var importFile = GetImportFile(fileId);
+        //    if (!fields.Any(f => f.PropertyName == "Account"))
+        //        throw new Exception("No Account Mapping Specified.");
+>>>>>>> Stashed changes
 
-            char[] delimiters = { ',' };
+        //    char[] delimiters = { ',' };
 
+<<<<<<< Updated upstream
             string[] columns = null;
 
             using (var stream = new MemoryStream(importFile.File.Data))
@@ -30,9 +40,18 @@ namespace DDI.Services.GL
                 {
                     if (importFile.ContainsHeaders)
                         columns = streamReader.ReadLine().Split(delimiters, StringSplitOptions.None);
+=======
+        //    string[] columns;
+        //    using (var stream = new MemoryStream(importFile.File.Data))
+        //    {
+        //        using (var streamReader = new StreamReader(stream))
+        //        {
+        //            string line = streamReader.ReadLine();
+>>>>>>> Stashed changes
 
                     var mappings = fields.Select(f => new { PropertyName = f.PropertyName, ColumnName = f.ColumnName, Ordinal = columns != null ? Array.IndexOf(columns, f.ColumnName) : Convert.ToInt32(f.ColumnName) }).ToList();
 
+<<<<<<< Updated upstream
                     string line = string.Empty;
                     while ((line = streamReader.ReadLine()) != string.Empty)
                     {
@@ -126,3 +145,52 @@ namespace DDI.Services.GL
     }
 }
 
+=======
+        //            if (importFile.ContainsHeaders)
+        //            {
+        //                string[] columns;
+        //                using (var stream = new MemoryStream(importFile.File.Data))
+        //                {
+        //                    using (var streamReader = new StreamReader(stream))
+        //                    {
+        //                        columns = streamReader.ReadLine().Split(',');
+        //                        string line = string.Empty;
+        //                        while ((line = streamReader.ReadLine()) != string.Empty)
+        //                        {
+        //                            string[] values = line.Split(delimiters, StringSplitOptions.None);
+
+        //                            if (fields.Any(f => f.PropertyName == "Account"))
+        //                            {
+        //                                var accountColumnName = fields.First(f => f.PropertyName == "Account").ColumnName;
+        //                                var accountNumberIndex = Array.IndexOf(columns, accountColumnName);
+
+        //                                var accountNumber = values[accountNumberIndex];
+
+        //                                var accountResponse = accountService.GetWhereExpression(a => a.AccountNumber == accountNumber);
+        //                                if (accountResponse.IsSuccessful)
+        //                                {
+        //                                    var Account = accountResponse.Data;
+
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+
+        //            }
+
+        //        }
+        //    }
+
+        //    private ImportFile GetImportFile(Guid id)
+        //    {
+        //        var includes = new Expression<Func<ImportFile, object>>[] { f => f.File, f => f.File.Data };
+        //        var importFile = _uow.GetById<ImportFile>(id, includes);
+
+        //        return importFile;
+        //    }
+
+        //}
+    }
+}
+>>>>>>> Stashed changes

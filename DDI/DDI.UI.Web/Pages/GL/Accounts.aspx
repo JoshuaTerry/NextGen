@@ -21,6 +21,27 @@
 
             });
 
+            $('.importbudget').click(function (e) {
+
+                e.preventDefault();
+
+                //ARECA
+                //gather the fiscal year id and the business unit id
+                sessionStorage.setItem('FISCAL_YEAR_ID', $('.as-fiscalyear').val());
+
+                //call the import utility to get the file
+
+                //gather up the mapping information and file
+                DisplayImportWizardModal();
+
+                //send the information to the route that josh has specified
+
+                //sessionStorage.removeItem('ACCOUNT_ID');
+
+                //location.href = "/Pages/GL/AccountDetails.aspx";
+
+            });
+
             $('.mergeaccounts').click(function (e) {
 
                 e.preventDefault();
@@ -103,6 +124,7 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
 
     <li><a href="#" class="mergeaccounts">Merge Accounts</a></li>
+    <li><a href="#" class="importbudget">Import Budget</a></li>
 
 </asp:Content>
 
