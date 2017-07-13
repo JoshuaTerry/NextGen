@@ -21,6 +21,7 @@ namespace DDI.Shared.Models.Client.INV
 
         public Guid? BusinessUnitId { get; set; }
 
+        [MaxLength(30)]
         public string CUSIP { get; set; }
 
         [MaxLength(256)]
