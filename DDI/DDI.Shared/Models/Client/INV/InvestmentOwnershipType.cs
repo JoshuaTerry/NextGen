@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.INV
 {
@@ -24,6 +25,7 @@ namespace DDI.Shared.Models.Client.INV
 
         public int? DefaultSelect { get; set; }
 
+        [MaxLength(30)]
         public string TextValue { get; set; }
 
         #endregion Public Properties

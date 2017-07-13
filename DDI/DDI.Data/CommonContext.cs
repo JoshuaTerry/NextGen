@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using DDI.Data.Conventions;
 
 namespace DDI.Data
 {
@@ -55,6 +56,13 @@ namespace DDI.Data
 
             return base.ValidateEntity(entityEntry, items);
         }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
+            modelBuilder.Conventions.Add(new StringLengthRequiredConvention());
+        }
+
         #endregion
     } 
 }

@@ -7,6 +7,8 @@ namespace DDI.Shared.Models.Client.Audit
 {
     public class PropertyChange : IPropertyChange<User>
     {
+
+        [MaxLength(10)]
         public string ChangeType { get; set; }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
