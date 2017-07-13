@@ -425,7 +425,7 @@ function SaveNewConstituent(modal, addnew) {
                 currentEntity = data.Data;
 
                 sessionStorage.setItem("constituentid", data.Data.ConstituentNumber);
-                location.href = "Pages/CRM/Constituents.aspx";
+                location.href = "Constituents.aspx";
             }
 
         }
@@ -626,40 +626,29 @@ function CloseModal(modal) {
 }
 
 function ConfirmModal(message, yes, no) {
-
     modal = $('.confirmmodal').dialog({
         closeOnEscape: false,
         modal: true,
         width: 450,
         resizable: false
     });
-
     $(modal).find('.confirmmessage').html(message);
-
     $('.confirmyes').unbind('click');
-
     $('.confirmyes').click(function () {
-
         if (yes) {
             yes();
         }
 
         CloseModal(modal);
-
     });
-
     $('.confirmno').unbind('click');
-
     $('.confirmno').click(function () {
-
         if (no) {
             no();
         }
 
         CloseModal(modal);
-
     });
-
 }
 
 function ClearFields(container) {
@@ -1272,7 +1261,7 @@ function GetEditedFields(editcontainer) {
 
     $(editcontainer).find('input.editable').each(function () {
 
-        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var property = $(this).prop('class').replace('editable ', '').split(' ');
         var propertyName = property[0]
         var value = '';
 
@@ -1297,7 +1286,7 @@ function GetEditedFields(editcontainer) {
     });
 
     $(editcontainer).find('select').each(function () {
-        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var property = $(this).prop('class').replace('editable ', '').split(' ');
         var propertyName = property[0]
         var value = $(this).val();
 
@@ -1334,22 +1323,17 @@ function SaveTagBoxes(editcontainer) {
 
         });
 
-        SaveChildCollection(idCollection, WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/' + route);
+        if (idCollection.length > 0) {
+            SaveChildCollection(idCollection, 'constituents/' + currentEntity.Id + '/' + route);
+        }
+
 
     });
 
 }
 
 function SaveChildCollection(children, route) {
-    MakeServiceCall('POST', SAVE_ROUTE + currentEntity.Id, JSON.stringify({ ChildIds: children }), function (data) {
-
-        if (data.Data) {
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-
-        }
-
-    }, null);
+     MakeServiceCall('POST', route, JSON.stringify({ ChildIds: children }), null, null);
 }
 
 function CancelEdit() {
@@ -1359,28 +1343,7 @@ function CancelEdit() {
 //
 // END EDITING
 
-// DELETING
-//
-
-function DeleteEntity(url, method, confirmationMessage) {
-    var okToDelete = confirm(confirmationMessage);
-    if (okToDelete === true) {
-        // delete the entity
-        MakeServiceCall(method, url, null, function (data) {
-
-            if (data.Data) {
-                // Display success
-                DisplaySuccessMessage('Success', 'This item was deleted.');
-
-            }
-
-        }, null);
-    };
-
-}
-
-//
-// END DELETING
+ 
 
 // MESSAGING
 //
