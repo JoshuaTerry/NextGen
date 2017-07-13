@@ -23,6 +23,12 @@ namespace DDI.Conversion.CP
         public enum ConversionMethod
         {
             ReceiptBatches = 42001,
+            Receipts,
+            ReceiptTransactions,
+            ReceiptEntityNumbers,
+            ReceiptFileStorage,
+            ReceiptAttachments,
+
         }
 
         private string _cpDirectory;
@@ -36,6 +42,7 @@ namespace DDI.Conversion.CP
             _cpOutputDirectory = Path.Combine(DirectoryName.OutputDirectory, DirectoryName.CP);
  
             RunConversion(ConversionMethod.ReceiptBatches, () => ConvertReceiptBatches(InputFile.CP_ReceiptBatches, false));
+            RunConversion(ConversionMethod.Receipts, () => ConvertReceipts(InputFile.CP_Receipts, false));
         }
 
         private void ConvertReceiptBatches(string filename, bool append)
@@ -126,6 +133,84 @@ namespace DDI.Conversion.CP
 
             context.Dispose();
             
+        }
+
+
+        private void ConvertReceipts(string filename, bool append)
+        {
+            DomainContext context = new DomainContext();
+
+            var batches = LoadLegacyIds(_cpOutputDirectory, OutputFile.CP_ReceiptBatchIdMappingFile);
+            var receiptTypes = LoadEntities(context.CP_ReceiptTypes);
+
+            using (var importer = CreateFileImporter(_cpDirectory, filename, typeof(ConversionMethod)))
+            {
+                var outputFile = new FileExport<Receipt>(Path.Combine(_cpOutputDirectory, OutputFile.CP_ReceiptFile), append);
+
+                // Legacy ID file, to convert from OE id to SQL Id.
+                FileExport<LegacyToID> legacyIdFile = new FileExport<LegacyToID>(Path.Combine(_cpOutputDirectory, OutputFile.CP_ReceiptMappingFile), append, true);
+
+                if (!append)
+                {
+                    outputFile.AddHeaderRow();
+                }
+
+                int count = 0;
+
+                while (importer.GetNextRow())
+                {
+                    count++;
+
+                    string legacyKey = importer.GetString(0);
+                    if (string.IsNullOrWhiteSpace(legacyKey))
+                    {
+                        continue;
+                    }
+
+                    int batchNumber = importer.GetInt(2);
+                    Guid batchId;
+                    if (!batches.TryGetValue(batchNumber.ToString(), out batchId))
+                    {
+                        importer.LogError($"Receipt batch {batchNumber} is invalid.");
+                        continue;
+                    }
+
+                    var receipt = new Receipt();
+                    receipt.ReceiptNumber = importer.GetInt(3);
+                    receipt.ReceiptBatchId = batchId;
+                    receipt.Amount = importer.GetDecimal(4);
+                    receipt.Reference = importer.GetString(5, 128);
+                    receipt.IsProcessed = importer.GetBool(6);
+                    receipt.IsReversed = importer.GetBool(7);
+                    receipt.AccountNumber = importer.GetString(9, 64);
+                    receipt.RoutingNumber = importer.GetString(10, 64);
+                    receipt.CheckNumber = importer.GetString(11, 30);
+                    receipt.TransactionDate = importer.GetDate(12);
+                    ImportCreatedModifiedInfo(receipt, importer, 13);
+
+                    string receiptType = importer.GetString(8);
+                    if (!string.IsNullOrWhiteSpace(receiptType))
+                    {
+                        receipt.ReceiptType = receiptTypes.FirstOrDefault(p => p.Code == receiptType);
+                        if (receipt.ReceiptType == null)
+                        {
+                            importer.LogError($"Invalid cash receipt type \"{receiptType}\".");
+                        }
+                    }
+
+                    receipt.AssignPrimaryKey();
+
+                    outputFile.AddRow(receipt);
+
+                    legacyIdFile.AddRow(new LegacyToID(legacyKey, receipt.Id));
+                }
+
+                outputFile.Dispose();
+                legacyIdFile.Dispose();
+            }
+
+            context.Dispose();
+
         }
 
     }

@@ -97,6 +97,12 @@ namespace DDI.Conversion.Statics
         public static string CP_ReceiptTypes => "ReceiptType.csv";
         public static string CP_ReceiptBatchTypes => "ReceiptBatchType.csv";
         public static string CP_ReceiptBatches => "ReceiptBatch.csv";
+        public static string CP_Receipts => "Receipt.csv";
+        public static string CP_ReceiptTransactions => "Transaction_Receipt.csv";
+        public static string CP_ReceiptEntityTransactions => "EntityTransaction_Receipt.csv";
+        public static string CP_ReceiptEntityNumbers => "EntityNumber_Receipt.csv";
+        public static string CP_ReceiptAttachments => "Attachment_Receipt.csv";
+        public static string CP_ReceiptFileStorage => "FileStorage_Receipt.csv";
 
         #endregion
 
