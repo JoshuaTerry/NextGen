@@ -24,6 +24,8 @@ namespace DDI.Shared.Models.Client.CP
         
         public bool IsReversed { get; set; }
 
+        public Guid? ReceiptTypeId { get; set; }
+        [ForeignKey(nameof(ReceiptTypeId))]
         public ReceiptType ReceiptType { get; set; }
 
         [MaxLength(64)]
