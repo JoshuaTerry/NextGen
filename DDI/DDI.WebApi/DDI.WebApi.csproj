@@ -294,6 +294,7 @@
     <Compile Include="Controllers\GL\FiscalPeriodController.cs" />
     <Compile Include="Controllers\GL\FiscalYearController.cs" />
     <Compile Include="Controllers\GL\FundController.cs" />
+    <Compile Include="Controllers\GL\JournalLinesController.cs" />
     <Compile Include="Controllers\GL\JournalsController.cs" />
     <Compile Include="Controllers\GL\BusinessUnitFromToController.cs" />
     <Compile Include="Controllers\GL\LedgerController.cs" />

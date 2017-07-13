@@ -7,7 +7,6 @@ var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'          // testing
 var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
 var businessUnitId = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16'    // testing
 var editMode = ''
-var journalContainer = '.journalbody'
 
 // 0: One-Time, 1: Recurring, 2: Template
 var journalType = 0;
@@ -33,7 +32,9 @@ $(document).ready(function () {
         LoadJournalDetail();
     }
 
-    $('.newjournallinemodallink').click(function () {
+    $('.newjournallinemodallink').click(function (e) {
+
+        e.preventDefault();
 
         JournalLineModal(null, true);
 
@@ -97,7 +98,7 @@ function SetupJournalTypeDisplay(data) {
 
 }
 
-function LoadJournalLineGrid(data) {
+function LoadJournalLineGrid() {
 
     var columns = [
         { dataField: 'LineNumber', caption: 'Line #', sortOrder: 'asc', sortIndex: 0},
@@ -118,29 +119,18 @@ function LoadJournalLineGrid(data) {
                 return DueTo[data.DueToMode];
             }
         },
-        { dataField: 'SourceFund', caption: 'Fund' },
-        { dataField: 'SourceBusinessUnit', caption: '' },
+        { dataField: 'SourceFund.DisplayName', caption: 'Fund' },
+        { dataField: 'SourceBusinessUnit.DisplayName', caption: '' },
     ];
 
     $('.journallinegridcontainer').show()
 
-    //LoadGrid('journallinegridcontainer', 'journallinegrid', columns, 'getroute', 'saveroute', null, null, 'journallinemodal', 'journallinemodal', 750, true, false, false, function (data) {
-    //    $('.journallinegrid').dxDataGrid({
-    //        summary: {
-    //            totalItems: [
-    //                { column: 'debit', summaryType: 'sum', valueFormat: 'currency', precision: 2, displayFormat: '{0}' },
-    //                { column: 'credit', summaryType: 'sum', valueFormat: 'currency', precision: 2, displayFormat: '{0}' }
-    //            ]
-    //        }
-    //    });
-    //});
-
-    LoadGridWithData('journallinegrid', '.journallinegridcontainer', columns, '', '', JournalLineModal, DeleteJournalLine, data.Data.JournalLines, function (data) {
+    CustomLoadGrid('journallinegrid', '.journallinegridcontainer', columns, 'journalline/journal/' + currentEntity.Id, null, JournalLineModal, DeleteJournalLine, function (data) {
         $('.journallinegrid').dxDataGrid({
             summary: {
                 totalItems: [
-                    { column: 'debit', summaryType: 'sum', valueFormat: 'currency', precision: 2, displayFormat: '{0}'},
-                    { column: 'credit', summaryType: 'sum', valueFormat: 'currency', precision: 2, displayFormat: '{0}'}
+                    { column: 'debit', summaryType: 'sum', valueFormat: 'currency', precision: 2, displayFormat: '{0}' },
+                    { column: 'credit', summaryType: 'sum', valueFormat: 'currency', precision: 2, displayFormat: '{0}' }
                 ]
             }
         });
@@ -149,11 +139,7 @@ function LoadJournalLineGrid(data) {
 }
 
 function JournalLineModal(id, isNew) {
-
-    if (editMode === 'display') {
-        return
-    }
-
+    
     var modal = $('.journallinemodal').dialog({
         closeOnEscape: false,
         modal: true,
@@ -163,6 +149,15 @@ function JournalLineModal(id, isNew) {
             $('.journallineledgeraccountid').empty();
         }
     });
+
+    MaskFields();
+
+    $(modal).find('.journallineledgeraccountid').empty();
+    GLAccountSelector($(modal).find('.journallineledgeraccountid'), ledgerId, fiscalYearId);
+
+    // PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback)
+    PopulateDropDown($(modal).find('.SourceFundId'), 'fund/' + fiscalYearId + '/fiscalyear', null, null, null, null, null);
+    PopulateDropDown($(modal).find('.DueToMode'), 'journals/duetomodes', null, null, null, null, null);
 
     if (!isNew) {
         LoadJournalLine(id);
@@ -179,7 +174,9 @@ function JournalLineModal(id, isNew) {
     $('.savejournalline').unbind('click');
 
     $('.savejournalline').click(function () {
-        
+
+        debugger;
+
         var item = GetJournalLineToSave();
         var method = 'POST';
         var route = 'journalline';
@@ -191,7 +188,7 @@ function JournalLineModal(id, isNew) {
 
         MakeServiceCall(method, route, item, function (data) {
 
-            DisplaySuccessMessage('Success', 'Linked Account saved successfully.');
+            DisplaySuccessMessage('Success', 'Journal Line saved successfully.');
 
             CloseModal(modal);
 
@@ -199,48 +196,85 @@ function JournalLineModal(id, isNew) {
 
         }, function (xhr, status, err) {
 
-            DisplayErrorMessage('Error', 'An error occurred during saving the Linked Account.');
+            DisplayErrorMessage('Error', 'An error occurred during saving the Journal Line.');
         });
 
     });
 }
 
+function GetJournalLineToSave() {
+
+    var amount = $('.Amount').val();
+
+    if ($('.creditoption').prop('checked')) {
+
+        if (amount.length > 0 && amount.substring(0, 1) != '-') {
+            amount = '-' + amount;
+        }
+
+    }
+
+    var rawitem = {
+
+        JournalId: currentEntity.Id,
+        SourceBusinessUnitId: currentBusinessUnitId,
+        LedgerAccountId: $('.hidledgeraccountid').val(),
+        Amount: amount,
+        Comment: $('.JournalLineComment').text(),
+        DueToMode: $('.DueToMode').val(),
+        SourceFundId: $('.SourceFundId').val()
+
+    };
+
+    var item = JSON.stringify(rawitem);
+
+    return item;
+
+}
+
 function LoadJournalLine(id) {
 
-    MakeServiceCall('GET', 'JournalLine/' + id, null, function (data) {
+    MakeServiceCall('GET', 'journalline/' + id, null, function (data) {
 
-        $('.LinkedAccountType').val(data.Data.LinkedAccountType),
-            $('.LinkedAccountInd').val((data.Data.LinkedAccountNumber > 0) ? 1 : 0),
-            $('.LinkedAccountNumber').val(data.Data.LinkedAccountNumber),
-            $('.CollateralTypePercent').prop("checked", (data.Data.CollateralType === 0) ? true : false),
-            $('.CollateralTypeAmount').prop("checked", (data.Data.CollateralType === 1) ? true : false),
-            $('.CollateralType').val(data.Data.CollateralType),
-            $('.Collateral').val(data.Data.Collateral),
-            $('.BlockOtherLoanLinks').val(data.Data.BlockOtherLoanLinks)
+        $('.hidjournallineid').val(id);
 
+        $('.hidledgeraccountid').val(data.Data.LedgerAccountId);
+        $('.hidaccountnumber').val(data.Data.LedgerAccount.AccountNumber);
+        $('.accountnumber').val(data.Data.LedgerAccount.AccountNumber);
 
+        $('.Amount').val(data.Data.Amount);
+        $('.JournalLineComment').text(data.Data.Comment);
+        $('.DueToMode').val(data.Data.DueToMode);
+        $('.SourceFundId').val(data.Data.SourceFundId);
+
+        if (data.Data.Amount && data.Data.Amount < 0) {
+            $('.creditoption').prop('checked', true);
+            $('.debitoption').prop('checked', false);
+        } else {
+            $('.creditoption').prop('checked', false);
+            $('.debitoption').prop('checked', true);
+        }
+        
     }, function (xhr, status, err) {
-        DisplayErrorMessage('Error', 'An error occurred during loading the Linked Account.');
+
+        DisplayErrorMessage('Error', 'An error occurred during loading the Journal Line.');
+
     });
 
 }
 
 function DeleteJournalLine(id) {
-
-    if (editMode === 'display') {
-        return
-    }
     
     ConfirmModal('Are you sure you want to delete this Journal Line?', function () {
         
-        MakeServiceCall('DELETE', 'JournalLines/' + id, null, function (data) {
+        MakeServiceCall('DELETE', 'journallines/' + id, null, function (data) {
 
             if (data.Data) {
                 DisplaySuccessMessage('Success', 'Journal Line deleted successfully.');
 
                 CloseModal(modal);
 
-                DisplayJournalLines($('.currentlevel').val(), $('.parentJournalLines').val());
+                LoadJournalLineGrid();
             }
 
         }, null);
@@ -254,8 +288,7 @@ function DeleteJournalLine(id) {
 
 function RefreshEntity() {
 
-    // load the grid when and event is fired on the modal.
+
 
 }
-
 

@@ -12,6 +12,7 @@ namespace DDI.Shared.Models.Client.GL
         public override Guid Id { get; set; }
 
         public string AccountNumber { get; set; }
+        public Guid LedgerAccountId { get; set; }
         public string Description { get; set; }
         public string Level1 { get; set; }
         public string Level2 { get; set; }

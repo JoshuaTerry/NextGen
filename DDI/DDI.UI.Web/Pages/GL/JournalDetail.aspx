@@ -116,8 +116,9 @@
 
         <div class="modalcontent">
 
-            <div class="journallineaccountgroup">
-                <select class="SourceFundId"></select>
+            <input type="hidden" class="hidjournallineid" />
+
+            <div class="fieldblock journallineaccountgroup">
                 <label class="accountselectorlabel">GL Account: </label>
                 <div class="journallineledgeraccountid"></div>
             </div>
@@ -126,16 +127,16 @@
 
                 <div class="fieldblock">
                     <label>Amount: </label>
-                    <input type="text" class="Amount editable money justright" />
+                    <input type="text" class="Amount money justright" />
                 </div>
 
-                <div>
-                    <div class="fieldblock">
-                        <input id="DebitOption" type="radio" name="debitcreditradio" value="Debit" />
+                <div style="margin-top: 20px;">
+                    <div class="fieldblock inline">
+                        <input id="DebitOption" type="radio" name="debitcreditradio" value="Debit" class="debitoption" />
                         <label for="DebitOption" class="inline">Debit</label>
                     </div>
-                    <div class="fieldblock">
-                        <input id="CreditOption" type="radio" name="debitcreditradio" value="Credit" />
+                    <div class="fieldblock inline">
+                        <input id="CreditOption" type="radio" name="debitcreditradio" value="Credit" class="creditoption" />
                         <label for="CreditOption" class="inline">Credit</label>
                     </div>
                 </div>
@@ -151,7 +152,7 @@
 
                 <div class="fieldblock">
                     <label>Due: </label>
-                    <select class="DueToMode editable"></select>
+                    <select class="DueToMode"></select>
                 </div>
 
                 <div class="fieldblock">

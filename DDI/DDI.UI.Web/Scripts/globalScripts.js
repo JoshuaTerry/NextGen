@@ -638,25 +638,27 @@ function ConfirmModal(message, yes, no) {
 
     $('.confirmyes').unbind('click');
 
-    if (yes) {
+    $('.confirmyes').click(function () {
 
-        $('.confirmyes').click(function () {
-            CloseModal(modal);
+        if (yes) {
             yes();
-        });
+        }
 
-    }
+        CloseModal(modal);
+
+    });
 
     $('.confirmno').unbind('click');
 
-    if (no) {
+    $('.confirmno').click(function () {
 
-        $('.confirmno').click(function () {
-            CloseModal(modal);
+        if (no) {
             no();
-        });
+        }
 
-    }
+        CloseModal(modal);
+
+    });
 
 }
 
