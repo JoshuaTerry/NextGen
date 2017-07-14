@@ -15,17 +15,17 @@ namespace DDI.Data.Conventions
         public StringLengthRequiredConvention()
         {
             // Enforce MaxLength or Text attributes on string properties.
-            Properties<string>()
-                .Where(p => p.DeclaringType.Namespace.StartsWith("DDI")
-                                && 
-                            !p.GetCustomAttributes(false).OfType<MaxLengthAttribute>().Any() 
-                                && 
-                            !p.GetCustomAttributes(false).OfType<TextAttribute>().Any())
-                .Configure(p => throw new InvalidOperationException($"String max length is required: {p.ClrPropertyInfo.DeclaringType.Name}.{p.ClrPropertyInfo.Name}"));
+            //Properties<string>()
+            //    .Where(p => p.DeclaringType.Namespace.StartsWith("DDI")
+            //                    && 
+            //                !p.GetCustomAttributes(false).OfType<MaxLengthAttribute>().Any() 
+            //                    && 
+            //                !p.GetCustomAttributes(false).OfType<TextAttribute>().Any())
+            //    .Configure(p => throw new InvalidOperationException($"String max length is required: {p.ClrPropertyInfo.DeclaringType.Name}.{p.ClrPropertyInfo.Name}"));
 
-            // Text attribute => nvarchar(max)
-            Properties<string>()
-                .Where(p => p.GetCustomAttributes(false).OfType<TextAttribute>().Any()).Configure(p => p.IsMaxLength());
+            //// Text attribute => nvarchar(max)
+            //Properties<string>()
+            //    .Where(p => p.GetCustomAttributes(false).OfType<TextAttribute>().Any()).Configure(p => p.IsMaxLength());
         }
     }
 }
