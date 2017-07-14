@@ -1,5 +1,4 @@
-﻿
-var EntityMappingType = { 'Budget': 0 }
+﻿var EntityMappingType = { Budget: 0};
 var currentwizpos = 0;
 
 $(document).ready(function () {
@@ -60,7 +59,7 @@ $(document).ready(function () {
 
 });
 
-function DisplayImportWizardModal() {
+function DisplayImportWizardModal(type) {
 
     SetupCustomStep();
 
@@ -72,27 +71,11 @@ function DisplayImportWizardModal() {
         resizable: false
     });
 
-    //UploadFiles(function (file) {
-
-
-    //    MakeServiceCall("Post", 'filestorage/upload', file, function (data) {
-
-    //        if(file)
-    //        {
-    //            $('.hiddentimportfileid').val(file.Id);
-    //        }
-    //    },
-    //        null
-    //    )}
-
-    //    );
-
-    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload', function (file) {
+    InitializeImportWizardFileUploader(WEB_API_ADDRESS + 'filestorage/upload', function (file) {
 
         if (file) {
             $('.hiddenimportfileid').val(file.Id);
         }
-
     });
 
 }
@@ -116,7 +99,54 @@ function SetupCustomStep() {
 
 }
 
-function GetFieldMappings() {
+function InitializeImportWizardFileUploader(url, callback) {
+
+    var filecounter = 0;
+    var totalfiles = 0;
+
+    $('#file_upload2').fileupload({
+        url: url,
+        headers: GetApiHeaders(),
+        sequentialUploads: true,
+        dropZone: $('.importwizardfileuploadcontainer'),
+        disableImageResize: true,
+        done: function (e, data) {
+
+            var responseFile = null;
+            if (data._response.result.Data) {
+                responseFile = data._response.result.Data;
+            }
+
+            $.each(data.files, function (index, file) {
+                filecounter++;
+
+                $('.filemessage2').text('File upload in progress, please do not close this window...').show();
+                $('.totalfiles2').text(filecounter + ' upload completed').show();
+
+                var progress = Math.floor(filecounter / totalfiles * 100);
+                $('.progress-bar2').css('width', progress + '%');
+
+                if (totalfiles == filecounter) {
+                    $('.filemessage2').text('File upload complete.');
+                    filecounter = 0;
+                    totalfiles = 0;
+                }
+
+                if (callback) {
+                    callback(responseFile);
+                }
+            });
+        }
+    }).bind('fileuploadadd', function (e, data) {
+        totalfiles++;
+
+        $('.filemessage2').text('');
+        $('.totalfiles2').text('');
+    });
+
+}
+
+function GetFieldMappings(type) {
 
     PopulateDropDown('.mappings', 'savedentitymapping', '', '', null, null, null);
 
@@ -139,7 +169,7 @@ function SaveFieldMapping() {
 
 }
 
-function GetMappingFields() {
+function GetMappingFields(type) {
 
     var map = [];
 
@@ -149,7 +179,7 @@ function GetMappingFields() {
             ColumnName: $(this).text(),
             EntityMapping: {
                 PropertyName: $('.importfilecolumns ul li')[index].text(),
-                MappingType: EntityMappingType.Budget
+                MappingType: type
             }
         }
 

@@ -397,7 +397,7 @@
                             <h2>Select Source File</h2>
                             <p>Select the file containing the records to be imported.</p>
 
-                            <div class="fileuploadcontainer">
+                            <div class="importwizardfileuploadcontainer">
 
                                 <span class="btn btn-success fileinput-button">
                                     <i class="glyphicon glyphicon-plus"></i>
@@ -407,13 +407,13 @@
                                 </span>
         
                                 <div id="progress2" class="progress">
-                                    <div class="progress-bar progress-bar-success"></div>
+                                    <div class="progress-bar2 progress-bar-success"></div>
                                 </div>
 
                                 <div id="file-upload-progress2"></div>
 
-                                <label class="filemessage">Press 'Select Files' or Drag your files here to begin uploading.</label>
-                                <label class="totalfiles"></label>
+                                <label class="filemessage2">Press 'Select Files' or Drag your files here to begin uploading.</label>
+                                <label class="totalfiles2"></label>
 
                             </div>
 
@@ -434,7 +434,7 @@
                         <div class="step step2">
                             
                             <h2>Field Mappings</h2>
-                            <p>Map the fields from  your input filie to the ocrresponding fields in the target object.</p>
+                            <p>Map the fields from  your input filie to the corresponding fields in the target object.</p>
 
                             <div class="importmappinggridcontainer">
 

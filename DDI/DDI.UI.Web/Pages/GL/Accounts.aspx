@@ -36,7 +36,7 @@
 
 
                 //gather up the mapping information and file
-                DisplayImportWizardModal();
+                DisplayImportWizardModal(0); // 0 = Budget
 
                 //send the information to the route that josh has specified
 
