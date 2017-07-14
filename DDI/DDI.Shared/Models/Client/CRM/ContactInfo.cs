@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.CRM
 {
@@ -13,6 +14,7 @@ namespace DDI.Shared.Models.Client.CRM
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
+        [MaxLength(256)]
         public string Info { get; set; }
 
         public bool IsPreferred { get; set; }       

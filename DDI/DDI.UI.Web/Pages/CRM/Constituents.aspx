@@ -235,6 +235,9 @@
                    <h1 class="DemographicSettingsSection"><span class="DemographicSettingsSectionLabel">Demographics</span></h1>
                     
                     <div class="editcontainer">
+                        <div>
+                             <label>&nbsp;</label>
+                        </div>
                         <div class="fieldblock">
                             <label>Denomination</label>
                             <div class="editable tagbox denominations"></div>
@@ -493,7 +496,7 @@
 
                         <div class="accordions contactinfocontainer">
 
-                            <h1>Addresses<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>
+                            <h1>Addresses</h1><%--<a href="#" title="New" class="newaddressmodallink newbutton"></a></h1>--%>
                             <div>
                                 <div class="constituentaddressgridcontainer"></div>
                             </div>
