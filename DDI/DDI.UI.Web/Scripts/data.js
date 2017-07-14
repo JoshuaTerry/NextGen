@@ -31,7 +31,20 @@ function MakeServiceCall(method, route, item, successCallback, errorCallback) {
                 }
             }
             else {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+
+                var errors = '';
+
+                if (data && data.ErrorMessages && data.ErrorMessages.length > 0) {
+
+                    for (var i = 0; i < data.ErrorMessages.length; i++) {
+                        errors += data.ErrorMessages[i] + ' <br />';
+                    }
+
+                    DisplayErrorMessage('Error', errors);
+                }
+                else {
+                    DisplayErrorMessage('Error', 'An unknown error has occurred.');
+                }
             }
 
         },

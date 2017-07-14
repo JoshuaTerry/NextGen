@@ -2987,13 +2987,11 @@ function LoadFiscalYearSectionSettings() {
     var fycontainer = $('<fieldset style="display: none;">').addClass('fiscalyearcontainer');
     $('<legend>').text('Fiscal Years').appendTo($(fycontainer));
     $('.gridcontainer').append($(fycontainer));
-    // $('<h2>').text('Fiscal Years').appendTo($(fycontainer));
 
     $('.fiscalperiodscontainer').remove();
     var fpcontainer = $('<fieldset style="display: none;">').addClass('fiscalperiodscontainer');
     $('<legend>').text('Fiscal Perods').appendTo($(fpcontainer));
     $('.gridcontainer').append($(fpcontainer));
-    // $('<h2>').text('Fiscal Periods').appendTo($(fpcontainer));
 
     $(fycontainer).appendTo(gridgroup);
     $(fpcontainer).appendTo(gridgroup);
@@ -3004,6 +3002,7 @@ function LoadFiscalYearSectionSettings() {
     PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, 'Please Select', '', $('.LedgerId').val(), function () {
 
         LoadFiscalYearGrid();
+        $('.fy-LedgerId').val($('.LedgerId').val());
 
     }, function (element, data) {
 
@@ -3016,11 +3015,11 @@ function LoadFiscalYearSectionSettings() {
 }
 
 function LoadFiscalYearGrid() {
-
+       
     var ledgerid = $('.LedgerId').val();
 
     var columns = [
-        { dataField: 'Name', caption: 'Name' },
+        { dataField: 'Name', caption: 'Name', sortOrder: 'desc' },
         {
             caption: 'Status', cellTemplate: function (container, options) {
 
@@ -3053,6 +3052,7 @@ function LoadFiscalYearGrid() {
 
         if (data.Data.length > 0) {
             $('.fiscalyearcontainer').show();
+            $('.fiscalperiodscontainer').hide();
         }
         else {
             $('.fiscalyearcontainer').hide();
@@ -3062,13 +3062,15 @@ function LoadFiscalYearGrid() {
 }
 
 function LoadFiscalPeriods(info) {
-
+    var fiscalYearId = "";
     if (!info) {
         var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
         info = dataGrid.getSelectedRowsData();
         selectedRow = info[0];
+        fiscalYearId = info[0].Id;
     } else {
         selectedRow = info.data;
+        fiscalYearId = info.data.Id;
     }
 
     var columns = [
@@ -3099,12 +3101,8 @@ function LoadFiscalPeriods(info) {
 
     LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, function (data) {
 
-        if (data.Data.length > 0) {
-            $('.fiscalperiodscontainer').show();
-        }
-        else {
-            $('.fiscalperiodscontainer').hide();
-        }
+        $('.fiscalperiodscontainer').show();
+        $('.fp-FiscalYearId').val(fiscalYearId)
 
     });
 }

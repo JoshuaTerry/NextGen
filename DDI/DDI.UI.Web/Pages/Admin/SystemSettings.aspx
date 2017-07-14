@@ -1092,6 +1092,16 @@
             </div>
 
             <div class="fieldblock">
+                <label>Start Date</label>
+                <input type="text" class="fy-StartDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
+                <label>End Date</label>
+                <input type="text" class="fy-EndDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
                 <label>Number Of Periods</label>
                 <select class="fy-NumberOfPeriods">
                     <option value="1">1</option>
@@ -1119,12 +1129,11 @@
     <div class="fiscalperiodmodal" title="Fiscal Period" style="display: none;">
         <div class="modalcontent">
 
-            <input type="hidden" class="fp-Id" />
             <input type="hidden" class="fp-FiscalYearId" />
 
             <div class="fieldblock">
                 <label>Period Number</label>
-                <input type="text" maxlength="2" class="fp-PeriodNumber number" maxlength="2" />
+                <input type="text" class="fp-PeriodNumber number" maxlength="2" />
             </div>
 
             <div class="fieldblock">

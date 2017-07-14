@@ -15,7 +15,8 @@ namespace DDI.WebApi.Controllers.GL
     [Authorize]
     public class FiscalYearController : GenericController<FiscalYear>
     {
-        public FiscalYearController(IService<FiscalYear> service) : base(service) { }
+        protected new IFiscalYearService Service => (IFiscalYearService)base.Service;
+        public FiscalYearController(IFiscalYearService service) : base(service) { }
 
         private string _fieldsForAll = null;
 
@@ -128,7 +129,7 @@ namespace DDI.WebApi.Controllers.GL
         [Route("api/v1/fiscalyears")]
         public IHttpActionResult Post([FromBody] FiscalYear entityToSave)
         {
-            return base.Post(entityToSave);
+            return Ok(Service.Post(entityToSave));
         }
 
         [HttpPost]

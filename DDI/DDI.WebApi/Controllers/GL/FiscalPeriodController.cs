@@ -14,7 +14,7 @@ namespace DDI.WebApi.Controllers.GL
     {
         public FiscalPeriodController(IService<FiscalPeriod> service) : base(service) { }
         
-        protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";
+        protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.FiscalYearId)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.FiscalYear);
 
