@@ -21,7 +21,7 @@ namespace DDI.Data.Conventions
                             !p.GetCustomAttributes(false).OfType<MaxLengthAttribute>().Any() 
                                 && 
                             !p.GetCustomAttributes(false).OfType<TextAttribute>().Any())
-                .Configure(p => throw new InvalidOperationException($"String max length is required: {p.ClrPropertyInfo.DeclaringType.Name}.{p.ClrPropertyInfo.Name}"));
+                .Configure(p => { throw new InvalidOperationException($"String max length is required: {p.ClrPropertyInfo.DeclaringType.Name}.{p.ClrPropertyInfo.Name}"); });
 
             // Text attribute => nvarchar(max)
             Properties<string>()
