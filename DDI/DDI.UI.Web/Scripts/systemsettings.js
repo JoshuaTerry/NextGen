@@ -30,6 +30,8 @@ $(document).ready(function () {
 
         e.preventDefault();
 
+        ClearNavMenu();
+
         $('.customfieldmodallink').remove();
 
         $('.gridcontainer').html('');
@@ -47,6 +49,13 @@ $(document).ready(function () {
     });
 
 });
+
+function ClearNavMenu() {
+    $('.utilitymenu').find('li').each(function () {
+        $(this).remove();
+    })
+    $('.utilitynav').hide();
+}
 
 function LoadSettingsGrid(grid, container, columns, route) {
 
@@ -357,9 +366,9 @@ function LoadClergySectionSettings() {
 
     var statuscolumns = [
               
-              { dataField: 'Code', caption: 'Code' },
-              { dataField: 'Name', caption: 'Description' },
-              { dataField: 'IsActive', caption: 'Active' }
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
     LoadGrid('.clergystatuscontainer', 'clergystatusgrid', statuscolumns, 'clergystatuses?fields=all', 'clergystatuses', null, 'cstat-',
         '.clergystatusmodal', '.clergystatusmodal', 250, true, false, false, null);
@@ -369,9 +378,9 @@ function LoadClergySectionSettings() {
 
     var typecolumns = [
     
-    { dataField: 'Code', caption: 'Code' },
-    { dataField: 'Name', caption: 'Description' },
-    { dataField: 'IsActive', caption: 'Active' }
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
     LoadGrid('.clergytypecontainer', 'clergytypegrid', typecolumns, 'clergytypes?fields=all', 'clergytypes', null, 'ctype-',
         '.clergytypemodal', '.clergytypemodal', 250, true, false, false, null);
@@ -669,10 +678,10 @@ function DeleteConstituentType(id) {
 
     }, 
         
-         function (xhr, status, err) {
-             DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Type.');
-    }
-);
+        function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Type.');
+        }
+    );
 }
 
 
@@ -912,9 +921,9 @@ function LoadAddressTypeSettingsGrid() {
 
     var addresstypecolumns = [
        
-       { dataField: 'Code', caption: 'Code' },
-       { dataField: 'Name', caption: 'Description' },
-       { dataField: 'IsActive', caption: 'Active' }
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
 
     CustomLoadGrid('addresstypesgrid', 'addresstypescontainer', addresstypecolumns, 'addresstypes?fields=all', null, EditAddressType, DeleteAddressType);
@@ -1327,68 +1336,68 @@ function LoadDenominationSettingsGrid() {
 
     var denominationcolumns = [
        
-       { dataField: 'Code', caption: 'Code' },
-       { dataField: 'Name', caption: 'Denomination' },
-       {
-           caption: 'Religion', cellTemplate: function (container, options) {
-               var religion = 'None';
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Denomination' },
+        {
+            caption: 'Religion', cellTemplate: function (container, options) {
+                var religion = 'None';
 
-               switch (options.data.Religion) {
-                   case 1:
-                       religion = "Catholic";
-                       break;
-                   case 2:
-                       religion = "Protestant";
-                       break;
-                   case 3:
-                       religion = "Orthodox";
-                       break;
-                   case 4:
-                       religion = "Jewish";
-                       break;
-                   case 5:
-                       religion = "Islam";
-                       break;
-                   case 6:
-                       religion = "Hindu";
-                       break;
-                   case 7:
-                       religion = "Buddhist";
-                       break;
-                   case 8:
-                       religion = "Taoist";
-                       break;
-                   case 9:
-                       religion = "Shinto";
-                       break;
-                   case 10:
-                       religion = "Sikh";
-                       break;
-                   case 11:
-                       religion = "Bahai";
-                       break;
-               }
+                switch (options.data.Religion) {
+                    case 1:
+                        religion = "Catholic";
+                        break;
+                    case 2:
+                        religion = "Protestant";
+                        break;
+                    case 3:
+                        religion = "Orthodox";
+                        break;
+                    case 4:
+                        religion = "Jewish";
+                        break;
+                    case 5:
+                        religion = "Islam";
+                        break;
+                    case 6:
+                        religion = "Hindu";
+                        break;
+                    case 7:
+                        religion = "Buddhist";
+                        break;
+                    case 8:
+                        religion = "Taoist";
+                        break;
+                    case 9:
+                        religion = "Shinto";
+                        break;
+                    case 10:
+                        religion = "Sikh";
+                        break;
+                    case 11:
+                        religion = "Bahai";
+                        break;
+                }
 
-               $('<label>').text(religion).appendTo(container);
-           }
-       },
-       {
-           caption: 'Affiliation', cellTemplate: function (container, options) {
-               var affiliation = 'None';
+                $('<label>').text(religion).appendTo(container);
+            }
+        },
+        {
+            caption: 'Affiliation', cellTemplate: function (container, options) {
+                var affiliation = 'None';
 
-               switch (options.data.Affiliation) {
-                   case 1:
-                       affiliation = "Affiliated";
-                       break;
-                   case 2:
-                       affiliation = "Unaffiliated";
-                       break;
-               }
+                switch (options.data.Affiliation) {
+                    case 1:
+                        affiliation = "Affiliated";
+                        break;
+                    case 2:
+                        affiliation = "Unaffiliated";
+                        break;
+                }
 
-               $('<label>').text(affiliation).appendTo(container);
-           }
-       },
-       { dataField: 'IsActive', caption: 'Active' }
+                $('<label>').text(affiliation).appendTo(container);
+            }
+        },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
 
     LoadGrid('.denominationscontainer', 'denominationsgrid', denominationcolumns, 'denominations?fields=all', 'denominations', null, 'den-',
@@ -1469,7 +1478,7 @@ function LoadDegreeSettingsGrid() {
     ];
 
     LoadGrid('.degreecontainer', 'degreesgrid', degreecolumns, 'degrees?fields=all', 'degrees', null, 'deg-',
-    '.degreemodal', '.degreemodal', 250, true, false, false, null);
+        '.degreemodal', '.degreemodal', 250, true, false, false, null);
 
 }
 
@@ -1483,7 +1492,7 @@ function LoadEducationLevelSettingsGrid() {
     ];
 
     LoadGrid('.educationlevelscontainer', 'educationlevelsgrid', educationLevelcolumns, 'educationlevels?fields=all', 'educationlevels', null, 'eduLev-',
-    '.educationLevelmodal', '.educationLevelmodal', 250, true, false, false, null);
+        '.educationLevelmodal', '.educationLevelmodal', 250, true, false, false, null);
 
 }
 
@@ -1497,7 +1506,7 @@ function LoadSchoolsSettingsGrid() {
     ];
 
     LoadGrid('.schoolscontainer', 'schoolsgrid', schoolcolumns, 'schools?fields=all', 'schools', null, 'sch-',
-    '.schoolmodal', '.schoolmodal', 250, true, false, false, null);
+        '.schoolmodal', '.schoolmodal', 250, true, false, false, null);
 
 }
 /* END EDUCATION SYSTEM SETTINGS */
@@ -1513,7 +1522,7 @@ function LoadGenderSectionSettings() {
     ];
 
     LoadGrid('.gridcontainer', 'gendergridcontainer', columns, 'genders?fields=all', 'genders', null, 'gen-',
-    '.gendermodal', '.gendermodal', 250, true, false, false, null);
+        '.gendermodal', '.gendermodal', 250, true, false, false, null);
 }
 
 function LoadHubSearchSectionSettings() {
@@ -1544,11 +1553,11 @@ function LoadPrefixSectionSettings() {
 
     var prefixcolumns = [
        
-       { dataField: 'Code', caption: 'Code' },
-       { dataField: 'Name', caption: 'Description' },
-       { dataField: 'Salutation', caption: 'Salutation Prefix' },
-       { dataField: 'LabelPrefix', caption: 'Label Prefix' },
-       { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Description' },
+        { dataField: 'Salutation', caption: 'Salutation Prefix' },
+        { dataField: 'LabelPrefix', caption: 'Label Prefix' },
+        { dataField: 'LabelAbbreviation', caption: 'Label Prefix Short' }
     ];
 
     LoadGrid('.gridcontainer', 'prefixgrid', prefixcolumns, 'prefixes?fields=all', 'prefixes', null, 'prefix-',
@@ -1804,9 +1813,9 @@ function DisplayRegions(level, parentid) {
 
     var columns = [
        
-       { dataField: 'Code', caption: 'Code' },
-       { dataField: 'Name', caption: 'Name' },
-       { dataField: 'IsActive', caption: 'Active' }
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Name' },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
 
     CustomLoadGrid('regiongrid', 'regiongridcontainer', columns, route, null, EditRegion, DeleteRegion, function () {
@@ -2134,10 +2143,10 @@ function LoadRelationshipCategorySettingsGrid() {
 
     var relationshipcategorycolumns = [
        
-       { dataField: 'Code', caption: 'Code' },
-       { dataField: 'Name', caption: 'Denomination' },
-       { dataField: 'IsShownInQuickView', caption: 'Show in Quick View' },
-       { dataField: 'IsActive', caption: 'Active' }
+        { dataField: 'Code', caption: 'Code' },
+        { dataField: 'Name', caption: 'Denomination' },
+        { dataField: 'IsShownInQuickView', caption: 'Show in Quick View' },
+        { dataField: 'IsActive', caption: 'Active' }
     ];
 
     LoadGrid('.relationshipcategorycontainer', 'relationshipcategorygrid', relationshipcategorycolumns, 'relationshipcategories?fields=all', 'relationshipcategories', null, 'relcat-',
@@ -2608,7 +2617,7 @@ function LoadAccountingSettingsSectionSettings() {
         ShowAuditData($('.hidLedgerId').val());
         LoadAccountingSettings($('.hidLedgerId').val());
 
-     });
+    });
 
     // fiscal year
     CreateBasicFieldBlock('Fiscal Year: ', '<select>', 'as-fiscalyear', acctsettingscontainer, true);
@@ -2682,7 +2691,7 @@ function LoadBudgetSectionSettings() {
     PopulateDropDown('.budgetLedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, '', '', '', function () {       
     }, function () {      
         GetBudgetSetting();
-        });
+    });
 
     $(container).find('.budgetLedgerId').change(function () { GetBudgetSetting(); });
          
@@ -2930,27 +2939,27 @@ function LoadEntitiesSectionSettings() {
 
     var entityColumns = [
       
-      { dataField: 'Code', caption: 'Code', sortOrder: 'asc', sortIndex: 0 },
-      { dataField: 'Name', caption: 'Description' },
-      {
-          caption: 'Entity Type', cellTemplate: function (container, options) {
-              var entity = 'None';
+        { dataField: 'Code', caption: 'Code', sortOrder: 'asc', sortIndex: 0 },
+        { dataField: 'Name', caption: 'Description' },
+        {
+            caption: 'Entity Type', cellTemplate: function (container, options) {
+                var entity = 'None';
 
-              switch (options.data.BusinessUnitType) {
-                  case 0:
-                      entity = "Organization";
-                      break;
-                  case 1:
-                      entity = "Common";
-                      break;
-                  case 2:
-                      entity = "Separate";
-                      break;
-              }
+                switch (options.data.BusinessUnitType) {
+                    case 0:
+                        entity = "Organization";
+                        break;
+                    case 1:
+                        entity = "Common";
+                        break;
+                    case 2:
+                        entity = "Separate";
+                        break;
+                }
 
-              $('<label>').text(entity).appendTo(container);
-          }
-      }
+                $('<label>').text(entity).appendTo(container);
+            }
+        }
     ];
 
     LoadGrid('gridcontainer', 'bugridcontainer', entityColumns, 'businessunits/noorganization', 'businessunits', null, 'en-',
@@ -2963,6 +2972,7 @@ function LoadFiscalYearSectionSettings() {
 
     $('.gridcontainer').empty();
     $('.fiscalyearcontainer').remove();
+    PopulateFiscalYearNavMenu();
 
     var container = $('<div>');
     var selectledgergroup = $('<div style="margin-bottom: 20px;">');
@@ -2977,13 +2987,11 @@ function LoadFiscalYearSectionSettings() {
     var fycontainer = $('<fieldset style="display: none;">').addClass('fiscalyearcontainer');
     $('<legend>').text('Fiscal Years').appendTo($(fycontainer));
     $('.gridcontainer').append($(fycontainer));
-    // $('<h2>').text('Fiscal Years').appendTo($(fycontainer));
 
     $('.fiscalperiodscontainer').remove();
     var fpcontainer = $('<fieldset style="display: none;">').addClass('fiscalperiodscontainer');
     $('<legend>').text('Fiscal Perods').appendTo($(fpcontainer));
     $('.gridcontainer').append($(fpcontainer));
-    // $('<h2>').text('Fiscal Periods').appendTo($(fpcontainer));
 
     $(fycontainer).appendTo(gridgroup);
     $(fpcontainer).appendTo(gridgroup);
@@ -2993,50 +3001,8 @@ function LoadFiscalYearSectionSettings() {
 
     PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, 'Please Select', '', $('.LedgerId').val(), function () {
 
-        var ledgerid = $('.LedgerId').val();
-
-        var columns = [
-            { dataField: 'Name', caption: 'Name' },
-            {
-                caption: 'Status', cellTemplate: function (container, options) {
-
-                    var status;
-
-                    switch (options.data.Status) {
-                        case 0:
-                            status = "Empty";
-                            break;
-                        case 1:
-                            status = "Open";
-                            break;
-                        case 2:
-                            status = "Closed";
-                            break;
-                        case 3:
-                            status = "Reopened";
-                            break;
-                        case 4:
-                            status = "Locked";
-                            break;
-                    }
-
-                    $('<label>').text(status).appendTo(container);
-                }
-            },
-        ];
-
-        LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, function (data) {
-
-            if (data.Data.length > 0) {
-                $('.fiscalyearcontainer').show();
-            }
-            else {
-                $('.fiscalyearcontainer').hide();
-            }
-
-        });
-
-
+        LoadFiscalYearGrid();
+        $('.fy-LedgerId').val($('.LedgerId').val());
 
     }, function (element, data) {
 
@@ -3048,14 +3014,63 @@ function LoadFiscalYearSectionSettings() {
     });
 }
 
-function LoadFiscalPeriods(info) {
+function LoadFiscalYearGrid() {
+       
+    var ledgerid = $('.LedgerId').val();
 
+    var columns = [
+        { dataField: 'Name', caption: 'Name', sortOrder: 'desc' },
+        {
+            caption: 'Status', cellTemplate: function (container, options) {
+
+                var status;
+
+                switch (options.data.Status) {
+                    case 0:
+                        status = "Empty";
+                        break;
+                    case 1:
+                        status = "Open";
+                        break;
+                    case 2:
+                        status = "Closed";
+                        break;
+                    case 3:
+                        status = "Reopened";
+                        break;
+                    case 4:
+                        status = "Locked";
+                        break;
+                }
+
+                $('<label>').text(status).appendTo(container);
+            }
+        },
+    ];
+
+    LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, function (data) {
+
+        if (data.Data.length > 0) {
+            $('.fiscalyearcontainer').show();
+            $('.fiscalperiodscontainer').hide();
+        }
+        else {
+            $('.fiscalyearcontainer').hide();
+        }
+
+    });
+}
+
+function LoadFiscalPeriods(info) {
+    var fiscalYearId = "";
     if (!info) {
         var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
         info = dataGrid.getSelectedRowsData();
         selectedRow = info[0];
+        fiscalYearId = info[0].Id;
     } else {
         selectedRow = info.data;
+        fiscalYearId = info.data.Id;
     }
 
     var columns = [
@@ -3086,14 +3101,271 @@ function LoadFiscalPeriods(info) {
 
     LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, function (data) {
 
-        if (data.Data.length > 0) {
-            $('.fiscalperiodscontainer').show();
-        }
-        else {
-            $('.fiscalperiodscontainer').hide();
-        }
+        $('.fiscalperiodscontainer').show();
+        $('.fp-FiscalYearId').val(fiscalYearId)
 
     });
+}
+
+function PopulateFiscalYearNavMenu() {
+    var um = $('.utilitymenu')
+    um.append('<li class="closefiscalyear"><a href="#">Close Fiscal Year</a></li>');
+    um.append('<li class="reopenfiscalyear"><a href="#">Reopen Fiscal Year</a></li>');
+    um.append('<li class="reclosefiscalyear"><a href="#">Reclose Fiscal Year</a></li>');
+    um.append('<li class="newfiscalyear"><a href="#">Create New Fiscal Year</a></li>');
+
+    var un = $('.utilitynav');
+    un.show();
+    un.unbind('click');
+    un.click(function (e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        toolbox = $(this).find('.utilitymenu');
+        toolbox.toggle();
+
+    });
+
+    $('.closefiscalyear').unbind('click');
+    $('.closefiscalyear').click(function (e) {
+
+        e.preventDefault();
+        UpdateFiscalYearModal('Close');
+
+    });
+
+    $('.reopenfiscalyear').unbind('click');
+    $('.reopenfiscalyear').click(function (e) {
+
+        e.preventDefault();
+        UpdateFiscalYearModal('Reopen');
+
+    });
+
+    $('.reclosefiscalyear').unbind('click');
+    $('.reclosefiscalyear').click(function (e) {
+
+        e.preventDefault();
+        UpdateFiscalYearModal('Reclose');
+
+    });
+
+    $('.newfiscalyear').unbind('click');
+    $('.newfiscalyear').click(function (e) {
+
+        e.preventDefault();
+        NewFiscalYearModal();
+
+    });
+
+}
+
+//close, reopen, reclose fiscal year
+
+function UpdateFiscalYearModal(updateOption) {
+    var fiscalYearId = '';
+    var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
+    if (!dataGrid) {
+        DisplayErrorMessage('Error', 'You must select a ledger first.');
+        return;
+    }
+    info = dataGrid.getSelectedRowsData();
+    if (info.length > 0) {
+        selectedRow = info[0];
+        fiscalYearId = selectedRow.Id;
+    }
+
+    $('.selectfiscalyearlabel').html('Fiscal Year to ' + updateOption + ":");
+    $('.updatefiscalyearmodalbuttons').show();
+
+    modal = $('.updatefiscalyearmodal').dialog({
+        title: updateOption + ' Fiscal Year',
+        closeOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    $('.cancelupdatefiscalyearmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.okupdatefiscalyearmodalbutton').unbind('click');
+
+    $('.okupdatefiscalyearmodalbutton').click(function () {
+
+        UpdateFiscalYearValidate(modal, updateOption)
+
+    });
+
+    $('.updatefiscalyearnotivylabel').html('Please wait... Now loading fiscal years');
+    PopulateDropDown('.uf-FiscalYear', 'fiscalyears/ledger/' + $('.LedgerId').val() + '?fields=Id,DisplayName', '', '', fiscalYearId, '', function () {
+        UpdateFiscalYearDropDownComplete(modal, updateOption)
+    })
+
+}
+
+function UpdateFiscalYearDropDownComplete(element, data) {
+    $('.updatefiscalyearnotifylabel').html('');
+}
+
+function UpdateFiscalYearValidate(modal, updateOption) {
+    if ($('.uf-FiscalYear').val() === '') {
+        DisplayErrorMessage('Error', 'You must select a fiscal year first.');
+        return;
+    }
+    UpdateFiscalYearUpdate(modal, updateOption)
+
+}
+
+function UpdateFiscalYearUpdate(modal, updateOption) {
+
+    $('.updatefiscalyearnotifylabel').html('Please wait... Now updating fiscal year');
+    $('.updatefiscalyearmodalbuttons').hide();
+
+    var item = null;
+    var status = 0;
+    switch (updateOption) {
+        case 'Close':
+            status = 'closed'
+            break;
+        case 'Reopen':
+            status = 'open'
+            break;
+        case 'Reclose':
+            status = 'reclose'
+            break;
+    }
+    item = {
+        Id: $('.uf-FiscalYear').val(),
+        Status: status
+    }
+
+    MakeServiceCall('PATCH', 'fiscalyears/' + $('.uf-FiscalYear').val(), JSON.stringify(item), function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+                DisplaySuccessMessage('Success', 'Fiscal year update successful.');
+                CloseModal(modal);
+                $('.fiscalperiodscontainer').hide();
+                LoadFiscalYearGrid()
+            }
+
+        }
+
+    }, function () {
+
+        $('.updatefiscalyearmodalbuttons').show();
+        $('.updatefiscalyearnotifylabel').html(updateOption + ' fiscal year failed');
+
+    }
+
+    );
+}
+
+//new fiscal year
+
+function NewFiscalYearModal() {
+    var fiscalYearId = '';
+    var dataGrid = $('.fiscalyeargrid').dxDataGrid('instance');
+    if (!dataGrid) {
+        DisplayErrorMessage('Error', 'You must select a ledger first.');
+        return;
+    }
+    info = dataGrid.getSelectedRowsData();
+    if (info.length > 0) {
+        selectedRow = info[0];
+        fiscalYearId = selectedRow.Id;
+    }
+    InitRequiredLabels('newfiscalyearmodal')
+    $('.newfiscalyearmodalbuttons').show();
+
+    modal = $('.newfiscalyearmodal').dialog({
+        NewOnEscape: false,
+        modal: true,
+        width: 500,
+        resizable: false
+    });
+
+    $('.cancelnewfiscalyearmodal').click(function (e) {
+
+        e.preventDefault();
+
+        CloseModal(modal);
+
+    });
+
+    $('.oknewfiscalyearmodalbutton').unbind('click');
+
+    $('.oknewfiscalyearmodalbutton').click(function () {
+
+        NewFiscalYearValidate(modal, option)
+
+    });
+
+    $('.newfiscalyearnotifylabel').html('Please wait... Now loading fiscal years');
+    PopulateDropDown('.fn-FromFiscalYear', 'fiscalyears/ledger/' + $('.LedgerId').val() + '?fields=Id,DisplayName', '', '', fiscalYearId, '', function () {
+        NewFiscalYearDropDownComplete(modal)
+    })
+
+}
+
+function NewFiscalYearDropDownComplete(element, data) {
+    $('.newfiscalyearnotifylabel').html('');
+}
+
+function NewFiscalYearValidate(modal) {
+
+    if (ValidateForm('newfiscalyearmodal') === false) {
+        return
+    }
+
+    NewFiscalYearUpdate(modal)
+
+}
+
+function NewFiscalYearUpdate(modal) {
+    $('.newfiscalyearmodalbuttons').hide();
+    $('.newfiscalyearnotifylabel').html('Please wait... Now creating new fiscal year');
+
+    var item = null;
+    item = {
+        Name: $('.fn-NewFiscalYear').val(),
+        StartDate: $('.fn-StartDate').val(),
+        CopyInactiveAccounts: ($('.fn-CopyInactiveAccounts').prop('checked') === true ? 'true' : 'false')
+    }
+
+    MakeServiceCall('POST', 'fiscalyears/' + $('.fn-FromFiscalYear').val() + '/copy', JSON.stringify(item), function (data) {
+
+        if (data.Data) {
+            if (data.IsSuccessful) {
+                DisplaySuccessMessage('Success', 'Fiscal year copy successful.');
+                var dt1 = new Date();
+                var time1 = dt1.getHours() + ":" + dt1.getMinutes() + ":" + dt1.getSeconds();
+                var dt2 = new Date();
+                var time2 = dt2.getHours() + ":" + dt2.getMinutes() + ":" + dt2.getSeconds();
+                $('.newfiscalyearnotifylabel').html(time1 + ' - ' + time2);
+
+                //CloseModal(modal);
+                //LoadFiscalYearGrid()
+            }
+
+        }
+
+    }, function () {
+
+        $('.newfiscalyearmodalbuttons').show();
+        $('.newfiscalyearnotifylabel').html('Creating new fiscal year failed');
+
+    }
+
+    );
+
 }
 
 /* GENERAL LEDGER FUND SETTINGS */
@@ -3188,6 +3460,7 @@ function LoadFundAccountingSectionSettings() {
 
     $(accordions).hide();
     $('.accordion-buttons').hide();
+   
 }
 
 function PopulateFiscalYears() {
@@ -3198,18 +3471,23 @@ function PopulateFiscalYears() {
             if (data.IsSuccessful) {
                 $('.selectfiscalyear').parent().show();
                 $('.hidLedgerId').val(data.Data.Id);
-                PopulateDropDown('.selectfiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), '', '', data.Data.DefaultFiscalYearId, function () {
+                PopulateDropDown('.selectfiscalyear', 'fiscalyears/ledger/' + $('.hidLedgerId').val(), 'Please Select', '', data.Data.DefaultFiscalYearId, function () {
                     $('.hidFiscalId').val($('.selectfiscalyear').val());
                     var fiscalId = $('.hidFiscalId').val();
                     var ledgerId = $('.hidLedgerId').val();
-                    PopulateFundFromFiscalYear(fiscalId, ledgerId);
-                    $('.gridcontainer .accordions').hide();
-                    $('.gridcontainer .accordion-buttons').hide();
-                }, function () {
+                    if ($('.selectfiscalyear').val().length > 0) {
+                        PopulateFundFromFiscalYear(fiscalId, ledgerId);
+                        PopulateFundBusinessFromFiscalYear(($('.selectfiscalyear').val(), $('.hidLedgerId').val()));
+                    }
+                },
+                function () {
                     $('.hidFiscalId').val($('.selectfiscalyear').val());
                     var fiscalId = $('.hidFiscalId').val();
                     var ledgerId = $('.hidLedgerId').val();
-                    $('.selectfund').parent().show();
+                    $('.gridcontainer .accordions').show();
+                    $('.gridcontainer .accordion-buttons').show();
+                    LoadFundGLAccountSelector($('.selectfiscalyear').val(), ledgerid, $('.selectfund').val());
+                    PopulateFundBusinessFromFiscalYear(($('.selectfiscalyear').val(), $('.hidLedgerId').val()));
                     PopulateFundFromFiscalYear(fiscalId, ledgerId);
                 });
             }
@@ -3220,38 +3498,59 @@ function PopulateFiscalYears() {
 /* POPULATING FUND FROM FISCAL YEAR GRID */
 function PopulateFundFromFiscalYear(fiscalyear, ledgerid, fundid) {
     
-    PopulateDropDown('.selectfund', 'fund/' + fiscalyear + '/fiscalyear', 'Please Select', '', '', function () {
-        $('.gridcontainer .accordions').show()
-        $('.gridcontainer .accordion-buttons').show();
+    PopulateDropDown('.selectfund', 'fund/' + fiscalyear + '/fiscalyear', 'Please Select', '', '',
+        function () {
 
-        LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.hidLedgerId').val(), $('.selectfund').val());
-        PopulateFundBusinessFromFiscalYear(($('.selectfiscalyear').val(), $('.hidLedgerId').val()));
-        PopulateFundDueFromFund($('.selectfund').val());
+            LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.hidLedgerId').val(), $('.selectfund').val());
+            PopulateFundBusinessFromFiscalYear(($('.selectfiscalyear').val(), $('.hidLedgerId').val()));
+            PopulateFundDueFromFund($('.selectfund').val());
 
-    }, null);
-
-    //used to preload the glaccountselector. then when fund is picked the fund values would be used to populate selector
-    LoadFundGLAccountSelector($('.selectfiscalyear').val(), ledgerid, fundid);
-
+        },
+        function (e, data) {
+            if (data.Data.length <= 1)
+            {
+                $('.selectfund').parent().hide();
+                $('.fundduecontainer').hide();
+                $('.fundduecontainer').parent().find("#" + $('.fundduecontainer').attr("aria-labelledby")).hide()
+                LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.hidLedgerId').val(), $('.selectfund').val());
+            }
+            else
+            {
+                $('.selectfund').parent().show();
+                $('.fundduecontainer').parent().find("#" + $('.fundduecontainer').attr("aria-labelledby")).show()
+            };
+            if (data.Data.length > 0) {
+                $('.selectfund option:eq(1)').attr('selected', 'selected');
+                LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.hidLedgerId').val(), $('.selectfund').val());
+                PopulateFundDueFromFund($('.selectfund').val());
+            };
+        }
+    );
 }
 /*POPULATE FUND ACCOUNT SELECTOR*/
 
 function LoadFundGLAccountSelector(fiscalyearid, ledgerid, fundid) {
 
-    if (($('.selectfundbalanceaccount').children().length <= 0)) {
-        GLAccountSelector($('.selectfundbalanceaccount'), ledgerid, fiscalyearid);
-        GLAccountSelector($('.selectclosingrevenueaccount'), ledgerid, fiscalyearid);
-        GLAccountSelector($('.selectclosingexpenseaccount'), ledgerid, fiscalyearid);
-    }
-    else {
-
+    $('.selectfundbalanceaccount').empty();
+    $('.selectclosingrevenueaccount').empty();
+    $('.selectclosingexpenseaccount').empty();
+  
+    GLAccountSelector($('.selectfundbalanceaccount'), ledgerid, fiscalyearid);
+    GLAccountSelector($('.selectclosingrevenueaccount'), ledgerid, fiscalyearid);
+    GLAccountSelector($('.selectclosingexpenseaccount'), ledgerid, fiscalyearid);
+    if (fundid != undefined && fundid.length > 0)
+    {
         MakeServiceCall('GET', 'fund/' + fundid, null, function (data) {
             var fund = data.Data;
             LoadSelectedAccount($('.selectfundbalanceaccount'), fund.FundBalanceAccountId);
             LoadSelectedAccount($('.selectclosingrevenueaccount'), fund.ClosingRevenueAccountId);
             LoadSelectedAccount($('.selectclosingexpenseaccount'), fund.ClosingExpenseAccountId);
         });
-
+    }
+    else {
+        LoadSelectedAccount($('.selectfundbalanceaccount'),"");
+        LoadSelectedAccount($('.selectclosingrevenueaccount'), "");
+        LoadSelectedAccount($('.selectclosingexpenseaccount'), "");
     }
 }
 
@@ -3352,11 +3651,11 @@ function EditBusinessUnit(buFromToInfo) {
             LoadSelectedAccount($(modal).find('.bus-FromLedgerAccount'), data.Data.FromAccountId);
             LoadSelectedAccount($(modal).find('.bus-ToLedgerAccount'), data.Data.ToAccountId);
 
+            $('.cancelbusinessunitduedetailsmodal').unbind('click');
             $('.cancelbusinessunitduedetailsmodal').click(function (e) {
 
                 e.preventDefault();
                 CloseModal(modal);
-                PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
 
                 $('.bus-FromLedgerAccount').empty();
                 $('.bus-ToLedgerAccount').empty();
@@ -3398,11 +3697,11 @@ function EditBusinessUnit(buFromToInfo) {
         GLAccountSelector($(modal).find('.bus-FromLedgerAccount'), $('.fundLedgerId').val(), $('.selectfiscalyear').val());
         GLAccountSelector($(modal).find('.bus-ToLedgerAccount'), $('.fundLedgerId').val(), $('.selectfiscalyear').val());
 
+        $('.cancelbusinessunitduedetailsmodal').unbind('click');
         $('.cancelbusinessunitduedetailsmodal').click(function (e) {
             e.preventDefault();
             CloseModal(modal);
-            PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
-
+          
             $('.bus-FromLedgerAccount').empty();
             $('.bus-ToLedgerAccount').empty();
         });
@@ -3453,11 +3752,11 @@ function EditFundDue(fundDueInfo) {
             LoadSelectedAccount($('.fn-DueFromAccount'), data.Data.FromAccountId);
             LoadSelectedAccount($('.fn-DueToAccount'), data.Data.ToAccountId);
 
+            $('.cancelfundduemodal').unbind('click');
             $('.cancelfundduemodal').click(function (e) {
                 e.preventDefault();
                 CloseModal(modal);
-                PopulateFundDueFromFund($('.selectfund').val());
-
+               
                 $('.fn-DueFromAccount').empty();
                 $('.fn-DueToAccount').empty();
             });
@@ -3498,11 +3797,11 @@ function EditFundDue(fundDueInfo) {
         GLAccountSelector($('.fn-DueFromAccount'), $('.fundLedgerId').val(), $('.selectfiscalyear').val());
         GLAccountSelector($('.fn-DueToAccount'), $('.fundLedgerId').val(), $('.selectfiscalyear').val());
 
+        $('.cancelfundduemodal').unbind('click');
         $('.cancelfundduemodal').click(function (e) {
             e.preventDefault();
             CloseModal(modal);
-            PopulateFundDueFromFund($('.selectfund').val());
-
+           
             $('.fn-DueFromAccount').empty();
             $('.fn-DueToAccount').empty();
         });
@@ -3576,75 +3875,75 @@ function LoadGLFormatSectionSettings() {
 
                 var glformatcolumns = [
             
-            { dataField: 'Level', caption: 'Level' },
-            {
-                caption: 'Type', cellTemplate: function (container, options) {
-                    var type = "None";
+                    { dataField: 'Level', caption: 'Level' },
+                    {
+                        caption: 'Type', cellTemplate: function (container, options) {
+                            var type = "None";
 
-                    switch (options.data.Type) {
-                        case 1:
-                            type = "Fund";
-                            break;
-                        case 2:
-                            type = "Account";
-                            break;
+                            switch (options.data.Type) {
+                                case 1:
+                                    type = "Fund";
+                                    break;
+                                case 2:
+                                    type = "Account";
+                                    break;
+                            }
+
+                            $('<label>').text(type).appendTo(container);
+                        }
+                    },
+                    {
+                        caption: 'Format', cellTemplate: function (container, options) {
+                            var format;
+
+                            switch (options.data.Format) {
+                                case 0:
+                                    format = "Both";
+                                    break;
+                                case 1:
+                                    format = "Numeric";
+                                    break;
+                                case 2:
+                                    format = "Alpha";
+                                    break;
+                            }
+
+                            $('<label>').text(format).appendTo(container);
+                        }
+                    },
+                    { dataField: 'Length', caption: 'Length' },
+                    { dataField: 'IsLinked', caption: 'Linked' },
+                    { dataField: 'IsCommon', caption: 'Common' },
+                    { dataField: 'Name', caption: 'Name' },
+                    { dataField: 'Abbreviation', caption: 'Abbreviation' },
+                    {
+                        caption: 'Separator', cellTemplate: function (container, options) {
+                            var separator = 'None';
+                            options.data.Separator.replace(' ', '(Space)');
+
+                            if (options.data.Separator == '') {
+                                options.data.Separator = 'None';
+                            }                      
+
+                            $('<label>').text(options.data.Separator).appendTo(container);
+                        }
+                    },
+                    {
+                        caption: 'Sort Order', cellTemplate: function (container, options) {
+                            var order = 'None';
+
+                            switch (options.data.SortOrder) {
+                                case 0:
+                                    order = "Ascending";
+                                    break;
+                                case 1:
+                                    order = "Unaffiliated";
+                                    break;
+                            }
+
+                            $('<label>').text(order).appendTo(container);
+                        }
                     }
-
-                    $('<label>').text(type).appendTo(container);
-                }
-            },
-            {
-                caption: 'Format', cellTemplate: function (container, options) {
-                    var format;
-
-                    switch (options.data.Format) {
-                        case 0:
-                            format = "Both";
-                            break;
-                        case 1:
-                            format = "Numeric";
-                            break;
-                        case 2:
-                            format = "Alpha";
-                            break;
-                    }
-
-                    $('<label>').text(format).appendTo(container);
-                }
-            },
-            { dataField: 'Length', caption: 'Length' },
-            { dataField: 'IsLinked', caption: 'Linked' },
-            { dataField: 'IsCommon', caption: 'Common' },
-            { dataField: 'Name', caption: 'Name' },
-            { dataField: 'Abbreviation', caption: 'Abbreviation' },
-            {
-                caption: 'Separator', cellTemplate: function (container, options) {
-                    var separator = 'None';
-                    options.data.Separator.replace(' ', '(Space)');
-
-                    if (options.data.Separator == '') {
-                        options.data.Separator = 'None';
-                    }                      
-
-                    $('<label>').text(options.data.Separator).appendTo(container);
-                }
-            },
-            {
-                caption: 'Sort Order', cellTemplate: function (container, options) {
-                    var order = 'None';
-
-                    switch (options.data.SortOrder) {
-                        case 0:
-                            order = "Ascending";
-                            break;
-                        case 1:
-                            order = "Unaffiliated";
-                            break;
-                    }
-
-                    $('<label>').text(order).appendTo(container);
-                }
-            }
                 ];
                 
                 LoadGrid('.glformatcontainer', 'glformatgrid', glformatcolumns, 'segmentlevels/ledger/' + ledgerId, 'segmentlevels', null, 'glformat-',
@@ -3832,8 +4131,8 @@ function CustomFieldTypeSelected(selectedvalue) {
 
     if (selectedvalue) {
         if (selectedvalue == CustomFieldType.Number ||
-        selectedvalue == CustomFieldType.Date ||
-        selectedvalue == CustomFieldType.DateTime) {
+            selectedvalue == CustomFieldType.Date ||
+            selectedvalue == CustomFieldType.DateTime) {
             $('.minmaxvalues').show()
         }
         else {

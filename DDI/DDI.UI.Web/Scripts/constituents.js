@@ -305,6 +305,8 @@ function DisplayConstituentPicture() {
 
     var img = $('.constituentpic img');
 
+    $(img).attr('src', '');
+
     $.ajax({
         url: WEB_API_ADDRESS + 'constituentpicture/' + currentEntity.Id,
         method: 'GET',
@@ -323,6 +325,13 @@ function DisplayConstituentPicture() {
                 });
 
             }
+            else {
+                if (currentEntity.IsMasculine) {
+                    $(img).attr('src', '../../Images/Male.png');
+                } else {
+                    $(img).attr('src', '../../Images/Female.png');
+                }
+            }
 
         },
         error: function (xhr, status, err) {
@@ -331,7 +340,7 @@ function DisplayConstituentPicture() {
     });
 
     $('.constituentpic').on('mouseenter', function () {
-        $('.changeconstituentpic').stop().show().animate({ height: '50px', bottom: '0px', opacity: '.9' }, 100);
+        $('.changeconstituentpic').stop().show().animate({ height: '50px', bottom: '0px', opacity: '.7' }, 100);
     }).on('mouseleave', function () {
         $('.changeconstituentpic').stop().animate({ height: '0px', bottom: '0px', opacity: '0' }, 100);
     });
@@ -388,6 +397,7 @@ function DisplayConstituentType() {
 
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
+        $('.OrganizationSettingsSection').hide();
         $('.individualConstituent').show();
         $('.DBASettingsSection').hide();
     } else {
@@ -413,8 +423,21 @@ function GetConstituentPrimaryAddress() {
 
             currentaddress = data.Data;
 
-            $('.Address').text(currentaddress);
-             
+                  
+            var curadd = currentaddress.split('\n');
+
+            for (var i = 0; i < curadd.length; i++) {
+
+                var insert =
+                    $('<span>', {
+                       text: curadd[i]
+                    });
+                    
+                 $('.Address').append(insert.text() + '<br />');
+               
+            }
+           
+              
         },
         error: function (xhr, status, err) {
             DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
@@ -497,7 +520,7 @@ function LoadEducationGrid() {
     ];
 
     LoadGrid('.educationgridcontainer', 'educationgrid', columns, 'constituents/' + currentEntity.Id + '/educations', 'educations'
-        , null, 'ed-', '.educationmodal', '.educationmodal', 350, false, false, false, null);
+        , null, 'ed-', '.educationmodal', '.educationmodal', 350, true, false, false, null);
 
     SetupSchoolAutocomplete();
     SetupDegreeAutoComplete();
@@ -525,7 +548,7 @@ function LoadPaymentPreferencesTable() {
             }
     ];
 
-    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'constituents/' + currentEntity.Id + '/paymentmethods?fields=Id,Description,RoutingNumber,BankAccount,AccountType', 'paymentmethods')
+    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'constituents/' + currentEntity.Id + '/paymentmethods?fields=Id,Description,RoutingNumber,BankAccount,AccountType', 'paymentmethods/', null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 400, true, false, false, null);
 }
 
 /* End Payment Preference Section */
@@ -569,8 +592,8 @@ function LoadAlternateIDTable() {
             { dataField: 'Name', caption: 'Name' }
     ];
 
-    LoadGrid('.alternateidgridcontainer', 'altidgrid', columns, 'constituents/' + currentEntity.Id + '/alternateids', 'alternateids'
-        , null, 'ai-', '.alternateidmodal', '.alternateidmodal', 250, false, true, false, null);
+    GridManager.LoadGrid('.alternateidgridcontainer', 'altidgrid', columns, 'constituents/' + currentEntity.Id + '/alternateids', 'alternateids'
+        , null, 'ai-', '.alternateidmodal', '.alternateidmodal', 250, true, true, false, null);
 }
 
 /* End Alternate Id Section */
@@ -584,26 +607,30 @@ function LoadContactInfo() {
 
 function LoadAddressesGrid() {
 
+    
+    
+
+    
     var columns = [
         { dataField: 'IsPrimary', caption: 'Is Primary' },
         { dataField: 'AddressType.DisplayName', caption: 'Type' },
         { dataField: 'Address.AddressLine1', caption: 'Address' }
     ];
-
+     
     CustomLoadGrid('constituentaddressgrid',
         'constituentaddressgridcontainer',
         columns,
         'constituents/' + currentEntity.Id + '/constituentaddresses',
         null,
-        EditAddressModal);
-    
-    
-
+        EditAddressModal, DeleteAddress, AddressGridComplete); 
+   
 }
 
-function NewAddressModal() {
-
-    $('.newaddressmodallink').click(function (e) {
+function AddressGridComplete() {
+    var cagc = $('.constituentaddressgridcontainer');
+    var cag = $('.constituentaddressgrid');
+    var header = $('<div>').attr('style', 'text-align: right;').prependTo($(cagc));
+    $('<a>').attr('href', '#').addClass('newmodallink modallink newbutton').text('New Item').click(function (e) {
 
         e.preventDefault();
 
@@ -667,11 +694,29 @@ function NewAddressModal() {
 
         AutoZip(modal, '.na-');
 
-    });
+    }).appendTo($(header));
 
     PopulateAddressTypesInModal(null);
 
-    PopulateCountriesInModal(null);
+    PopulateCountriesInModal(null); 
+}
+function DeleteAddress(id)
+{
+    MakeServiceCall('DELETE', 'constituentaddresses/' + id, null, function (data) {
+
+        DisplaySuccessMessage('Success', 'Constituent Address deleted successfully.');
+
+        LoadAddressesGrid();
+
+    },
+        function (xhr, status, err) {
+            DisplayErrorMessage('Error', 'An error occurred deleting the Constituent Address.');
+        }
+    );
+}
+function NewAddressModal() {
+
+    
 
 }
 
@@ -867,7 +912,7 @@ function LoadContactCategoryGrid(categoryid, displayText, name, idField) {
     PopulateDropDown($('.' + name.toLowerCase() + "-ContactTypeId"), 'contacttypes/category/' + categoryid, null)
    
     LoadGrid( 'constituent' + name + 'gridcontainer', 'constituent' + name + 'grid', columns,  'contactinfo/' + categoryid + '/' + currentEntity.Id, 'contactinfo'
-        , null, name.toLowerCase() + '-', '.' + name.toLowerCase() + 'modal', '.' + name.toLowerCase() + 'modal', 250, false, true, false, null);
+        , null, name.toLowerCase() + '-', '.' + name.toLowerCase() + 'modal', '.' + name.toLowerCase() + 'modal', 250, true, true, false, null);
 
    
 }
@@ -980,7 +1025,7 @@ function NewRelationshipModal() {
 
 function PrePopulateNewRelationshipModal(modal) {
     $(modal).find('.rs-Constituent2Id').val(currentEntity.Id);
-    $(modal).find('.rs-Constituent2Name').val(currentEntity.FormattedName);
+    $(modal).find('.rs-Constituent2Information').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {

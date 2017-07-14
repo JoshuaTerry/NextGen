@@ -16,7 +16,7 @@ namespace DDI.Shared.Models.Client.GL
         [Key, Column(Order = 2)]
         public int PeriodNumber { get; set; }
 
-        [Key, Column(Order = 3)]
+        [Key, Column(Order = 3), MaxLength(2)]
         public string DebitCredit { get; set; }
         
         public decimal TotalAmount { get; set; }
