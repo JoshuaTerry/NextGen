@@ -1,10 +1,11 @@
-﻿using DDI.Shared.Helpers;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Models.Client.Security;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
+using DDI.Shared.Helpers;
+using DDI.Shared.Models.Client.CRM;
+using DDI.Shared.Models.Client.Security;
 
 namespace DDI.Shared.Models.Client.Core
 {
@@ -18,6 +19,7 @@ namespace DDI.Shared.Models.Client.Core
         [MaxLength(256)]
         public string Title { get; set; }
 
+        [Text]
         public string Text { get; set; }
 
         [Column(TypeName = "date")]
