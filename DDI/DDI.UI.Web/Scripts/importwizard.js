@@ -72,6 +72,21 @@ function DisplayImportWizardModal() {
         resizable: false
     });
 
+    //UploadFiles(function (file) {
+
+
+    //    MakeServiceCall("Post", 'filestorage/upload', file, function (data) {
+
+    //        if(file)
+    //        {
+    //            $('.hiddentimportfileid').val(file.Id);
+    //        }
+    //    },
+    //        null
+    //    )}
+
+    //    );
+
     InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload', function (file) {
 
         if (file) {
