@@ -2,7 +2,6 @@ using System;
 using DDI.Shared.Data;
 using DDI.Shared.Helpers;
 using DDI.Shared.Interfaces;
-using System;
 
 namespace DDI.Shared
 {

@@ -41,7 +41,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpGet]
         [Route("api/v1/ledgers/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
@@ -66,14 +66,14 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpPost]
         [Route("api/v1/ledgers")]
-        public IHttpActionResult Post([FromBody] Ledger item)
+        public override IHttpActionResult Post([FromBody] Ledger item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/ledgers/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }

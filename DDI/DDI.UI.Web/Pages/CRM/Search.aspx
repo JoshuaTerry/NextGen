@@ -143,7 +143,7 @@
     </div>
 
     <div class="searchresults">
-        <div class="gridcontainer scrollable"></div>
+        <div class="gridcontainer"></div>
     </div>
 
 </asp:Content>

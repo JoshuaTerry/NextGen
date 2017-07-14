@@ -28,7 +28,6 @@ namespace DDI.Shared
         private int _count;
         private bool _autoSaveChanges = false;
         private bool _hasDataSource = false;
-        private IUnitOfWork _parentUnitOfWork = null;
 
         #endregion
 
