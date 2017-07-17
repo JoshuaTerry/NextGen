@@ -55,13 +55,16 @@ $(document).ready(function () {
 
     });
 
-    GetFieldMappings();
+    
 
 });
 
 function DisplayImportWizardModal(type) {
 
     SetupCustomStep();
+    GetFieldMappings(type);
+    GetEntityMapping(type);
+
 
     modal = $('.importwizardmodal').dialog({
         closeOnEscape: false,
@@ -78,6 +81,7 @@ function DisplayImportWizardModal(type) {
         }
     });
 
+    
 }
 
 function SetupCustomStep() {
@@ -146,11 +150,22 @@ function InitializeImportWizardFileUploader(url, callback) {
 
 }
 
+function GetEntityMapping(type) {
+    //function MakeServiceCall(method, route, item, successCallback, errorCallback)
+    MakeServiceCall('GET', 'entitymappings/' + type, null, function (data) {
+        // for each row of data, add a dropdown with a label tied to the row and dropdown options matching the column headers of the spreadsheet
+        // or create a row in a table that allows selection of mapped column
+    }, null);
+}
+
 function GetFieldMappings(type) {
 
-    PopulateDropDown('.mappings', 'savedentitymapping', '', '', null, null, null);
+    PopulateDropDown('.mappings', 'savedentitymapping/type/' + type, '', '', null, DisplayMapping, null);
 
     // Populate the mappingcolumns amd importfilecolumns
+}
+
+function DisplayMapping () {
 }
 
 function SaveFieldMapping() {
@@ -169,32 +184,32 @@ function SaveFieldMapping() {
 
 }
 
-function GetMappingFields(type) {
+    function GetMappingFields(type) {
 
-    var map = [];
+        var map = [];
 
-    $.each('.mappingselection ul li', function (index) {
+        $.each('.mappingselection ul li', function (index) {
 
-        var c = {
-            ColumnName: $(this).text(),
-            EntityMapping: {
-                PropertyName: $('.importfilecolumns ul li')[index].text(),
-                MappingType: type
+            var c = {
+                ColumnName: $(this).text(),
+                EntityMapping: {
+                    PropertyName: $('.importfilecolumns ul li')[index].text(),
+                    MappingType: type
+                }
             }
-        }
 
-        map.push(c);
+            map.push(c);
 
-    });
+        });
 
-    map = '{' + map + '}';
+        map = '{' + map + '}';
 
-    return map;
-}
+        return map;
+    }
 
-function PreviewImport() {
-
+    function PreviewImport() {
 
 
-}
+
+    }
 

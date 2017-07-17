@@ -242,6 +242,7 @@
     <Compile Include="Controllers\Core\NotesController.cs" />
     <Compile Include="Controllers\Core\NoteTopicsController.cs" />
     <Compile Include="Controllers\Core\RolesController.cs" />
+    <Compile Include="Controllers\Core\EntityMappingController.cs" />
     <Compile Include="Controllers\Core\SavedEntityMappingController.cs" />
     <Compile Include="Controllers\Core\SectionPreferencesController.cs" />
     <Compile Include="Controllers\CP\BankAccountController.cs" />

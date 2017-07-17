@@ -8,29 +8,29 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.Core
 {
-    public class SavedEntityMappingController : GenericController<SavedEntityMapping>
+    public class EntityMappingController : GenericController<EntityMapping>
     {
-        public SavedEntityMappingController(ServiceBase<SavedEntityMapping> service)
+        public EntityMappingController(ServiceBase<EntityMapping> service)
             : base(service)
         {
         }
         
         [HttpGet]
-        [Route("api/v1/savedentitymapping")]
+        [Route("api/v1/EntityMapping")]
         public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/savedentitymapping/{id}")]
+        [Route("api/v1/EntityMapping/{id}")]
         public IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpGet]
-        [Route("api/v1/savedentitymapping/type/{type}")]
+        [Route("api/v1/EntityMapping/type/{type}")]
         public IHttpActionResult GetByType(Int32 type, int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = "all")
         {
             try
@@ -50,21 +50,21 @@ namespace DDI.WebApi.Controllers.Core
     
 
         [HttpPost]
-        [Route("api/v1/savedentitymapping")]
-        public IHttpActionResult Post([FromBody] SavedEntityMapping entityToSave)
+        [Route("api/v1/EntityMapping")]
+        public IHttpActionResult Post([FromBody] EntityMapping entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
-        [Route("api/v1/savedentitymapping/{id}")]
+        [Route("api/v1/EntityMapping/{id}")]
         public IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpDelete]
-        [Route("api/v1/savedentitymapping/{id}")]
+        [Route("api/v1/EntityMapping/{id}")]
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
