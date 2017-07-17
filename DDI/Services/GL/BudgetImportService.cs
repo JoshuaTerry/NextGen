@@ -12,7 +12,17 @@ namespace DDI.Services.GL
 {
     public class BudgetImportService
     {
-        private IUnitOfWork _uow = new UnitOfWorkEF();
+        private IUnitOfWork _uow = null;
+        public BudgetImportService()
+        {
+            _uow = new UnitOfWorkEF();
+        }
+
+        public BudgetImportService(IUnitOfWork unitOfWork)
+        {
+            _uow = unitOfWork;
+        }
+
         public IDataResponse ImportBudgets(Guid fileId, Guid fiscalYearId, MappableEntityField[] fields)
         {
             var response = new DataResponse();
