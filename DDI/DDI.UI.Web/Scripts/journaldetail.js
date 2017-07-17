@@ -7,6 +7,7 @@ var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'          // testing
 var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
 var businessUnitId = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16'    // testing
 var editMode = ''
+var nextLineNumber = 1;
 
 // 0: One-Time, 1: Recurring, 2: Template
 var journalType = 0;
@@ -134,8 +135,25 @@ function LoadJournalLineGrid() {
                 ]
             }
         });
+
+        nextLineNumber = GetMaxLineNumber(data.Data) + 1;
     });
 
+}
+
+function GetMaxLineNumber(arr) {
+
+    var max;
+
+    for (var i = 0; i < arr.length; i++) {
+
+        if (!max || parseInt(arr[i]['LineNumber']) > parseInt(max)) {
+            max = arr[i]['LineNumber'];
+        }
+        
+    }
+
+    return max;
 }
 
 function JournalLineModal(id, isNew) {
@@ -154,13 +172,13 @@ function JournalLineModal(id, isNew) {
 
     $(modal).find('.journallineledgeraccountid').empty();
     GLAccountSelector($(modal).find('.journallineledgeraccountid'), ledgerId, fiscalYearId);
-
-    // PopulateDropDown(element, route, defaultText, defaultValue, selectedValue, changecallback, completecallback)
-    PopulateDropDown($(modal).find('.SourceFundId'), 'fund/' + fiscalYearId + '/fiscalyear', null, null, null, null, null);
-    PopulateDropDown($(modal).find('.DueToMode'), 'journals/duetomodes', null, null, null, null, null);
-
+    
     if (!isNew) {
         LoadJournalLine(id);
+    }
+    else {
+        PopulateDropDown($(modal).find('.SourceFundId'), 'fund/' + fiscalYearId + '/fiscalyear', null, null, null, null, null);
+        PopulateDropDown($(modal).find('.DueToMode'), 'journals/duetomodes', null, null, null, null, null);
     }
     
     $('.canceljournallinemodal').click(function (e) {
@@ -183,8 +201,11 @@ function JournalLineModal(id, isNew) {
             method = 'PATCH';
             route = 'journalline/' + id;
         }
+        else {
+            item.LineNumber = nextLineNumber;
+        }
 
-        MakeServiceCall(method, route, item, function (data) {
+        MakeServiceCall(method, route, JSON.stringify(item), function (data) {
 
             DisplaySuccessMessage('Success', 'Journal Line saved successfully.');
 
@@ -201,8 +222,6 @@ function JournalLineModal(id, isNew) {
 }
 
 function GetJournalLineToSave() {
-
-    debugger;
 
     var amount = $('.Amount').val();
 
@@ -226,15 +245,15 @@ function GetJournalLineToSave() {
 
     };
 
-    var item = JSON.stringify(rawitem);
-
-    return item;
+    return rawitem;
 
 }
 
 function LoadJournalLine(id) {
 
     MakeServiceCall('GET', 'journalline/' + id, null, function (data) {
+
+        debugger;
 
         $('.hidjournallineid').val(id);
 
@@ -244,8 +263,9 @@ function LoadJournalLine(id) {
 
         $('.Amount').val(data.Data.Amount);
         $('.JournalLineComment').text(data.Data.Comment);
-        $('.DueToMode').val(data.Data.DueToMode);
-        $('.SourceFundId').val(data.Data.SourceFundId);
+
+        PopulateDropDown($('.DueToMode'), 'journals/duetomodes', null, null, data.Data.DueToMode, null, null);
+        PopulateDropDown($('.SourceFundId'), 'fund/' + fiscalYearId + '/fiscalyear', null, null, data.Data.SourceFundId, null, null);
 
         if (data.Data.Amount && data.Data.Amount < 0) {
             $('.creditoption').prop('checked', true);
