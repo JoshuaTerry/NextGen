@@ -581,16 +581,27 @@ function LoadEnvironment() {
 }
 
 function LoadNewConstituentModalDropDowns() {
+    var countries;
 
     PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
     PopulateDropDown('.nc-GenderId', 'genders', '', '');
 
-    PopulateDropDown('.nca-Country', 'countries', '', '');
+    PopulateDropDown('.nca-Country', 'countries', '', '', '', '', function (element, data) {
+        //default states to USA
+        PopulateDropDown('.nca-State', 'states/?countryid=' + data.Data[0].Id, '', '');
+    });
     PopulateDropDown('.nca-AddressType', 'addresstypes', '', '');
 
     $('.nca-Country').change(function () {
 
         PopulateDropDown('.nca-State', 'states/?countryid=' + $('.nca-Country').val(), '', '');
+        ClearElement($('.nca-County'));
+
+    });
+
+    $('.nca-State').change(function () {
+
+        PopulateDropDown('.nca-County', 'states/' + $('.nca-State').val() + '/counties', '', '');
 
     });
 

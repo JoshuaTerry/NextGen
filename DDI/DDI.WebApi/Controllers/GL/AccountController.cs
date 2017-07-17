@@ -86,7 +86,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpGet]
         [Route("api/v1/accounts/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
@@ -145,7 +145,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpPost]
         [Route("api/v1/accounts")]
-        public IHttpActionResult Post([FromBody] Account item)
+        public override IHttpActionResult Post([FromBody] Account item)
         {
             return base.Post(item);
         }
@@ -159,7 +159,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpPatch]
         [Route("api/v1/accounts/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }

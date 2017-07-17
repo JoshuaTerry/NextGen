@@ -16,28 +16,28 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/notecategories")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/notecategories/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/notecategories")]
-        public IHttpActionResult Post([FromBody] NoteCategory entityToSave)
+        public override IHttpActionResult Post([FromBody] NoteCategory entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
         [Route("api/v1/notecategories/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

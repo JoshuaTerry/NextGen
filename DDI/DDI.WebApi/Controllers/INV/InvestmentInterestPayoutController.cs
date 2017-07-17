@@ -20,14 +20,14 @@ namespace DDI.WebApi.Controllers.INV
         
         [HttpGet]
         [Route("api/v1/investmentinterestpayouts")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/investmentinterestpayouts/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace DDI.WebApi.Controllers.INV
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPost]
         [Route("api/v1/investmentinterestpayouts")]
-        public IHttpActionResult Post([FromBody] InvestmentInterestPayout entityToSave)
+        public override IHttpActionResult Post([FromBody] InvestmentInterestPayout entityToSave)
         {
             return base.Post(entityToSave);
         }
@@ -75,7 +75,7 @@ namespace DDI.WebApi.Controllers.INV
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/investmentinterestpayouts/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

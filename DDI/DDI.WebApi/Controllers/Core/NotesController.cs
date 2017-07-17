@@ -102,7 +102,7 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/notes/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = "all")
+        public override IHttpActionResult GetById(Guid id, string fields = "all")
         {
             return base.GetById(id, fields);
         }
@@ -148,14 +148,14 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpPatch]
         [Route("api/v1/notes/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpPost]
         [Route("api/v1/notes")]
-        public IHttpActionResult Post([FromBody] Note entityToSave)
+        public override IHttpActionResult Post([FromBody] Note entityToSave)
         {
             return base.Post(entityToSave);
         }
