@@ -96,7 +96,7 @@
     </div>
 
 
-    <div class="searchresults" style="height: 670px;">
+    <div class="searchresults" style="height: 670px; width: 83%">
         <div class="buttons">
             <a href="#" class="addnewjournal newmodallink">New Journal</a>
         </div>
