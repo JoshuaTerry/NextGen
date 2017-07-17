@@ -25,7 +25,10 @@ $(document).ready(function () {
         DoSearch();
     });
 
-    $('.addnewjournal').click(function () {
+    $('.addnewjournal').click(function (e) {
+
+        e.preventDefault();
+
         AddNewJournal();
     });
 
@@ -131,16 +134,31 @@ function GetSearchParameters() {
 
 }
 
-function LoadCreatedBy() {
+function LoadCreatedBy()
+{
 
     PopulateDropDown('.searchCreatedBy', 'CreatedBy', '', '');
 
 }
 
-function AddNewJournal() {
+function AddNewJournal()
+{
 
-    sessionStorage.removeItem('JOURNAL_ID');
-    location.href = "JournalEntry.aspx";
+    modal = $('.newjournalmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        resizable: false
+    });
+
+    $('.journaltypeselection div').unbind('click');
+
+    $('.journaltypeselection div').click(function () {
+
+        sessionStorage.setItem('JOURNAL_TYPE', $(this).attr('id'));
+        location.href = "JournalEntry.aspx";
+
+    });
 
 }
 

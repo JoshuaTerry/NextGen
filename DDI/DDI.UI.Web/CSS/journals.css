@@ -69,8 +69,17 @@ div.tagscontainer { height: 50vh }
 .searchresults div.scrollable { width: 100%; }
 
 
-/* journal entry items */
+/* NEW JOURNAL SELECTION */
 
+.journaltypeselection {  }
+.journaltypeselection div { vertical-align: top; font-weight: bold; color: #0f75b4; padding: 5px 10px; position: relative; height: 110px; border: solid 2px white; }
+.journaltypeselection div:hover { cursor: pointer; border: solid 2px #0f75b4; }
+.journaltypeselection label { display: inline-block; vertical-align: top; margin: 20px 0 0 0; }
+.journaltypeselection img { position: absolute; right: 0px; }
+
+/* END NEW JOURNAL SELECTION */
+
+/* JOURNAL ENTRY */
 .journaltabs { width: 90%; margin: 0 auto; display: block; }
 .journaltabs h1, .journaltabs h3 { margin-bottom: 10px; }
 
@@ -89,5 +98,5 @@ div.inlinecontainer { width: 100%; display: inline; vertical-align: top; margin-
 
 .expirationselection label { width: 10%; }
 .expirationselection input[type="text"] { width: 150px; display: inline-block; }
-
+/* END JOURNAL ENTRY */
 

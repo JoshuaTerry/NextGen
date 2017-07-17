@@ -31,7 +31,16 @@ $(document).ready(function () {
     journalId = sessionStorage.getItem('JOURNAL_ID');
 
     if (journalId) {
+        sessionStorage.removeItem('JOURNAL_ID');
         LoadJournalDetail();
+    }
+
+    journalType = sessionStorage.getItem('JOURNAL_TYPE');
+
+    if (journalType) {
+        sessionStorage.removeItem('JOURNAL_TYPE');
+        journalType = parseInt(journalType);
+        SetupJournalTypeDisplay(null);
     }
 
     $('.newjournallinemodallink').click(function (e) {
@@ -53,7 +62,8 @@ function LoadJournalDetail() {
             currentEntity = data.Data;
 
             fiscalYearId = currentEntity.FiscalYearId;
-            ledgerId = currentEntity.FiscalYear.LedgerId;
+            ledgerId = (currentEntity.FiscalYear) ? currentEntity.FiscalYear.LedgerId : null;
+            journalType = data.Data.JournalType;
 
             $('.journaltype').html(data.Data.JournalDescription);
             $('.StatusDescription').html(data.Data.StatusDescription);
@@ -77,19 +87,27 @@ function LoadJournalDetail() {
 
 function SetupJournalTypeDisplay(data) {
 
-    PopulateDropDown('.RecurringType', 'journals/recurringtypes', null, null, data.Data.RecurringType, null, null);
+    var currentRecurringType = null;
+    
+    if (data) {
+        currentRecurringType = data.Data.RecurringType;
+    }
 
-    switch (data.Data.JournalType) {
+    PopulateDropDown('.RecurringType', 'journals/recurringtypes', null, null, currentRecurringType, null, null);
+
+    switch (journalType) {
         case 0:
 
-            if (data.Data.ReverseOnDate === null) {
-                $('.reverseondatecontainer').hide();
+            if (data) {
+                if (data.Data.ReverseOnDate === null) {
+                    $('.reverseondatecontainer').hide();
+                }
+                else {
+                    $('.reverseondatecontainer').show();
+                    $('.ReverseOnDate').val(data.Data.ReverseOnDate);
+                }
             }
-            else {
-                $('.reverseondatecontainer').show();
-                $('.ReverseOnDate').val(data.Data.ReverseOnDate);
-            }
-
+            
             $('.RecurringType').val('0');
 
             break;

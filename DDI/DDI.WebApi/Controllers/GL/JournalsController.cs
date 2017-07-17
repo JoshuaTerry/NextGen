@@ -51,7 +51,7 @@ namespace DDI.WebApi.Controllers.GL
         {
             return new Expression<Func<Journal, object>>[]
             {
-                c => c.JournalLines, c => c.JournalLines.First().LedgerAccount, c => c.ParentJournal
+                c => c.FiscalYear, c => c.JournalLines, c => c.JournalLines.First().LedgerAccount, c => c.ParentJournal
             };
         }
 
@@ -59,7 +59,6 @@ namespace DDI.WebApi.Controllers.GL
                                                                                                .Exclude(p => p.JournalLines.First().Journal)
                                                                                                .Exclude(p => p.ChildJournals)
                                                                                                .Exclude(p => p.ParentJournal.BusinessUnit)
-                                                                                               .Exclude(p => p.ParentJournal.FiscalYear)
                                                                                                .Exclude(p => p.ParentJournal.JournalLines)
                                                                                                .Exclude(p => p.ParentJournal.ChildJournals)
                                                                                                .Exclude(p => p.ParentJournal.ParentJournal);
