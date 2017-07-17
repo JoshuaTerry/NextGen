@@ -879,7 +879,7 @@ function LoadTagSelector(container) {
 
                     });
 
-                    MakeServiceCall('POST', path1 + '/' + currentEntity.Id + '/' + path2, JSON.stringify({ tags: tagIds }), function (data) {
+                    MakeServiceCall('POST', 'constituents/' + currentEntity.Id + '/constituenttags', JSON.stringify({ tags: tagIds }), function (data) {
 
                         if (data.Data) {
 

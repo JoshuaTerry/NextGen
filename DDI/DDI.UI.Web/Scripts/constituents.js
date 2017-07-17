@@ -423,6 +423,7 @@ function GetConstituentPrimaryAddress() {
 
             currentaddress = data.Data;
 
+            $('.Address').empty();
                   
             var curadd = currentaddress.split('\n');
 
