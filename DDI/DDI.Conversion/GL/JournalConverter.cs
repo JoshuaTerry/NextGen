@@ -20,6 +20,7 @@ namespace DDI.Conversion.GL
 {    
     internal class JournalConverter : GLConversionBase
     {
+        private const string ENTITY_TYPE_JOURNAL = "Journal";
         private Dictionary<string, Guid> _journalIds, _fundIds;
 
         public enum ConversionMethod
@@ -30,8 +31,8 @@ namespace DDI.Conversion.GL
             JournalApprovals,
             JournalNotes,
             JournalEntityNumbers,
-            FileStorage,
-            Attachments,
+            JournalFileStorage,
+            JournalAttachments,
         }
 
         public override void Execute(string baseDirectory, IEnumerable<ConversionMethodArgs> conversionMethods)
@@ -45,8 +46,8 @@ namespace DDI.Conversion.GL
             RunConversion(ConversionMethod.JournalApprovals, () => ConvertApprovals(InputFile.GL_JournalApprovals, false));
             RunConversion(ConversionMethod.JournalNotes, () => ConvertNotes(InputFile.GL_MemoJournals, false));
             RunConversion(ConversionMethod.JournalEntityNumbers, () => ConvertEntityNumbers(InputFile.GL_JournalEntityNumbers));
-            RunConversion(ConversionMethod.FileStorage, () => ConvertFileStorage(InputFile.GL_FileStorage, true));
-            RunConversion(ConversionMethod.Attachments, () => ConvertAttachments(InputFile.GL_Attachment, false));
+            RunConversion(ConversionMethod.JournalFileStorage, () => ConvertFileStorage(InputFile.GL_FileStorage, true));
+            RunConversion(ConversionMethod.JournalAttachments, () => ConvertAttachments(InputFile.GL_Attachment, false));
 
         }
 
@@ -60,14 +61,14 @@ namespace DDI.Conversion.GL
             var tranConverter = new TransactionConverter(FiscalYearIds, LedgerAccountYearIds);
             tranConverter.ConvertTransactions(() => CreateFileImporter(GLDirectory, transactionFilename, typeof(ConversionMethod)),
                                                () => CreateFileImporter(GLDirectory, entityTransactionFilename, typeof(ConversionMethod)),
-                                               "Journal", _journalIds, append);
+                                               ENTITY_TYPE_JOURNAL, _journalIds, append);
         }
 
         private void ConvertApprovals(string approvalFilename, bool append)
         {
             LoadJournalIds();
             var tranConverter = new ApprovalConverter();
-            tranConverter.ConvertApprovals(() => CreateFileImporter(GLDirectory, approvalFilename, typeof(ConversionMethod)), "Journal", _journalIds, append);
+            tranConverter.ConvertApprovals(() => CreateFileImporter(GLDirectory, approvalFilename, typeof(ConversionMethod)), ENTITY_TYPE_JOURNAL, _journalIds, append);
         }
 
         private void ConvertEntityNumbers(string filename)
@@ -83,7 +84,7 @@ namespace DDI.Conversion.GL
         {
             LoadJournalIds();
             var noteConverter = new NoteConverter();
-            noteConverter.ConvertNotes(() => CreateFileImporter(GLDirectory, filename, typeof(ConversionMethod)), "Journal", _journalIds, false);
+            noteConverter.ConvertNotes(() => CreateFileImporter(GLDirectory, filename, typeof(ConversionMethod)), ENTITY_TYPE_JOURNAL, _journalIds, false);
         }
 
         private void ConvertFileStorage(string filename, bool append)
@@ -98,7 +99,7 @@ namespace DDI.Conversion.GL
             var attachmentConverter = new AttachmentConverter();
             LoadJournalIds();
             attachmentConverter.ConvertAttachments(() => CreateFileImporter(GLDirectory, filename, typeof(ConversionMethod)),
-                "Journal", _journalIds, append);
+                ENTITY_TYPE_JOURNAL, _journalIds, append);
         }
 
 

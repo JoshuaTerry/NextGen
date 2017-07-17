@@ -89,7 +89,7 @@ namespace DDI.Business.GL
                 }
             }
 
-            if (entity.JournalType == JournalType.Normal)
+            if (entity.JournalType == JournalType.OneTime)
             {
                 var approvals = UnitOfWork.Where<EntityApproval>(p => p.EntityType == _journalTypeName && p.ParentEntityId == entity.Id);
                 if (approvals.Count() > 0)
@@ -154,7 +154,7 @@ namespace DDI.Business.GL
                 }
             }
 
-            if (journal.JournalType == JournalType.Normal)
+            if (journal.JournalType == JournalType.OneTime)
             {
                 string result = string.Empty;
 
@@ -240,7 +240,7 @@ namespace DDI.Business.GL
 
             switch (journal.JournalType)
             {
-                case JournalType.Normal:
+                case JournalType.OneTime:
                     sb.Append("One-Time Journal");
                     break;
                 case JournalType.Recurring:
@@ -253,7 +253,7 @@ namespace DDI.Business.GL
 
             sb.Append(" #").Append(journal.JournalNumber);
 
-            if (journal.JournalType == JournalType.Normal)
+            if (journal.JournalType == JournalType.OneTime)
             {
                 var fiscalyear = UnitOfWork.GetReference(journal, p => p.FiscalYear);
                 sb.Append(" for ").Append(fiscalyear.Name);
@@ -276,7 +276,7 @@ namespace DDI.Business.GL
             EntityNumberType numberType = EntityNumberType.Journal;
             Guid entityId;
 
-            if (journalType == JournalType.Normal)
+            if (journalType == JournalType.OneTime)
             {
                 if (fiscalYearId.HasValue)
                 {

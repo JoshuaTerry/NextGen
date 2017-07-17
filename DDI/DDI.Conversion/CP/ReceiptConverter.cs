@@ -23,7 +23,7 @@ namespace DDI.Conversion.CP
 
         public enum ConversionMethod
         {
-            ReceiptBatches = 42001,
+            ReceiptBatches = 41101,
             Receipts,
             ReceiptTransactions,
             ReceiptEntityNumbers,

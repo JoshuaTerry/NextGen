@@ -41,7 +41,6 @@ namespace DDI.Conversion.Core
             // Create the output filename for transactions.
             string outputFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_TransactionFile, outputFileNameSuffix);
 
-
             // Import the transactions.
 
             using (var importer = transactionImporter())
@@ -135,11 +134,17 @@ namespace DDI.Conversion.Core
                             }
                         }
                     }
-                    
+
                     outputFile.AddRow(tran);
                 }
 
                 outputFile.Dispose();
+            }
+
+            // Load other transactions
+            if (string.Compare(outputFileNameSuffix, "Receipt", true) != 0)
+            {
+                LoadTransactionIds(Path.Combine(_outputDirectory, ConversionBase.CreateOutputFilename(OutputFile.Core_TransactionFile, "Receipt")), tranKeys);
             }
 
             // Create the output filename for transaction xrefs.
@@ -244,8 +249,36 @@ namespace DDI.Conversion.Core
 
                 outputFile.Dispose();
             }
-            
+
         }
 
+
+        private void LoadTransactionIds(string filename, Dictionary<string, Guid> tranKeys)
+        {
+            if (!File.Exists(filename))
+            {
+                return;
+            }
+
+            // Read the posted transaction ID mapping file and populate postedTranKeys dictionary
+            // which will map legacy ids to PostedTransaction.Id
+            using (var importer = new FileImport(filename, "TransactionConverter"))
+            {
+                while (importer.GetNextRow())
+                {
+                    Int64 tranNum = importer.GetInt64(2);
+                    int lineNum = importer.GetInt(3);
+                    if (tranNum == 0)
+                    {
+                        continue;
+                    }
+
+                    Guid id = importer.GetGuid(0);
+
+                    tranKeys[$"{tranNum},{lineNum}"] = id;
+                }
+            }
+
+        }
     }
 }

@@ -2,7 +2,7 @@
 {
     public enum JournalType
     {
-        Normal = 0,
+        OneTime = 0,
         Recurring = 1,
         Template = 2,      
     }

@@ -66,6 +66,11 @@ namespace DDI.Conversion
 		{
 			get
 			{
+                if (_data == null)
+                {
+                    return string.Empty;
+                }
+
 				StringBuilder sb = new StringBuilder();
 				bool isFirst = true;
 				int len = 0;

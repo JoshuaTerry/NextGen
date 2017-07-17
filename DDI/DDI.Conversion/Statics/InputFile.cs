@@ -104,6 +104,16 @@ namespace DDI.Conversion.Statics
         public static string CP_ReceiptAttachments => "Attachment_Receipt.csv";
         public static string CP_ReceiptFileStorage => "FileStorage_Receipt.csv";
 
+        public static string CP_MiscReceipts => "MiscReceipt.csv";
+        public static string CP_MiscReceiptLines => "MiscReceiptLine.csv";
+        public static string CP_MiscReceiptTransactions => "Transaction_MiscReceipt.csv";
+        public static string CP_MiscReceiptEntityTransactions => "EntityTransaction_MiscReceipt.csv";
+        public static string CP_MiscReceiptEntityNumbers => "EntityNumber_MiscReceipt.csv";
+        public static string CP_MiscReceiptAttachments => "Attachment_MiscReceipt.csv";
+        public static string CP_MiscReceiptFileStorage => "FileStorage_MiscReceipt.csv";
+        public static string CP_MiscReceiptApprovals => "Approval_MiscReceipt.csv";
+        public static string CP_MemoMiscReceipts => "Memo_MiscReceipt.csv";
+
         #endregion
 
 

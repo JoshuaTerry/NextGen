@@ -46,6 +46,8 @@ namespace DDI.Conversion.Statics
         public static string CP_PaymentMethodConstituentFile => "PaymentMethodConstituents.csv";
         public static string CP_ReceiptBatchFile => "ReceiptBatch.csv";
         public static string CP_ReceiptFile => "Receipt.csv";
+        public static string CP_MiscReceiptFile => "MiscReceipt.csv";
+        public static string CP_MiscReceiptLineFile => "MiscReceiptLine.csv";
 
         #endregion
 
@@ -81,6 +83,8 @@ namespace DDI.Conversion.Statics
         public static string CP_BankAccountIdMappingFile => "BankAccountId.csv";
         public static string CP_ReceiptBatchIdMappingFile => "ReceiptBatchId.csv";
         public static string CP_ReceiptMappingFile => "ReceiptId.csv";
+        public static string CP_MiscReceiptMappingFile => "MiscReceiptId.csv";
+        public static string CP_MiscReceiptLineMappingFile => "MiscReceiptLineId.csv";
         #endregion
 
         #region Core Mapping Files

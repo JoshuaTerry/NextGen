@@ -2,7 +2,7 @@
 {
     public enum MiscReceiptType
     {
-        Normal = 0,
+        OneTime = 0,
         Template = 1
     }
 }
