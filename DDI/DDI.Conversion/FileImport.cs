@@ -12,7 +12,7 @@ namespace DDI.Conversion
 	/// </summary>
 	public class FileImport : IDisposable
 	{
-		#region Private fields
+        #region Private fields
 
 		private Microsoft.VisualBasic.FileIO.TextFieldParser _csvReader = null;
 		private string[] _data = null;
