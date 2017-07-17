@@ -2,10 +2,9 @@
 var SAVE_ROUTE = 'journals/';
 var DueTo = { 0: 'None', 1: 'Due From', 2: 'Due To' }
 
-var fiscalYearId = 'B80B38CF-108C-4D9D-BE49-DFFD6502449C'      // testing
-var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'          // testing
-var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
-var businessUnitId = 'D63D404A-1BDD-40E4-AC19-B9354BD11D16'    // testing
+//var fiscalYearId = 'B80B38CF-108C-4D9D-BE49-DFFD6502449C'      // testing
+//var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'          // testing
+//var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
 var editMode = ''
 var nextLineNumber = 1;
 
@@ -29,6 +28,8 @@ $(document).ready(function () {
 
     });
 
+    journalId = sessionStorage.getItem('JOURNAL_ID');
+
     if (journalId) {
         LoadJournalDetail();
     }
@@ -50,6 +51,9 @@ function LoadJournalDetail() {
         if (data.Data && data.IsSuccessful) {
 
             currentEntity = data.Data;
+
+            fiscalYearId = currentEntity.FiscalYearId;
+            ledgerId = currentEntity.FiscalYear.LedgerId;
 
             $('.journaltype').html(data.Data.JournalDescription);
             $('.StatusDescription').html(data.Data.StatusDescription);
@@ -73,6 +77,8 @@ function LoadJournalDetail() {
 
 function SetupJournalTypeDisplay(data) {
 
+    PopulateDropDown('.RecurringType', 'journals/recurringtypes', null, null, data.Data.RecurringType, null, null);
+
     switch (data.Data.JournalType) {
         case 0:
 
@@ -84,14 +90,13 @@ function SetupJournalTypeDisplay(data) {
                 $('.ReverseOnDate').val(data.Data.ReverseOnDate);
             }
 
+            $('.RecurringType').val('0');
+
             break;
         case 1:
 
             $('.expirationselection').show()
-            PopulateDropDown('.RecurringType', 'journals/recurringtypes', null, null, data.Data.RecurringType, null, null);
-
-
-
+            
             break;
         case 2:
             break;
@@ -299,7 +304,7 @@ function DeleteJournalLine(id) {
 
 function RefreshEntity() {
 
-
+    LoadJournalDetail();
 
 }
 

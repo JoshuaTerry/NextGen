@@ -56,7 +56,6 @@ namespace DDI.WebApi.Controllers.GL
         }
 
         protected override string FieldsForSingle => new PathHelper.FieldListBuilder<Journal>().Exclude(p => p.BusinessUnit)
-                                                                                               .Exclude(p => p.FiscalYear)
                                                                                                .Exclude(p => p.JournalLines.First().Journal)
                                                                                                .Exclude(p => p.ChildJournals)
                                                                                                .Exclude(p => p.ParentJournal.BusinessUnit)
