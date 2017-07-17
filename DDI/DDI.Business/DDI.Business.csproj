@@ -70,6 +70,7 @@
     <Compile Include="Core\TransactionLogic.cs" />
     <Compile Include="Core\EntityNumberLogic.cs" />
     <Compile Include="CP\CPConfiguration.cs" />
+    <Compile Include="CP\MiscReceiptLogic.cs" />
     <Compile Include="CP\PaymentMethodLogic.cs" />
     <Compile Include="CRM\ContactInfoLogic.cs" />
     <Compile Include="CRM\ConstituentAddressLogic.cs" />

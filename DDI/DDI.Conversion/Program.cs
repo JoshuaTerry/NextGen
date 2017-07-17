@@ -115,6 +115,8 @@ namespace DDI.Conversion
             //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.ReceiptTypes));
             //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.ReceiptBatchTypes));
 
+            //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
+
             //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptBatches));
             //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.Receipts));
             //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptTransactions));
@@ -131,8 +133,7 @@ namespace DDI.Conversion
             //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceiptFileStorage));
             //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceiptAttachments));
 
-
-            //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
+            //Run<CP.CPSearchIndexer>(new ConversionMethodArgs(CP.CPSearchIndexer.ConversionMethod.IndexCP));
 
             // Post-conversion tasks
 

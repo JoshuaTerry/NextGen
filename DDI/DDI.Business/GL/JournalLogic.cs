@@ -105,7 +105,7 @@ namespace DDI.Business.GL
                 }
 
                 var transactions = UnitOfWork.GetEntities<EntityTransaction>(p => p.Transaction)
-                                             .Where(p => p.EntityType == _journalTypeName && p.ParentEntityId == entity.Id)
+                                             .Where(p => p.EntityType == _journalTypeName && p.ParentEntityId == entity.Id && p.Relationship == EntityTransactionRelationship.Owner)
                                              .Select(p => p.Transaction);
 
                 if (transactions.All(p => p.PostDate != null))
@@ -182,7 +182,7 @@ namespace DDI.Business.GL
                 }
 
                 var transactions = UnitOfWork.GetEntities<EntityTransaction>(p => p.Transaction)
-                                             .Where(p => p.EntityType == journalTypeName && p.ParentEntityId == journal.Id)
+                                             .Where(p => p.EntityType == journalTypeName && p.ParentEntityId == journal.Id && p.Relationship == EntityTransactionRelationship.Owner)
                                              .Select(p => p.Transaction);
 
                 if (result.Length > 0)
