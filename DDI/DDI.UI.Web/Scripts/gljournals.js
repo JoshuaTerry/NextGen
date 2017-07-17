@@ -94,11 +94,11 @@ function DoSearch() {
                                  }
                              },
 
-                        { dataField: 'TransactionDate', caption: 'Tran Dt', dataType: 'date' },
+                        { dataField: 'TransactionDate', caption: 'Tran Dt', dataType: 'date', alignment: 'right' },
                         { dataField: 'Comment', caption: 'Memo' },
                         { dataField: 'Amount', caption: 'Amount', format: { type: 'currency', precision: 2 } },
                         { dataField: 'CreatedBy', caption: 'Created By' },
-                        { dataField: 'CreatedOn', caption: 'Created On', dataType: 'date' },
+                        { dataField: 'CreatedOn', caption: 'Created On', dataType: 'date', alignment: 'right' },
                         { dataField: 'Status', caption: 'Status' }
                     ],
                     paging: {

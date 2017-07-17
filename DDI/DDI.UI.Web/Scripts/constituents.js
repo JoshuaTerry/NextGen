@@ -423,6 +423,7 @@ function GetConstituentPrimaryAddress() {
 
             currentaddress = data.Data;
 
+            $('.Address').empty();
                   
             var curadd = currentaddress.split('\n');
 
@@ -548,7 +549,7 @@ function LoadPaymentPreferencesTable() {
             }
     ];
 
-    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'constituents/' + currentEntity.Id + '/paymentmethods?fields=Id,Description,RoutingNumber,BankAccount,AccountType', 'paymentmethods')
+    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'constituents/' + currentEntity.Id + '/paymentmethods?fields=Id,Description,RoutingNumber,BankAccount,AccountType', 'paymentmethods/', null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 400, true, false, false, null);
 }
 
 /* End Payment Preference Section */
@@ -1029,7 +1030,7 @@ function NewRelationshipModal() {
 
 function PrePopulateNewRelationshipModal(modal) {
     $(modal).find('.rs-Constituent2Id').val(currentEntity.Id);
-    $(modal).find('.rs-Constituent2Name').val(currentEntity.FormattedName);
+    $(modal).find('.rs-Constituent2Information').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {

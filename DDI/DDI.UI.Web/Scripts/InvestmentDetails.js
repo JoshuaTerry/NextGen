@@ -22,9 +22,6 @@
         PopulateDropDown('.ConstituentPaymentPreference', 'paymentmethods', '', '');
     }
 
-
-    // RefreshEntity(); ?
-    
 });
 
 
@@ -39,14 +36,6 @@ function GetInvestmentData(investid) {
     });
 
 }
-
-
-function RefreshEntity() {
-
-    DisplayInvestmentData();
-
-}
-
 
 function DisplayInvestmentData() {
 
