@@ -382,12 +382,7 @@
                         <!-- Custom Step -->
                         <div class="step customstep">
 
-                            <div class="customstepcontent">
-                                <div class="fieldblock">
-                                    <label>Fiscal Year</label>
-                                    <select class="importfiscalyear"></select>
-                                </div>
-                            </div>
+                            <div class="customstepcontent"></div>
 
                             <div class="modalbuttons">
                                 <input type="button" value="Next" class="nextstep" />
@@ -490,6 +485,7 @@
                     </div>
                 </div>
             </div>
+        </div>
 
 
     <div class="notesdetailmodal" title="Notes Detail" style="display: none;">
