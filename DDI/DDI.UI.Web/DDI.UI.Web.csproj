@@ -160,7 +160,6 @@
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
     <Content Include="Scripts\journaldetail.js" />
-    <Content Include="Scripts\JournalEntry.js" />
     <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\attachments.js" />
     <Content Include="Scripts\dx.all.js" />

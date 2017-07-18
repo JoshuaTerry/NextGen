@@ -1158,16 +1158,16 @@ function SetupEditControls() {
         e.preventDefault();
 
         var editcontainer = $(this).closest('.editcontainer');
-        StopEdit(editcontainer);
-        SaveEdit(editcontainer);
 
-        //if ($('#form1').valid()) {
-        //    var editcontainer = $(this).closest('.editcontainer');
-        //    StopEdit(editcontainer);
-        //    SaveEdit(editcontainer);
-        //} else {
-        //    DisplayErrorMessage('Error', 'There are invalid fields. Please fix those and then try saving again.');
-        //}
+        if (!ValidateFields(editcontainer, function () {
+
+            StopEdit(editcontainer);
+            SaveEdit(editcontainer);
+
+        }))
+        {
+            return;
+        }
 
     });
 
@@ -1282,6 +1282,25 @@ function GetEditedFields(editcontainer) {
         else {
             value = $(this).val();
         }
+
+        for (var key in currentEntity) {
+            if (key == propertyName && currentEntity[key] != value) {
+                if (value == 'null') {
+                    p.push('"' + propertyName + '": ' + null);
+                }
+                else {
+                    p.push('"' + propertyName + '": "' + value + '"');
+                }
+            }
+        }
+
+    });
+
+    $(editcontainer).find('textarea').each(function () {
+
+        var property = $(this).prop('class').replace('editable', '').split(' ');
+        var propertyName = property[0];
+        var value = $(this).val();
 
         for (var key in currentEntity) {
             if (key == propertyName && currentEntity[key] != value) {
