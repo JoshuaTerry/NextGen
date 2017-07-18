@@ -2,12 +2,12 @@
 using DDI.Services;
 using DDI.Services.Search;
 using DDI.Shared;
+using DDI.Shared.Enums.Core;
 using DDI.Shared.Statics;
 using DDI.WebApi.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -25,7 +25,7 @@ namespace DDI.WebApi.Controllers.General
         }
 
         [HttpGet]
-        [Route("api/v1/audit/flat/{id}", Name = "AuditFlat")]
+        [Route("api/v1/audit/flat/{id}")]
         public IHttpActionResult GetAuditFlat(Guid id, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -45,7 +45,27 @@ namespace DDI.WebApi.Controllers.General
             }
         }
         [HttpGet]
-        [Route("api/v1/audit/flat/multiple", Name = "AuditFlatMultiple")]
+        [Route("api/v1/audit/entityType/{entityType}")]
+        public IHttpActionResult GetAuditFlat(EntityType entityType, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
+        {
+            try
+            {
+                start = start ?? DateTime.Today.AddDays(-90);
+                end = end ?? DateTime.Today.AddDays(1);
+
+                var search = new PageableSearch(offset, limit, orderBy);
+                var response = _service.GetByEntityType(entityType, start.Value, end.Value, search);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+        [HttpGet]
+        [Route("api/v1/audit/flat/multiple")]
         public IHttpActionResult GetAuditFlatMultiple([FromUri]Guid[] ids, DateTime? start = null, DateTime? end = null, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = OrderByProperties.DisplayName)
         {
             try
@@ -76,7 +96,7 @@ namespace DDI.WebApi.Controllers.General
 
                 var search = new PageableSearch(offset, limit, orderBy);
                 var response = _service.GetChanges(id, start.Value, end.Value);
-                  
+
                 return Ok(response);
             }
             catch (Exception ex)
@@ -89,7 +109,7 @@ namespace DDI.WebApi.Controllers.General
         private IHttpActionResult FinalizeResponse<T1>(IDataResponse<List<T1>> response, string routeName, IPageable search) where T1 : class
         {
             try
-            { 
+            {
                 if (!response.IsSuccessful)
                 {
                     _logger.LogError(response.ErrorMessages.ToString());
