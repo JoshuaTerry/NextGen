@@ -83,7 +83,7 @@ function PopulateDropDown(element, route, selectedValue) {
 
             });
 
-            if (selectedValue) {
+            if (selectedValue || selectedValue === 0) {
                 $(element).val(selectedValue);
             }
         }
@@ -121,7 +121,7 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
 
             });
 
-            if (selectedValue) {
+            if (selectedValue || selectedValue === 0) {
                 $(element).val(selectedValue);
             }
 
