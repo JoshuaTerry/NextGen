@@ -117,11 +117,6 @@
                     <img src="../../Images/RecurringJournal.gif" />
                 </div>
 
-                <div class="priorperiod" id="3">
-                    <label>Prior Period Journal Entry</label>
-                    <img src="../../Images/PriorPeriod.gif" />
-                </div>
-
                 <div class="template" id="2">
                     <label>Journal Template</label>
                     <img src="../../Images/TemplateJournal.gif" />

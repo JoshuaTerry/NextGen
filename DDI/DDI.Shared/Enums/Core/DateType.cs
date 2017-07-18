@@ -5,7 +5,7 @@ namespace DDI.Shared.Enums.Core
 {
     public enum DateType
     {
-        [Description("Mont hDay Year")]
+        [Description("Month Day Year")]
         MonthDayYear = 0,
 
         [Description("Month Year")]

@@ -30,7 +30,7 @@ namespace DDI.Shared.Enums.Core
         [Description("Day 6")]
         Day6 = 6,
 
-        [Description("Day7")]
+        [Description("Day 7")]
         Day7 = 7,
 
         [Description("Day 8")]
