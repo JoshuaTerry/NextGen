@@ -103,6 +103,7 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
 
     <li><a href="#" class="mergeaccounts">Merge Accounts</a></li>
+    <li><a href="#" class="importbudget">Import Budget</a></li>
 
 </asp:Content>
 
