@@ -13,7 +13,7 @@ namespace DDI.Shared.Models.Common
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
-
+        [MaxLength(128)]
         public string Description { get; set; }
 
         [Index]
@@ -34,7 +34,7 @@ namespace DDI.Shared.Models.Common
         public decimal PopulationPercentageChange { get; set; }
 
         // Navigation Properties
-        
+
         public State State { get; set; }
 
         public ICollection<City> Cities { get; set; }

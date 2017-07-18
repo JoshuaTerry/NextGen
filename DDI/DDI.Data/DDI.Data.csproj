@@ -80,8 +80,12 @@
     <Compile Include="DomainContextAdapter.cs" />
     <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
-    <Compile Include="Migrations\201707181727284_AddingConcurrency.cs" />
-    <Compile Include="Migrations\201707181727284_AddingConcurrency.Designer.cs">
+    <Compile Include="Migrations\201707181804432_Concurrency.cs" />
+    <Compile Include="Migrations\201707181804432_Concurrency.Designer.cs">
+      <DependentUpon>201707181804432_Concurrency.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201707181727284_AddingConcurrency.cs" />
+    <Compile Include="Migrations\Client\201707181727284_AddingConcurrency.Designer.cs">
       <DependentUpon>201707181727284_AddingConcurrency.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201707131538194_CP_v3.cs" />
@@ -156,7 +160,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201707181727284_AddingConcurrency.resx">
+    <EmbeddedResource Include="Migrations\201707181804432_Concurrency.resx">
+      <DependentUpon>201707181804432_Concurrency.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201707181727284_AddingConcurrency.resx">
       <DependentUpon>201707181727284_AddingConcurrency.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201707131538194_CP_v3.resx">
