@@ -80,6 +80,10 @@
     <Compile Include="DomainContextAdapter.cs" />
     <Compile Include="DomainContextInitializer.cs" />
     <Compile Include="Extensions\DbEntityValidationExceptionExtensions.cs" />
+    <Compile Include="Migrations\201707181727284_AddingConcurrency.cs" />
+    <Compile Include="Migrations\201707181727284_AddingConcurrency.Designer.cs">
+      <DependentUpon>201707181727284_AddingConcurrency.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Client\201707131538194_CP_v3.cs" />
     <Compile Include="Migrations\Client\201707131538194_CP_v3.Designer.cs">
       <DependentUpon>201707131538194_CP_v3.cs</DependentUpon>
@@ -103,6 +107,10 @@
     <Compile Include="Migrations\Client\201706301616290_FileStorageChange.cs" />
     <Compile Include="Migrations\Client\201706301616290_FileStorageChange.Designer.cs">
       <DependentUpon>201706301616290_FileStorageChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Client\201706301826581_ConcurrencyTest.cs" />
+    <Compile Include="Migrations\Client\201706301826581_ConcurrencyTest.Designer.cs">
+      <DependentUpon>201706301826581_ConcurrencyTest.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Client\201706162112069_Initial.cs" />
     <Compile Include="Migrations\Client\201706162112069_Initial.Designer.cs">
@@ -148,6 +156,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201707181727284_AddingConcurrency.resx">
+      <DependentUpon>201707181727284_AddingConcurrency.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201707131538194_CP_v3.resx">
       <DependentUpon>201707131538194_CP_v3.cs</DependentUpon>
     </EmbeddedResource>
@@ -165,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201706301616290_FileStorageChange.resx">
       <DependentUpon>201706301616290_FileStorageChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Client\201706301826581_ConcurrencyTest.resx">
+      <DependentUpon>201706301826581_ConcurrencyTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Client\201706162112069_Initial.resx">
       <DependentUpon>201706162112069_Initial.cs</DependentUpon>

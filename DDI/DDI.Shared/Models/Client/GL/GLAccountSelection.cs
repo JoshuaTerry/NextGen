@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DDI.Shared.Models.Client.GL
 {
     [Table("GLAccountSelection")]
-    public class GLAccountSelection :  EntityBase
+    public class GLAccountSelection : EntityBase
     {
         [Key]
         public override Guid Id { get; set; }
@@ -31,6 +31,8 @@ namespace DDI.Shared.Models.Client.GL
         public string SortKey { get; set; }
         public Guid LedgerId { get; set; }
         public Guid FiscalYearId { get; set; }
+        [NotMapped]
+        public override byte[] RowVersion { get => base.RowVersion; set => base.RowVersion = value; }
 
 
 

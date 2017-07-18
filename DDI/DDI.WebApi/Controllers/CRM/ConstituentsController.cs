@@ -20,6 +20,9 @@ namespace DDI.WebApi.Controllers.CRM
 
         public ConstituentsController(IConstituentService service) : base(service) { }
 
+        protected override string FieldsForSingle => FieldListBuilder
+           .IncludeAll();
+
         protected override Expression<Func<Constituent, object>>[] GetDataIncludesForSingle()
         {
             return new Expression<Func<Constituent, object>>[]
@@ -144,7 +147,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Route("api/v1/constituents/{id}")]
         public IHttpActionResult GetConstituentById(Guid id, string fields = null)
         {
-            return base.GetById(id, fields);
+           return base.GetById(id, fields);
         }
 
         [HttpGet]
