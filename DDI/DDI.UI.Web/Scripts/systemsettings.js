@@ -284,6 +284,9 @@ function LoadMergeFormSystemSectionSettings() {
 
 function LoadNoteSectionSettings() {
 
+    var initialmenu = ''
+    CreateNavMenu(initialmenu)
+
     var accordion = $('<div>').addClass('accordions');
     var noteCodes = $('<div>').addClass('noteCodecontainer');
     var noteCategories = $('<div>').addClass('noteCategorycontainer');
@@ -349,11 +352,17 @@ function LoadTransactionCodesSectionSettings() {
 /* CRM SETTINGS */
 function LoadAlternateIDSectionSettings() {
 
+    var initialmenu = ''
+    CreateNavMenu(initialmenu)
+
     LoadSectionSettings(SettingsCategories.CRM, 'Alternate ID', 'sectionpreferences', SystemSettings.AlternateId);
 
 }
 
 function LoadClergySectionSettings() {
+
+    var initialmenu = ''
+    CreateNavMenu(initialmenu)
 
     LoadSectionSettings(SettingsCategories.CRM, 'Clergy', 'sectionpreferences', SystemSettings.Clergy);
 
@@ -393,6 +402,9 @@ function LoadClergySectionSettings() {
 
 
 function LoadConstituentTypesSectionSettings() {
+
+    var initialmenu = ''
+    CreateNavMenu(initialmenu)
 
     var accordion = $('<div>').addClass('accordions');
     var types = $('<div>').addClass('constituenttypescontainer');
@@ -469,6 +481,9 @@ function LoadConstituentTypesSectionSettings() {
 
 function DisplayConstituentTypeTags(tags) {
 
+    var initialmenu = ''
+    CreateNavMenu(initialmenu)
+
     $(modal).find('.tagselect').empty();
     $(modal).find('.consttype-tagselect').empty();
 
@@ -499,6 +514,9 @@ function DisplayConstituentTypeTags(tags) {
 }
 
 function LoadConstituentTypeTagSelector(typeId, container) {
+
+    var initialmenu = ''
+    CreateNavMenu(initialmenu)
 
     $('.tagselect').each(function () {
 
@@ -560,6 +578,9 @@ function LoadConstituentTypeTagSelector(typeId, container) {
 }
 
 function LoadConstituentTypeSettingsGrid() {
+
+    var initialmenu = ''
+    CreateNavMenu(initialmenu)
 
     var typecolumns = [
         
@@ -2591,9 +2612,8 @@ function LoadAccountingSettingsSectionSettings() {
     $('<input>').attr('type', 'hidden').addClass('hidLedgerId').appendTo(acctsettingscontainer);
 
 
-    // Audit Link
-    $('<a>').text('Audit History').attr('href', '#').attr('type', 'hidden').addClass('newauditmodal').prependTo($('.gridcontainer'));
-
+    var initialmenu = ''
+    CreateNavMenu(initialmenu)
 
     // Select the ledger
     CreateBasicFieldBlock('Ledger: ', '<select>', 'as-ledgerselect', acctsettingscontainer, true);
@@ -2601,7 +2621,8 @@ function LoadAccountingSettingsSectionSettings() {
     PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '<Please Select>', null, '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
-        ShowAuditData($('.hidLedgerId').val());
+        //ShowAuditData($('.hidLedgerId').val());
+        ShowEntityAuditData(34);
         LoadAccountingSettings($('.hidLedgerId').val());
 
 
@@ -2614,7 +2635,8 @@ function LoadAccountingSettingsSectionSettings() {
         }
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
-        ShowAuditData($('.hidLedgerId').val());
+        //ShowAuditData($('.hidLedgerId').val());
+        ShowEntityAuditData(34);
         LoadAccountingSettings($('.hidLedgerId').val());
 
     });
@@ -3108,24 +3130,15 @@ function LoadFiscalPeriods(info) {
 }
 
 function PopulateFiscalYearNavMenu() {
-    var um = $('.utilitymenu')
-    um.append('<li class="closefiscalyear"><a href="#">Close Fiscal Year</a></li>');
-    um.append('<li class="reopenfiscalyear"><a href="#">Reopen Fiscal Year</a></li>');
-    um.append('<li class="reclosefiscalyear"><a href="#">Reclose Fiscal Year</a></li>');
-    um.append('<li class="newfiscalyear"><a href="#">Create New Fiscal Year</a></li>');
 
-    var un = $('.utilitynav');
-    un.show();
-    un.unbind('click');
-    un.click(function (e) {
+    var initialmenu = ''
+    initialmenu += '<li class="closefiscalyear"><a href="#">Close Fiscal Year</a></li>';
+    initialmenu += '<li class="reopenfiscalyear"><a href="#">Reopen Fiscal Year</a></li>';
+    initialmenu += '<li class="reclosefiscalyear"><a href="#">Reclose Fiscal Year</a></li>';
+    initialmenu += '<li class="newfiscalyear"><a href="#">Create New Fiscal Year</a></li>';
+    CreateNavMenu(initialmenu)
 
-        e.preventDefault();
-        e.stopPropagation();
-
-        toolbox = $(this).find('.utilitymenu');
-        toolbox.toggle();
-
-    });
+    ShowAuditData($('.hidLedgerId').val());
 
     $('.closefiscalyear').unbind('click');
     $('.closefiscalyear').click(function (e) {
@@ -4269,5 +4282,27 @@ function SendCustomField(method, route, data, modal) {
 }
 
 /* END CUSTOM FIELDS */
+
+function CreateNavMenu(initialmenu){
+
+    var um = $('.utilitymenu');
+    um.append(initialmenu);
+    um.append('<li class="newauditmodal"><a href="#">Edit History</a></li>');
+
+    var un = $('.utilitynav');
+    un.show();
+    un.unbind('click');
+    un.click(function (e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        toolbox = $(this).find('.utilitymenu');
+        toolbox.toggle();
+
+    });
+
+
+}
 
 

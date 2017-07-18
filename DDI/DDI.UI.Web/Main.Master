@@ -344,9 +344,9 @@
 
             <div class="auditgridcontainer"></div>
 
-           <%-- <div class="modalbuttons"> 
-                <a href ="#" class="cancelmodal">Cancel</a>
-            </div>--%>
+            <div class="modalbuttons"> 
+                <a href ="#" class="cancelauditmodal">Cancel</a>
+            </div>
                             
         </div>      
               
