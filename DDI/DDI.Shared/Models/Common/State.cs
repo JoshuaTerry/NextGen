@@ -16,7 +16,7 @@ namespace DDI.Shared.Models.Common
 
         [MaxLength(4)]
         public string StateCode { get; set; }
-
+        [MaxLength(128)]
         public string Description { get; set; }
 
         [MaxLength(2)]
@@ -25,7 +25,7 @@ namespace DDI.Shared.Models.Common
         public Guid? CountryId { get; set; }
 
         // Navigation Properties
-        
+
         public Country Country { get; set; }
 
         public ICollection<County> Counties { get; set; }

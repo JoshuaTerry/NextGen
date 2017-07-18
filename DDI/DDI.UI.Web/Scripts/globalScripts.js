@@ -381,6 +381,7 @@ function SetupNewConstituent(constituenttypeid) {
 
             if (data && data.Data && data.IsSuccessful) {
 
+                currentEntity = data.Data;
                 $('.nc-ConstituentNumber').val(data.Data.ConstituentNumber);
                 $('.nc-ConstituentTypeId').val(data.Data.ConstituentType.Id);
             }

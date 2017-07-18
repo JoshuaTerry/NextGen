@@ -1,5 +1,8 @@
 using DDI.Shared.Helpers;
 using System;
+using System.Collections.Generic;
+using DDI.Shared.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace DDI.Shared.Models
 {
@@ -7,13 +10,14 @@ namespace DDI.Shared.Models
     /// Base class for all entity model classes.
     /// </summary>
     public abstract class EntityBase : IEntity
-    {       
+    {
         #region Properties 
 
         public abstract Guid Id { get; set; }
 
         public virtual string DisplayName => string.Empty;
-       
+        [Timestamp]
+        public virtual Byte[] RowVersion { get; set; }
         #endregion
 
         #region Constructors 
