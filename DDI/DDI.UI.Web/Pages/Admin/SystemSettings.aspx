@@ -1108,14 +1108,27 @@
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
+                    <option value="5">5</option>
                     <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
                     <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
                 </select>
             </div>
 
             <div class="fieldblock">
-                <label>Use final accounting period for year end adjustments only</label>
-                <input type="checkbox" class="fy-HasAdjustmentPeriod" />
+<%--                <label>Use final accounting period for year end adjustments only</label>
+                <input type="checkbox" class="fy-HasAdjustmentPeriod" />--%>
+                <label>Final period:</label>
+                <select class="fy-HasAdjustmentPeriod">
+                    <option value="false">Normal period</option>
+                    <option value="true">Adjustment period</option>
+                </select>
             </div>
 
             <div class="modalbuttons">
@@ -1131,19 +1144,20 @@
 
             <input type="hidden" class="fp-FiscalYearId" />
 
-            <div class="fieldblock">
-                <label>Period Number</label>
+            <div class="fieldblock inline">
+                <label>Period Number: </label>
+                <%--<label class="fp-PeriodNumber"> </label>--%>
                 <input type="text" class="fp-PeriodNumber number" maxlength="2" />
             </div>
 
             <div class="fieldblock">
                 <label>Start Date</label>
-                <input type="text" class="fp-StartDate datepicker" maxlength="10" />
+                <input type="text" class="fp-StartDate date datepicker" maxlength="10" />
             </div>
 
             <div class="fieldblock">
                 <label>End Date</label>
-                <input type="text" class="fp-EndDate datepicker" maxlength="10" />
+                <input type="text" class="fp-EndDate date datepicker" maxlength="10" />
             </div>
 
             <div class="fieldblock">

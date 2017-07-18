@@ -51,6 +51,9 @@
         public static string FiscalYearDuplicateStartDate => "A fiscal year with a start date of {0} already exists.";
         public static string BadFiscalPeriod => "Invalid fiscal period.";
         public static string FiscalYearNoName => "Fiscal year name is required.";
+        public static string FiscalYearPeriodsChanged => "The number of periods cannot be changed unless the fiscal year status is Empty.";
+        public static string FiscalYearAdjustPeriodChanged => "The adjustment period cannot be changed unless the fiscal year status is Empty.";
+        public static string FiscalYearDatesChanged => "Cannot change the start or end date of an existing fiscal year.";
 
         public static string FiscalPeriodMissing => "Fiscal period {0} not defined for fiscal year {1}.";
         public static string FiscalPeriodDuplicate => "Fiscal period {0} appears more than once in fiscal year {1}.";
@@ -61,6 +64,7 @@
         public static string NoFiscalPeriodForDate => "No fiscal period defined for {0} in fiscal year {1}.";
         public static string NoFiscalYearForDate => "No fiscal year defined for {0}.";
         public static string TranDateClosedPeriod => "Transaction date of {0} is for a closed fiscal period.";
+        public static string FiscalPeriodNumberChanged => "Cannot change the period number of a fiscal year.";
 
         public static string FundNoFiscalYear => "Fund has no fiscal year.";
         public static string FundNoFundSegment => "No fund segment specified for fund.";

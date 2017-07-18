@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DDI.Business.GL;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
@@ -78,58 +79,35 @@ namespace DDI.Services.GL
 
         private void SetFiscalPeriods(FiscalYear entityToSave)
         {
-            if (entityToSave.NumberOfPeriods > 0)
+            if (entityToSave.NumberOfPeriods > 0 && entityToSave.StartDate.HasValue)
             {
                 if (entityToSave.FiscalPeriods == null)
                     entityToSave.FiscalPeriods = new List<FiscalPeriod>();
 
-                int currentYear = entityToSave.StartDate.HasValue ? entityToSave.StartDate.Value.Year : DateTime.Now.Year;
-
-                CreateFiscalPeriods(entityToSave, currentYear);
-
-                if (entityToSave.HasAdjustmentPeriod)
+                List<DateTime[]> dates = _logic.CalculateDefaultStartEndDates(entityToSave.StartDate.Value, entityToSave.NumberOfPeriods, entityToSave.HasAdjustmentPeriod);
+                for (int number = 0; number < entityToSave.NumberOfPeriods; number++)
                 {
-                    entityToSave.NumberOfPeriods += 1;
-                    
-                    AddAdjustmentPeriod(entityToSave, currentYear);
+                    FiscalPeriod period = entityToSave.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == number + 1);
+                    if (period == null)
+                    {
+                        period = new FiscalPeriod()
+                        {
+                            PeriodNumber = number + 1,
+                            FiscalYear = entityToSave,
+                            Status = FiscalPeriodStatus.Open                            
+                        };
+                        UnitOfWork.Insert(period);
+                    }
+                    period.StartDate = dates[number][0];
+                    period.EndDate = dates[number][1];
+                    period.IsAdjustmentPeriod = entityToSave.HasAdjustmentPeriod && number == entityToSave.NumberOfPeriods - 1;
                 }
 
-            }
-        }
-
-        private void CreateFiscalPeriods(FiscalYear entityToSave, int currentYear)
-        {
-            int numberOfMonths = decimal.ToInt32(Math.Floor(12 / (decimal)entityToSave.NumberOfPeriods));
-            int currentMonth = 1;
-
-            for (int index = 1; index <= entityToSave.NumberOfPeriods; index++)
-            {
-                int endMonth = currentMonth - 1 + numberOfMonths;
-
-                entityToSave.FiscalPeriods.Add(new FiscalPeriod()
+                foreach (var period in entityToSave.FiscalPeriods.Where(p => p.PeriodNumber > entityToSave.NumberOfPeriods).ToList())
                 {
-                    PeriodNumber = index,
-                    StartDate = new DateTime(currentYear, currentMonth, 1),
-                    EndDate = new DateTime(currentYear, endMonth, DateTime.DaysInMonth(currentYear, endMonth)),
-                    IsAdjustmentPeriod = false,
-                    Status = Shared.Enums.GL.FiscalPeriodStatus.Open
-                });
-
-                currentMonth += numberOfMonths;
+                    UnitOfWork.Delete(period);
+                }
             }
-        }
-
-        private void AddAdjustmentPeriod(FiscalYear entityToSave, int currentYear)
-        {
-            entityToSave.FiscalPeriods.Add(new FiscalPeriod()
-            {
-                // FiscalYearId = entityToSave.Id,
-                PeriodNumber = entityToSave.NumberOfPeriods + 1,
-                StartDate = new DateTime(currentYear, 12, 31),
-                EndDate = new DateTime(currentYear, 12, 31),
-                IsAdjustmentPeriod = true,
-                Status = Shared.Enums.GL.FiscalPeriodStatus.Open
-            });
         }
 
         protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
@@ -139,7 +117,7 @@ namespace DDI.Services.GL
                 var year = (FiscalYear)entity;
 
                 // Operations based on FiscalYear.Status
-                if (string.Compare(name, nameof(FiscalYear.Status), true) == 0)
+                if (StringHelper.IsSameAs(name, nameof(FiscalYear.Status)))
                 {
                     // To re-close a fiscal year, set status to "reclose"
                     if (token.ToString().ToLower() == "reclose")
@@ -167,6 +145,55 @@ namespace DDI.Services.GL
 
                     return true;
                 }
+
+                // Operations for FiscalYear.NumberOfPeriods
+                else if (StringHelper.IsSameAs(name, nameof(FiscalYear.NumberOfPeriods)))
+                {
+                    if ((int)token != year.NumberOfPeriods)
+                    {
+                        if (year.Status != FiscalYearStatus.Empty)
+                        {
+                            throw new ValidationException(UserMessagesGL.FiscalYearPeriodsChanged);
+                        }
+                        year.NumberOfPeriods = (int)token;
+                        SetFiscalPeriods(year);
+                    }
+                    return true;
+                }
+                // Operations for FiscalYear.HasAdjustmentPeriod
+                else if (StringHelper.IsSameAs(name, nameof(FiscalYear.HasAdjustmentPeriod)))
+                {
+                    if ((bool)token != year.HasAdjustmentPeriod)
+                    {
+                        // Changing adjustment period
+                        if (year.Status != FiscalYearStatus.Empty)
+                        {
+                            throw new ValidationException(UserMessagesGL.FiscalYearAdjustPeriodChanged);
+                        }
+                        year.HasAdjustmentPeriod = (bool)token;
+                        SetFiscalPeriods(year);
+                    }
+                    return true;
+                }
+                // Operations for FiscalYear.StartDate
+                else if (StringHelper.IsSameAs(name, nameof(FiscalYear.StartDate)))
+                {
+                    if (token.ToString() != year.StartDate.ToShortDateString())
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalYearDatesChanged);
+                    }
+                    return true;
+                }
+                // Operations for FiscalYear.EndDate
+                else if (StringHelper.IsSameAs(name, nameof(FiscalYear.EndDate)))
+                {
+                    if (token.ToString() != year.EndDate.ToShortDateString())
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalYearDatesChanged);
+                    }
+                    return true;
+                }
+
             }
             return base.ProcessJTokenUpdate(entity, name, token);
         }

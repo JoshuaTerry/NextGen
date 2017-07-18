@@ -7,6 +7,7 @@ using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
+using DDI.Shared.Statics.GL;
 using Newtonsoft.Json.Linq;
 
 namespace DDI.Services.GL
@@ -51,6 +52,13 @@ namespace DDI.Services.GL
                         }                        
                     }
                     return true;
+                }
+                else if (string.Compare(name, nameof(FiscalPeriod.PeriodNumber), true) == 0)
+                {
+                    if (period.PeriodNumber.ToString() != token.ToString())
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalPeriodNumberChanged);
+                    }
                 }
             }
             return base.ProcessJTokenUpdate(entity, name, token);

@@ -6,6 +6,7 @@ using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
+using System.Linq.Expressions;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -16,7 +17,12 @@ namespace DDI.WebApi.Controllers.GL
         
         protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.FiscalYearId)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";
 
-        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.FiscalYear);
+        protected override string FieldsForAll => FieldListBuilder.IncludeAll().Include(p => p.FiscalYear.Name).Include(p => p.FiscalYear.Status);
+
+        protected override Expression<Func<FiscalPeriod, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<FiscalPeriod, object>>[] { p => p.FiscalYear };
+        }
 
         [HttpGet]
         [Route("api/v1/fiscalperiods/fiscalyear/{fiscalYearId}")]
@@ -61,13 +67,6 @@ namespace DDI.WebApi.Controllers.GL
             return base.GetById(id, fields);
         }
 
-        [HttpPost]
-        [Route("api/v1/fiscalperiods")]
-        public override IHttpActionResult Post([FromBody] FiscalPeriod entityToSave)
-        {
-            return base.Post(entityToSave);
-        }
-
         [HttpPatch]
         [Route("api/v1/fiscalperiods/{id}")]
         public override IHttpActionResult Patch(Guid id, JObject entityChanges)
@@ -75,11 +74,5 @@ namespace DDI.WebApi.Controllers.GL
             return base.Patch(id, entityChanges);
         }
 
-        [HttpDelete]
-        [Route("api/v1/fiscalperiods/{id}")]
-        public override IHttpActionResult Delete(Guid id)
-        {
-            return base.Delete(id);
-        }
     }
 }

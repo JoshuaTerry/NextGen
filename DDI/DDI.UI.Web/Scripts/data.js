@@ -494,6 +494,8 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
         }
     });
 
+    TriggerLoadHandler(modalClass, true);
+
     $(modal).find('.cancelmodal').click(function (e) {
         e.preventDefault();
         CloseModal(modal);
@@ -509,6 +511,10 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
 
             var item = GetModalFieldsToSave(prefix);
 
+            if (TriggerSaveHandler(modalClass, item, true)) {
+                return;
+            }
+            
             MakeServiceCall('POST', route, item, function () {
                 DisplaySuccessMessage("Success", "Save successful.");
 
@@ -535,10 +541,10 @@ function EditEntity(route, prefix, id, modalClass, modalWidth, refreshGrid) {
         resizable: false,
         beforeClose: function (event, ui) {
             currentEntity = previousEntity;
-        }
+        }        
     });
     
-    LoadEntity(route, id, prefix);
+    LoadEntity(route, id, prefix, modalClass);
 
     $(modal).find('.cancelmodal').click(function (e) {
 
@@ -555,6 +561,10 @@ function EditEntity(route, prefix, id, modalClass, modalWidth, refreshGrid) {
         if (!ValidateFields(modal, function () {
 
             var item = GetModalFieldsToSave(prefix);
+
+            if (TriggerSaveHandler(modalClass, item, false)) {
+                return;
+            }
 
             MakeServiceCall('PATCH', route + '/' + id, item, function () {
                 DisplaySuccessMessage("Save successful.");
@@ -667,7 +677,7 @@ function GetModalFieldsToSave(prefix) {
 
 }
 
-function LoadEntity(route, id, prefix) {
+function LoadEntity(route, id, prefix, modalClass) { 
 
     if ($.type(prefix) === "string" && prefix.indexOf('.') != 0) {
         prefix = '.' + prefix;
@@ -679,32 +689,79 @@ function LoadEntity(route, id, prefix) {
         currentEntity = data.Data;
 
         for (var property in data.Data) {
-            
-            if ($(prefix + property).is('select')) {
 
-                var classes = $(prefix + property).attr('class').split(' ');
+            var selector = $(prefix + property);
+            if (selector.is('select')) {
+
+                var classes = selector.attr('class').split(' ');
 
                 if (classes.length > 1) {
                     var route = classes[1];
 
-                    PopulateDropDown($(prefix + property), route, '', '', data.Data[property], null);
+                    PopulateDropDown(selector, route, '', '', data.Data[property].toString(), null);
                 }
                 else {
-                    $(prefix + property).val(data.Data[property]);
+                    selector.val(data.Data[property].toString());
                 }
 
             }
-            else if ($(prefix + property).is('input[type="checkbox"]')) {
-                $(prefix + property).prop('checked', data.Data[property]);
+            else if (selector.is('input[type="checkbox"]')) {
+                selector.prop('checked', data.Data[property]);
             }
             else {
-                $(prefix + property).val(data.Data[property]);
+                if (selector.is('input')) {
+                    var classes = selector.attr('class').split(' ');
+                    if (classes.indexOf('datepicker') >= 0) {
+                        selector.val(FormatJSONDate(data.Data[property])); // Format date values correctly.
+                    }
+                    else {
+                        selector.val(data.Data[property]);
+                    }
+                }
+                else if (selector.is('label')) {
+                    selector.text(data.Data[property]);
+                }
+                else {
+                    selector.val(data.Data[property]);
+                }
             }
-            
-
         }
+
+        TriggerLoadHandler(modalClass, false);
 
     }, null);
 }
+
+function SetLoadHandler(classname, handler) {
+    $('.' + classname).off("Loaded");
+    $('.' + classname).on("Loaded", handler);
+}
+
+function SetSaveHandler(classname, handler) {
+    $('.' + classname).off("Save");
+    $('.' + classname).on("Save", handler);
+}
+
+function TriggerLoadHandler(modalClass, isNew) {
+    if (modalClass) {
+        $(modalClass).trigger("Loaded", { entity: currentEntity, isNew: isNew });
+    }
+}
+
+function TriggerSaveHandler(modalClass, itemToSave, isNew) {
+    if (modalClass) {
+        var eventObject = {
+            entity: itemToSave,
+            isNew: isNew,
+            cancel: false
+        }
+        $(modalClass).trigger("Save", eventObject);
+        return eventObject.cancel;
+    }
+    return false;
+}
+
+
+
 /* END DATAGRID FUNCTIONALITY */
 

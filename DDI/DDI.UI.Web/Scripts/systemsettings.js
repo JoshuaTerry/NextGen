@@ -45,7 +45,6 @@ $(document).ready(function () {
         $('.systemsettingsheader').text($(this).text());
 
         ExecuteFunction(functionToCall, window);
-
     });
 
 });
@@ -2966,7 +2965,7 @@ function LoadEntitiesSectionSettings() {
         '.entitymodal', '.entitymodal', 250, true, false, false, null);
 
 }
-/// End Entities/Business Untis Settings
+/// End Entities/Business Units Settings
 
 function LoadFiscalYearSectionSettings() {
 
@@ -3048,6 +3047,21 @@ function LoadFiscalYearGrid() {
         },
     ];
 
+    SetLoadHandler('fiscalyearmodal', function (event, data) {
+        var disable = false;
+
+        if (data.entity) {
+            var disable = (data.entity.Status != 0); // disable some controls if fiscal year status not Empty.
+        }
+
+        $('.fy-NumberOfPeriods').prop('disabled', disable);
+        $('.fy-HasAdjustmentPeriod').prop('disabled', disable);       
+
+        $('.fy-StartDate').prop('disabled', !data.isNew);
+        $('.fy-EndDate').prop('disabled', !data.isNew);
+
+    });
+
     LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, function (data) {
 
         if (data.Data.length > 0) {
@@ -3099,7 +3113,21 @@ function LoadFiscalPeriods(info) {
         }
     ]
 
-    LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', '.fiscalperiodmodal', 250, true, false, false, function (data) {
+    SetLoadHandler('fiscalperiodmodal', function (event, data) {
+        var disabled = false;
+        if (data.entity && data.entity.FiscalYear) {
+            disabled = (data.entity.FiscalYear.Status != 0); // Period start/end date editable only if fiscal year status is Empty.
+        }
+
+        $('.fp-StartDate').prop('disabled', disabled);
+        $('.fp-EndDate').prop('disabled', disabled);
+        if (disabled) {
+            $('.fp-StartDate').datepicker('hide');  // Unfortunately disabling the datepicker doesn't automatically hide the dropdown if it's the first control.
+        }
+
+    });
+
+    LoadGrid('fiscalperiodscontainer', 'fiscalperiodgrid', columns, 'fiscalperiods/fiscalyear/' + selectedRow.Id + '?fields=all', 'fiscalperiods', null, 'fp-', '.fiscalperiodmodal', null, 250, false, false, false, function (data) {
 
         $('.fiscalperiodscontainer').show();
         $('.fp-FiscalYearId').val(fiscalYearId)
@@ -3178,7 +3206,7 @@ function UpdateFiscalYearModal(updateOption) {
 
     $('.selectfiscalyearlabel').html('Fiscal Year to ' + updateOption + ":");
     $('.updatefiscalyearmodalbuttons').show();
-
+    
     modal = $('.updatefiscalyearmodal').dialog({
         title: updateOption + ' Fiscal Year',
         closeOnEscape: false,

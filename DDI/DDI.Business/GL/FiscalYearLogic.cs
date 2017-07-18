@@ -135,7 +135,7 @@ namespace DDI.Business.GL
 
             // Determine if any fiscal periods were modified in a non-empty fiscal year.
 
-            if (fiscalYear.Status != FiscalYearStatus.Empty && fiscalYear.FiscalPeriods != null)
+            if (fiscalYear.FiscalPeriods != null)
             {
                 string[] propertiesToCheck = new string[] { nameof(FiscalPeriod.EndDate), nameof(FiscalPeriod.StartDate), nameof(FiscalPeriod.IsAdjustmentPeriod), nameof(FiscalPeriod.PeriodNumber) };
 
@@ -153,10 +153,18 @@ namespace DDI.Business.GL
                     }
                     if (isAdded || modifiedProperties.Intersect(propertiesToCheck).Count() > 0)
                     {
-                        throw new ValidationException(UserMessagesGL.FiscalYearNotEditable);
+                        isModified = true;
+                        if (fiscalYear.Status != FiscalYearStatus.Empty)
+                        {
+                            throw new ValidationException(UserMessagesGL.FiscalYearNotEditable);
+                        }
                     }
                 }
+            }
 
+            if (isModified)
+            {
+                // Will need to propagate these changes to common ledgers.
             }
         }
         
