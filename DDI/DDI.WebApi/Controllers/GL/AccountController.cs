@@ -1,19 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using DDI.Services;
-using DDI.Services.GL;
+﻿using DDI.Services.GL;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -87,7 +86,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpGet]
         [Route("api/v1/accounts/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
@@ -146,7 +145,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpPost]
         [Route("api/v1/accounts")]
-        public IHttpActionResult Post([FromBody] Account item)
+        public override IHttpActionResult Post([FromBody] Account item)
         {
             return base.Post(item);
         }
@@ -160,7 +159,7 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpPatch]
         [Route("api/v1/accounts/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }

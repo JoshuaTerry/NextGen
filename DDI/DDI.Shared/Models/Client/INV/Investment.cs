@@ -1,7 +1,5 @@
 using DDI.Shared.Attributes.Models;
 using DDI.Shared.Enums.INV;
-using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CP;
 using DDI.Shared.Models.Client.GL;
 using System;
 using System.Collections.Generic;
@@ -23,6 +21,7 @@ namespace DDI.Shared.Models.Client.INV
 
         public Guid? BusinessUnitId { get; set; }
 
+        [MaxLength(30)]
         public string CUSIP { get; set; }
 
         [MaxLength(256)]

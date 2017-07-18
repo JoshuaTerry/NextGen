@@ -64,9 +64,8 @@
 
         <header>
             <div class="globalnav"> 
-                <ul>
-                    <li><a href="#" class="addconstituent">Add Constituent</a></li>
-                    <li><a href="#" class="logout">Logout</a></li>
+                <ul> 
+                    <li><asp:LoginStatus ID="Login" runat="server" /></li>  
                 </ul>
             </div>
             <div class="info">
@@ -556,10 +555,11 @@
                     <label>Contact Date</label>
                     <input type="text" class="nd-ContactDate datepicker" />
                 </div>
-
-                 <div class="fieldblock">
+            
+                <div class="fieldblock">
+                    <input type="hidden" class="rs-Constituent1Id" />
                     <label>Primary Contact</label>
-                    <select class="nd-PrimaryContact"></select>
+                    <input type="text" class="rs-Constituent1Information constituentlookup" />
                 </div>
 
             </div>
@@ -567,8 +567,8 @@
             <div class="twocolumn">
 
                 <div class="fieldblock">
-                    <label>Person Responsible</label>
-                    <select class="nd-PersonResponsible"></select>
+                    <label>User Responsible</label>
+                    <select class="nd-UserResponsible"></select>
                 </div>
 
                 <div class="fieldblock">

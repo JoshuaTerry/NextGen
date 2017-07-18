@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.CRM
 {
@@ -54,6 +55,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         public Guid? EducationLevelId { get; set; }
 
+        [MaxLength(128)]
         public string Employer { get; set; }
 
         [Column(TypeName = "date")]
@@ -170,27 +172,27 @@ namespace DDI.Shared.Models.Client.CRM
         public Profession Profession { get; set; }
 
 
-        
+
         public ICollection<ConstituentAddress> ConstituentAddresses { get; set; }
-        
+
         public ICollection<AlternateId> AlternateIds { get; set; }
-        
+
         public ICollection<ContactInfo> ContactInfo { get; set; }
-        
+
         public ICollection<Denomination> Denominations { get; set; }
-        
+
         public ICollection<DoingBusinessAs> DoingBusinessAs { get; set; }
-       
+
         public ICollection<Education> Educations { get; set; }
-        
+
         public ICollection<Ethnicity> Ethnicities { get; set; }
-        
+
         public ICollection<Tag> Tags { get; set; }
-        
+
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
 
         public ICollection<InvestmentRelationship> InvestmentRelationships { get; set; }
-        
+
         [InverseProperty(nameof(Relationship.Constituent1))]
         public ICollection<Relationship> Relationship1s { get; set; }
 
@@ -279,7 +281,8 @@ namespace DDI.Shared.Models.Client.CRM
         #region Private Properties
 
         //private IUser UserId { get; set; }
-
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         #endregion Private Properties
     }
 }

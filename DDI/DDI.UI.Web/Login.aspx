@@ -26,9 +26,9 @@
             <input type="submit" class="loginbutton" value="Login" />
         </div>
 
-        <div class="forgotpassword">
+        <%--<div class="forgotpassword">
             <a href="#" class="forgotpasswordlink">Forgot Password?</a>
-        </div>
+        </div>--%>
 
     </div>
 

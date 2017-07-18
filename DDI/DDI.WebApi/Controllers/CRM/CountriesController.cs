@@ -1,11 +1,8 @@
-﻿using DDI.Services;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
-using DDI.Shared.Helpers;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Web.Http;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -21,7 +18,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/countries")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         { 
             return base.GetAll(limit, offset, orderBy, fields);
         }
@@ -29,7 +26,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/countries/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }

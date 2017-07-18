@@ -1,4 +1,3 @@
-using DDI.Services;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.CRM;
@@ -8,7 +7,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -62,7 +60,7 @@ namespace DDI.WebApi.Controllers.CRM
         
         [HttpGet]
         [Route("api/v1/relationships")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitDefault, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             if (string.IsNullOrWhiteSpace(fields))
             {
@@ -91,7 +89,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpPost]
         [Route("api/v1/relationships")]
-        public IHttpActionResult Post([FromBody] Relationship entityToSave)
+        public override IHttpActionResult Post([FromBody] Relationship entityToSave)
         {
             return base.Post(entityToSave);
         }
@@ -109,7 +107,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/relationships/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

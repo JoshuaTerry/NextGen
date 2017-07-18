@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Web;
 using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.Core
@@ -41,14 +40,14 @@ namespace DDI.WebApi.Controllers.Core
 
         [HttpGet]
         [Route("api/v1/groups")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/groups/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
@@ -104,7 +103,7 @@ namespace DDI.WebApi.Controllers.Core
         }
         [HttpPost]
         [Route("api/v1/groups")]
-        public IHttpActionResult Post([FromBody] Group entityToSave)
+        public override IHttpActionResult Post([FromBody] Group entityToSave)
         {
             return base.Post(entityToSave);
         }
@@ -127,7 +126,7 @@ namespace DDI.WebApi.Controllers.Core
 
         [HttpPatch]
         [Route("api/v1/groups/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

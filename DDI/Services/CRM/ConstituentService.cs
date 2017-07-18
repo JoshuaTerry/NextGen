@@ -202,19 +202,19 @@ namespace DDI.Services
         public IDataResponse GetConstituentPrimaryContactInfo(Constituent constituent)
         {
             IDataResponse response = null;
-
-            
-            var address = constituent.ConstituentAddresses.FirstOrDefault<ConstituentAddress>(a => a.IsPrimary);
-            var primaryaddress = UnitOfWork.FirstOrDefault<Address>(a => a.Id == address.AddressId);
-            var state = UnitOfWork.FirstOrDefault<State>(s => s.Id == primaryaddress.StateId);
-
             StringBuilder sb = new StringBuilder();
-            sb.Append("Address: ");
-            sb.Append(primaryaddress.AddressLine1 + "\n");
-            sb.Append(primaryaddress.PostalCode + " ");
-            sb.Append(primaryaddress.City + ", ");
-            sb.Append(state + "\n");
+            if (constituent.ConstituentAddresses.Count > 0)
+            {
+                var address = constituent.ConstituentAddresses.FirstOrDefault<ConstituentAddress>(a => a.IsPrimary);
+                var primaryaddress = UnitOfWork.FirstOrDefault<Address>(a => a.Id == address.AddressId);
+                var state = UnitOfWork.FirstOrDefault<State>(s => s.Id == primaryaddress.StateId);
+                var formattedAddress = UnitOfWork.GetBusinessLogic<AddressLogic>().FormatAddress(UnitOfWork.GetReference(address, p => p.Address));
+                sb.Append(formattedAddress + "\n");
+            } else
+            {
 
+                sb.Append("No address available for Constituent");
+            }
             var primaryContactInfo = constituent.ContactInfo.Where(ci => ci.IsPreferred);
 
             foreach (ContactInfo info in primaryContactInfo)

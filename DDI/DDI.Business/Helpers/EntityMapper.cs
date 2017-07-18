@@ -48,7 +48,8 @@ namespace DDI.Business.Helpers
                 return null;
             }
 
-            return _mappings.GetValueOrDefault(fromEntity.Id);
+            Guid result = _mappings.GetValueOrDefault(fromEntity.Id);
+            return (result == default(Guid) ? (Guid?)null : result);
         }
 
         /// <summary>
@@ -60,7 +61,8 @@ namespace DDI.Business.Helpers
             {
                 return null;
             }
-            return _mappings.GetValueOrDefault(fromId.Value);
+            Guid result = _mappings.GetValueOrDefault(fromId.Value);
+            return (result == default(Guid) ? (Guid?)null : result);
         }
     }
 }

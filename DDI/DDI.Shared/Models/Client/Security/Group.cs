@@ -18,8 +18,10 @@ namespace DDI.Shared.Models.Client.Security
         public string DisplayName => Name;
         public ICollection<User> Users { get; set; } = new List<User>();
         public ICollection<Role> Roles { get; set; } = new List<Role>();
+        [MaxLength(64)]
         public string CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
+        [MaxLength(64)]
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
         [NotMapped]

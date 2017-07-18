@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Web.Http;
-using DDI.Services;
-using DDI.Shared;
+﻿using DDI.Services;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq.Expressions;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -34,7 +33,7 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/customfields")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
@@ -85,14 +84,14 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpPost]
         [Route("api/v1/customfields")]
-        public IHttpActionResult Post([FromBody] CustomField item)
+        public override IHttpActionResult Post([FromBody] CustomField item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/customfields/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }

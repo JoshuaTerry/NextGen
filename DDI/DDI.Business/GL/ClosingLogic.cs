@@ -757,7 +757,7 @@ namespace DDI.Business.GL
 
                         AccountLogic accountLogic = batch.UnitOfWork.GetBusinessLogic<AccountLogic>();
 
-                        // Determine which G/L account receives the beginning balance.
+                        // Determine which GL account receives the beginning balance.
                         Account toAccount;
                         if (account.Category == AccountCategory.Asset || account.Category == AccountCategory.Liability || account.Category == AccountCategory.Fund)
                         {

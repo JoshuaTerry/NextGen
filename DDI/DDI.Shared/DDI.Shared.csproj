@@ -48,10 +48,6 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
@@ -60,17 +56,14 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin.Security, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -98,7 +91,9 @@
     <Compile Include="Attributes\Logging\DoLogAttribute.cs" />
     <Compile Include="Attributes\Logging\DoNotLogAttribute.cs" />
     <Compile Include="Attributes\Logging\IFilterAttribute.cs" />
+    <Compile Include="Attributes\Models\EntityNameAttribute.cs" />
     <Compile Include="Attributes\Models\DecimalPrecisionAttribute.cs" />
+    <Compile Include="Attributes\Models\TextAttribute.cs" />
     <Compile Include="Attributes\Transactions\TransactionTypeAttribute.cs" />
     <Compile Include="BatchUnitOfWork.cs" />
     <Compile Include="CachedRepository.cs" />
@@ -124,9 +119,23 @@
     <Compile Include="Enums\Core\EntityNumberType.cs" />
     <Compile Include="Enums\Core\TransactionType.cs" />
     <Compile Include="Enums\Core\TransactionAmountType.cs" />
+    <Compile Include="Enums\CP\DisbursementLineType.cs" />
+    <Compile Include="Enums\CP\DisbursementStatus.cs" />
+    <Compile Include="Enums\CP\DisbursementType.cs" />
+    <Compile Include="Enums\CP\MiscReceiptType.cs" />
+    <Compile Include="Enums\CP\ReceiptBatchDistributionMode.cs" />
+    <Compile Include="Enums\CP\ReceiptBatchStatus.cs" />
+    <Compile Include="Enums\CP\ReceiptBatchEntryMode.cs" />
     <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
     <Compile Include="Enums\CP\EFTAccountType.cs" />
+    <Compile Include="Models\Client\CP\MiscReceiptLine.cs" />
+    <Compile Include="Models\Client\CP\MiscReceipt.cs" />
+    <Compile Include="Models\Client\CP\Receipt.cs" />
+    <Compile Include="Enums\CP\ReceiptCategory.cs" />
+    <Compile Include="Models\Client\CP\ReceiptBatch.cs" />
+    <Compile Include="Models\Client\CP\ReceiptBatchType.cs" />
+    <Compile Include="Models\Client\CP\ReceiptType.cs" />
     <Compile Include="Enums\CRM\Affiliation.cs" />
     <Compile Include="Enums\CRM\BirthDateType.cs" />
     <Compile Include="Enums\CRM\ConstituentBaseStatus.cs" />
@@ -211,6 +220,9 @@
     <Compile Include="Models\Client\Core\NoteCode.cs" />
     <Compile Include="Models\Client\Core\SavedEntityMapping.cs" />
     <Compile Include="Models\Client\Core\SavedEntityMappingField.cs" />
+    <Compile Include="Models\Client\CP\BankAccount.cs" />
+    <Compile Include="Models\Client\CP\Disbursement.cs" />
+    <Compile Include="Models\Client\CP\DisbursementLine.cs" />
     <Compile Include="Models\Client\CRM\ConstituentPicture.cs" />
     <Compile Include="Models\Client\GL\AccountActivitySummary.cs" />
     <Compile Include="Models\Client\GL\AccountActivityDetail.cs" />

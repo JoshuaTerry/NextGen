@@ -212,7 +212,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituents")]
-        public IHttpActionResult Post([FromBody] Constituent constituent)
+        public override IHttpActionResult Post([FromBody] Constituent constituent)
         {
             return base.Post(constituent);
         }
@@ -243,7 +243,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/constituents/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject constituentChanges)
+        public override IHttpActionResult Patch(Guid id, JObject constituentChanges)
         {
             return base.Patch(id, constituentChanges);
         }

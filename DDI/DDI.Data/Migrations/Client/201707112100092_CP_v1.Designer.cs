@@ -7,13 +7,13 @@ namespace DDI.Data.Migrations.Client
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ConcurrencyChanges : IMigrationMetadata
+    public sealed partial class CP_v1 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ConcurrencyChanges));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CP_v1));
         
         string IMigrationMetadata.Id
         {
-            get { return "201707061608494_ConcurrencyChanges"; }
+            get { return "201707112100092_CP_v1"; }
         }
         
         string IMigrationMetadata.Source

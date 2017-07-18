@@ -98,9 +98,18 @@ namespace DDI.Data
         #endregion
 
         #region CP Entities
-        
+
+        public DbSet<Shared.Models.Client.CP.BankAccount> CP_BankAccounts { get; set; }
+        public DbSet<Shared.Models.Client.CP.Disbursement> CP_Disbursements { get; set; }
+        public DbSet<Shared.Models.Client.CP.DisbursementLine> CP_DisbursementLines { get; set; }
         public DbSet<Shared.Models.Client.CP.EFTFormat> CP_EFTFormats { get; set; }
+        public DbSet<Shared.Models.Client.CP.MiscReceipt> CP_MiscReceipts { get; set; }
+        public DbSet<Shared.Models.Client.CP.MiscReceiptLine> CP_MiscReceiptLines { get; set; }
         public DbSet<Shared.Models.Client.CP.PaymentMethod> CP_PaymentMethods { get; set; }
+        public DbSet<Shared.Models.Client.CP.Receipt> CP_Receipts { get; set; }
+        public DbSet<Shared.Models.Client.CP.ReceiptBatch> CP_ReceiptBatches { get; set; }
+        public DbSet<Shared.Models.Client.CP.ReceiptBatchType> CP_ReceiptBatchTypes { get; set; }
+        public DbSet<Shared.Models.Client.CP.ReceiptType> CP_ReceiptTypes { get; set; }
 
         #endregion
 
@@ -209,12 +218,6 @@ namespace DDI.Data
 
                 return base.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                _logger.LogInformation(ex);
-                throw new DatabaseConcurrencyException();
-
-            }
             catch (DbUpdateException ex)
             {
                 if (ex?.InnerException?.InnerException != null && ex.InnerException.InnerException is SqlException)
@@ -241,8 +244,8 @@ namespace DDI.Data
                     _logger.LogError(ex);
                     throw ex;
                 }
-            }            
-            catch
+            }
+            catch 
             {
                 throw;
             }
@@ -273,6 +276,7 @@ namespace DDI.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
+            modelBuilder.Conventions.Add(new StringLengthRequiredConvention());
         }
 
         public ISaveResult<ChangeSet> Save(User author)

@@ -7,6 +7,12 @@
 
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
+
+    <li><a href="#" class="addconstituent">Add Constituent</a></li> 
+
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="searchcriteria">
@@ -23,9 +29,6 @@
 
             <fieldset>
                 <legend>Advanced Search</legend>
-
-                
-
                 <div class="accordions nocontrols">
 
                     <h1>CRM</h1>
@@ -70,7 +73,9 @@
                             <input type="text" class="searchzipto" maxlength="128" />
                         </div>
 
-                        <div class="fieldblock">
+                        <div class="searchregions"></div>
+
+                        <%--<div class="fieldblock">
                             <label>Region 1</label>
                             <input type="text" class="searchregion1" maxlength="128" />
                         </div>
@@ -88,7 +93,7 @@
                         <div class="fieldblock">
                             <label>Region 4</label>
                             <input type="text" class="searchregion4" maxlength="128" />
-                        </div>
+                        </div>--%>
 
                         <div class="fieldblock">
                             <label>Age From</label>
@@ -125,12 +130,7 @@
                             <input type="text" class="searchcreatedto datepicker" maxlength="10" />
                         </div>
                     </div>
-
-                    <h1>Donations</h1>
-                    <div>
-
-                    </div>
-
+                               
                 </div>
                 
 
@@ -145,7 +145,7 @@
     </div>
 
     <div class="searchresults">
-        <div class="gridcontainer scrollable"></div>
+        <div class="gridcontainer"></div>
     </div>
 
 </asp:Content>

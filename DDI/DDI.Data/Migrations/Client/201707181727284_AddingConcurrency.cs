@@ -3,10 +3,16 @@ namespace DDI.Data.Migrations.Client
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class ConcurrencyChanges : DbMigration
+    public partial class AddingConcurrency : DbMigration
     {
         public override void Up()
         {
+            DropForeignKey("dbo.FiscalPeriod", "FiscalYearId", "dbo.FiscalYear");
+            DropIndex("dbo.FiscalPeriod", "IX_FiscalYear_PeriodNumber");
+            AlterColumn("dbo.FiscalPeriod", "FiscalYearId", c => c.Guid(nullable: false));
+            CreateIndex("dbo.FiscalPeriod", new[] { "FiscalYearId", "PeriodNumber" }, unique: true, name: "IX_FiscalYear_PeriodNumber");
+            AddForeignKey("dbo.FiscalPeriod", "FiscalYearId", "dbo.FiscalYear", "Id", cascadeDelete: true);
+
             AddColumn("dbo.Attachment", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.FileStorage", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.Note", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
@@ -38,8 +44,8 @@ namespace DDI.Data.Migrations.Client
             AddColumn("dbo.Ethnicity", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.Gender", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.IncomeLevel", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
-            AddColumn("dbo.InvestmentRelationship", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
-            AddColumn("dbo.Investment", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            //AddColumn("dbo.InvestmentRelationship", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            //AddColumn("dbo.Investment", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.BusinessUnit", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.BusinessUnitFromTo", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.FiscalYear", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
@@ -57,9 +63,9 @@ namespace DDI.Data.Migrations.Client
             AddColumn("dbo.PostedTransaction", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.Transaction", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.EntityTransaction", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
-            AddColumn("dbo.InvestmentInterestPayout", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
-            AddColumn("dbo.InvestmentOwnershipType", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
-            AddColumn("dbo.InvestmentType", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            //AddColumn("dbo.InvestmentInterestPayout", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            //AddColumn("dbo.InvestmentOwnershipType", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            //AddColumn("dbo.InvestmentType", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.Language", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.MaritialStatus", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.PaymentMethod", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
@@ -70,6 +76,15 @@ namespace DDI.Data.Migrations.Client
             AddColumn("dbo.RelationshipType", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.RelationshipCategory", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.Configuration", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            AddColumn("dbo.BankAccount", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            AddColumn("dbo.DisbursementLine", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            AddColumn("dbo.Disbursement", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            AddColumn("dbo.MiscReceiptLine", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            AddColumn("dbo.MiscReceipt", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            AddColumn("dbo.ReceiptBatch", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            AddColumn("dbo.ReceiptBatchType", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            AddColumn("dbo.Receipt", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            AddColumn("dbo.ReceiptType", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.ConstituentPicture", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.RegionLevel", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.CustomField", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
@@ -81,24 +96,28 @@ namespace DDI.Data.Migrations.Client
             AddColumn("dbo.AccountClose", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.FundFromTo", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.Fund", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
-            AddColumn("dbo.GLAccountSelection", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            
             AddColumn("dbo.JournalLine", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.Journal", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.LedgerAccountMerge", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.SavedEntityMapping", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.SavedEntityMappingField", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
             AddColumn("dbo.SectionPreference", "RowVersion", c => c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"));
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.FiscalPeriod", "FiscalYearId", "dbo.FiscalYear");
+            DropIndex("dbo.FiscalPeriod", "IX_FiscalYear_PeriodNumber");
+            AlterColumn("dbo.FiscalPeriod", "FiscalYearId", c => c.Guid());
             DropColumn("dbo.SectionPreference", "RowVersion");
             DropColumn("dbo.SavedEntityMappingField", "RowVersion");
             DropColumn("dbo.SavedEntityMapping", "RowVersion");
             DropColumn("dbo.LedgerAccountMerge", "RowVersion");
             DropColumn("dbo.Journal", "RowVersion");
             DropColumn("dbo.JournalLine", "RowVersion");
-            DropColumn("dbo.GLAccountSelection", "RowVersion");
+            
             DropColumn("dbo.Fund", "RowVersion");
             DropColumn("dbo.FundFromTo", "RowVersion");
             DropColumn("dbo.AccountClose", "RowVersion");
@@ -110,6 +129,15 @@ namespace DDI.Data.Migrations.Client
             DropColumn("dbo.CustomField", "RowVersion");
             DropColumn("dbo.RegionLevel", "RowVersion");
             DropColumn("dbo.ConstituentPicture", "RowVersion");
+            DropColumn("dbo.ReceiptType", "RowVersion");
+            DropColumn("dbo.Receipt", "RowVersion");
+            DropColumn("dbo.ReceiptBatchType", "RowVersion");
+            DropColumn("dbo.ReceiptBatch", "RowVersion");
+            DropColumn("dbo.MiscReceipt", "RowVersion");
+            DropColumn("dbo.MiscReceiptLine", "RowVersion");
+            DropColumn("dbo.Disbursement", "RowVersion");
+            DropColumn("dbo.DisbursementLine", "RowVersion");
+            DropColumn("dbo.BankAccount", "RowVersion");
             DropColumn("dbo.Configuration", "RowVersion");
             DropColumn("dbo.RelationshipCategory", "RowVersion");
             DropColumn("dbo.RelationshipType", "RowVersion");
@@ -120,9 +148,9 @@ namespace DDI.Data.Migrations.Client
             DropColumn("dbo.PaymentMethod", "RowVersion");
             DropColumn("dbo.MaritialStatus", "RowVersion");
             DropColumn("dbo.Language", "RowVersion");
-            DropColumn("dbo.InvestmentType", "RowVersion");
-            DropColumn("dbo.InvestmentOwnershipType", "RowVersion");
-            DropColumn("dbo.InvestmentInterestPayout", "RowVersion");
+            //DropColumn("dbo.InvestmentType", "RowVersion");
+            //DropColumn("dbo.InvestmentOwnershipType", "RowVersion");
+            //DropColumn("dbo.InvestmentInterestPayout", "RowVersion");
             DropColumn("dbo.EntityTransaction", "RowVersion");
             DropColumn("dbo.Transaction", "RowVersion");
             DropColumn("dbo.PostedTransaction", "RowVersion");
@@ -140,8 +168,8 @@ namespace DDI.Data.Migrations.Client
             DropColumn("dbo.FiscalYear", "RowVersion");
             DropColumn("dbo.BusinessUnitFromTo", "RowVersion");
             DropColumn("dbo.BusinessUnit", "RowVersion");
-            DropColumn("dbo.Investment", "RowVersion");
-            DropColumn("dbo.InvestmentRelationship", "RowVersion");
+            //DropColumn("dbo.Investment", "RowVersion");
+            //DropColumn("dbo.InvestmentRelationship", "RowVersion");
             DropColumn("dbo.IncomeLevel", "RowVersion");
             DropColumn("dbo.Gender", "RowVersion");
             DropColumn("dbo.Ethnicity", "RowVersion");
@@ -173,6 +201,8 @@ namespace DDI.Data.Migrations.Client
             DropColumn("dbo.Note", "RowVersion");
             DropColumn("dbo.FileStorage", "RowVersion");
             DropColumn("dbo.Attachment", "RowVersion");
+            CreateIndex("dbo.FiscalPeriod", new[] { "FiscalYearId", "PeriodNumber" }, unique: true, name: "IX_FiscalYear_PeriodNumber");
+            AddForeignKey("dbo.FiscalPeriod", "FiscalYearId", "dbo.FiscalYear", "Id");
         }
     }
 }

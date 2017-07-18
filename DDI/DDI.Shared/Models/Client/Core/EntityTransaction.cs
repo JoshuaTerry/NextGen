@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DDI.Shared.Enums.Core;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DDI.Shared.Enums.Core;
 
 namespace DDI.Shared.Models.Client.Core
 {
@@ -20,8 +20,6 @@ namespace DDI.Shared.Models.Client.Core
         public string EntityType { get; set; }
 
         public EntityTransactionRelationship Relationship { get; set; }
-
-        public EntityTransactionCategory Category { get; set; }
 
         public TransactionAmountType AmountType { get; set; }
 

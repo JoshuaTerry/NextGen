@@ -1,12 +1,11 @@
-﻿using System;
-using System.Web.Http;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
+using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
-using DDI.Services;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using DDI.Services.ServiceInterfaces;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -15,7 +14,7 @@ namespace DDI.WebApi.Controllers.GL
     {
         public FiscalPeriodController(IService<FiscalPeriod> service) : base(service) { }
         
-        protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";
+        protected override string FieldsForList => $"{nameof(FiscalPeriod.Id)},{nameof(FiscalPeriod.FiscalYearId)},{nameof(FiscalPeriod.PeriodNumber)},{nameof(FiscalPeriod.StartDate)},{nameof(FiscalPeriod.EndDate)},{nameof(FiscalPeriod.Status)}";
 
         protected override string FieldsForAll => FieldListBuilder.IncludeAll().Exclude(p => p.FiscalYear);
 
@@ -57,21 +56,21 @@ namespace DDI.WebApi.Controllers.GL
         }
         [HttpGet]
         [Route("api/v1/fiscalperiods/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/fiscalperiods")]
-        public IHttpActionResult Post([FromBody] FiscalPeriod entityToSave)
+        public override IHttpActionResult Post([FromBody] FiscalPeriod entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
         [Route("api/v1/fiscalperiods/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

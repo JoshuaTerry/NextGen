@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DDI.Shared.Data;
 using DDI.Shared.Helpers;
 using DDI.Shared.Interfaces;

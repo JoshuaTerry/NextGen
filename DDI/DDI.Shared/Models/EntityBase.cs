@@ -1,5 +1,7 @@
 using DDI.Shared.Helpers;
 using System;
+using System.Collections.Generic;
+using DDI.Shared.Helpers;
 using System.ComponentModel.DataAnnotations;
 
 namespace DDI.Shared.Models
@@ -15,7 +17,7 @@ namespace DDI.Shared.Models
 
         public virtual string DisplayName => string.Empty;
         [Timestamp]
-        public Byte[] RowVersion { get; set; }
+        public virtual Byte[] RowVersion { get; set; }
         #endregion
 
         #region Constructors 

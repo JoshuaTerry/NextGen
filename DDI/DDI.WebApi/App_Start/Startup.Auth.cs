@@ -1,5 +1,4 @@
-﻿using DDI.WebApi.Models;
-using DDI.WebApi.Providers;
+﻿using DDI.WebApi.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;

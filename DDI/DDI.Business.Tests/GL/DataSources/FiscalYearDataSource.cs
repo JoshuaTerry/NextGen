@@ -39,7 +39,7 @@ namespace DDI.Business.Tests.GL.DataSources
                         StartDate = DateTime.Parse($"1/1/{CLOSED_YEAR}"),
                         EndDate = DateTime.Parse($"12/31/{CLOSED_YEAR}"),
                         Ledger = ledger,
-                        NumberOfPeriods = 12,
+                        NumberOfPeriods = 13,
                         Status = FiscalYearStatus.Closed,
                         Id = GuidHelper.NewSequentialGuid()
                     });

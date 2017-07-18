@@ -1,13 +1,7 @@
-﻿using DDI.Shared.Models.Client.Core;
-using DDI.Shared.Models.Client.CRM;
-using DDI.Shared.Statics;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Web.Http;
-using System.Net;
-using System.Net.Http;
+﻿using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
 using System.IO;
-using DDI.Shared;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.Core
 {
@@ -16,8 +10,8 @@ namespace DDI.WebApi.Controllers.Core
         public ImportController(IService<ImportFile> service) : base(service) { }
 
         [HttpPost]
-        [Route("api/v1/import")] 
-        public IHttpActionResult Post([FromBody] ImportFile item)
+        [Route("api/v1/import")]
+        public override IHttpActionResult Post([FromBody] ImportFile item)
         {
             var serviceResult = Service.Add(item);
              

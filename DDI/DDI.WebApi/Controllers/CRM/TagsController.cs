@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Web.Http;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -20,28 +20,28 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/tags")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.Order, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/tags/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/tags")]
-        public IHttpActionResult Post([FromBody] Tag entityToSave)
+        public override IHttpActionResult Post([FromBody] Tag entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
         [Route("api/v1/tags/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

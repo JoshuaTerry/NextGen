@@ -1,5 +1,4 @@
-﻿using DDI.Services;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
@@ -24,14 +23,14 @@ namespace DDI.WebApi.Controllers.CRM
    
         [HttpGet]
         [Route("api/v1/ethnicities")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/ethnicities/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
@@ -39,7 +38,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/ethnicities")]
-        public IHttpActionResult Post([FromBody] Ethnicity entityToSave)
+        public override IHttpActionResult Post([FromBody] Ethnicity entityToSave)
         {
             return base.Post(entityToSave);
         }
@@ -47,7 +46,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/ethnicities/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

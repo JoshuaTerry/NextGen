@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Web.Http;
-using DDI.Services.Search;
+﻿using DDI.Services.Search;
 using DDI.Shared;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
+using System;
+using System.Linq.Expressions;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.CRM
 {
@@ -59,7 +59,7 @@ namespace DDI.WebApi.Controllers.CRM
 
         [HttpGet]
         [Route("api/v1/states/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }

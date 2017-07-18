@@ -1,15 +1,12 @@
-﻿using DDI.Services;
+﻿using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Http;
-using DDI.Services.Search;
-using DDI.Shared.Helpers;
-using System.Linq;
-using DDI.Shared;
 
 namespace DDI.WebApi.Controllers.General
 {
@@ -28,7 +25,17 @@ namespace DDI.WebApi.Controllers.General
             .Exclude(p => p.ContactMethod)
             .Exclude(p => p.NoteCode)
             .Include(p => p.NoteTopics.First().Id)
-            .Include(p => p.NoteTopics.First().DisplayName);
+            .Include(p => p.NoteTopics.First().DisplayName)
+            .Include(p => p.PrimaryContact);
+
+        protected override Expression<Func<Note, object>>[] GetDataIncludesForSingle()
+        {
+            return new Expression<Func<Note, object>>[]
+            {
+                n => n.NoteTopics,
+                n => n.PrimaryContact
+            };
+        }
 
         #endregion Public Properties
 
@@ -95,7 +102,7 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/notes/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = "all")
         {
             return base.GetById(id, fields);
         }
@@ -141,14 +148,14 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpPatch]
         [Route("api/v1/notes/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }
 
         [HttpPost]
         [Route("api/v1/notes")]
-        public IHttpActionResult Post([FromBody] Note entityToSave)
+        public override IHttpActionResult Post([FromBody] Note entityToSave)
         {
             return base.Post(entityToSave);
         }
@@ -157,13 +164,7 @@ namespace DDI.WebApi.Controllers.General
 
         #region Protected Methods
 
-        protected override Expression<Func<Note, object>>[] GetDataIncludesForSingle()
-        {
-            return new Expression<Func<Note, object>>[]
-            {
-                n => n.NoteTopics
-            };
-        }
+
 
         #endregion Protected Methods
     }

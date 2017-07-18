@@ -1,23 +1,23 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Web.Http;
-using DDI.Services.GL;
+﻿using DDI.Services.GL;
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
-using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
     [Authorize]
     public class FiscalYearController : GenericController<FiscalYear>
     {
-        public FiscalYearController(IService<FiscalYear> service) : base(service) { }
-        
+        protected new IFiscalYearService Service => (IFiscalYearService)base.Service;
+        public FiscalYearController(IFiscalYearService service) : base(service) { }
+
         private string _fieldsForAll = null;
 
         protected override string FieldsForList => $"{nameof(FiscalYear.Id)},{nameof(FiscalYear.Name)},{nameof(FiscalYear.Status)}";
@@ -41,7 +41,7 @@ namespace DDI.WebApi.Controllers.GL
             return new Expression<Func<FiscalYear, object>>[]
             {
                 p => p.FiscalPeriods,
-                p => p.Ledger                
+                p => p.Ledger
             };
         }
 
@@ -91,7 +91,7 @@ namespace DDI.WebApi.Controllers.GL
 
                 return FinalizeResponse(result, ConvertFieldList(fields, FieldsForSingle));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
@@ -120,28 +120,36 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpGet]
         [Route("api/v1/fiscalyears/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/fiscalyears")]
-        public IHttpActionResult Post([FromBody] FiscalYear entityToSave)
+        public override IHttpActionResult Post([FromBody] FiscalYear entityToSave)
         {
-            return base.Post(entityToSave);
+            return Ok(Service.Post(entityToSave));
         }
 
         [HttpPost]
         [Route("api/v1/fiscalyears/{sourceFiscalYearId}/copy")]
         public IHttpActionResult Copy(Guid sourceFiscalYearId, [FromBody] FiscalYearTemplate newFiscalYear)
         {
-            return FinalizeResponse(((FiscalYearService)Service).CopyFiscalYear(sourceFiscalYearId, newFiscalYear), FieldsForSingle);
+            try
+            {
+                return FinalizeResponse(((FiscalYearService)Service).CopyFiscalYear(sourceFiscalYearId, newFiscalYear), FieldsForSingle);
+            }
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
 
         [HttpPatch]
         [Route("api/v1/fiscalyears/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

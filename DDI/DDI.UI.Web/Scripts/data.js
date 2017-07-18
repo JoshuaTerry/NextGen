@@ -51,7 +51,20 @@ function MakeServiceCall(method, route, item, successCallback, errorCallback) {
                 }
             }
             else {
-                DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
+
+                var errors = '';
+
+                if (data && data.ErrorMessages && data.ErrorMessages.length > 0) {
+
+                    for (var i = 0; i < data.ErrorMessages.length; i++) {
+                        errors += data.ErrorMessages[i] + ' <br />';
+                    }
+
+                    DisplayErrorMessage('Error', errors);
+                }
+                else {
+                    DisplayErrorMessage('Error', 'An unknown error has occurred.');
+                }
             }
 
         },
@@ -90,7 +103,7 @@ function PopulateDropDown(element, route, selectedValue) {
 
             });
 
-            if (selectedValue) {
+            if (selectedValue || selectedValue === 0) {
                 $(element).val(selectedValue);
             }
         }
@@ -128,7 +141,7 @@ function PopulateDropDown(element, route, defaultText, defaultValue, selectedVal
 
             });
 
-            if (selectedValue) {
+            if (selectedValue || selectedValue === 0) {
                 $(element).val(selectedValue);
             }
 
@@ -356,7 +369,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
     $(container).html('');
 
     var datagrid = $('<div>').addClass(grid);
-
+     
     if (editMethod) {
         columns.push({
             width: '100px',
@@ -364,7 +377,9 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
             cellTemplate: function(container, options) {
                 $('<a/>')
                     .addClass('editthing')
-                    .text('Edit')
+                    .addClass('actionbuttons')
+                    .addClass('editbutton')
+                    .attr('title', 'Edit')
                     .click(function(e) {
                         e.preventDefault();
 
@@ -382,11 +397,14 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
             cellTemplate: function (container, options) {
                 $('<a/>')
                     .addClass('editthing')
-                    .text('Delete')
+                    .addClass('actionbuttons')
+                    .addClass('deletebutton')
+                    .attr('title', 'Delete')
                     .click(function (e) {
                         e.preventDefault();
-
-                        deleteMethod(options.data.Id);
+                        ConfirmModal('Are you sure you want to delete this item?', function () {
+                            deleteMethod(options.data.Id);
+                        }, null); 
                     })
                     .appendTo(container);
             }
@@ -504,25 +522,26 @@ function NewEntityModal(route, prefix, modalClass, modalWidth, refreshGrid) {
     $(modal).find('.savebutton').unbind('click');
 
     $(modal).find('.savebutton').click(function () {
-        if (!ValidateFields(modal)) {
+        if (!ValidateFields(modal, function() {
+
+            previousEntity = currentEntity;
+            currentEntity = null;
+
+            var item = GetModalFieldsToSave(prefix);
+
+            MakeServiceCall('POST', route, item, function () {
+                DisplaySuccessMessage("Success", "Save successful.");
+
+                CloseModal(modal);
+
+                if (refreshGrid) {
+                    refreshGrid();
+                }
+            }, null);
+        }))
+        {
             return;
         } 
-
-        previousEntity = currentEntity;
-        currentEntity = null;
-
-        var item = GetModalFieldsToSave(prefix);
-
-        MakeServiceCall('POST', route, item, function () {
-            DisplaySuccessMessage("Success", "Save successful.");
-
-            CloseModal(modal);
-
-            if (refreshGrid) {
-                refreshGrid();
-            }
-        }, null);
-
     });
 
 }
@@ -553,21 +572,27 @@ function EditEntity(route, prefix, id, modalClass, modalWidth, refreshGrid) {
 
     $(modal).find('.savebutton').click(function () {
 
-        if (ValidateForm($(modal).attr('class').split(" ")[0]) == false) {
+        if (!ValidateFields(modal, function () {
+
+            var item = GetModalFieldsToSave(prefix);
+
+            MakeServiceCall('PATCH', route + '/' + id, item, function () {
+                DisplaySuccessMessage("Save successful.");
+
+                CloseModal(modal);
+
+                if (refreshGrid) {
+                    refreshGrid();
+                }
+            }, null);
+
+        })) {
             return;
-        }
+        } 
 
-        var item = GetModalFieldsToSave(prefix);
-        
-        MakeServiceCall('PATCH', route + '/' + id, item, function () {
-            DisplaySuccessMessage("Save successful.");
 
-            CloseModal(modal);
 
-            if (refreshGrid) {
-                refreshGrid();
-            }
-        }, null);
+       
 
     });
 

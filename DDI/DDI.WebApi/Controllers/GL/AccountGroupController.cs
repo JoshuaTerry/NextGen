@@ -1,13 +1,10 @@
-﻿using System;
-using System.Web.Http;
-using DDI.Services;
-using DDI.Services.GL;
-using DDI.Services.Search;
-using DDI.Services.ServiceInterfaces;
+﻿using DDI.Services.Search;
+using DDI.Shared;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
-using DDI.Shared;
+using System;
+using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.GL
 {
@@ -54,21 +51,21 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpGet]
         [Route("api/v1/AccountGroups/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/AccountGroups")]
-        public IHttpActionResult Post([FromBody] AccountGroup item)
+        public override IHttpActionResult Post([FromBody] AccountGroup item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/AccountGroups/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }

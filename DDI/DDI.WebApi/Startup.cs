@@ -1,5 +1,4 @@
-﻿using DDI.Shared;
-using DDI.WebApi;
+﻿using DDI.WebApi;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
