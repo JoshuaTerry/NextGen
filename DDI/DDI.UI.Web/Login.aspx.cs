@@ -47,7 +47,7 @@ namespace DDI.UI.Web
 
                     //if (data != null && data.IsSuccessful)
                     //{
-                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, username, DateTime.Now, DateTime.Now.AddMinutes(60), false, roles);
+                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, username, DateTime.Now, DateTime.Now.AddMinutes(19), false, roles);
                     string encryptedTicket = FormsAuthentication.Encrypt(ticket);
                     HttpCookie fatCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
 

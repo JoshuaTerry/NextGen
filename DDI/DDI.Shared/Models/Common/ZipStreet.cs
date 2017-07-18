@@ -14,7 +14,7 @@ namespace DDI.Shared.Models.Common
 
         [MaxLength(8)]
         public string Prefix { get; set; }
-
+        [MaxLength(40)]
         public string Street { get; set; }
 
         [MaxLength(8)]
@@ -28,7 +28,7 @@ namespace DDI.Shared.Models.Common
 
         [Index]
         [MaxLength(8)]
-        public string CityKey { get; set; }    
+        public string CityKey { get; set; }
 
         public Guid? ZipId { get; set; }
 

@@ -13,7 +13,27 @@ function GetApiHeaders() {
 
 }
 
+function GetRowVersion(item) {
+
+    var o = JSON.parse(item);
+
+    if (o.RowVersion && currentEntity) {
+        o.RowVersion = null;
+    }
+    else {
+        o['RowVersion'] = currentEntity.RowVersion;
+    }
+
+    o = JSON.stringify(o);
+
+    return o;
+
+}
+
 function MakeServiceCall(method, route, item, successCallback, errorCallback) {
+
+    if (item)
+        item = GetRowVersion(item);
 
     $.ajax({
         url: WEB_API_ADDRESS + route,
