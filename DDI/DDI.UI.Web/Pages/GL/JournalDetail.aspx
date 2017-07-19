@@ -104,7 +104,7 @@
         </div>
             
         <div>
-            <a href="#" class="newjournallinemodallink newmodallink">New Item</a>
+            <a href="#" class="newjournallinemodallink newmodallink" style="display: none;">New Item</a>
             <div class="journallinegridcontainer">
                 <div class="journallinegrid"></div>
             </div>

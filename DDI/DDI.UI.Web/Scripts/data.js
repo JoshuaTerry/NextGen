@@ -15,20 +15,25 @@ function GetApiHeaders() {
 
 function GetRowVersion(item) {
 
-    var o = JSON.parse(item);
+    try {
+        item = JSON.parse(item);
+    }
+    catch (err) {
 
+    }
+    
     if (currentEntity && currentEntity.Id) {
-        if (o.RowVersion) {
-            o.RowVersion = currentEntity.RowVersion;
+        if (item.RowVersion) {
+            item.RowVersion = currentEntity.RowVersion;
         }
         else {
-            o['RowVersion'] = currentEntity.RowVersion;
+            item['RowVersion'] = currentEntity.RowVersion;
         }
     }
 
-    o = JSON.stringify(o);
+    item = JSON.stringify(item);
 
-    return o;
+    return item;
 
 }
 
