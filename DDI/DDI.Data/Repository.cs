@@ -308,14 +308,16 @@ namespace DDI.Data
             IEnumerable<string> propertynames = currentValues.PropertyNames;
 
             var entityInterface = entity as IEntity;
-            Byte[] requestRowVersion = propertyValues["RowVersion"] as Byte[];
-            if (requestRowVersion != null && !entityInterface.RowVersion.SequenceEqual(requestRowVersion))
-                throw new DatabaseConcurrencyException();
+            if (propertyValues.ContainsKey("RowVersion"))
+            {
+                Byte[] requestRowVersion = propertyValues["RowVersion"] as Byte[];
+                if (requestRowVersion != null && !entityInterface.RowVersion.SequenceEqual(requestRowVersion))
+                    throw new DatabaseConcurrencyException();
 
-            var manager = ((IObjectContextAdapter)_context).ObjectContext.ObjectStateManager;
-            var ose = manager.GetObjectStateEntry(entity);
-            ose.AcceptChanges();
-
+                var manager = ((IObjectContextAdapter)_context).ObjectContext.ObjectStateManager;
+                var ose = manager.GetObjectStateEntry(entity);
+                ose.AcceptChanges();
+            }
 
             foreach (KeyValuePair<string, object> keyValue in propertyValues)
             {
