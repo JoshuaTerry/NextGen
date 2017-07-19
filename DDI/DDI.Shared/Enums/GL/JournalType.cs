@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿
+using System.ComponentModel;
 
 namespace DDI.Shared.Enums.GL
 {

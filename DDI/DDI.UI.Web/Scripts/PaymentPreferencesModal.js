@@ -113,7 +113,7 @@ function Loadpaymentpreferences(id) {
 
 function GetpaymentpreferencesToSave() {
 
-    var rawitem = {
+    var item = {
 
         Description: $(paymentPreferencesModal).find('.Description').val(),
         BankName: $(paymentPreferencesModal).find('.BankName').val(),
@@ -124,8 +124,6 @@ function GetpaymentpreferencesToSave() {
         Status: $(paymentPreferencesModal).find('.Status').val
 
     };
-
-    var item = JSON.stringify(rawitem);
 
     return item;
 

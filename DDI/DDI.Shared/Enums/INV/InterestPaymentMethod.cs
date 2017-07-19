@@ -14,9 +14,6 @@ namespace DDI.Shared.Enums.INV
         Check = 2,
 
         [Description("Investment Deposit")]
-        InvestmentDeposit = 3,
-
-        
+        InvestmentDeposit = 3,   
     }
-
 }
