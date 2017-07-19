@@ -89,7 +89,31 @@ namespace DDI.Conversion.Statics
         #endregion
 
         #region CP Files
+
         public static string CP_EFTInfo => "EFTInfo.csv";
+        public static string CP_EFTFormat => "EFTFormat.csv";
+        public static string CP_Settings => "CPSettings.csv";
+        public static string CP_BankAccounts => "BankAccount.csv";
+        public static string CP_ReceiptTypes => "ReceiptType.csv";
+        public static string CP_ReceiptBatchTypes => "ReceiptBatchType.csv";
+        public static string CP_ReceiptBatches => "ReceiptBatch.csv";
+        public static string CP_Receipts => "Receipt.csv";
+        public static string CP_ReceiptTransactions => "Transaction_Receipt.csv";
+        public static string CP_ReceiptEntityTransactions => "EntityTransaction_Receipt.csv";
+        public static string CP_ReceiptEntityNumbers => "EntityNumber_Receipt.csv";
+        public static string CP_ReceiptAttachments => "Attachment_Receipt.csv";
+        public static string CP_ReceiptFileStorage => "FileStorage_Receipt.csv";
+
+        public static string CP_MiscReceipts => "MiscReceipt.csv";
+        public static string CP_MiscReceiptLines => "MiscReceiptLine.csv";
+        public static string CP_MiscReceiptTransactions => "Transaction_MiscReceipt.csv";
+        public static string CP_MiscReceiptEntityTransactions => "EntityTransaction_MiscReceipt.csv";
+        public static string CP_MiscReceiptEntityNumbers => "EntityNumber_MiscReceipt.csv";
+        public static string CP_MiscReceiptAttachments => "Attachment_MiscReceipt.csv";
+        public static string CP_MiscReceiptFileStorage => "FileStorage_MiscReceipt.csv";
+        public static string CP_MiscReceiptApprovals => "Approval_MiscReceipt.csv";
+        public static string CP_MemoMiscReceipts => "Memo_MiscReceipt.csv";
+
         #endregion
 
 

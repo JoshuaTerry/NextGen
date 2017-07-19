@@ -184,7 +184,10 @@ namespace DDI.Conversion.CP
 
                 joinOutputFile.Dispose();
                 outputFile.Dispose();
+                legacyIdFile.Dispose();
             }
+
+            context.Dispose();
         }
 
     }

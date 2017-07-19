@@ -43,5 +43,7 @@ namespace DDI.Shared.Models.Client.CP
         public Guid ReceiptBatchId { get; set; }
         [ForeignKey(nameof(ReceiptBatchId))]
         public ReceiptBatch ReceiptBatch { get; set; }
+
+        public override string DisplayName => ReceiptNumber.ToString();
     }
 }

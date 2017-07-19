@@ -1,8 +1,13 @@
-﻿namespace DDI.Shared.Enums.CP
+﻿using System.ComponentModel;
+
+namespace DDI.Shared.Enums.CP
 {
     public enum MiscReceiptType
     {
-        Normal = 0,
+        [Description("One-Time")]
+        OneTime = 0,
+
+        [Description("Template")]
         Template = 1
     }
 }
