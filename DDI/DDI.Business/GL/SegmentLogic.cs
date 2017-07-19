@@ -70,7 +70,11 @@ namespace DDI.Business.GL
                 throw new ValidationException(UserMessagesGL.GLSegmentAlphaNumeric);
             }
 
-
+            // Ledger is no longer empty if there are segments.
+            if (ledger.Status == LedgerStatus.Empty)
+            {
+                ledger.Status = LedgerStatus.Active;                    
+            }
         }
 
     }

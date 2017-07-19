@@ -140,6 +140,14 @@ namespace DDI.Shared.Data
         }
 
         /// <summary>
+        /// Get the original property value for an entity.
+        /// </summary>
+        public TElement GetOriginalPropertyValue<TElement>(T entity, Expression<Func<T, TElement>> property) where TElement : class
+        {
+            return GetReference(entity, property);
+        }
+
+        /// <summary>
         /// Return a collection of entities that have already been loaded or added to the repository.
         /// </summary>
         public ICollection<T> GetLocal()

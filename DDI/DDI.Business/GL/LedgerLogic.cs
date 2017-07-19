@@ -102,7 +102,7 @@ namespace DDI.Business.GL
             {
                 if (_ledgerCache != null)
                 {
-                    InvalidLedgerCache();
+                    InvalidateLedgerCache();
                 }
 
                 if (modifiedProperties.Contains(nameof(ledger.AccountGroupLevels)))
@@ -126,12 +126,12 @@ namespace DDI.Business.GL
                 // If modifying a ledger for an organizational business unit, the settings should be copied to all the other common business units.
                 if (ledger.IsParent)
                 {
-                    CopyLedgerProperties(ledger, ledger.Id);
+                    SynchronizeLedgerProperties(ledger, ledger.Id);
                 }
 
                 else if (unit.BusinessUnitType == BusinessUnitType.Common && ledger.OrgLedgerId != null)
                 {
-                    CopyLedgerProperties(ledger, ledger.OrgLedgerId.Value);
+                    SynchronizeLedgerProperties(ledger, ledger.OrgLedgerId.Value);
                 }
             }
 
@@ -139,15 +139,18 @@ namespace DDI.Business.GL
 
             if (ledger.IsParent)
             {
-                CopySegmentLevels(ledger, ledger.Id);
+                SynchronizeSegmentLevels(ledger, ledger.Id);
             }
 
             else if (unit.BusinessUnitType == BusinessUnitType.Common && ledger.OrgLedgerId != null)
             {
-                CopySegmentLevels(ledger, ledger.OrgLedgerId.Value);
+                SynchronizeSegmentLevels(ledger, ledger.OrgLedgerId.Value);
             }
         }
 
+        /// <summary>
+        /// Get a cached ledger.
+        /// </summary>
         public Ledger GetCachedLedger(Guid? ledgerId)
         {
             if (ledgerId == null)
@@ -161,9 +164,9 @@ namespace DDI.Business.GL
         /// <summary>
         /// Invalidate the ledger cache (if ledger or fiscal year settings have changed).
         /// </summary>
-        public void InvalidLedgerCache()
+        public void InvalidateLedgerCache()
         {
-            _ledgerCache.InvalidateCache();
+            _ledgerCache?.InvalidateCache();
         }
 
         /// <summary>
@@ -219,6 +222,11 @@ namespace DDI.Business.GL
         /// </summary>
         public int GetFundSegmentLevel(Ledger ledger)
         {
+            if (ledger == null)
+            {
+                throw new ArgumentNullException(nameof(ledger));
+            }
+
             if (ledger.FundAccounting)
             {
                 return UnitOfWork.GetReference(ledger, p => p.SegmentLevels).FirstOrDefault(p => p.Type == SegmentType.Fund)?.Level ?? 0;
@@ -231,6 +239,11 @@ namespace DDI.Business.GL
         /// </summary>
         public int GetFundSegmentLevel(FiscalYear year)
         {
+            if (year == null)
+            {
+                throw new ArgumentNullException(nameof(year));
+            }
+
             return GetFundSegmentLevel(year.Ledger ?? GetCachedLedger(year.LedgerId));
         }
 
@@ -239,6 +252,11 @@ namespace DDI.Business.GL
         /// </summary>
         public string GetFundLabel(Ledger ledger)
         {
+            if (ledger == null)
+            {
+                throw new ArgumentNullException(nameof(ledger));
+            }
+
             if (ledger.FundAccounting)
             {
                 return UnitOfWork.GetReference(ledger, p => p.SegmentLevels)?.FirstOrDefault(p => p.Type == SegmentType.Fund)?.Name ?? string.Empty;
@@ -251,6 +269,11 @@ namespace DDI.Business.GL
         /// </summary>
         public string GetFundLabel(FiscalYear year)
         {
+            if (year == null)
+            {
+                throw new ArgumentNullException(nameof(year));
+            }
+
             return GetFundLabel(year.Ledger ?? GetCachedLedger(year.LedgerId));
         }
 
@@ -261,9 +284,9 @@ namespace DDI.Business.GL
         {
             switch (budgetType)
             {
-                case BudgetType.Fixed: return StringHelper.FirstNonBlank(ledger.FixedBudgetName, "Fixed Budget");
-                case BudgetType.Working: return StringHelper.FirstNonBlank(ledger.WorkingBudgetName, "Working Budget");
-                case BudgetType.WhatIf: return StringHelper.FirstNonBlank(ledger.WhatIfBudgetName, "What-If Budget");
+                case BudgetType.Fixed: return StringHelper.FirstNonBlank(ledger?.FixedBudgetName, "Fixed Budget");
+                case BudgetType.Working: return StringHelper.FirstNonBlank(ledger?.WorkingBudgetName, "Working Budget");
+                case BudgetType.WhatIf: return StringHelper.FirstNonBlank(ledger?.WhatIfBudgetName, "What-If Budget");
             }
             return string.Empty;
         }
@@ -308,6 +331,11 @@ namespace DDI.Business.GL
         /// </summary>
         public string GetGLAccountFormatSample(Ledger ledger)
         {
+            if (ledger == null)
+            {
+                throw new ArgumentNullException(nameof(ledger));
+            }
+
             if (ledger.SegmentLevels == null)
             {
                 return string.Empty;
@@ -348,6 +376,105 @@ namespace DDI.Business.GL
             }
         }
 
+        /// <summary>
+        /// Copy properties from one ledger to another ledger.
+        /// </summary>
+        public void CopyLedgerProperties(Ledger from, Ledger to)
+        {
+            if (from == null || to == null)
+            {
+                throw new ArgumentNullException();
+            }
+            to.AccountGroup1Title = from.AccountGroup1Title;
+            to.AccountGroup2Title = from.AccountGroup2Title;
+            to.AccountGroup3Title = from.AccountGroup3Title;
+            to.AccountGroup4Title = from.AccountGroup4Title;
+            to.AccountGroupLevels = from.AccountGroupLevels;
+            to.ApproveJournals = from.ApproveJournals;
+            to.CapitalizeHeaders = from.CapitalizeHeaders;
+            to.CopyCOAChanges = from.CopyCOAChanges;
+            to.FixedBudgetName = from.FixedBudgetName;
+            to.FundAccounting = from.FundAccounting;
+            to.NumberOfSegments = from.NumberOfSegments;
+            to.PostAutomatically = from.PostAutomatically;
+            to.PriorPeriodPostingMode = from.PriorPeriodPostingMode;
+            to.WhatIfBudgetName = from.WhatIfBudgetName;
+            to.WorkingBudgetName = from.WorkingBudgetName;
+        }
+
+        /// <summary>
+        /// Initialize default ledger properties for a new ledger.
+        /// </summary>
+        public void InitializeLedgerProperties(Ledger ledger)
+        {
+            if (ledger == null)
+            {
+                throw new ArgumentNullException(nameof(ledger));
+            }
+
+            ledger.AccountGroup1Title = "Category";
+            ledger.AccountGroup2Title = "Class";
+            ledger.AccountGroup3Title = "Type";
+            ledger.AccountGroupLevels = 3;
+            ledger.FixedBudgetName = "Fixed Budget";
+            ledger.WorkingBudgetName = "Working Budget";
+            ledger.WhatIfBudgetName = "What If Budget";
+            ledger.PriorPeriodPostingMode = PriorPeriodPostingMode.Allow;
+            ledger.Status = LedgerStatus.Empty;
+            if (ledger.SegmentLevels == null)
+            {
+                ledger.SegmentLevels = new List<SegmentLevel>();
+            }
+        }
+
+        /// <summary>
+        /// Copy segment levels from one ledger to another ledger.
+        /// </summary>
+        public void CopySegmentLevels(Ledger from, Ledger to)
+        {
+            if (from == null || to == null || from.SegmentLevels == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (to.SegmentLevels == null)
+            {
+                to.SegmentLevels = new List<SegmentLevel>();
+            }
+
+            // add/update levels 
+            foreach (SegmentLevel fromLevel in from.SegmentLevels)
+            {
+                SegmentLevel toLevel = to.SegmentLevels.FirstOrDefault(p => p.Level == fromLevel.Level);
+                if (toLevel == null)
+                {
+                    toLevel = new SegmentLevel()
+                    {
+                        Level = fromLevel.Level
+                    };
+                    to.SegmentLevels.Add(toLevel);
+                }
+                toLevel.Abbreviation = fromLevel.Abbreviation;
+                toLevel.Format = fromLevel.Format;
+                toLevel.IsCommon = fromLevel.IsCommon;
+                toLevel.IsLinked = fromLevel.IsLinked;
+                toLevel.Length = fromLevel.Length;
+                toLevel.Name = fromLevel.Name;
+                toLevel.Separator = fromLevel.Separator;
+                toLevel.SortOrder = fromLevel.SortOrder;
+                toLevel.Type = fromLevel.Type;
+            }
+
+            // Remove levels
+            foreach (var toLevel in to.SegmentLevels.ToList())
+            {
+                if (!from.SegmentLevels.Any(p => p.Level == toLevel.Level))
+                {
+                    to.SegmentLevels.Remove(toLevel);
+                }
+            }
+        }
+
         #endregion
 
         #region Private Methods
@@ -355,30 +482,14 @@ namespace DDI.Business.GL
         /// <summary>
         /// Copy properties from one ledger to another.
         /// </summary>
-        private void CopyLedgerProperties(Ledger from, Guid orgLedgerId)
+        private void SynchronizeLedgerProperties(Ledger from, Guid orgLedgerId)
         {
             foreach (Ledger to in UnitOfWork.Where<Ledger>(p => p.Id != from.Id &&
                                  (p.OrgLedgerId == orgLedgerId || p.Id == orgLedgerId)))
             {
-                to.AccountGroup1Title = from.AccountGroup1Title;
-                to.AccountGroup2Title = from.AccountGroup2Title;
-                to.AccountGroup3Title = from.AccountGroup3Title;
-                to.AccountGroup4Title = from.AccountGroup4Title;
-                to.AccountGroupLevels = from.AccountGroupLevels;
-                to.ApproveJournals = from.ApproveJournals;
-                to.CapitalizeHeaders = from.CapitalizeHeaders;
-                to.CopyCOAChanges = from.CopyCOAChanges;
-                to.FixedBudgetName = from.FixedBudgetName;
-                to.FundAccounting = from.FundAccounting;
-                to.NumberOfSegments = from.NumberOfSegments;
-                to.PostAutomatically = from.PostAutomatically;
-                to.PriorPeriodPostingMode = from.PriorPeriodPostingMode;
-                to.Status = from.Status;
-                to.WhatIfBudgetName = from.WhatIfBudgetName;
-                to.WorkingBudgetName = from.WorkingBudgetName;
+                CopyLedgerProperties(from, to);
             }
         }
-
 
         private void ValidateSegmentLevels(Ledger ledger)
         {
@@ -457,7 +568,7 @@ namespace DDI.Business.GL
             }
         }
 
-        private void CopySegmentLevels(Ledger from, Guid orgLedgerId)
+        private void SynchronizeSegmentLevels(Ledger from, Guid orgLedgerId)
         {
             if (from.SegmentLevels == null)
             {
@@ -468,37 +579,7 @@ namespace DDI.Business.GL
                                             .Where(p => p.Id != from.Id && 
                                                 (p.OrgLedgerId == orgLedgerId || p.Id == orgLedgerId)))
             {
-                // add/update levels 
-                foreach (var fromLevel in from.SegmentLevels)
-                {
-                    SegmentLevel toLevel = to.SegmentLevels.FirstOrDefault(p => p.Level == fromLevel.Level);
-                    if (toLevel == null)
-                    {
-                        toLevel = new SegmentLevel()
-                        {
-                            Level = fromLevel.Level
-                        };
-                        to.SegmentLevels.Add(toLevel);
-                    }
-                    toLevel.Abbreviation = fromLevel.Abbreviation;
-                    toLevel.Format = fromLevel.Format;
-                    toLevel.IsCommon = fromLevel.IsCommon;
-                    toLevel.IsLinked = fromLevel.IsLinked;
-                    toLevel.Length = fromLevel.Length;
-                    toLevel.Name = fromLevel.Name;
-                    toLevel.Separator = fromLevel.Separator;
-                    toLevel.SortOrder = fromLevel.SortOrder;
-                    toLevel.Type = fromLevel.Type;                    
-                }
-
-                // Remove levels
-                foreach (var toLevel in to.SegmentLevels.ToList())
-                {
-                    if (!from.SegmentLevels.Any(p => p.Level == toLevel.Level))
-                    {
-                        to.SegmentLevels.Remove(toLevel);
-                    }
-                }
+                CopySegmentLevels(from, to);
             }
         }
 

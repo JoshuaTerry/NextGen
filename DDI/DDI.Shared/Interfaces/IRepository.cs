@@ -43,6 +43,8 @@ namespace DDI.Shared
 
         List<string> GetModifiedProperties(T entity);
 
+        TElement GetOriginalPropertyValue<TElement>(T entity, Expression<Func<T, TElement>> property) where TElement : class;
+
         void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, ICollection<TElement>>> collection) where TElement : class;
 
         void LoadReference<TElement>(T entity, System.Linq.Expressions.Expression<Func<T, TElement>> property) where TElement : class;

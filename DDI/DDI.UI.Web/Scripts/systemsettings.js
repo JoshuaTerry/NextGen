@@ -3004,7 +3004,7 @@ function LoadFiscalYearSectionSettings() {
     $(gridgroup).appendTo(container);
     $(container).appendTo($('.gridcontainer'));
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, 'Please Select', '', $('.LedgerId').val(), function () {
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, 'Please Select', '', $('.LedgerId').val(), null, function () {
 
         LoadFiscalYearGrid();
         $('.fy-LedgerId').val($('.LedgerId').val());
@@ -3070,14 +3070,8 @@ function LoadFiscalYearGrid() {
 
     LoadGrid('fiscalyearcontainer', 'fiscalyeargrid', columns, 'fiscalyears/ledger/' + ledgerid + '?fields=Id,Name,Status', 'fiscalyears', LoadFiscalPeriods, 'fy-', '.fiscalyearmodal', '.fiscalyearmodal', 250, true, false, false, function (data) {
 
-        if (data.Data.length > 0) {
-            $('.fiscalyearcontainer').show();
-            $('.fiscalperiodscontainer').hide();
-        }
-        else {
-            $('.fiscalyearcontainer').hide();
-        }
-
+        $('.fiscalperiodscontainer').hide();
+        $('.fiscalyearcontainer').show();
     });
 }
 

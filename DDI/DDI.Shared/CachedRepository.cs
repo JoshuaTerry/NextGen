@@ -135,6 +135,11 @@ namespace DDI.Shared
             return _baseRepository.GetModifiedProperties(entity);
         }
 
+        public TElement GetOriginalPropertyValue<TElement>(T entity, Expression<Func<T, TElement>> property) where TElement : class
+        {
+            return _baseRepository.GetOriginalPropertyValue(entity, property);
+        }    
+
         public void LoadReference<TElement>(T entity, Expression<Func<T, ICollection<TElement>>> collection) where TElement : class
         {
             _baseRepository.LoadReference<TElement>(entity, collection);

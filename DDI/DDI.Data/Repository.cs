@@ -356,6 +356,20 @@ namespace DDI.Data
             return list;
         }
 
+        /// <summary>
+        /// Get the original property value for an entity.
+        /// </summary>
+        public TElement GetOriginalPropertyValue<TElement>(T entity, Expression<Func<T, TElement>> property) where TElement : class
+        {
+            DbEntityEntry<T> entry = _context.Entry(entity);
+            if (entry.State == System.Data.Entity.EntityState.Detached || entry.State == System.Data.Entity.EntityState.Added)
+            {
+                return null;
+            }
+            string propertyName = (property.Body as MemberExpression).Member.Name;
+            return entry.OriginalValues.GetValue<TElement>(propertyName);
+        }
+
         #endregion Public Methods
 
         #region Private Methods

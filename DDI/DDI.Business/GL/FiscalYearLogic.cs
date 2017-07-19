@@ -201,7 +201,7 @@ namespace DDI.Business.GL
                 UnitOfWork.Insert(fund);
             }
 
-            _ledgerLogic.InvalidLedgerCache();
+            _ledgerLogic.InvalidateLedgerCache();
         }
         
         /// <summary>

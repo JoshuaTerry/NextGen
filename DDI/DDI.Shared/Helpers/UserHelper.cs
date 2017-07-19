@@ -11,8 +11,21 @@ namespace DDI.Shared.Helpers
         /// <summary>
         /// Get the User entity associated with the current thread.
         /// </summary>
-        public static User GetCurrentUser(IUnitOfWork unitOfWork)
+        /// <param name="unitOfWork">Unit of work to use for retrieving the user.</param>
+        /// <param name="dontCache">TRUE to prevent returning a cached user (in case the user is to be attached to another entity.)</param>
+        public static User GetCurrentUser(IUnitOfWork unitOfWork, bool dontCache = false)
         {
+            if (dontCache)
+            {
+                var userId = Thread.CurrentPrincipal?.Identity.Name;
+
+                if (!string.IsNullOrWhiteSpace(userId))
+                {
+                    return unitOfWork.FirstOrDefault<User>(p => p.UserName == userId);
+                }
+                return null;                        
+            }
+
             User user = GetCurrentUser((userId) => unitOfWork.FirstOrDefault<User>(p => p.UserName == userId));
             return user;
         }
