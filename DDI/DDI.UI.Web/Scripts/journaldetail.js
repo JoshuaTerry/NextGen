@@ -276,8 +276,6 @@ function LoadJournalLine(id) {
 
     MakeServiceCall('GET', 'journalline/' + id, null, function (data) {
 
-        debugger;
-
         $('.hidjournallineid').val(id);
 
         $('.hidledgeraccountid').val(data.Data.LedgerAccountId);

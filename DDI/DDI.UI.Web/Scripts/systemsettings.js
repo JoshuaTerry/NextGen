@@ -161,6 +161,8 @@ function GetSetting(category, key, route, id, checkbox, label) {
         if (data.Data) {
             if (data.IsSuccessful) {
 
+                currentEntity = data.Data;
+
                 $(id).val(data.Data.Id);
                 $(checkbox).prop('checked', data.Data.IsShown);
                 $(label).val(data.Data.Value);
@@ -426,31 +428,33 @@ function LoadConstituentTypesSectionSettings() {
 
             $('.submitconsttype').click(function () {
 
-                var item = {
-                    Code: $(modal).find('.consttype-Code').val(),
-                    Name: $(modal).find('.consttype-Name').val(),
-                    Category: $(modal).find('.consttype-Category').val(),
-                    NameFormat: $(modal).find('.consttype-NameFormat').val(),
-                    SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
-                    SalutationInformal: $(modal).find('.consttype-SalutationInformal').val(),
-                    IsActive: true,
-                    IsRequired: true
-                }
-
-                MakeServiceCall('POST', 'constituenttypes', item, function (data) {
-
-                    if (data.Data) {
-                        DisplaySuccessMessage('Success', 'Constituent Type saved successfully.');
-
-                        CloseModal(modal);
-
-                        LoadConstituentTypeSettingsGrid();
+                ValidateFields(modal, function () {
+                    var item = {
+                        Code: $(modal).find('.consttype-Code').val(),
+                        Name: $(modal).find('.consttype-Name').val(),
+                        Category: $(modal).find('.consttype-Category').val(),
+                        NameFormat: $(modal).find('.consttype-NameFormat').val(),
+                        SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
+                        SalutationInformal: $(modal).find('.consttype-SalutationInformal').val(),
+                        IsActive: true,
+                        IsRequired: true
                     }
 
-                }, function (xhr, status, err) {
+                    MakeServiceCall('POST', 'constituenttypes', item, function (data) {
 
-                    DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+                        if (data.Data) {
+                            DisplaySuccessMessage('Success', 'Constituent Type saved successfully.');
 
+                            CloseModal(modal);
+
+                            LoadConstituentTypeSettingsGrid();
+                        }
+
+                    }, function (xhr, status, err) {
+
+                        DisplayErrorMessage('Error', 'An error occurred while saving the Constituent Type.');
+
+                    });
                 });
 
             });
@@ -643,26 +647,28 @@ function EditConstituentType(id) {
 
     $('.submitconsttype').click(function () {
 
-        var item = {
-            Code: $(modal).find('.consttype-Code').val(),
-            Name: $(modal).find('.consttype-Name').val(),
-            Category: $(modal).find('.consttype-Category').val(),
-            NameFormat: $(modal).find('.consttype-NameFormat').val(),
-            SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
-            SalutationInformal: $(modal).find('.consttype-SalutationInformal').val()
-        }
-
-        MakeServiceCall('PATCH', 'constituenttypes/' + id, item, function (data) {
-
-            if (data.Data) {
-                DisplaySuccessMessage('Success', 'Constituent type saved successfully.');
-
-                CloseModal(modal);
-
-                LoadConstituentTypeSettingsGrid();
+        ValidateFields(modal, function () {
+            var item = {
+                Code: $(modal).find('.consttype-Code').val(),
+                Name: $(modal).find('.consttype-Name').val(),
+                Category: $(modal).find('.consttype-Category').val(),
+                NameFormat: $(modal).find('.consttype-NameFormat').val(),
+                SalutationFormal: $(modal).find('.consttype-SalutationFormal').val(),
+                SalutationInformal: $(modal).find('.consttype-SalutationInformal').val()
             }
 
-        }, null);
+            MakeServiceCall('PATCH', 'constituenttypes/' + id, item, function (data) {
+
+                if (data.Data) {
+                    DisplaySuccessMessage('Success', 'Constituent type saved successfully.');
+
+                    CloseModal(modal);
+
+                    LoadConstituentTypeSettingsGrid();
+                }
+
+            }, null);
+        });
 
     });
 

@@ -17,11 +17,13 @@ function GetRowVersion(item) {
 
     var o = JSON.parse(item);
 
-    if (o.RowVersion && currentEntity) {
-        o.RowVersion = null;
-    }
-    else {
-        o['RowVersion'] = currentEntity.RowVersion;
+    if (currentEntity && currentEntity.Id) {
+        if (o.RowVersion) {
+            o.RowVersion = currentEntity.RowVersion;
+        }
+        else {
+            o['RowVersion'] = currentEntity.RowVersion;
+        }
     }
 
     o = JSON.stringify(o);
