@@ -94,6 +94,14 @@ namespace DDI.Services
 
         public override IDataResponse<Constituent> Add(Constituent entity)
         {
+            if (entity.ConstituentAddresses == null)
+            {
+                entity.ConstituentAddresses = new List<ConstituentAddress>();
+            }
+            if (entity.ContactInfo == null)
+            {
+                entity.ContactInfo = new List<ContactInfo>();
+            }
             if (entity.ConstituentAddresses != null)
             {
                 foreach (var entry in entity.ConstituentAddresses)
