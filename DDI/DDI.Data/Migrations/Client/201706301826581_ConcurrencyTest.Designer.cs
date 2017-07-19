@@ -13,7 +13,7 @@ namespace DDI.Data.Migrations.Client
         
         string IMigrationMetadata.Id
         {
-            get { return "201707051934385_ConcurrencyTest"; }
+            get { return "201706301826581_ConcurrencyTest"; }
         }
         
         string IMigrationMetadata.Source

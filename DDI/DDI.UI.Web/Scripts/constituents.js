@@ -652,9 +652,9 @@ function AddressGridComplete() {
 
         });
 
-        $('.saveaddress').unbind('click');
+        $('.savebutton').unbind('click');
 
-        $('.saveaddress').click(function () {
+        $('.savebutton').click(function () {
 
             var item = {
                 ConstituentId: currentEntity.Id,
@@ -689,7 +689,11 @@ function AddressGridComplete() {
 
                 LoadAddressesGrid();
 
-            }, null);
+            }, function () {
+
+                DisplaySuccessMessage('Failure', 'Address not saved.');
+
+            });
 
         });
 
@@ -782,14 +786,14 @@ function EditAddressModal(id) {
 
     });
 
-    $('.saveaddress').unbind('click');
+    $('.savebutton').unbind('click');
 
-    $('.saveaddress').click(function () {
+    $('.savebutton').click(function () {
 
         // Get the changed fields from currentaddress and put into new array.
         var fields = GetEditedAddressFields();
 
-        MakeServiceCall('PATCH', 'constituentaddresses/' + id, fields, function () {
+        MakeServiceCall('PATCH', 'constituentaddresses/' + id, JSON.stringify(fields), function () {
             DisplaySuccessMessage('Success', 'Address saved successfully.');
 
             CloseModal(modal);

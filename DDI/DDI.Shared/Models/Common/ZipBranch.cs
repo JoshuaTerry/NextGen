@@ -10,7 +10,7 @@ namespace DDI.Shared.Models.Common
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
-
+        [MaxLength(128)]
         public string Description { get; set; }
 
         [Index]
