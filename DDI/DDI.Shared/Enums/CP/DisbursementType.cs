@@ -1,4 +1,19 @@
-﻿namespace DDI.Shared.Enums.CP
+﻿using System.ComponentModel;
+
+namespace DDI.Shared.Enums.CP
 {
-    public enum DisbursementType { None = 0, Check = 1, EFT = 3, Other = 4 }
+    public enum DisbursementType
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Check")]
+        Check = 1,
+
+        [Description("EFT")]
+        EFT = 2,
+
+        [Description("Other")]
+        Other = 3
+    }
 }

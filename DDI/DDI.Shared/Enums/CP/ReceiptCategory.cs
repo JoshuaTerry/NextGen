@@ -1,7 +1,31 @@
-﻿namespace DDI.Shared.Enums.CP
+﻿using System.ComponentModel;
+
+namespace DDI.Shared.Enums.CP
 {
     public enum ReceiptCategory
     {
-        Cash = 0, Check = 1, CreditCard = 2, InKind = 3, EFT = 4, Security = 5, Fee = 6, Other = 7
+        [Description("Cash")]
+        Cash = 0,
+
+        [Description("Check")]
+        Check = 1,
+
+        [Description("Credit Card")]
+        CreditCard = 2,
+
+        [Description("In Kind")]
+        InKind = 3,
+
+        [Description("EFT")]
+        EFT = 4,
+
+        [Description("Security")]
+        Security = 5,
+
+        [Description("Fee")]
+        Fee = 6,
+
+        [Description("Other")]
+        Other = 7
     }
 }

@@ -1039,7 +1039,7 @@ function LoadAccountGroups(id) {
 
 function GetAccountGroupItemsToSave(modal, parentId) {
 
-    var rawitem = {
+    var item = {
 
         Name: $(modal).find('.ag-Name').val(),
         Category: $(modal).find('.ag-Category').val(),
@@ -1047,8 +1047,6 @@ function GetAccountGroupItemsToSave(modal, parentId) {
         ParentGroupId: parentId
 
     };
-
-    var item = JSON.stringify(rawitem);
 
     return item;
 
@@ -1169,7 +1167,7 @@ function LoadAccountSegments(id) {
 
 function GetAccountSegmentItemsToSave(modal, parentId, level) {
 
-    var rawitem = {
+    var item = {
 
         Name: $(modal).find('.as-Name').val(),
         Code: $(modal).find('.as-Code').val(),
@@ -1178,8 +1176,6 @@ function GetAccountSegmentItemsToSave(modal, parentId, level) {
         ParentSegmentId: parentId
 
     };
-
-    var item = JSON.stringify(rawitem);
 
     return item;
 

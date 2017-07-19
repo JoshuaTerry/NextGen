@@ -28,6 +28,7 @@
     </div>
 
     <input type="hidden" class="hidjournalid" />
+    <input type="hidden" class="hidjournaltype" />
 
 
 

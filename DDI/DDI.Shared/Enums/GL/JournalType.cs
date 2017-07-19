@@ -5,8 +5,8 @@ namespace DDI.Shared.Enums.GL
 {
     public enum JournalType
     {
-        [Description("Normal")]
-        Normal = 0,
+        [Description("One-Time")]
+        OneTime = 0,
 
         [Description("Recurring")]
         Recurring = 1,

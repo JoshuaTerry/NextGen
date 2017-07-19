@@ -98,7 +98,7 @@ function Login() {
             $.ajax({
                 type: 'POST',
                 url: 'Login.aspx/AuthorizeUser',
-                data: JSON.stringify(user),
+                data: user,
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function () {

@@ -880,7 +880,7 @@ function LoadTagSelector(container) {
 
                     });
 
-                    MakeServiceCall('POST', 'constituents/' + currentEntity.Id + '/constituenttags', JSON.stringify({ tags: tagIds }), function (data) {
+                    MakeServiceCall('POST', 'constituents/' + currentEntity.Id + '/constituenttags', { tags: tagIds }, function (data) {
 
                         if (data.Data) {
 
@@ -1364,7 +1364,7 @@ function SaveTagBoxes(editcontainer) {
 }
 
 function SaveChildCollection(children, route) {
-     MakeServiceCall('POST', route, JSON.stringify({ ChildIds: children }), null, null);
+     MakeServiceCall('POST', route, { ChildIds: children }, null, null);
 }
 
 function CancelEdit() {
@@ -1840,6 +1840,13 @@ function FormatDateTimeStrings(str) {
 
     return str;
 
+}
+
+function FormatDateTime(dt) {
+    if (dt) {
+        return new Date(dt).toLocaleString();
+    }
+    return '';
 }
 
 //
