@@ -9,9 +9,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="journalbody">
-        
-        <input type="hidden" class="hidjournalid" />
-        <input type="hidden" class="hidjournaltype" />
 
         <h1 class="journaltype"></h1>
 
@@ -107,7 +104,7 @@
         </div>
             
         <div>
-            <a href="#" class="newjournallinemodallink newmodallink">New Item</a>
+            <a href="#" class="newjournallinemodallink newmodallink" style="display: none;">New Item</a>
             <div class="journallinegridcontainer">
                 <div class="journallinegrid"></div>
             </div>

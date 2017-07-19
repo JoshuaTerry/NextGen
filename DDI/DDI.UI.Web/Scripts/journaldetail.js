@@ -33,6 +33,7 @@ $(document).ready(function () {
 
     if (sessionStorage.getItem('JOURNAL_ID')) {
         $('.hidjournalid').val(sessionStorage.getItem('JOURNAL_ID'));
+        sessionStorage.removeItem('JOURNAL_ID');
     }
 
     journalId = $('.hidjournalid').val();
@@ -40,9 +41,14 @@ $(document).ready(function () {
     if (journalId && journalId.length > 0) {
         LoadJournalDetail();
     }
+    else {
+        editing = false;
+        $('.journalbody .editbutton').click();
+    }
 
     if (sessionStorage.getItem('JOURNAL_TYPE')) {
         $('.hidjournaltype').val(sessionStorage.getItem('JOURNAL_TYPE'));
+        sessionStorage.removeItem('JOURNAL_TYPE');
     }
 
     journalType = $('.hidjournaltype').val();
@@ -76,12 +82,14 @@ function LoadJournalDetail() {
 
             $('.journaltype').html(data.Data.JournalDescription);
             $('.StatusDescription').html(data.Data.StatusDescription);
-            $('.TransactionDate').val(data.Data.TransactionDate);
+            $('.TransactionDate').val(FormatDateTimeStrings(data.Data.TransactionDate));
             $('.Comment').val(data.Data.Comment);
             $('.CreatedBy').html(data.Data.CreatedBy);
-            $('.CreatedOn').html(data.Data.CreatedOn);
+            $('.CreatedOn').html(FormatDateTimeStrings(data.Data.CreatedOn));
             $('.LastChangedBy').html(data.Data.LastChangedBy);
-            $('.LastChangedOn').html(data.Data.LastChangedOn);
+            $('.LastChangedOn').html(FormatDateTimeStrings(data.Data.LastChangedOn));
+
+            $('.newjournallinemodallink').show();
 
             SetupJournalTypeDisplay(data);
 
@@ -113,7 +121,8 @@ function SetupJournalTypeDisplay(data) {
                 }
                 else {
                     $('.reverseondatecontainer').show();
-                    $('.ReverseOnDate').val(data.Data.ReverseOnDate);
+                    $('.reversejournal').prop('checked', true);
+                    $('.ReverseOnDate').val(FormatDateTimeStrings(data.Data.ReverseOnDate));
                 }
             }
             
