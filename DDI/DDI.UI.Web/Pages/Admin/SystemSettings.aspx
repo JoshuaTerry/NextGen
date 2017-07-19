@@ -1146,8 +1146,7 @@
 
             <div class="fieldblock inline">
                 <label>Period Number: </label>
-                <%--<label class="fp-PeriodNumber"> </label>--%>
-                <input type="text" class="fp-PeriodNumber number" maxlength="2" />
+                <label class="fp-PeriodNumber bold"> </label>
             </div>
 
             <div class="fieldblock">

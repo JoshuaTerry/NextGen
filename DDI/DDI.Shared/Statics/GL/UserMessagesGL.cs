@@ -61,10 +61,12 @@
         public static string AdjustmentPeriodNotLast => "Adjustment period for fiscal year {0} must be the last period.";
         public static string AdjustmentPeriodDates => "Adjustment period for fiscal year {0} must start and end on {1}.";
         public static string FiscalPeriodStartDate => "Period {0} in fiscal year {1} must start on {2}.";
+        public static string FiscalPeriodEndDate => "Period {0} in fiscal year {1} must end on {2}.";
         public static string NoFiscalPeriodForDate => "No fiscal period defined for {0} in fiscal year {1}.";
         public static string NoFiscalYearForDate => "No fiscal year defined for {0}.";
         public static string TranDateClosedPeriod => "Transaction date of {0} is for a closed fiscal period.";
         public static string FiscalPeriodNumberChanged => "Cannot change the period number of a fiscal year.";
+        public static string FiscalPeriodNumberInvalid => "Fiscal period number must be between 1 and {0}.";
 
         public static string FundNoFiscalYear => "Fund has no fiscal year.";
         public static string FundNoFundSegment => "No fund segment specified for fund.";

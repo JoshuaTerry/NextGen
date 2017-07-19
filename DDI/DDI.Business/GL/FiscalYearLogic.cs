@@ -59,9 +59,10 @@ namespace DDI.Business.GL
             {
                 throw new ValidationException(UserMessagesGL.FiscalYearDatesInvalid);
             }
-            
+
             // Validate other modified properties
 
+            bool isNewYear = false;
             bool isModified = false;
             List<string> modifiedProperties = null;
             if (_fiscalYearRepository.GetEntityState(fiscalYear) != EntityState.Added)
@@ -71,7 +72,7 @@ namespace DDI.Business.GL
             }
             else
             {
-                isModified = true;
+                isNewYear = isModified = true;
             }
 
             if (isModified && fiscalYear.Status != FiscalYearStatus.Empty)
@@ -108,6 +109,20 @@ namespace DDI.Business.GL
                     {
                         throw new ValidationException(UserMessagesGL.FiscalPeriodDatesInvalid, periodNumber.ToString(), fiscalYear.Name);
                     }
+                    if (period.StartDate < fiscalYear.StartDate)
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalPeriodStartDate, periodNumber.ToString(), fiscalYear.Name, fiscalYear.StartDate.ToShortDateString());
+                    }
+                    if (period.EndDate > fiscalYear.EndDate)
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalPeriodEndDate, periodNumber.ToString(), fiscalYear.Name, fiscalYear.EndDate.ToShortDateString());
+                    }
+
+                    if (fiscalYear.CurrentPeriodNumber == 0)
+                    {
+                        fiscalYear.CurrentPeriodNumber = 1;
+                    }
+
                     // Adjustment period must be the final period and have a date range matching the last day of the year.
                     if (period.IsAdjustmentPeriod)
                     {
@@ -123,8 +138,8 @@ namespace DDI.Business.GL
                     }
                     else
                     {
-                        // Start/end dates must be contiguous.
-                        if (period.StartDate != nextStartDate)
+                        // Start/end dates cannot overlap
+                        if (period.StartDate < nextStartDate)
                         {
                             throw new ValidationException(UserMessagesGL.FiscalPeriodStartDate, periodNumber.ToString(), fiscalYear.Name, 
                                 nextStartDate.ToShortDateString());
@@ -134,7 +149,7 @@ namespace DDI.Business.GL
                 }
             }
 
-            // Determine if any fiscal periods were modified in a non-empty fiscal year.
+            // Determine if any fiscal periods were modified in a non-empty fiscal year.  Also make sure none have invalid period numbers.
 
             if (fiscalYear.FiscalPeriods != null)
             {
@@ -142,6 +157,11 @@ namespace DDI.Business.GL
 
                 foreach (var period in fiscalYear.FiscalPeriods)
                 {
+                    if (period.PeriodNumber < 1 || period.PeriodNumber > fiscalYear.NumberOfPeriods)
+                    {
+                        throw new ValidationException(UserMessagesGL.FiscalPeriodNumberInvalid, fiscalYear.NumberOfPeriods.ToString());
+                    }
+
                     bool isAdded = false;
                     if (_fiscalPeriodRepository.GetEntityState(period) != EntityState.Added)
                     {
@@ -163,9 +183,22 @@ namespace DDI.Business.GL
                 }
             }
 
+            // If fiscal year or fiscal periods were modified, synchronize across common ledgers.
             if (isModified)
             {
-                SynchronizeCommonLedgers(fiscalYear);
+                SyncronizeFiscalYear(fiscalYear);
+            }
+
+            // Ensure there's a fund for this fiscal year if fund accounting not enabled.
+            Ledger ledger = _ledgerLogic.GetCachedLedger(fiscalYear.LedgerId);
+            if (!ledger.FundAccounting && 
+                (isNewYear || !UnitOfWork.Any<Fund>(p => p.FiscalYearId == fiscalYear.Id)))
+            {
+                Fund fund = new Fund
+                {
+                    FiscalYear = fiscalYear
+                };
+                UnitOfWork.Insert(fund);
             }
 
             _ledgerLogic.InvalidLedgerCache();
@@ -175,7 +208,7 @@ namespace DDI.Business.GL
         /// Copy fiscal year settings to all other common business units, including the org. business unit.
         /// </summary>
         /// <remarks>FiscalPeriods must be loaded.</remarks>
-        private void SynchronizeCommonLedgers(FiscalYear baseYear)
+        public void SyncronizeFiscalYear(FiscalYear baseYear)
         {
             if (baseYear == null)
             {
@@ -264,7 +297,7 @@ namespace DDI.Business.GL
         }
 
         /// <summary>
-        /// Create a copy of a fiscal year in a different business unit.  Only the fiscal year, fiscal periods, and GL account segments are copied.
+        /// Create a copy of a fiscal year in a different business unit.
         /// </summary>
         private void CreateFiscalYearForBusinessUnit(FiscalYear fromYear, Guid unitId)
         {
@@ -302,6 +335,13 @@ namespace DDI.Business.GL
 
             UnitOfWork.Insert(year);
 
+            if (!ledger.FundAccounting)
+            {
+                Fund fund = new Fund();
+                fund.FiscalYear = year;
+                UnitOfWork.Insert(fund);
+            }
+            
             // Copy fiscal periods
             foreach (var fromPeriod in fromYear.FiscalPeriods)
             {
@@ -317,9 +357,6 @@ namespace DDI.Business.GL
                 UnitOfWork.Insert(period);
             }
 
-            // Copy the GL account segments
-            var closingLogic = UnitOfWork.GetBusinessLogic<ClosingLogic>();
-            closingLogic.CopySegments(fromYear, year);
         }
 
         /// <summary>
