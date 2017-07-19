@@ -1842,6 +1842,13 @@ function FormatDateTimeStrings(str) {
 
 }
 
+function FormatDateTime(dt) {
+    if (dt) {
+        return new Date(dt).toLocaleString();
+    }
+    return '';
+}
+
 //
 // END FORMATTING
 

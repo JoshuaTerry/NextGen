@@ -81,13 +81,13 @@ function LoadJournalDetail() {
             journalType = data.Data.JournalType;
 
             $('.journaltype').html(data.Data.JournalDescription);
-            $('.StatusDescription').html(data.Data.StatusDescription);
-            $('.TransactionDate').val(FormatDateTimeStrings(data.Data.TransactionDate));
+            $('.StatusDescription').html(FormatDateTimeStrings(data.Data.StatusDescription));            
+            $('.TransactionDate').val(FormatJSONDate(data.Data.TransactionDate));
             $('.Comment').val(data.Data.Comment);
             $('.CreatedBy').html(data.Data.CreatedBy);
-            $('.CreatedOn').html(FormatDateTimeStrings(data.Data.CreatedOn));
+            $('.CreatedOn').html(FormatDateTime(data.Data.CreatedOn));
             $('.LastChangedBy').html(data.Data.LastChangedBy);
-            $('.LastChangedOn').html(FormatDateTimeStrings(data.Data.LastChangedOn));
+            $('.LastChangedOn').html(FormatDateTime(data.Data.LastChangedOn));
 
             $('.newjournallinemodallink').show();
 
@@ -122,7 +122,7 @@ function SetupJournalTypeDisplay(data) {
                 else {
                     $('.reverseondatecontainer').show();
                     $('.reversejournal').prop('checked', true);
-                    $('.ReverseOnDate').val(FormatDateTimeStrings(data.Data.ReverseOnDate));
+                    $('.ReverseOnDate').val(FormatJSONDate(data.Data.ReverseOnDate));
                 }
             }
             

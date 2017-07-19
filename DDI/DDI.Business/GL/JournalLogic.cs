@@ -172,7 +172,7 @@ namespace DDI.Business.GL
                         }
                         if (approval.ApprovedOn.HasValue)
                         {
-                            result += $" on {String.Format("{0:ddd, MMM d, yyyy h:mm tt}", approval.ApprovedOn)}";
+                            result += $" on {approval.ApprovedOn.ToRoundTripString()}";
                         }
                     }
                     else
@@ -191,7 +191,7 @@ namespace DDI.Business.GL
                 }
                 if (transactions.All(p => p.PostDate != null))
                 {
-                    result += $"Posted on {String.Format("{0:ddd, MMM d, yyyy h:mm tt}", transactions.Max(p => p.PostDate.Value))}";
+                    result += $"Posted on {transactions.Max(p => p.PostDate.Value).ToRoundTripString()}";
                 }
                 else
                 {

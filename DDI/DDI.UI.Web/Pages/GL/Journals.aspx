@@ -25,7 +25,7 @@
                         <label>Journal Type</label>
                         <select class="searchjournaltype">
                             <option value="">(All)</option>
-                            <option value="0">Normal</option>
+                            <option value="0">One-Time</option>
                             <option value="1">Recurring</option>
                             <option value="2">Template</option>
                         </select>
