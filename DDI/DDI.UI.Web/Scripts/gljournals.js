@@ -74,7 +74,7 @@ function DoSearch() {
 
                         switch (options.data.JournalType) {
                             case 0:
-                                JournalType = "Normal";
+                                JournalType = "One-Time";
                                 break;
                             case 1:
                                 JournalType = "Recurring";
