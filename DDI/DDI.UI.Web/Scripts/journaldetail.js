@@ -5,11 +5,14 @@ var DueTo = { 0: 'None', 1: 'Due From', 2: 'Due To' }
 //var fiscalYearId = 'B80B38CF-108C-4D9D-BE49-DFFD6502449C'      // testing
 //var ledgerId = '52822462-5041-46CB-9883-ECB1EF8F46F0'          // testing
 //var journalId = 'E2A35D00-2452-11E7-833C-00C0DD01025C'         // testing
+var fiscalYearId = null;
+var ledgerId = null;
+var journalId = null;
 var editMode = ''
 var nextLineNumber = 1;
 
 // 0: One-Time, 1: Recurring, 2: Template
-var journalType = 0;
+var journalType = null;
 
 $(document).ready(function () {
 
@@ -28,17 +31,23 @@ $(document).ready(function () {
 
     });
 
-    journalId = sessionStorage.getItem('JOURNAL_ID');
+    if (sessionStorage.getItem('JOURNAL_ID')) {
+        $('.hidjournalid').val(sessionStorage.getItem('JOURNAL_ID'));
+    }
 
-    if (journalId) {
-        sessionStorage.removeItem('JOURNAL_ID');
+    journalId = $('.hidjournalid').val();
+
+    if (journalId && journalId.length > 0) {
         LoadJournalDetail();
     }
 
-    journalType = sessionStorage.getItem('JOURNAL_TYPE');
+    if (sessionStorage.getItem('JOURNAL_TYPE')) {
+        $('.hidjournaltype').val(sessionStorage.getItem('JOURNAL_TYPE'));
+    }
 
-    if (journalType) {
-        sessionStorage.removeItem('JOURNAL_TYPE');
+    journalType = $('.hidjournaltype').val();
+
+    if (journalType && journalType.lenght > 0) {
         journalType = parseInt(journalType);
         SetupJournalTypeDisplay(null);
     }
@@ -228,7 +237,7 @@ function JournalLineModal(id, isNew) {
             item.LineNumber = nextLineNumber;
         }
 
-        MakeServiceCall(method, route, JSON.stringify(item), function (data) {
+        MakeServiceCall(method, route, item, function (data) {
 
             DisplaySuccessMessage('Success', 'Journal Line saved successfully.');
 

@@ -203,7 +203,7 @@ function SaveSetting(idContainer, route, categoryName, name, value, isShown) {
         }
     }
 
-    MakeServiceCall(method, route, JSON.stringify(item), function (data) {
+    MakeServiceCall(method, route, item, function (data) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
@@ -547,7 +547,7 @@ function LoadConstituentTypeTagSelector(typeId, container) {
                     }
                 });
 
-                MakeServiceCall('POST', 'constituenttypes/' + constTypeId + '/constituenttypetags', JSON.stringify({ tags: tagIds }), function (data) {
+                MakeServiceCall('POST', 'constituenttypes/' + constTypeId + '/constituenttypetags', { tags: tagIds }, function (data) {
 
                     if (data.Data) {
                         DisplaySuccessMessage('Success', 'Tags saved successfully.');
@@ -2649,7 +2649,7 @@ function LoadAccountingSettingsSectionSettings() {
             ApproveJournals: $('.as-approval').prop('checked')
         };
 
-        MakeServiceCall('PATCH', 'ledgers/' + $('.hidLedgerId').val(), JSON.stringify(data), function () {
+        MakeServiceCall('PATCH', 'ledgers/' + $('.hidLedgerId').val(), data, function () {
 
             LoadAccountingSettings($('.hidLedgerId').val());
             DisplaySuccessMessage('Success', 'Accounting settings saved successfully.');
@@ -2716,7 +2716,7 @@ function LoadBudgetSectionSettings() {
             WhatIfBudgetName: $('.whatifBudgetName').val(),
         }
 
-        MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), JSON.stringify(data), function () {
+        MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), data, function () {
 
             LoadAccountingSettings($('.hidLedgerId').val());
             DisplaySuccessMessage('Success', 'Accounting settings saved successfully.');
@@ -2865,7 +2865,7 @@ function SaveBudgetSetting(id) {
         WhatIfBudgetName: $('.whatifBudgetName').val(),
     }
 
-    MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), JSON.stringify(data), function (data) {
+    MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), data, function (data) {
 
         if (data.Data) {
             DisplaySuccessMessage('Success', 'Budget Settings saved successfully.');
@@ -2919,7 +2919,7 @@ function SaveChartSetting(id) {
         AccountGroup4Title: $('.accountGroup4Title').val(),
     }
 
-    MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), JSON.stringify(data), function (data) {
+    MakeServiceCall('PATCH', 'ledgers/' + $(id).val(), data, function (data) {
 
         if (data.Data) {
             DisplaySuccessMessage('Success', 'Chart of Accounts Settings saved successfully.');
@@ -3252,7 +3252,7 @@ function UpdateFiscalYearUpdate(modal, updateOption) {
         Status: status
     }
 
-    MakeServiceCall('PATCH', 'fiscalyears/' + $('.uf-FiscalYear').val(), JSON.stringify(item), function (data) {
+    MakeServiceCall('PATCH', 'fiscalyears/' + $('.uf-FiscalYear').val(), item, function (data) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
@@ -3346,7 +3346,7 @@ function NewFiscalYearUpdate(modal) {
         CopyInactiveAccounts: ($('.fn-CopyInactiveAccounts').prop('checked') === true ? 'true' : 'false')
     }
 
-    MakeServiceCall('POST', 'fiscalyears/' + $('.fn-FromFiscalYear').val() + '/copy', JSON.stringify(item), function (data) {
+    MakeServiceCall('POST', 'fiscalyears/' + $('.fn-FromFiscalYear').val() + '/copy', item, function (data) {
 
         if (data.Data) {
             if (data.IsSuccessful) {
@@ -3435,7 +3435,7 @@ function LoadFundAccountingSectionSettings() {
             ClosingExpenseAccountId: $('.selectclosingexpenseaccount > .hidaccountid').val(),
         };
 
-        MakeServiceCall('PATCH', 'fund/' + $('.selectfund').val(), JSON.stringify(item), function () {
+        MakeServiceCall('PATCH', 'fund/' + $('.selectfund').val(), item, function () {
             LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.fundLedgerId').val(), $('.selectfund').val())
             DisplaySuccessMessage('Success', 'Setting saved successfully.');
             LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.fundLedgerId').val(), $('.selectfund').val())
@@ -3675,7 +3675,7 @@ function EditBusinessUnit(buFromToInfo) {
                     ToAccountId: $(modal).find('.bus-ToLedgerAccount > .hidaccountid').val()
                 }
 
-                MakeServiceCall('PATCH', 'businessunitfromtos/' + buFromToInfo.Id, JSON.stringify(item), function (data) {
+                MakeServiceCall('PATCH', 'businessunitfromtos/' + buFromToInfo.Id, item, function (data) {
                     DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
                     CloseModal(modal);
                     PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
@@ -3723,7 +3723,7 @@ function EditBusinessUnit(buFromToInfo) {
                 ToAccountId: $(modal).find('.bus-ToLedgerAccount > .hidaccountid').val()
             }
 
-            MakeServiceCall('POST', 'businessunitfromtos/', JSON.stringify(item), function (data) {
+            MakeServiceCall('POST', 'businessunitfromtos/', item, function (data) {
                 DisplaySuccessMessage('Success', 'Business Unit saved successfully.');
                 CloseModal(modal);
                 PopulateFundBusinessFromFiscalYear($('.selectfiscalyear').val(), $('.fundLedgerId').val());
@@ -3775,7 +3775,7 @@ function EditFundDue(fundDueInfo) {
                     ToAccountId: $(modal).find('.fn-DueToAccount > .hidaccountid').val()
                 }
 
-                MakeServiceCall('PATCH', 'fundfromtos/' + fundDueInfo.Id, JSON.stringify(item), function (data) {
+                MakeServiceCall('PATCH', 'fundfromtos/' + fundDueInfo.Id, item, function (data) {
                     DisplaySuccessMessage('Success', 'Fund due saved successfully.');
                     CloseModal(modal);
                     PopulateFundDueFromFund($('.selectfund').val());
@@ -3823,7 +3823,7 @@ function EditFundDue(fundDueInfo) {
                 ToAccountId: $(modal).find('.fn-DueToAccount > .hidaccountid').val()
             }
 
-            MakeServiceCall('POST', 'fundfromtos/', JSON.stringify(item), function (data) {
+            MakeServiceCall('POST', 'fundfromtos/', item, function (data) {
                 DisplaySuccessMessage('Success', 'Fund due saved successfully.');
                 CloseModal(modal);
                 PopulateFundDueFromFund($('.selectfund').val());
@@ -4259,7 +4259,7 @@ function SaveCustomField(modal) {
 
 function SendCustomField(method, route, data, modal) {
 
-    MakeServiceCall(method, 'route', JSON.stringify(data), function (data) {
+    MakeServiceCall(method, 'route', data, function (data) {
 
         if (data.Data) {
             DisplaySuccessMessage('Success', 'Custom field saved successfully.');

@@ -9,6 +9,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="journalbody">
+        
+        <input type="hidden" class="hidjournalid" />
+        <input type="hidden" class="hidjournaltype" />
 
         <h1 class="journaltype"></h1>
 
