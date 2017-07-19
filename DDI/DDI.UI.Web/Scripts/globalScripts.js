@@ -650,6 +650,7 @@ function ConfirmModal(message, yes, no) {
         if (yes) {
             yes();
         }
+
         CloseModal(modal);
     });
     $('.confirmno').unbind('click');
@@ -657,6 +658,7 @@ function ConfirmModal(message, yes, no) {
         if (no) {
             no();
         }
+
         CloseModal(modal);
     });
 }
@@ -1155,13 +1157,19 @@ function SetupEditControls() {
     $('.savebutton').click(function (e) {
 
         e.preventDefault();
-        if ($('#form1').valid()) {
-            var editcontainer = $(this).closest('.editcontainer');
+
+        var editcontainer = $(this).closest('.editcontainer');
+
+        if (!ValidateFields(editcontainer, function () {
+
             StopEdit(editcontainer);
             SaveEdit(editcontainer);
-        } else {
-            DisplayErrorMessage('Error', 'There are invalid fields. Please fix those and then try saving again.');
+
+        }))
+        {
+            return;
         }
+
     });
 
     $('.cancelbutton').click(function (e) {
@@ -1171,7 +1179,7 @@ function SetupEditControls() {
         var editcontainer = $(this).closest('.editcontainer');
 
         StopEdit(editcontainer);
-        $('#form1').validate().resetForm();
+        // $('#form1').validate().resetForm();
         CancelEdit();
 
     });
@@ -1243,7 +1251,7 @@ function SaveEdit(editcontainer) {
 
             if (data.Data) {
                 // Display success
-                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+                DisplaySuccessMessage('Success', 'Save successful.');
 
                 // Display updated entity data
                 currentEntity = data.Data;
@@ -1275,6 +1283,25 @@ function GetEditedFields(editcontainer) {
         else {
             value = $(this).val();
         }
+
+        for (var key in currentEntity) {
+            if (key == propertyName && currentEntity[key] != value) {
+                if (value == 'null') {
+                    p.push('"' + propertyName + '": ' + null);
+                }
+                else {
+                    p.push('"' + propertyName + '": "' + value + '"');
+                }
+            }
+        }
+
+    });
+
+    $(editcontainer).find('textarea').each(function () {
+
+        var property = $(this).prop('class').replace('editable', '').split(' ');
+        var propertyName = property[0];
+        var value = $(this).val();
 
         for (var key in currentEntity) {
             if (key == propertyName && currentEntity[key] != value) {
@@ -1742,7 +1769,13 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancel
 //
 
 function MaskFields() {
-    $('.date').mask('00/00/0000');
+    $('.date.editable').each(function () {
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($.datepicker.formatDate('mm/dd/yy', new Date($(this).val())));
+        }
+    })
+    $('.date.editable').mask('00/00/0000');
+
     $('.time').mask('00:00:00');
     $('.datetime').mask('00/00/0000 00:00:00');
     $('.money').mask("#0.00", { reverse: true });
@@ -1762,14 +1795,29 @@ function MaskFields() {
 
 function FormatFields() {
     $(".decimal").each(function () {
-        $(this).val(parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val(parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        }
     });
     $(".money").each(function () {
-        $(this).val('$' + parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val('$' + parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        }
     });
-    $(".date").val($.datepicker.formatDate('D M dd, yy', new Date()));
+    $("input.date").each(function () {
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($.datepicker.formatDate('D M dd, yy', new Date($(this).val())));
+        }
+    });
+    $("label.date").each(function () {
+        if ($(this).html() != null && $(this).html() != '') {
+            $(this).html($.datepicker.formatDate('D M dd, yy', new Date($(this).html())));
+        }
+    });
     $(".percent").each(function () {
-        $(this).val($(this).val() + '%');
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($(this).val() + '%');
+        }
     });
 }
 

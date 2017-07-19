@@ -13,6 +13,7 @@ namespace DDI.Shared.Models.Client.GL
 
         [MaxLength(128)]
         public string AccountNumber { get; set; }
+        public Guid LedgerAccountId { get; set; }
         [MaxLength(128)]
         public string Description { get; set; }
         [MaxLength(128)]

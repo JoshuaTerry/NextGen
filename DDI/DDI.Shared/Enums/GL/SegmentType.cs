@@ -1,4 +1,17 @@
-﻿namespace DDI.Shared.Enums.GL
+﻿
+using System.ComponentModel;
+
+namespace DDI.Shared.Enums.GL
 {
-    public enum SegmentType { None = 0, Fund = 1, Account = 2 }
+    public enum SegmentType
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Fund")]
+        Fund = 1,
+
+        [Description("Account")]
+        Account = 2
+    }
 }

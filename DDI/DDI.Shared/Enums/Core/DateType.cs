@@ -1,12 +1,21 @@
 ﻿
+using System.ComponentModel;
+
 namespace DDI.Shared.Enums.Core
 {
     public enum DateType
-	{
-		MonthDayYear = 0,
-		MonthYear = 1,
-		Year = 2,
-		MonthDay = 3
+    {
+        [Description("Month Day Year")]
+        MonthDayYear = 0,
+
+        [Description("Month Year")]
+        MonthYear = 1,
+
+        [Description("Year")]
+        Year = 2,
+
+        [Description("Month Day")]
+        MonthDay = 3
 	}
 
 }
