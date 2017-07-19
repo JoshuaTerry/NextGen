@@ -406,7 +406,7 @@ namespace DDI.Data
             {
                 if (entry.Entity is IEntity)
                 {
-                    stateDict.Add(((IEntity)entry.Entity).Id, entry.State);
+                    stateDict[((IEntity)entry.Entity).Id] = entry.State;
                 }
             }
 
