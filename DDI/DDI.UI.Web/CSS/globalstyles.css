@@ -1,4 +1,4 @@
-﻿body { margin: 0px; padding: 0px; font-size: 1em; font-family: Arial; background-color: #c2ddf4; min-width: 1000px; }
+﻿body { margin: 0px; padding: 0px; font-size: 12px; font-family: Arial; background-color: #c2ddf4; min-width: 1000px; }
 
 h1, h2, h3 { margin: 0px; padding: 0px; }
 h1 {  }
@@ -14,8 +14,6 @@ a.disabled { color: #333333;  text-decoration: none; cursor: default; pointer-ev
 .floatleft {float: left}
 .floatright {float: right}
 
-.newbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; color: #0f75b4 !important; }
-.editbutton { display: inline-block; float: right; margin: -1px 0 0 0; padding: 0px; color: #0f75b4 !important; }
 /* ICONS */
 
 .view-icon { background: url('../../Images/Search_Mono_16.png') no-repeat; width: 16px; height: 16px; margin: 0px; padding: 0px; }
