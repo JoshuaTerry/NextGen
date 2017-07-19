@@ -471,7 +471,7 @@ namespace DDI.Business.GL
 
         }
 
-        private EntityMapper<Segment> CopySegments(FiscalYear fromYear, FiscalYear toYear)
+        public EntityMapper<Segment> CopySegments(FiscalYear fromYear, FiscalYear toYear)
         {
             var mapper = new EntityMapper<Segment>();
 

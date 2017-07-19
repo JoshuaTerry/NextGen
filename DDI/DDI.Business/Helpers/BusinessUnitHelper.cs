@@ -36,5 +36,20 @@ namespace DDI.Business.Helpers
             }
             return false;
         }
+
+        /// <summary>
+        /// Returns the client-specific business unit label.
+        /// </summary>
+        public static string GetBusinessUnitLabel(IUnitOfWork unitOfWork)
+        {
+            return CacheHelper.GetEntry(BusinessUnitLogic.BusinessUnitLabelCacheKey, () =>
+            {
+                if (unitOfWork == null)
+                {
+                    return new BusinessUnitLogic().BusinessUnitLabel;
+                }
+                return unitOfWork.GetBusinessLogic<BusinessUnitLogic>().BusinessUnitLabel;
+            });
+        }
     }
 }

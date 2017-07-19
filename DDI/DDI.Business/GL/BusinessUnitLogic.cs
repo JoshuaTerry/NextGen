@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using DDI.Business.Core;
 using DDI.Shared;
 using DDI.Shared.Caching;
 using DDI.Shared.Enums.GL;
@@ -13,6 +14,7 @@ namespace DDI.Business.GL
     public class BusinessUnitLogic : EntityLogicBase<BusinessUnit>
     {
         public static string IsMultipleCacheKey => "IsMultipleBusinessUnits";
+        public static string BusinessUnitLabelCacheKey => "BusinessUnitLabel";
 
         public BusinessUnitLogic() : this(Factory.CreateUnitOfWork())
         {
@@ -37,6 +39,18 @@ namespace DDI.Business.GL
                     return (bool)result;
                 }
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Returns the client-specific business unit label.
+        /// </summary>
+        public string BusinessUnitLabel
+        {
+            get
+            {
+                return CacheHelper.GetEntry(BusinessUnitLabelCacheKey, () => 
+                    UnitOfWork.GetBusinessLogic<ConfigurationLogic>().GetConfiguration<CoreConfiguration>().BusinessUnitLabel);
             }
         }
 

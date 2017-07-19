@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DDI.Business.Helpers;
 using DDI.Logger;
 using DDI.Shared;
 using DDI.Shared.Caching;
@@ -164,10 +165,168 @@ namespace DDI.Business.GL
 
             if (isModified)
             {
-                // Will need to propagate these changes to common ledgers.
+                SynchronizeCommonLedgers(fiscalYear);
             }
+
+            _ledgerLogic.InvalidLedgerCache();
         }
         
+        /// <summary>
+        /// Copy fiscal year settings to all other common business units, including the org. business unit.
+        /// </summary>
+        /// <remarks>FiscalPeriods must be loaded.</remarks>
+        private void SynchronizeCommonLedgers(FiscalYear baseYear)
+        {
+            if (baseYear == null)
+            {
+                throw new ArgumentNullException(nameof(baseYear));
+            }
+
+            Ledger ledger = _ledgerLogic.GetCachedLedger(baseYear.LedgerId);
+            
+            if (ledger.BusinessUnit.BusinessUnitType == BusinessUnitType.Separate)
+            {
+                // Separate ledgers are not synchronized.
+                return;
+            }
+            
+            // Iterate thru all common/org. business units.
+            foreach (var unit in UnitOfWork.Where<BusinessUnit>(p => p.BusinessUnitType != BusinessUnitType.Separate && p.Id != ledger.BusinessUnitId))
+            {
+                var otherYear = GetFiscalYearForBusinessUnit(baseYear, unit.Id);
+                if (otherYear == null)
+                {
+                    CreateFiscalYearForBusinessUnit(baseYear, unit.Id);
+                }
+                else
+                {
+                    SynchronizeFiscalYearForBusinessUnit(baseYear, otherYear);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copy fiscal year settings from one year to another year.  These should be to similar fiscal years in different business units.
+        /// </summary>
+        private void SynchronizeFiscalYearForBusinessUnit(FiscalYear fromYear, FiscalYear toYear)
+        {
+            if (toYear.Status != FiscalYearStatus.Empty)
+            {
+                throw new InvalidOperationException(UserMessagesGL.FiscalYearNotEditable);
+            }
+
+            if (toYear.LedgerId == fromYear.LedgerId)
+            {
+                throw new InvalidOperationException("Fiscal years must be in different ledgers.");
+            }
+
+            toYear.StartDate = fromYear.StartDate;
+            toYear.EndDate = fromYear.EndDate;
+            toYear.HasAdjustmentPeriod = fromYear.HasAdjustmentPeriod;
+            toYear.NumberOfPeriods = fromYear.NumberOfPeriods;
+            if (toYear.CurrentPeriodNumber > toYear.NumberOfPeriods)
+            {
+                toYear.CurrentPeriodNumber = toYear.NumberOfPeriods;
+            }
+
+            UnitOfWork.LoadReference(toYear, p => p.FiscalPeriods);
+
+            // Add/update fiscal periods in fromYear to toYear.
+            foreach (var fromPeriod in fromYear.FiscalPeriods)
+            {
+                FiscalPeriod toPeriod = toYear.FiscalPeriods.FirstOrDefault(p => p.PeriodNumber == fromPeriod.PeriodNumber);
+                if (toPeriod == null)
+                {
+                    toPeriod = new FiscalPeriod
+                    {
+                        PeriodNumber = fromPeriod.PeriodNumber,
+                        FiscalYear = toYear,
+                        Status = FiscalPeriodStatus.Open
+                    };
+
+                    UnitOfWork.Insert(toPeriod);
+                }
+
+                toPeriod.StartDate = fromPeriod.StartDate;
+                toPeriod.EndDate = fromPeriod.EndDate;
+                toPeriod.IsAdjustmentPeriod = fromPeriod.IsAdjustmentPeriod;                
+            }
+
+            // Remove fiscal periods in toYear that don't exist in fromYear.
+            foreach (var toPeriod in toYear.FiscalPeriods.ToList())
+            {
+                if (!fromYear.FiscalPeriods.Any(p => p.PeriodNumber == toPeriod.PeriodNumber))
+                {
+                    UnitOfWork.Delete(toPeriod);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Create a copy of a fiscal year in a different business unit.  Only the fiscal year, fiscal periods, and GL account segments are copied.
+        /// </summary>
+        private void CreateFiscalYearForBusinessUnit(FiscalYear fromYear, Guid unitId)
+        {
+            Ledger ledger = _ledgerLogic.GetCurrentLedger(unitId);
+            if (ledger == null)
+            {
+                return;
+            }
+
+            if (fromYear.LedgerId == ledger.Id)
+            {
+                throw new InvalidOperationException("Cannot copy a fiscal year into the same ledger.");
+            }
+
+            if (UnitOfWork.Any<FiscalYear>(p => p.LedgerId == ledger.Id && p.Name == fromYear.Name))
+            {
+                throw new InvalidOperationException(string.Format("Fiscal year {0} already exists in {1} {2} with a different start date.", fromYear.Name,
+                    BusinessUnitHelper.GetBusinessUnitLabel(UnitOfWork), ledger.Code));
+            }
+
+            // Create new fiscal year and periods 
+
+            FiscalYear year = new FiscalYear
+            {
+                LedgerId = ledger.Id,
+                Name = fromYear.Name,
+                CurrentPeriodNumber = 1,
+                EndDate = fromYear.EndDate,
+                StartDate = fromYear.StartDate,
+                Status = fromYear.Status,
+                HasAdjustmentPeriod = fromYear.HasAdjustmentPeriod,
+                NumberOfPeriods = fromYear.NumberOfPeriods,
+                FiscalPeriods = new List<FiscalPeriod>()
+            };
+
+            UnitOfWork.Insert(year);
+
+            // Copy fiscal periods
+            foreach (var fromPeriod in fromYear.FiscalPeriods)
+            {
+                FiscalPeriod period = new FiscalPeriod
+                {
+                    FiscalYear = year,
+                    IsAdjustmentPeriod = fromPeriod.IsAdjustmentPeriod,
+                    EndDate = fromPeriod.EndDate,
+                    StartDate = fromPeriod.StartDate,
+                    Status = FiscalPeriodStatus.Open,
+                    PeriodNumber = fromPeriod.PeriodNumber
+                };
+                UnitOfWork.Insert(period);
+            }
+
+            // Copy the GL account segments
+            var closingLogic = UnitOfWork.GetBusinessLogic<ClosingLogic>();
+            closingLogic.CopySegments(fromYear, year);
+        }
+
+        /// <summary>
+        /// Get a cached version of a fiscal year.
+        /// </summary>
+        /// <param name="fiscalYearId"></param>
+        /// <returns></returns>
         public FiscalYear GetCachedFiscalYear(Guid? fiscalYearId)
         {
             if (fiscalYearId == null)

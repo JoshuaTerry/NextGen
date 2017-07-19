@@ -102,7 +102,7 @@ namespace DDI.Business.GL
             {
                 if (_ledgerCache != null)
                 {
-                    _ledgerCache.InvalidateCache();
+                    InvalidLedgerCache();
                 }
 
                 if (modifiedProperties.Contains(nameof(ledger.AccountGroupLevels)))
@@ -156,6 +156,14 @@ namespace DDI.Business.GL
             }
 
             return LedgerCache.GetById(ledgerId.Value);
+        }
+
+        /// <summary>
+        /// Invalidate the ledger cache (if ledger or fiscal year settings have changed).
+        /// </summary>
+        public void InvalidLedgerCache()
+        {
+            _ledgerCache.InvalidateCache();
         }
 
         /// <summary>
