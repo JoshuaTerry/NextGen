@@ -209,6 +209,8 @@ function SaveSetting(idContainer, route, categoryName, name, value, isShown) {
             if (data.IsSuccessful) {
                 DisplaySuccessMessage('Success', 'Setting saved successfully.');
 
+                currentEntity = data.Data;
+
                 $(idContainer).val(data.Data.Id);
             }
 
