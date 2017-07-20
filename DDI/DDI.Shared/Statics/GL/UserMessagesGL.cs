@@ -8,6 +8,7 @@
         public static string GLAcctCategoryNone => "GL account category cannot be set to \"None\".";
         public static string GLAcctBeginBalRandE => "Revenue and expense accounts cannot have a beginning balance.";
         public static string GLAcctDuplicate => "GL account number is already assigned for this fiscal year.";
+        public static string AcctMergeFundMismatch = "Accounts being muerged must be in the same fund.";
 
         public static string AccountGroupLevelsRange => $"The number of account groups must be between 1 and {ConstantsGL.MaxAccountGroups}.";
         public static string AccountGroupLevelsChanged => "The number of account groups cannot be modified if any GL accounts have been defined for this ledger.";

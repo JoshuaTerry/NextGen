@@ -74,6 +74,7 @@
     <Compile Include="Common\DataSources\StateDataSource.cs" />
     <Compile Include="Common\DataSources\CountryDataSource.cs" />
     <Compile Include="Common\ZipLookupTest.cs" />
+    <Compile Include="Core\DataSources\ConfigurationDataSource.cs" />
     <Compile Include="Core\DIContainerTest.cs" />
     <Compile Include="Core\TransactionLogicTest.cs" />
     <Compile Include="Core\EntityNumberLogicTest.cs" />

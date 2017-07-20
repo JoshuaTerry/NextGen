@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using DDI.Business.Helpers;
@@ -12,7 +13,6 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using DDI.Shared.Statics.GL;
-using System.Reflection;
 
 namespace DDI.Business.GL
 {
@@ -100,76 +100,231 @@ namespace DDI.Business.GL
         }
 
         
-        public IDataResponse<Account> MergeAccounts(Guid sourceAccountId, Guid destinationAccountId)
+        public Account MergeAccounts(Guid fromAccountId, Guid toAccountId)
         {
-            DataResponse<Account> response = new DataResponse<Account>(); ;
+            var fromAccount = UnitOfWork.GetById<Account>(fromAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments,
+                p => p.PriorYearAccounts, p => p.NextYearAccounts, p => p.LedgerAccountYears);
 
-            try
+            var toAccount = UnitOfWork.GetById<Account>(toAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments,
+                p => p.PriorYearAccounts, p => p.NextYearAccounts, p => p.LedgerAccountYears);
+
+            if (fromAccountId == toAccountId)
             {
-                var sourceAccount = UnitOfWork.GetById<Account>(sourceAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments);
-                var destinationAccount = UnitOfWork.GetById<Account>(destinationAccountId, p => p.FiscalYear.Ledger, p => p.Budgets, p => p.AccountSegments);
-
-                response.Data = destinationAccount;
-
-                if (sourceAccount.FiscalYearId != destinationAccount.FiscalYearId)
-                    throw new InvalidOperationException("Source and Destination Account must have the same Fiscal Year.");
-
-                // Update budgets
-                MergeAccountBudgets(sourceAccount, destinationAccount);
-
-                //Delete the Account Segments
-                sourceAccount.AccountSegments.ToList().ForEach(s => UnitOfWork.Delete(s));
-
-                //Create Merge Record
-                CreateMergeRecord(sourceAccount, destinationAccount);
-
-                //Delete Source Account
-                UnitOfWork.Delete(sourceAccount);
-
-                //Update Destination Account
-                UnitOfWork.Update(destinationAccount);
-
-                UnitOfWork.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex);
-                response.IsSuccessful = false;
-                response.ErrorMessages.Add(ex.Message);
+                throw new InvalidOperationException("Source and destination accounts must be different.");
             }
 
-            return response;
+            if (fromAccount == null)
+            {
+                throw new InvalidOperationException("Source account is undefined.");
+            }
+
+            if (toAccount == null)
+            {
+                throw new InvalidOperationException("Destination account is undefined.");
+            }
+
+            if (fromAccount.FiscalYearId != toAccount.FiscalYearId)
+            {
+                throw new InvalidOperationException("Source and Destination Account must have the same Fiscal Year.");
+            }
+
+            if (fromAccount.FiscalYear.Ledger.FundAccounting)
+            {
+                var fundLogic = UnitOfWork.GetBusinessLogic<FundLogic>();
+                Fund fromFund = fundLogic.GetFund(fromAccount);
+                Fund toFund = fundLogic.GetFund(toAccount);
+                if (fromFund?.Id != toFund?.Id)
+                {
+                    throw new ValidationException(UserMessagesGL.AcctMergeFundMismatch);
+                }
+            }
+
+            // Add the Beginning Account Balance
+            toAccount.BeginningBalance += fromAccount.BeginningBalance;
+
+            // Update budgets
+            MergeAccountBudgets(fromAccount, toAccount);
+
+            // Merge prior year accounts
+            List<Guid> accountsToAdjust = MergePriorYearAccounts(fromAccount, toAccount);
+
+            //Delete the Account Segments
+            fromAccount.AccountSegments.ToList().ForEach(s => UnitOfWork.Delete(s));
+
+            //Create Merge Record
+            CreateMergeRecord(fromAccount, toAccount);
+
+            // Update LedgerAccountYear for sourceAccount to point to destinationAccount.
+            foreach (LedgerAccountYear fromLAY in fromAccount.LedgerAccountYears.ToList())
+            {
+                fromLAY.Account = toAccount;
+                fromLAY.AccountId = toAccountId;
+            }
+
+            // Update closing account references
+            foreach (Account otherAccount in UnitOfWork.Where<Account>(p => p.FiscalYearId == toAccount.FiscalYearId && p.ClosingAccountId == fromAccountId))
+            {
+                otherAccount.ClosingAccountId = toAccountId;
+            }
+                
+            //Delete Source Account
+            UnitOfWork.Delete(fromAccount);
+
+            UnitOfWork.SaveChanges();
+
+            // Ensure prior year percentages add to 100%
+            foreach (Guid acctId in accountsToAdjust)
+            {
+                RedistributePriorAccountPercentages(acctId);
+            }
+
+            return toAccount;
         }
 
         //Merge Budgets for 2 different Accounts
-        internal void MergeAccountBudgets(Account source, Account destination)
+        internal void MergeAccountBudgets(Account fromAccount, Account toAccount)
         {
-            // Add the Beginning Account Balance
-            destination.BeginningBalance += source.BeginningBalance;
-
             // Add the source Budget Amounts to Destination Budget Amounts
-            var destinationBudgets = destination.Budgets.ToList();
-            var sourceBudgets = source.Budgets.ToList();
+            var destinationBudgets = toAccount.Budgets.ToList();
+            var sourceBudgets = fromAccount.Budgets.ToList();
             var amountProperties = typeof(PeriodAmountList).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.Name.StartsWith("Amount") && p.CanWrite).ToList();
 
             // Get each amount from the source PeriodAmountList and add them to the destination PeriodAmountList
-            foreach (var budget in sourceBudgets)
+            foreach (AccountBudget sourceBudget in sourceBudgets)
             {
-                var dbudget = destinationBudgets.FirstOrDefault(b => b.BudgetType == budget.BudgetType)?.Budget;
-                amountProperties.ForEach(p => p.SetValue(dbudget, (decimal)p.GetValue(budget.Budget) + (decimal)p.GetValue(dbudget)));
-               
-                UnitOfWork.Update(dbudget);
+                AccountBudget destinationBudget = destinationBudgets.FirstOrDefault(b => b.BudgetType == sourceBudget.BudgetType);
+                if (destinationBudget != null)
+                {
+                    // Merge source budget into destination budget
+                    destinationBudget.YearAmount += sourceBudget.YearAmount;
+                    PeriodAmountList destinationAmounts = destinationBudget.Budget;
+                    amountProperties.ForEach(p => p.SetValue(destinationAmounts, (decimal)p.GetValue(sourceBudget.Budget) + (decimal)p.GetValue(destinationAmounts)));
+
+                    UnitOfWork.Delete(sourceBudget);
+                }
+                else
+                {
+                    // No destination budget, so just point the source budget to toAccount.
+                    sourceBudget.Account = toAccount;
+                    sourceBudget.AccountId = toAccount.Id;
+                } 
             }
         }
        
         //Create a Merge Record for merging 2 accounts
-        internal void CreateMergeRecord(Account source, Account destintation)
+        internal void CreateMergeRecord(Account fromAccount, Account toAccount)
         {
             var merge = new LedgerAccountMerge();
-            merge.FiscalYear = destintation.FiscalYear;
-            merge.FromAccount = GetLedgerAccount(source);
-            merge.ToAccount = GetLedgerAccount(destintation);
+            merge.FiscalYear = toAccount.FiscalYear;
+            merge.FromAccount = GetLedgerAccount(fromAccount);
+            merge.ToAccount = GetLedgerAccount(toAccount);
+            merge.MergedById = UserHelper.GetCurrentUser(UnitOfWork).Id;
+            merge.MergedOn = DateTime.Now;
+
             UnitOfWork.Insert(merge);
+        }
+
+        private List<Guid> MergePriorYearAccounts(Account fromAccount, Account toAccount)
+        {
+            List<Guid> accountsToAdjust = new List<Guid>();
+            FiscalYearLogic fiscalYearLogic = UnitOfWork.GetBusinessLogic<FiscalYearLogic>();
+
+            // Prior Year Accounts via Account
+            foreach (AccountPriorYear prior in fromAccount.PriorYearAccounts.ToList())
+            {
+                if (toAccount.PriorYearAccounts.Any(p => p.PriorAccountId == prior.PriorAccountId))
+                {
+                    // Some prior year account was mapped to both the "from" and "to" account 
+                    if (!accountsToAdjust.Contains(prior.PriorAccountId.Value))
+                    {
+                        accountsToAdjust.Add(prior.PriorAccountId.Value);
+                    }
+                    UnitOfWork.Delete(prior);
+                }
+                else
+                {
+                    prior.Account = toAccount;
+                    prior.AccountId = toAccount.Id;
+                }
+            }
+
+            // Update AccountPriorYear via PriorAccount.
+            foreach (AccountPriorYear prior in fromAccount.NextYearAccounts.ToList())
+            {
+                if (!accountsToAdjust.Contains(toAccount.Id))
+                {
+                    accountsToAdjust.Add(toAccount.Id);
+                }
+
+                prior.PriorAccount = toAccount;
+                prior.PriorAccountId = toAccount.Id;
+            }
+
+            // Create new AccountPriorYear objects to map fromAccount in the prior year to toAccount.
+            FiscalYear pyear = fiscalYearLogic.GetPriorFiscalYear(fromAccount.FiscalYear);
+
+            if (pyear != null)
+            {
+                // Iterate thru LedgerAccountYear's for fromAccount in the prior year.
+                foreach (LedgerAccountYear entry in fromAccount.LedgerAccountYears)
+                {
+                    // Convert the LedgerAccountYear into an Account for fromAccount in the prior year.
+                    Account priorFromAcct = GetAccount(entry.LedgerAccountId, pyear);
+                    if (priorFromAcct != null)
+                    {
+                        // Is there an AccountPriorYear that maps fromAccount in the prior year to toAccount?
+                        AccountPriorYear apy = toAccount.PriorYearAccounts.FirstOrDefault(p => p.PriorAccountId == priorFromAcct.Id);
+                        if (apy == null)
+                        {
+                            // If not, create one.
+                            apy = new AccountPriorYear();
+                            apy.Account = toAccount;
+                            apy.AccountId = toAccount.Id;
+                            apy.PriorAccount = priorFromAcct;
+                            apy.PriorAccountId = priorFromAcct.Id;
+                            apy.Percentage = 100m;
+                            UnitOfWork.Insert(apy);
+
+                            if (!accountsToAdjust.Contains(priorFromAcct.Id))
+                                accountsToAdjust.Add(priorFromAcct.Id);
+                        }
+                    }
+                }
+            }
+
+            return accountsToAdjust;
+        }
+
+        private void RedistributePriorAccountPercentages(Guid accountId)
+        {
+            // Get the list of AccountPriorYear where PriorAccount = the specified account (priorAcct).  
+            List<AccountPriorYear> priors = UnitOfWork.Where<AccountPriorYear>(p => p.PriorAccountId == accountId).ToList();
+
+            if (priors.Count > 0)
+            {
+                // The percentages for these AccountPriorYears may no longer sum to 100%.  If so, they need to be fixed.
+                decimal totPct = priors.Sum(p => p.Percentage);
+                if (totPct > 0m && totPct != 100m)
+                {
+                    // Calculate factor.  For example, if totPct is 200%, factor should be 0.5.
+                    decimal factor = 100m / totPct;
+
+                    // Multiply each percentage by the factor.
+                    foreach (AccountPriorYear prior in priors)
+                    {
+                        prior.Percentage = Math.Round(prior.Percentage * factor, 2);
+                    }
+
+                    // Recalculate the total percentage.
+                    totPct = priors.Sum(p => p.Percentage);
+
+                    // If it's still not 100% (due to rounding errors) force the difference into the first entry.
+                    if (totPct != 100m)
+                    {
+                        priors[0].Percentage += (100m - totPct);
+                    }
+                }
+            }
         }
 
         /// <summary>

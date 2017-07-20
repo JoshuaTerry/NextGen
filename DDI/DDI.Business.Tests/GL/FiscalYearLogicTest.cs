@@ -387,12 +387,12 @@ namespace DDI.Business.Tests.GL
             AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(openYear), "Fiscal year name", "Validate blank name.");
             openYear.Name = tempString;
 
-            int tempInt = openYear.NumberOfPeriods;
-            openYear.NumberOfPeriods = 0;
-            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(openYear), UserMessagesGL.FiscalPeriodsRange, "Validate number of periods = 0.");
-            openYear.NumberOfPeriods = ConstantsGL.MaxFiscalPeriods + 1;
-            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(openYear), UserMessagesGL.FiscalPeriodsRange, "Validate number of periods too big.");
-            openYear.NumberOfPeriods = tempInt;
+            int tempInt = emptyYear.NumberOfPeriods;
+            emptyYear.NumberOfPeriods = 0;
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(emptyYear), UserMessagesGL.FiscalPeriodsRange, "Validate number of periods = 0.");
+            emptyYear.NumberOfPeriods = ConstantsGL.MaxFiscalPeriods + 1;
+            AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(emptyYear), UserMessagesGL.FiscalPeriodsRange, "Validate number of periods too big.");
+            emptyYear.NumberOfPeriods = tempInt;
 
             tempInt = openYear.CurrentPeriodNumber;
             openYear.CurrentPeriodNumber = 0;
@@ -452,12 +452,12 @@ namespace DDI.Business.Tests.GL
 
             // Non-contiguous period dates
             tempDate = tempPeriod.StartDate.Value;
-            tempPeriod.StartDate = tempDate.AddDays(1);
+            tempPeriod.StartDate = tempDate.AddDays(-1);
             AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(openYear), UserMessagesGL.FiscalPeriodStartDate, "Validate gap due to wrong period start date.");
             tempPeriod.StartDate = tempDate;
 
             tempDate = tempPeriod.EndDate.Value;
-            tempPeriod.EndDate = tempDate.AddDays(-1);
+            tempPeriod.EndDate = tempDate.AddDays(1);
             AssertThrowsExceptionMessageContains<ValidationException>(() => _bl.Validate(openYear), UserMessagesGL.FiscalPeriodStartDate, "Validate gap due to wrong period end date.");
             tempPeriod.EndDate = tempDate;
 

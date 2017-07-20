@@ -68,19 +68,20 @@ namespace DDI.Business.GL
             if (_fiscalYearRepository.GetEntityState(fiscalYear) != EntityState.Added)
             {
                 modifiedProperties = _fiscalYearRepository.GetModifiedProperties(fiscalYear);
-                isModified = (modifiedProperties.Count > 0);
+                // See if any properties were modified that would affect common ledgers or posted transactions.
+                isModified =
+                    modifiedProperties.Intersect(new string[] {
+                    nameof(FiscalYear.EndDate), nameof(FiscalYear.StartDate), nameof(FiscalYear.NumberOfPeriods),
+                    nameof(FiscalYear.HasAdjustmentPeriod)}).Count() > 0;
             }
             else
             {
                 isNewYear = isModified = true;
+                modifiedProperties = new List<string>();
             }
 
             if (isModified && fiscalYear.Status != FiscalYearStatus.Empty)
-            {
-                // See if any properties were modified that would affect posted transactions.
-                if (modifiedProperties.Intersect(new string[] {
-                    nameof(FiscalYear.EndDate), nameof(FiscalYear.StartDate), nameof(FiscalYear.NumberOfPeriods),
-                    nameof(FiscalYear.HasAdjustmentPeriod)}).Count() > 0)
+            {                
                 {
                     throw new ValidationException(UserMessagesGL.FiscalYearNotEditable);
                 }
@@ -151,7 +152,7 @@ namespace DDI.Business.GL
 
             // Determine if any fiscal periods were modified in a non-empty fiscal year.  Also make sure none have invalid period numbers.
 
-            if (fiscalYear.FiscalPeriods != null)
+            if (!isNewYear && fiscalYear.FiscalPeriods != null)
             {
                 string[] propertiesToCheck = new string[] { nameof(FiscalPeriod.EndDate), nameof(FiscalPeriod.StartDate), nameof(FiscalPeriod.IsAdjustmentPeriod), nameof(FiscalPeriod.PeriodNumber) };
 

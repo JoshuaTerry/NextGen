@@ -520,9 +520,8 @@ namespace DDI.Business.Tests.GL
             uow.Setup(u => u.GetById<Account>(destinationAccountId)).Returns(new Account() { Id = destinationAccountId, FiscalYearId = destinationFiscalYearId });
 
             var logic = new AccountLogic(uow.Object);
-            var response = logic.MergeAccounts(sourceAccountId, destinationAccountId);
 
-            Assert.AreEqual(false, response.IsSuccessful);  
+            AssertThrowsException<InvalidOperationException>(() => logic.MergeAccounts(sourceAccountId, destinationAccountId));
         }
 
         [TestMethod, TestCategory(TESTDESCR)]
@@ -536,10 +535,9 @@ namespace DDI.Business.Tests.GL
             var logic = new AccountLogic(uow.Object);
             logic.MergeAccountBudgets(source, destination);
 
-            Assert.AreEqual(destination.BeginningBalance, 30000.00m);
-            Assert.AreEqual(destination.Budgets.ToList()[0].Budget.Amount01, 1500.00m);
-            Assert.AreEqual(destination.Budgets.ToList()[1].Budget.Amount01, 1500.00m);
-            Assert.AreEqual(destination.Budgets.ToList()[2].Budget.Amount01, 1500.00m);
+            Assert.AreEqual(1500.00m, destination.Budgets.ToList()[0].Budget.Amount01);
+            Assert.AreEqual(1500.00m, destination.Budgets.ToList()[1].Budget.Amount01);
+            Assert.AreEqual(1500.00m, destination.Budgets.ToList()[2].Budget.Amount01);
         }
 
         private Account CreateAccount(decimal beginningBalance, decimal periodAmounts)

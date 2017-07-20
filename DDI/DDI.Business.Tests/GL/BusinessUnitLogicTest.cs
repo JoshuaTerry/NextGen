@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DDI.Business.GL;
+using DDI.Business.Tests.Core.DataSources;
 using DDI.Business.Tests.GL.DataSources;
 using DDI.Shared;
 using DDI.Shared.Caching;
@@ -31,7 +32,10 @@ namespace DDI.Business.Tests.GL
         [TestMethod, TestCategory(TESTDESCR)]
         public void BusinessUnitLogic_ValidatingCodeAndNameTest()
         {
-            BusinessUnit unit = new BusinessUnit() { Code = "MKM", Name = "Methodist Kare Ministries ", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Common };
+            LedgerDataSource.GetDataSource(_uow);
+            ConfigurationDataSource.GetDataSource(_uow);
+
+            BusinessUnit unit = new BusinessUnit() { Code = "MKM", Name = "Methodist Kare Ministries ", BusinessUnitType = Shared.Enums.GL.BusinessUnitType.Separate };
 
             AssertNoException(() => _bl.Validate(unit), "Valid Business Unit Code example.");
 

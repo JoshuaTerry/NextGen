@@ -200,7 +200,22 @@ namespace DDI.Services.GL
 
         public IDataResponse<Account> Merge(Guid sourceAccountId, Guid destinationAccountId)
         {
-            return _accountLogic.MergeAccounts(sourceAccountId, destinationAccountId);
+            DataResponse<Account> response = new DataResponse<Account>(); ;
+
+            try
+            {
+                Account toAccount = _accountLogic.MergeAccounts(sourceAccountId, destinationAccountId);
+                response.Data = toAccount;
+            }
+            catch (Exception ex)
+            {
+                
+                Logger.LogError(ex);
+                response.IsSuccessful = false;
+                response.ErrorMessages.Add(ex.Message);
+            }
+
+            return response;
         }
 
         protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
