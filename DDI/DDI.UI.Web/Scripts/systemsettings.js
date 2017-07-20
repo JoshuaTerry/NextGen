@@ -2995,16 +2995,15 @@ function LoadFiscalYearSectionSettings() {
     $(gridgroup).appendTo(container);
     $(container).appendTo($('.gridcontainer'));
 
-    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, 'Please Select', '', $('.LedgerId').val(), null, function () {
+    PopulateDropDown('.LedgerId', 'ledgers/businessunit/' + currentBusinessUnitId, 'Please Select', '', $('.LedgerId').val(), function () {
 
         LoadFiscalYearGrid();
         $('.fy-LedgerId').val($('.LedgerId').val());
 
-    }, function (element, data) {
+        }, function (element, data) {
 
         if (data.Data.length == 1) {
             $(element).val(data.Data[0].Id);
-            $(element).change();
         }
 
     });
