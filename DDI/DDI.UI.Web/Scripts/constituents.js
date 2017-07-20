@@ -316,9 +316,9 @@ function DisplayConstituentPicture() {
         crossDomain: true,
         success: function (data) {
 
-            if (data.Data && data.Data[0]) {
+            if (data.Data) {
 
-                GetFile(data.Data[0].FileId, function (item) {
+                GetFile(data.Data.FileId, function (item) {
 
                     $(img).attr('src', 'data:image/jpg;base64,' + item.Data).appendTo($('.constituentpic'));
 
@@ -358,7 +358,7 @@ function DisplayConstituentPicture() {
             $.ajax({
                 url: WEB_API_ADDRESS + 'constituentpicture',
                 method: 'POST',
-                data: data,
+                data: JSON.stringify(data),
                 contentType: 'application/json; charset-utf-8',
                 dataType: 'json',
                 headers: GetApiHeaders(),

@@ -403,7 +403,7 @@
                                     <i class="glyphicon glyphicon-plus"></i>
                                     <span>Select files...</span>
 
-                                    <input class="file_upload2" type="file" name="files[]" multiple="multiple" />
+                                    <input class="file_upload" type="file" name="files[]" multiple="multiple" />
                                 </span>
         
                                 <div id="progress2" class="progress">

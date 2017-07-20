@@ -663,8 +663,6 @@ function EditConstituentType(id) {
 
             }, null);
         });
-
-        });
     });
 
 }
@@ -3703,10 +3701,6 @@ function EditBusinessUnit(buFromToInfo) {
             $('.bus-ToLedgerAccount').empty();
         });
 
-            $('.bus-FromLedgerAccount').empty();
-            $('.bus-ToLedgerAccount').empty();
-        });
-
         $('.Savebusinessunitduedetails').unbind('click');
         $('.Savebusinessunitduedetails').click(function () {
 
@@ -3758,10 +3752,6 @@ function EditFundDue(fundDueInfo) {
                 e.preventDefault();
                 CloseModal(modal);
                
-                $('.fn-DueFromAccount').empty();
-                $('.fn-DueToAccount').empty();
-            });
-
                 $('.fn-DueFromAccount').empty();
                 $('.fn-DueToAccount').empty();
             });
