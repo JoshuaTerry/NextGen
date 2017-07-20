@@ -33,7 +33,9 @@ namespace DDI.Services.GL
             var importFile = GetImportFile(fileId);
 
             if (!fields.Any(f => f.PropertyName == "AccountNumber"))
+            {
                 throw new Exception("No Account Mapping Specified.");
+            }
 
             char[] delimiters = { ',' };
 
@@ -44,7 +46,9 @@ namespace DDI.Services.GL
                 using (var streamReader = new StreamReader(stream))
                 {
                     if (importFile.ContainsHeaders)
+                    {
                         columns = streamReader.ReadLine().Split(delimiters, StringSplitOptions.None);
+                    }
 
                     var mappings = fields.Select(f => new { PropertyName = f.PropertyName, ColumnName = f.ColumnName, Ordinal = columns != null ? Array.IndexOf(columns, f.ColumnName) : Convert.ToInt32(f.ColumnName) }).ToList();
 
@@ -99,7 +103,9 @@ namespace DDI.Services.GL
             AccountBudget budget = null;
             var account = GetAccount(accountNumber, fiscalYearId);
             if (account == null)
+            {
                 throw new NullReferenceException($"No Account was found for AccountNumber: {accountNumber}.");
+            }
 
             (string fix, string working, string whatif) = GetBudgetNames(account);
             var budgets = GetAccountBudgets(account);
@@ -109,11 +115,17 @@ namespace DDI.Services.GL
                 int budgetType = -1;
 
                 if (fix == budgetName)
+                {
                     budgetType = 0;
+                }
                 else if (working == budgetName)
+                {
                     budgetType = 1;
+                }
                 else if (whatif == budgetName)
+                {
                     budgetType = 2;
+                }
 
                 budget = budgets.FirstOrDefault(b => (int)b.BudgetType == budgetType);
             }
@@ -127,15 +139,21 @@ namespace DDI.Services.GL
         internal (string, string, string) GetBudgetNames(Account account)
         {
             if (account == null)
+            {
                 throw new Exception("The account used for retrieving budget names was null");
+            }
 
             var ledgerAccount = _uow.GetEntities<LedgerAccount>().FirstOrDefault(la => la.AccountNumber == account.AccountNumber);
             if (ledgerAccount == null)
+            {
                 throw new NullReferenceException($"No LedgerAccount was found for AccountNumber: {account.AccountNumber}.");
+            }
 
             var ledger = _uow.GetEntities<Ledger>().FirstOrDefault(l => l.Id == ledgerAccount.LedgerId);
             if (ledger == null)
+            {
                 throw new NullReferenceException($"No Ledger was found for AccountNumber: {account.AccountNumber}.");
+            }
 
             return (ledger.FixedBudgetName, ledger.WorkingBudgetName, ledger.WhatIfBudgetName);
         }
