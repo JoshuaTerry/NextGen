@@ -287,7 +287,7 @@ function LoadInterestPayouts(id) {
 
 function GetInterestPayoutsToSave() {
 
-    var rawitem = {
+    var item = {
 
         Priority: $(modal).find('.Priority').val(),
         InterestPaymentMethod: $(modal).find('.InterestPaymentMethod').val(),
@@ -297,8 +297,6 @@ function GetInterestPayoutsToSave() {
         Amount: ($('.InterestPayoutOptionAmount').prop("checked") === true ? $(modal).find('.InterestPayoutPercentAmount').val() : 0),
 
     };
-
-    var item = JSON.stringify(rawitem);
 
     return item;
 
@@ -478,7 +476,7 @@ function LoadLinkedAccounts(id) {
 
 function GetLinkedAccountsToSave() {
 
-    var rawitem = {
+    var item = {
 
         LinkedAccountType: $(modal).find('.LinkedAccountType').val(),
         //LinkedAccountInd: ($.isNumeric($(modal).find('.LinkedAccountNumber').val()) ? 1 : 0),    // when the item is available
@@ -488,8 +486,6 @@ function GetLinkedAccountsToSave() {
         BlockOtherLoanLinks: $(modal).find('.BlockOtherLoanLinks').val()
 
     };
-
-    var item = JSON.stringify(rawitem);
 
     return item;
 

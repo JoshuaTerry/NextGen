@@ -36,12 +36,12 @@ namespace DDI.Services.GL
             // If journal number specified, bypass all other search criteria and retrieve single journal.
             if (criteria.JournalNumber > 0 && criteria.JournalType.HasValue)
             {
-                if (criteria.JournalType.Value == Shared.Enums.GL.JournalType.Normal && criteria.FiscalYearId.HasValue)
+                if (criteria.JournalType.Value == Shared.Enums.GL.JournalType.OneTime && criteria.FiscalYearId.HasValue)
                 {
                     var journals = UnitOfWork.GetEntities(IncludesForList).Where(p => p.JournalType == criteria.JournalType.Value && p.FiscalYearId == criteria.FiscalYearId.Value && p.JournalNumber == criteria.JournalNumber);
                     return new DataResponse<List<ICanTransmogrify>>(journals.ToList<ICanTransmogrify>()) { TotalResults = journals.Count() };
                 }
-                else if (criteria.JournalType.Value != Shared.Enums.GL.JournalType.Normal && criteria.BusinessUnitId.HasValue)
+                else if (criteria.JournalType.Value != Shared.Enums.GL.JournalType.OneTime && criteria.BusinessUnitId.HasValue)
                 {
                     var journals = UnitOfWork.GetEntities(IncludesForList).Where(p => p.JournalType == criteria.JournalType.Value && p.BusinessUnitId == criteria.BusinessUnitId.Value && p.JournalNumber == criteria.JournalNumber);
                     return new DataResponse<List<ICanTransmogrify>>(journals.ToList<ICanTransmogrify>()) { TotalResults = journals.Count() };
@@ -151,7 +151,7 @@ namespace DDI.Services.GL
             if (search.JournalType.HasValue)
             {
                 query.Must.Equal((int)search.JournalType.Value, p => p.JournalType);
-                if (search.JournalType.Value == Shared.Enums.GL.JournalType.Normal && search.FiscalYearId.HasValue)
+                if (search.JournalType.Value == Shared.Enums.GL.JournalType.OneTime && search.FiscalYearId.HasValue)
                 {
                     ignoreBusinessUnit = true;
                 }

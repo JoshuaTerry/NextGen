@@ -22,8 +22,8 @@ namespace DDI.Conversion.GL
         private string _glDirectory;
         protected string GLDirectory => _glDirectory;
 
-        private string _outputDirectory;
-        protected string OutputDirectory => _outputDirectory;
+        private string _glOutputDirectory;
+        protected string GLOutputDirectory => _glOutputDirectory;
 
         private Dictionary<int, Guid> _ledgerIds;
         protected Dictionary<int, Guid> LedgerIds => _ledgerIds;
@@ -46,20 +46,20 @@ namespace DDI.Conversion.GL
         protected void Initialize(string baseDirectory)
         {
             _glDirectory = Path.Combine(baseDirectory, DirectoryName.GL);
-            _outputDirectory = Path.Combine(DirectoryName.OutputDirectory, DirectoryName.GL);
+            _glOutputDirectory = Path.Combine(DirectoryName.OutputDirectory, DirectoryName.GL);
 
             // Make sure the IS Payload directory exists.
-            Directory.CreateDirectory(_outputDirectory);
+            Directory.CreateDirectory(_glOutputDirectory);
         }
 
         /// <summary>
-        /// Load legacy ledger IDs into a dictionary.
+        /// Load legacy business unit IDs into a dictionary.
         /// </summary>
         protected void LoadBusinessUnitIds()
         {
             if (_businessUnitIds == null)
             {
-                _businessUnitIds = LoadIntLegacyIds(_outputDirectory, OutputFile.GL_BusinessUnitIdMappingFile);
+                _businessUnitIds = LoadIntLegacyIds(_glOutputDirectory, OutputFile.GL_BusinessUnitIdMappingFile);
             }
         }
 
@@ -70,7 +70,7 @@ namespace DDI.Conversion.GL
         {
             if (_ledgerIds == null)
             {
-                _ledgerIds = LoadIntLegacyIds(_outputDirectory, OutputFile.GL_LedgerIdMappingFile);
+                _ledgerIds = LoadIntLegacyIds(_glOutputDirectory, OutputFile.GL_LedgerIdMappingFile);
             }
         }
 
@@ -81,7 +81,7 @@ namespace DDI.Conversion.GL
         {
             if (_fiscalYearIds == null)
             {
-                _fiscalYearIds = LoadLegacyIds(_outputDirectory, OutputFile.GL_FiscalYearIdMappingFile);
+                _fiscalYearIds = LoadLegacyIds(_glOutputDirectory, OutputFile.GL_FiscalYearIdMappingFile);
             }
         }
 
@@ -93,7 +93,7 @@ namespace DDI.Conversion.GL
         {
             if (_ledgerAccountIds == null)
             {
-                _ledgerAccountIds = LoadIntLegacyIds(_outputDirectory, OutputFile.GL_LedgerAccountIdMappingFile);
+                _ledgerAccountIds = LoadIntLegacyIds(_glOutputDirectory, OutputFile.GL_LedgerAccountIdMappingFile);
             }
         }
 
@@ -101,7 +101,7 @@ namespace DDI.Conversion.GL
         {
             if (_ledgerAccountYearIds == null)
             {
-                _ledgerAccountYearIds = LoadLegacyIds(OutputDirectory, OutputFile.GL_LedgerAccountYearIdMappingFile);
+                _ledgerAccountYearIds = LoadLegacyIds(GLOutputDirectory, OutputFile.GL_LedgerAccountYearIdMappingFile);
             }
         }
 
@@ -112,7 +112,7 @@ namespace DDI.Conversion.GL
         {
             if (_segmentIds == null)
             {
-                _segmentIds = LoadLegacyIds(_outputDirectory, OutputFile.GL_SegmentIdMappingFile);
+                _segmentIds = LoadLegacyIds(_glOutputDirectory, OutputFile.GL_SegmentIdMappingFile);
             }
         }
 
@@ -181,6 +181,33 @@ namespace DDI.Conversion.GL
             }
 
             return ledgerId;
+        }
+
+        protected Guid? GetBusinessUnitId(FileImport importer, int column)
+        {
+            Guid? unitId = null;
+
+            // Legacy company ID
+            string code = importer.GetString(column);
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                return null;
+            }
+
+            if (_businessUnitIds != null)
+            {
+                int cid = 0;
+                Guid id;
+                if (!int.TryParse(code, out cid) || !_businessUnitIds.TryGetValue(cid, out id))
+                {
+                    importer.LogError($"Invalid legacy company ID \"{code}\"");
+                    return null;
+                }
+
+                unitId = id;
+            }
+
+            return unitId;
         }
 
         protected Guid? GetLedgerAccountId(FileImport importer, int column)

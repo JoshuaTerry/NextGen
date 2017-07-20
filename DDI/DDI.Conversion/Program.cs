@@ -103,14 +103,37 @@ namespace DDI.Conversion
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalNotes));
             //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalEntityNumbers));
 
-            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.FileStorage));
-            Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.Attachments));
+            //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalFileStorage));
+            //Run<GL.JournalConverter>(new ConversionMethodArgs(GL.JournalConverter.ConversionMethod.JournalAttachments));
 
             //Run<GL.JournalSearchIndexer>(new ConversionMethodArgs(GL.JournalSearchIndexer.ConversionMethod.IndexJournals));
             //Run<Core.NoteSearchIndexer>(new ConversionMethodArgs(Core.NoteSearchIndexer.ConversionMethod.IndexNotes));
 
-            //Run<CP.SettingsLoader>();
+            //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.Configuration));
+            //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.EFTFormats));
+            //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.BankAccounts));
+            //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.ReceiptTypes));
+            //Run<CP.SettingsLoader>(new ConversionMethodArgs(CP.SettingsLoader.ConversionMethod.ReceiptBatchTypes));
+
             //Run<CP.PaymentMethodConverter>(new ConversionMethodArgs(CP.PaymentMethodConverter.ConversionMethod.PaymentMethods));
+
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptBatches));
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.Receipts));
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptTransactions));
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptEntityNumbers));
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptFileStorage));
+            //Run<CP.ReceiptConverter>(new ConversionMethodArgs(CP.ReceiptConverter.ConversionMethod.ReceiptAttachments));
+
+            //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceipts));
+            //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceiptLines));
+            //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceiptEntityNumbers));
+            //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceiptTransactions));
+            //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceiptApprovals));
+            //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceiptNotes));
+            //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceiptFileStorage));
+            //Run<CP.MiscReceiptConverter>(new ConversionMethodArgs(CP.MiscReceiptConverter.ConversionMethod.MiscReceiptAttachments));
+
+            //Run<CP.CPSearchIndexer>(new ConversionMethodArgs(CP.CPSearchIndexer.ConversionMethod.IndexCP));
 
             // Post-conversion tasks
 

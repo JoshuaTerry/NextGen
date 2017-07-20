@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     
+    <script type="text/javascript" src="Scripts\data.js"></script>
     <script type="text/javascript" src="Scripts\jquery.validate.min.js"></script>
     <script type="text/javascript" src="Scripts\login.js"></script>
     <link rel="stylesheet" href="CSS/login.css" />
@@ -25,10 +26,6 @@
         <div class="buttons">
             <input type="submit" class="loginbutton" value="Login" />
         </div>
-
-        <%--<div class="forgotpassword">
-            <a href="#" class="forgotpasswordlink">Forgot Password?</a>
-        </div>--%>
 
     </div>
 

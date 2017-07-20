@@ -29,9 +29,20 @@ namespace DDI.Conversion.Core
             string attachmentFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_AttachmentFile, outputFileNameSuffix);
             string legacyIdFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_AttachmentMappingFile, outputFileNameSuffix);
             string noteIdFilename = ConversionBase.CreateOutputFilename(OutputFile.Core_NoteIdMappingFile, outputFileNameSuffix);
+            bool hasNotes = File.Exists(noteIdFilename);
+
             string fileStorageIdFilename = OutputFile.Core_FileStorageMappingFile;
 
-            Dictionary<int,Guid> noteIds = ConversionBase.LoadIntLegacyIds(outputDirectory, noteIdFilename);
+            Dictionary<int, Guid> noteIds;
+            if (hasNotes)
+            {
+                noteIds = ConversionBase.LoadIntLegacyIds(outputDirectory, noteIdFilename);
+            }
+            else
+            {
+                noteIds = new Dictionary<int, Guid>();
+            }
+
             Dictionary<int, Guid> fileStorageIds = ConversionBase.LoadIntLegacyIds(outputDirectory, fileStorageIdFilename);
 
             if (entityIds == null)

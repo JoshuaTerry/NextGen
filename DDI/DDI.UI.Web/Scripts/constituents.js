@@ -358,7 +358,7 @@ function DisplayConstituentPicture() {
             $.ajax({
                 url: WEB_API_ADDRESS + 'constituentpicture',
                 method: 'POST',
-                data: JSON.stringify(data),
+                data: data,
                 contentType: 'application/json; charset-utf-8',
                 dataType: 'json',
                 headers: GetApiHeaders(),
@@ -793,7 +793,7 @@ function EditAddressModal(id) {
         // Get the changed fields from currentaddress and put into new array.
         var fields = GetEditedAddressFields();
 
-        MakeServiceCall('PATCH', 'constituentaddresses/' + id, JSON.stringify(fields), function () {
+        MakeServiceCall('PATCH', 'constituentaddresses/' + id, fields, function () {
             DisplaySuccessMessage('Success', 'Address saved successfully.');
 
             CloseModal(modal);

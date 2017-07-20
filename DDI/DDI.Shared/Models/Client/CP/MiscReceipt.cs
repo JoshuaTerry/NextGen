@@ -60,6 +60,8 @@ namespace DDI.Shared.Models.Client.CP
         [NotMapped]
         public string StatusDescription { get; set; }
 
+        public override string DisplayName => MiscReceiptNumber.ToString();
+
         #endregion
 
 

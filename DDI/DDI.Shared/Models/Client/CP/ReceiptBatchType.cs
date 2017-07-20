@@ -23,5 +23,7 @@ namespace DDI.Shared.Models.Client.CP
         [ForeignKey(nameof(BankAccountId))]
         public BankAccount BankAccount { get; set; }
 
+        public override string DisplayName => $"{Code}: {Name}";
+
     }
 }

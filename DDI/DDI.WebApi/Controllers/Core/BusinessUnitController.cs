@@ -9,6 +9,7 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class BusinessUnitController : GenericController<BusinessUnit>
     {
         public BusinessUnitController(IService<BusinessUnit> service) : base(service) { }

@@ -207,7 +207,7 @@ namespace DDI.Conversion
         /// <param name="userName">User name.</param>
         protected User GetUserByName(IEnumerable<User> users, string userName)
         {
-            return users.FirstOrDefault(p => Regex.IsMatch(p.UserName, $"^{userName}(@.*)?$", RegexOptions.IgnoreCase));
+            return users.FirstOrDefault(p => string.Compare(p.FullName, userName, true) == 0 ||  Regex.IsMatch(p.UserName, $"^{userName}(@.*)?$", RegexOptions.IgnoreCase));
         }
 
         #endregion

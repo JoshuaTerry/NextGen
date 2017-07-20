@@ -9,7 +9,6 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 
 namespace DDI.Data
 {
@@ -255,7 +254,7 @@ namespace DDI.Data
                     IAuditableEntity auditableEntity = entity as IAuditableEntity;
                     if (auditableEntity != null)
                     {
-                        auditableEntity.CreatedBy = UserHelper.GetCurrentUserDisplayName(); 
+                        auditableEntity.CreatedBy = UserHelper.GetCurrentUserDisplayName();
                         auditableEntity.CreatedOn = DateTime.UtcNow;
                     }
                     // Add it only if not already added.
@@ -308,14 +307,12 @@ namespace DDI.Data
             IEnumerable<string> propertynames = currentValues.PropertyNames;
 
             var entityInterface = entity as IEntity;
-            Byte[] requestRowVersion = propertyValues["RowVersion"] as Byte[];
-            if (requestRowVersion != null && !entityInterface.RowVersion.SequenceEqual(requestRowVersion))
-                throw new DatabaseConcurrencyException();
-
-            var manager = ((IObjectContextAdapter)_context).ObjectContext.ObjectStateManager;
-            var ose = manager.GetObjectStateEntry(entity);
-            ose.AcceptChanges();
-
+            if (propertyValues.ContainsKey("RowVersion"))
+            {
+                Byte[] requestRowVersion = propertyValues["RowVersion"] as Byte[];
+                if (requestRowVersion != null && !entityInterface.RowVersion.SequenceEqual(requestRowVersion))
+                    throw new DatabaseConcurrencyException();
+            }
 
             foreach (KeyValuePair<string, object> keyValue in propertyValues)
             {
@@ -406,7 +403,7 @@ namespace DDI.Data
             {
                 if (entry.Entity is IEntity)
                 {
-                    stateDict.Add(((IEntity)entry.Entity).Id, entry.State);
+                    stateDict[((IEntity)entry.Entity).Id] = entry.State;
                 }
             }
 

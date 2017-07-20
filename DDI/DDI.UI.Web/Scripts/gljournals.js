@@ -3,7 +3,8 @@
 
 $(document).ready(function () {
 
-   
+    // Resize();
+ 
     $('.clearsearch').click(function () {
         $('.searchcriteria div.fieldblock input').each(function () {
             $(this).val('');
@@ -24,8 +25,11 @@ $(document).ready(function () {
         DoSearch();
     });
 
-    $('.addnewjournal').click(function () {
-        addnewjournal();
+    $('.addnewjournal').click(function (e) {
+
+        e.preventDefault();
+
+        AddNewJournal();
     });
 
 
@@ -52,87 +56,50 @@ function DoSearch() {
 
     var parameters = GetSearchParameters();
 
+    MakeServiceCall('GET', 'journals/?' + parameters, null, function (data) {
 
-    $.ajax({
-        url: WEB_API_ADDRESS + 'journals/?' + parameters,
-        method: 'GET',
-        contentType: 'application/json; charset-utf-8',
-        dataType: 'json',
-        headers: GetApiHeaders(),
-        crossDomain: true,
-        success: function (data) {
+        if (data.Data.length === 1) {
 
-            if (data.Data.length === 1) {
-                DisplayJournals(data.Data[0].ID);
-            }
-            else {
+            DisplayJournal(data.Data[0].ID);
 
-                $('.gridcontainer').dxDataGrid({
-                    dataSource: data.Data,
-                    key: "Id",
-                    type: "array",
-                    columns: [
-                          { dataField: 'JournalNumber', caption: 'Journal No.' },
-                             {
-                                 caption: 'Type', cellTemplate: function (container, options) {
-
-                                     var JournalType;
-
-                                     switch (options.data.JournalType) {
-                                         case 0:
-                                             JournalType = "Normal";
-                                             break;
-                                         case 1:
-                                             JournalType = "Recurring";
-                                             break;
-                                         case 2:
-                                             JournalType = "Template";
-                                             break;
-                                     }
-
-                                     $('<label>').text(JournalType).appendTo(container);
-                                 }
-                             },
-
-                        { dataField: 'TransactionDate', caption: 'Tran Dt', dataType: 'date', alignment: 'right' },
-                        { dataField: 'Comment', caption: 'Memo' },
-                        { dataField: 'Amount', caption: 'Amount', format: { type: 'currency', precision: 2 } },
-                        { dataField: 'CreatedBy', caption: 'Created By' },
-                        { dataField: 'CreatedOn', caption: 'Created On', dataType: 'date', alignment: 'right' },
-                        { dataField: 'Status', caption: 'Status' }
-                    ],
-                    paging: {
-                        pageSize: 15
-                    },
-                    pager: {
-                        showNavigationButtons: true,
-                        showPageSizeSelector: true,
-                        showInfo: true,
-                        allowedPageSizes: [15, 25, 50, 100]
-                    },
-                    groupPanel: {
-                        visible: true,
-                        allowColumnDragging: true
-                    },
-                    filterRow: {
-                        visible: true,
-                        showOperationChooser: false
-                    },
-
-                    onRowClick: function (info) {
-
-                        DisplayJournals(info.values[0]);
-                    },
-                    columnAutoWidth: true,
-                });
-
-            }
-
-        },
-        error: function (xhr, status, err) {
-            DisplayErrorMessage('Error', xhr.responseJSON.ExceptionMessage);
         }
-    });
+        else {
+
+            var columns = [
+                { dataField: 'JournalNumber', caption: 'Journal No.' },
+                {
+                    caption: 'Type', cellTemplate: function (container, options) {
+
+                        var JournalType;
+
+                        switch (options.data.JournalType) {
+                            case 0:
+                                JournalType = "One-Time";
+                                break;
+                            case 1:
+                                JournalType = "Recurring";
+                                break;
+                            case 2:
+                                JournalType = "Template";
+                                break;
+                        }
+
+                        $('<label>').text(JournalType).appendTo(container);
+                    }
+                },
+                { dataField: 'TransactionDate', caption: 'Tran Dt', dataType: 'date', alignment: 'right' },
+                { dataField: 'Comment', caption: 'Memo' },
+                { dataField: 'Amount', caption: 'Amount', format: { type: 'currency', precision: 2 } },
+                { dataField: 'CreatedBy', caption: 'Created By' },
+                { dataField: 'CreatedOn', caption: 'Created On', dataType: 'date', alignment: 'right' },
+                { dataField: 'Status', caption: 'Status' }
+            ];
+            
+            LoadGridWithData('journalinquerygrid', '.gridcontainer', columns, '', DisplayJournal, null, null, data, null);
+
+        }
+
+    }, null);
 
 }
 
@@ -159,7 +126,7 @@ function GetSearchParameters() {
     });
 
     p += 'limit=100&' + 'BusinessUnitId=' + currentBusinessUnitId;
-    p += '&fields=JournalNumber,JournalType,TransactionDate,Comment,Amount,CreatedBy,CreatedOn,Status&';
+    p += '&fields=Id,JournalNumber,JournalType,TransactionDate,Comment,Amount,CreatedBy,CreatedOn,Status&';
 
     p = p.substring(0, p.length - 1);
 
@@ -167,32 +134,38 @@ function GetSearchParameters() {
 
 }
 
-function LoadCreatedBy() {
+function LoadCreatedBy()
+{
 
     PopulateDropDown('.searchCreatedBy', 'CreatedBy', '', '');
 
 }
 
+function AddNewJournal()
+{
 
-function DisplayJournals(id) {
+    modal = $('.newjournalmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 400,
+        resizable: false
+    });
 
-    sessionStorage.setItem("ID", id);
-    location.href = "../Admin/SystemSettings.aspx";
+    $('.journaltypeselection div').unbind('click');
+
+    $('.journaltypeselection div').click(function () {
+
+        sessionStorage.setItem('JOURNAL_TYPE', $(this).attr('id'));
+        location.href = "JournalEntry.aspx";
+
+    });
 
 }
 
-function addnewjournal() {
-    //need to ridirect to Journal Edit 
-    location.href = "../Admin/SystemSettings.aspx";
-
-}
-
-
-
-function DisplayJournal(id) {
-
-    sessionStorage.setItem("id", id);
-    location.href = "/Admin/SystemSettings.aspx";
+function DisplayJournal(id)
+{
+    sessionStorage.setItem('JOURNAL_ID', id.data.Id);
+    location.href = "JournalEntry.aspx";
 
 }
 
