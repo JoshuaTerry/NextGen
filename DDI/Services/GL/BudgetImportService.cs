@@ -33,7 +33,7 @@ namespace DDI.Services.GL
             var importFile = GetImportFile(fileId);
 
             if (!fields.Any(f => f.PropertyName == "AccountNumber"))
-                throw new Exception("No Account Mapping Specified.");
+                throw new Exception(messages.NoAccountMapping);
 
             char[] delimiters = { ',' };
 
@@ -99,7 +99,7 @@ namespace DDI.Services.GL
             AccountBudget budget = null;
             var account = GetAccount(accountNumber, fiscalYearId);
             if (account == null)
-                throw new NullReferenceException($"No Account was found for AccountNumber: {accountNumber}.");
+                throw new NullReferenceException(messages.InvalidAccountNumber + accountNumber);
 
             (string fix, string working, string whatif) = GetBudgetNames(account);
             var budgets = GetAccountBudgets(account);
@@ -127,7 +127,7 @@ namespace DDI.Services.GL
         internal (string, string, string) GetBudgetNames(Account account)
         {
             if (account == null)
-                throw new Exception("The account used for retrieving budget names was null");
+                throw new Exception(messages.InvalidAccountBudget);
 
             var ledgerAccount = _uow.GetEntities<LedgerAccount>().FirstOrDefault(la => la.AccountNumber == account.AccountNumber);
             if (ledgerAccount == null)

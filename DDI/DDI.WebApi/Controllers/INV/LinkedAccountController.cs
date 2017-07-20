@@ -15,9 +15,9 @@ namespace DDI.WebApi.Controllers.INV
         {
             _laService = service;
         }
-        
+
         [Authorize] //(Roles = Permissions.INV_Read + "," + Permissions.Settings_Read)]
-        
+
         [HttpGet]
         [Route("api/v1/linkedaccounts")]
         public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
@@ -31,8 +31,6 @@ namespace DDI.WebApi.Controllers.INV
         {
             try
             {
-                //var search = new PageableSearch(offset, limit, orderBy);
-                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
                 var response = _laService.GetLinkedAccountById(id);
                 return Ok(response);
             }
@@ -41,7 +39,6 @@ namespace DDI.WebApi.Controllers.INV
                 Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
-            //return base.GetById(id, fields);
         }
 
         //[Authorize] //(Roles = Permissions.INV_Read)] //add investment roles when available
@@ -49,12 +46,10 @@ namespace DDI.WebApi.Controllers.INV
         [Route("api/v1/linkedaccounts/investment/{id}")]
         public IHttpActionResult GetByInvestmentId(Guid id)
         {
-            
+
 
             try
             {
-                //var search = new PageableSearch(offset, limit, orderBy);
-                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
                 var response = _laService.GetLinkedAccountByInvestmentId(id);
                 return Ok(response);
             }

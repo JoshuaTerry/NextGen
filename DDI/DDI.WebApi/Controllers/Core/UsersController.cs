@@ -240,7 +240,7 @@ namespace DDI.WebApi.Controllers.General
         {
             if (!ModelState.IsValid)
             {
-                return InternalServerError(new Exception("A valid Username is Required."));
+                return InternalServerError(new Exception(messages.UsernameRequired));
             }
 
             var user = new User()

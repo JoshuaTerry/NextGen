@@ -37,13 +37,13 @@ namespace DDI.WebApi.Providers
 
             if (user == null)
             {
-                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                context.SetError("invalid_grant", messages.BadLogin);
                 return;
             }
 
             if (!user.EmailConfirmed)
             {
-                context.SetError("invalid_grant", "The user has not confirmed the email address.");
+                context.SetError("invalid_grant", messages.EmailUnconfirmed);
                 return;
             }
 

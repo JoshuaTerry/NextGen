@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web.Http;
-using System.Web.Http.Routing;
 
 namespace DDI.WebApi.Controllers
 {
@@ -71,14 +70,14 @@ namespace DDI.WebApi.Controllers
             {
                 fields = FieldsForAll;
             }
-            
+
             return fields;
         }
-             
+
         public virtual IHttpActionResult GetById(Guid id, string fields = null)
         {
             try
-            {                                
+            {
                 var response = _service.GetById(id);
                 if (!response.IsSuccessful)
                 {
@@ -102,7 +101,7 @@ namespace DDI.WebApi.Controllers
                 {
                     search = PageableSearch.Default;
                 }
-                                
+
                 if (!response.IsSuccessful)
                 {
                     return BadRequest(string.Join(", ", response.ErrorMessages));
@@ -131,7 +130,7 @@ namespace DDI.WebApi.Controllers
                 if (response.Data == null)
                 {
                     if (response.ErrorMessages.Count > 0)
-                        return  BadRequest(string.Join(",", response.ErrorMessages));
+                        return BadRequest(string.Join(",", response.ErrorMessages));
                     else
                         return NotFound();
                 }
@@ -161,7 +160,7 @@ namespace DDI.WebApi.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    throw new Exception("Model Invalid");
+                    throw new Exception(messages.ModelInvalid);
                 }
 
 

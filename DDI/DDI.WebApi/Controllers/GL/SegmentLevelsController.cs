@@ -12,7 +12,7 @@ namespace DDI.WebApi.Controllers.GL
     public class SegmentLevelsController : GenericController<SegmentLevel>
     {
         public SegmentLevelsController(IService<SegmentLevel> service) : base(service) { }
-        
+
         protected override string FieldsForAll => FieldListBuilder
             .IncludeAll()
             .Exclude(p => p.Ledger)
@@ -32,13 +32,12 @@ namespace DDI.WebApi.Controllers.GL
         [Route("api/v1/ledgers/{id}/segmentlevels")]
         public IHttpActionResult GetByLedgerId(Guid id, string fields = null, int? offset = SearchParameters.OffsetDefault, int? limit = SearchParameters.LimitDefault, string orderBy = nameof(SegmentLevel.Level))
         {
-
             try
             {
                 var search = new PageableSearch(offset, limit, orderBy);
                 fields = ConvertFieldList(fields, FieldsForList);
                 var response = Service.GetAllWhereExpression(a => a.LedgerId == id, search, fields);
-                
+
                 return FinalizeResponse(response, search, fields);
             }
             catch (Exception ex)
@@ -68,7 +67,7 @@ namespace DDI.WebApi.Controllers.GL
                 return InternalServerError(new Exception(ex.Message));
             }
         }
-        
+
         [HttpPost]
         [Route("api/v1/segmentlevels")]
         public override IHttpActionResult Post([FromBody] SegmentLevel item)

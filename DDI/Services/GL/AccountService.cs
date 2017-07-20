@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DDI.Business.GL;
+﻿using DDI.Business.GL;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
 using DDI.Shared.Helpers;
@@ -9,6 +6,9 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics.GL;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DDI.Services.GL
 {
@@ -64,9 +64,9 @@ namespace DDI.Services.GL
             dest.IsNormallyDebit = source.IsNormallyDebit;
             dest.ClosingAccount = source.ClosingAccount;
             dest.Name = source.Name;
-            
+
             source.AccountSegments.ToList().ForEach(s => dest.AccountSegments.Add(new AccountSegment() { Level = s.Level, Segment = s.Segment }));
-        
+
 
             UnitOfWork.Insert<Account>(dest);
             UnitOfWork.SaveChanges();
@@ -74,7 +74,7 @@ namespace DDI.Services.GL
             return new DataResponse<Account>(dest);
         }
 
-		protected override Action<Account,string> FormatEntityForGet => (account, fields) => PopulateAccountBalanceIds(account);
+        protected override Action<Account, string> FormatEntityForGet => (account, fields) => PopulateAccountBalanceIds(account);
 
         public IDataResponse<Account> ValidateAccountNumber(Guid fiscalYearId, string accountNumber)
         {
@@ -184,7 +184,7 @@ namespace DDI.Services.GL
                 ledgerAccountYear.AccountId = account.Id;
                 UnitOfWork.Insert(ledgerAccountYear);
             }
-            
+
             account.AccountNumber = _accountLogic.CalculateAccountNumber(account);
             account.SortKey = _accountLogic.CalculateSortKey(account);
 
@@ -194,7 +194,7 @@ namespace DDI.Services.GL
                 ledgerAccount.AccountNumber = account.AccountNumber;
                 ledgerAccount.Name = account.Name;
             }
-            
+
             return base.Add(account);
         }
 
@@ -249,8 +249,8 @@ namespace DDI.Services.GL
                             }
                         }
                         else
-                        { 
-                            throw new InvalidOperationException("Unable to process AccountSegment entry: No Id or SegmentId provided.");
+                        {
+                            throw new InvalidOperationException(messages.SegmentError);
                         }
 
                     }

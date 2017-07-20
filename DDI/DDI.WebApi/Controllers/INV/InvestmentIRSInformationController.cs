@@ -9,7 +9,6 @@ namespace DDI.WebApi.Controllers.INV
 {
     public class InvestmentIRSInformationController : GenericController<InvestmentIRSInformation>
     {
-
         private InvestmentIRSInformationService _irsInfoService;
 
         public InvestmentIRSInformationController(InvestmentIRSInformationService service) : base(service)
@@ -38,12 +37,10 @@ namespace DDI.WebApi.Controllers.INV
         [Route("api/v1/investmentirsinformations/investment/{id}")]
         public IHttpActionResult GetByInvestmentId(Guid id)
         {
-            
+
 
             try
             {
-                //var search = new PageableSearch(offset, limit, orderBy);
-                //var response = Service.GetAllWhereExpression(a => a.InvestmentId == id, search);
                 var response = _irsInfoService.GetIRSInformationByInvestmentId(id);
                 return Ok(response);
             }
@@ -53,7 +50,6 @@ namespace DDI.WebApi.Controllers.INV
                 return InternalServerError(new Exception(ex.Message));
             }
         }
-
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPost]

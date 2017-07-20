@@ -1,20 +1,15 @@
-﻿using System;
-using DDI.Shared;
+﻿using DDI.Shared;
 using DDI.Shared.Models.Client.CRM;
+using System;
 
 namespace DDI.Services
 {
     public class EducationService : ServiceBase<Education>
     {
 
-        #region Private Fields
-
-
-        #endregion
-
         #region Properties
 
-        protected override Action<Education,string> FormatEntityForGet => FormatEducationForGet;
+        protected override Action<Education, string> FormatEntityForGet => FormatEducationForGet;
 
         #endregion
 
@@ -22,9 +17,7 @@ namespace DDI.Services
 
         public EducationService(IUnitOfWork uow) : base(uow) { }
 
-        #endregion
-
-        
+        #endregion 
 
         #region private Methods
 
@@ -50,7 +43,7 @@ namespace DDI.Services
                 education.DegreeOther = education.Degree.Name;
             }
         }
-        
+
         #endregion
 
     }

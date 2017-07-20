@@ -71,8 +71,13 @@
     <Compile Include="Audit\AuditService.cs" />
     <Compile Include="Core\ConfigurationService.cs" />
     <Compile Include="Core\AttachmentService.cs" />
-    <Compile Include="Core\IAttachmentService.cs" />
-    <Compile Include="Core\IConfigurationService.cs" />
+    <Compile Include="messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceInterfaces\IAttachmentService.cs" />
+    <Compile Include="ServiceInterfaces\IConfigurationService.cs" />
     <Compile Include="CRM\ConstituentAddressService.cs" />
     <Compile Include="CRM\ConstituentTypeService.cs" />
     <Compile Include="CRM\ConstituentService.cs" />
@@ -113,26 +118,26 @@
     <Compile Include="GL\FiscalYearService.cs" />
     <Compile Include="Security\RoleService.cs" />
     <Compile Include="Security\UserService.cs" />
-    <Compile Include="CRM\IAddressService.cs" />
-    <Compile Include="Core\ICustomFieldService.cs" />
+    <Compile Include="ServiceInterfaces\IAddressService.cs" />
+    <Compile Include="ServiceInterfaces\ICustomFieldService.cs" />
     <Compile Include="LinqQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\ConstituentSearch.cs" />
     <Compile Include="Search\PageableSearch.cs" />
     <Compile Include="Search\ForeignKeySearch.cs" />
     <Compile Include="ServiceBase.cs" />
-    <Compile Include="CRM\IConstituentTypeService.cs" />
-    <Compile Include="CRM\IConstituentService.cs" />
+    <Compile Include="ServiceInterfaces\IConstituentTypeService.cs" />
+    <Compile Include="ServiceInterfaces\IConstituentService.cs" />
     <Compile Include="Security\IGroupService.cs" />
-    <Compile Include="Core\INoteService.cs" />
-    <Compile Include="CRM\IRelationshipService.cs" />
-    <Compile Include="CRM\IDenominationsService.cs" />
-    <Compile Include="CRM\IEthnicitiesService.cs" />
-    <Compile Include="CRM\IRegionService.cs" />
+    <Compile Include="ServiceInterfaces\INoteService.cs" />
+    <Compile Include="ServiceInterfaces\IRelationshipService.cs" />
+    <Compile Include="ServiceInterfaces\IDenominationsService.cs" />
+    <Compile Include="ServiceInterfaces\IEthnicitiesService.cs" />
+    <Compile Include="ServiceInterfaces\IRegionService.cs" />
     <Compile Include="CRM\AddressService.cs" />
     <Compile Include="ServiceInterfaces\IFundFromToService.cs" />
     <Compile Include="ServiceInterfaces\IBusinessUnitFromToService.cs" />
-    <Compile Include="CRM\ITagGroupService.cs" />
+    <Compile Include="ServiceInterfaces\ITagGroupService.cs" />
     <Compile Include="CRM\TagGroupService.cs" />
     <Compile Include="ServiceFactory.cs" />
     <Compile Include="ServiceInterfaces\ISegmentService.cs" />
@@ -168,6 +173,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="General\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

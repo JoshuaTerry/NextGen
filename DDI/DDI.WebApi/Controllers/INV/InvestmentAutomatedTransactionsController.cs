@@ -47,8 +47,7 @@ namespace DDI.WebApi.Controllers.INV
             {
                 Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
-            }
-            //return base.GetById(id, fields);
+            } 
         }
 
         //[Authorize] //(Roles = Permissions.INV_Read)] //add investment roles when available
@@ -59,9 +58,7 @@ namespace DDI.WebApi.Controllers.INV
             
 
             try
-            {
-                //var search = new PageableSearch(offset, limit, orderBy);
-                //var response = Service.GetAllWhereExpression(a => a.InvestmentId == id, search);
+            {                 
                 var response = _laService.GetAutomatedTransactionByInvestmentId(id);
                 return Ok(response);
             }

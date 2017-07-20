@@ -38,12 +38,11 @@ namespace DDI.WebApi.Controllers.INV
         [Route("api/v1/investmentrelationships/constituent/{id}")]
         public IHttpActionResult GetByConstituentId(Guid id)
         {
-            
+
 
             try
             {
-                //var search = new PageableSearch(offset, limit, orderBy);
-                //var response = Service.GetAllWhereExpression(a => a.ConstituentId == id, search);
+
                 var response = _invrelService.GetInvestmentByConstituentId(id);
                 return Ok(response);
             }
@@ -78,6 +77,5 @@ namespace DDI.WebApi.Controllers.INV
         {
             return base.Delete(id);
         }
-
     }
 }

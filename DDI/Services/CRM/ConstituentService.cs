@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using DDI.Business.CRM;
 using DDI.Business.Helpers;
 using DDI.Search;
@@ -14,6 +10,10 @@ using DDI.Shared.Models.Client.CRM;
 using DDI.Shared.Models.Common;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace DDI.Services
 {
@@ -35,8 +35,8 @@ namespace DDI.Services
 
         #region Public Methods
 
-        protected override Action<Constituent,string> FormatEntityForGet => FormatConstituentForGet;
-		               
+        protected override Action<Constituent, string> FormatEntityForGet => FormatConstituentForGet;
+
         public override IDataResponse<List<ICanTransmogrify>> GetAll(string fields, IPageable search)
         {
             var criteria = (ConstituentSearch)search;
@@ -59,12 +59,12 @@ namespace DDI.Services
 
             // Otherwise, convert the search documents to constituents via a join.
             List<Guid> ids = results.Documents.Select(p => p.Id).ToList(); // This is the list of Ids to retrieve.  See the Where method below that filters constituents via this list.
-            List<ICanTransmogrify> constituentsFound = ids.Join(UnitOfWork.GetEntities(IncludesForList).Where(p => ids.Contains(p.Id)), 
-                                                                outer => outer, 
+            List<ICanTransmogrify> constituentsFound = ids.Join(UnitOfWork.GetEntities(IncludesForList).Where(p => ids.Contains(p.Id)),
+                                                                outer => outer,
                                                                 inner => inner.Id,
                                                                 (id, constituent) => constituent)
                                                           .ToList<ICanTransmogrify>();
-               
+
             return new DataResponse<List<ICanTransmogrify>>(constituentsFound) { TotalResults = results.TotalCount };
         }
 
@@ -79,7 +79,7 @@ namespace DDI.Services
             var constituentType = UnitOfWork.GetRepository<ConstituentType>().GetById(constituentTypeId);
             if (constituentType == null)
             {
-                throw new ArgumentException("Constituent type ID is not valid.");               
+                throw new ArgumentException(messages.InvalidId);
             }
 
             var constituent = new Constituent();
@@ -133,7 +133,7 @@ namespace DDI.Services
 
 
 
-       protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
+        protected override bool ProcessJTokenUpdate(IEntity entity, string name, JToken token)
         {
             // If age range or birth year fields are being updated, clear the birth year range.
             if (name == nameof(Constituent.AgeFrom) || name == nameof(Constituent.AgeTo) || name == nameof(Constituent.BirthYear))
@@ -174,12 +174,12 @@ namespace DDI.Services
             }
 
             UnitOfWork.SaveChanges();
-            
+
             response = new DataResponse<Constituent>()
             {
                 Data = UnitOfWork.GetById<Constituent>(constituent.Id),
                 IsSuccessful = true
-                
+
             };
 
             return response;
@@ -218,10 +218,11 @@ namespace DDI.Services
                 var state = UnitOfWork.FirstOrDefault<State>(s => s.Id == primaryaddress.StateId);
                 var formattedAddress = UnitOfWork.GetBusinessLogic<AddressLogic>().FormatAddress(UnitOfWork.GetReference(address, p => p.Address));
                 sb.Append(formattedAddress + "\n");
-            } else
+            }
+            else
             {
 
-                sb.Append("No address available for Constituent");
+                sb.Append(messages.NoAddress);
             }
             var primaryContactInfo = constituent.ContactInfo.Where(ci => ci.IsPreferred);
 
@@ -291,7 +292,7 @@ namespace DDI.Services
 
                 if (!string.IsNullOrWhiteSpace(search.QueryString))
                 {
-                   query.Must.QueryString(search.QueryString, p => p.Name, p => p.ConstituentNumber, p => p.PrimaryAddress);
+                    query.Must.QueryString(search.QueryString, p => p.Name, p => p.ConstituentNumber, p => p.PrimaryAddress);
                 }
 
                 if (!search.ConstituentTypeId.IsNullOrEmpty())
@@ -450,7 +451,7 @@ namespace DDI.Services
                     query.OrderByScore();
                     break;
             }
-            
+
 
             return repo.DocumentSearch(query, search.Limit ?? 0, search.Offset ?? 0);
         }

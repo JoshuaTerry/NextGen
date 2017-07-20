@@ -31,9 +31,6 @@ namespace DDI.WebApi.Controllers.INV
         [Route("api/v1/investments/{id}")]
         public override IHttpActionResult GetById(Guid id, string fields = null)
         {
-
-            //return base.GetById(id, fields);
-
             try
             {
                 var response = _invService.GetInvestmentById(id);
@@ -45,7 +42,6 @@ namespace DDI.WebApi.Controllers.INV
                 return InternalServerError(new Exception(ex.Message));
             }
         }
-
 
         [Authorize] //(Roles = Permissions.INV_ReadWrite)]
         [HttpPost]
