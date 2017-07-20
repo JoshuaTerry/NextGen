@@ -19,7 +19,5 @@ namespace DDI.Shared.Enums.INV
 
         [Description("Redeem Investment into Other Investment Type")]
         OtherType = 4
-
     }
-
 }

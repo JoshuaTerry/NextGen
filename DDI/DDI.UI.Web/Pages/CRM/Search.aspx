@@ -73,7 +73,9 @@
                             <input type="text" class="searchzipto" maxlength="128" />
                         </div>
 
-                        <div class="fieldblock">
+                        <div class="searchregions"></div>
+
+                        <%--<div class="fieldblock">
                             <label>Region 1</label>
                             <input type="text" class="searchregion1" maxlength="128" />
                         </div>
@@ -91,7 +93,7 @@
                         <div class="fieldblock">
                             <label>Region 4</label>
                             <input type="text" class="searchregion4" maxlength="128" />
-                        </div>
+                        </div>--%>
 
                         <div class="fieldblock">
                             <label>Age From</label>
@@ -143,7 +145,7 @@
     </div>
 
     <div class="searchresults">
-        <div class="gridcontainer scrollable"></div>
+        <div class="gridcontainer"></div>
     </div>
 
 </asp:Content>

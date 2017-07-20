@@ -9,29 +9,33 @@
 
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
+
+    <li><a href="#" class="addnewjournal">New Journal</a></li>
+    <div class="searchcriteria">
+
+        <div >
+
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="searchcriteria">
 
-        <div >
+        <div>
             <fieldset>
-
-
                 <div>
                     <div class="fieldblock">
                         <label>Journal Type</label>
                         <select class="searchjournaltype">
                             <option value="">(All)</option>
-                            <option value="0">Normal</option>
+                            <option value="0">One-Time</option>
                             <option value="1">Recurring</option>
                             <option value="2">Template</option>
                             
-
                         </select>
                         <br />
                     </div>
                    
-
                     <div class="fieldblock">
                         <label>Journal No.</label>
                         <input type="text" class="searchJournalNumber" maxlength="5" />
@@ -96,13 +100,36 @@
     </div>
 
 
-    <div class="searchresults" style="height: 670px;">
-        <div class="buttons">
-            <a href="#" class="addnewjournal newmodallink">New Journal</a>
-        </div>
+    <div class="searchresults" style="height: 670px; width: 83%">
         <div class="scrollable">
             <div class="gridcontainer"></div>
         </div>
+    </div>
+
+    <div class="newjournalmodal" title="New Journal" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="journaltypeselection">
+
+                <div class="general" id="0">
+                    <label>General Journal Entry</label>
+                    <img src="../../Images/OneTimeJournal.gif" />
+                </div>
+
+                <div class="recurring" id="1">
+                    <label>Recurring Journal Entry</label>
+                    <img src="../../Images/RecurringJournal.gif" />
+                </div>
+
+                <div class="template" id="2">
+                    <label>Journal Template</label>
+                    <img src="../../Images/TemplateJournal.gif" />
+                </div>
+
+            </div>
+        </div>
+        
     </div>
 
 </asp:Content>

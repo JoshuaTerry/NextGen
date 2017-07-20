@@ -89,171 +89,173 @@ namespace DDI.Conversion.CRM
 
         private void LoadLegacyCodes(string filename)
         {
-            DomainContext context = new DomainContext();
-            int createdByField = 9;
-            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                while (importer.GetNextRow())
+                int createdByField = 9;
+                using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
                 {
-                    int codeSet = importer.GetInt(0);
-                    string code = importer.GetString(1);
-                    string description = importer.GetString(2);
-                    int int1 = importer.GetInt(3);
-                    int int2 = importer.GetInt(4);
-                    string text1 = importer.GetString(5);
-                    string text2 = importer.GetString(6);
-                    string security = importer.GetString(7);
-                    bool active = importer.GetBool(8);
-
-                    bool masculine = true;
-                    IAuditableEntity entity;
-
-                    switch (codeSet)
+                    while (importer.GetNextRow())
                     {
-                        case ADDRESS_TYPE_SET:
-                            entity = new AddressType { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_AddressTypes.AddOrUpdate(prop => prop.Code, (AddressType)entity);
-                            break;
-                        case CLERGY_STATUS_SET:
-                            entity = new ClergyStatus { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_ClergyStatuses.AddOrUpdate(p => p.Code, (ClergyStatus)entity);
-                               
-                            break;
-                        case CLERGY_TYPE_SET:
-                            entity = new ClergyType { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_ClergyTypes.AddOrUpdate(p => p.Code, (ClergyType)entity);                               
-                            break;
-                        case DENOMINATION_SET:
-                            Affiliation affiliation;
-                            Religion religion;
+                        int codeSet = importer.GetInt(0);
+                        string code = importer.GetString(1);
+                        string description = importer.GetString(2);
+                        int int1 = importer.GetInt(3);
+                        int int2 = importer.GetInt(4);
+                        string text1 = importer.GetString(5);
+                        string text2 = importer.GetString(6);
+                        string security = importer.GetString(7);
+                        bool active = importer.GetBool(8);
 
-                            switch (text1.ToUpper())
-                            {
-                                case "PROT": religion = Religion.Protestant; break;
-                                case "ORTH": religion = Religion.Orthodox; break;
-                                case "BUD": religion = Religion.Buddhist; break;
-                                case "HIND": religion = Religion.Hindu; break;
-                                case "ISL": religion = Religion.Islam; break;
-                                case "JEW": religion = Religion.Jewish; break;
-                                case "CATH": religion = Religion.Catholic; break;
-                                default: religion = Religion.None; break;
-                            }
+                        bool masculine = true;
+                        IAuditableEntity entity;
 
-                            switch (text2.ToUpper())
-                            {
-                                case "AC":
-                                case "A":
-                                    affiliation = Affiliation.Affiliated; break;
-                                case "UC":
-                                case "U":
-                                    affiliation = Affiliation.Unaffiliated; break;
-                                case "OC":
-                                case "O":
-                                    affiliation = Affiliation.Other; break;
-                                default:
-                                    affiliation = Affiliation.None; break;
-                            }
-                            entity = new Denomination { Code = code, Name = description, IsActive = active, Religion = religion, Affiliation = affiliation };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_Denominations.AddOrUpdate(p => p.Code, (Denomination)entity);                                
-                            break;
-                        case EDUCATION_LEVEL_SET:
-                            entity = new EducationLevel { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_EducationLevels.AddOrUpdate(p => p.Code, (EducationLevel)entity);                                
-                            break;
-                        case ETHNICITY_SET:
-                            entity = new Ethnicity { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_Ethnicities.AddOrUpdate(p => p.Code, (Ethnicity)entity);                               
-                            break;
-                        case GENDER_SET:
-                            if (code == "M")
-                            {
-                                masculine = true;
-                            }
-                            else if (code == "F")
-                            {
-                                masculine = false;
-                            }
-                            entity = new Gender { Code = code, Name = description, IsMasculine = masculine, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_Genders.AddOrUpdate(p => p.Code, (Gender)entity);                               
-                            break;
-                        case LANGUAGE_SET:
-                            entity = new Language { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.Languages.AddOrUpdate(p => p.Code, (Language)entity);
-                            break;
-                        case DELETION_SET:
-                            if (code == "AC" || code == "BL" || code == "HO" || code == "DEL")
-                            {
-                                continue;
-                            }
-                            entity = new ConstituentStatus() { Code = code, Name = description, BaseStatus = ConstituentBaseStatus.Inactive, IsActive = active, IsRequired = false };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_ConstituentStatuses.AddOrUpdate(p => p.Code, (ConstituentStatus)entity);
-                            break;
-                        case PROFESSION_SET:
-                            entity = new Profession { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_Professions.AddOrUpdate(p => p.Code, (Profession)entity);
-                            break;
-                        case EARNINGS_SET:
-                            entity = new IncomeLevel { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_IncomeLevels.AddOrUpdate(p => p.Code, (IncomeLevel)entity);
-                            break;
-                        case MARITAL_STATUS_SET:
-                            entity = new MaritalStatus { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_MaritalStatuses.AddOrUpdate(p => p.Code, (MaritalStatus)entity);
-                            break;
-                        case SCHOOL_SET:
-                            entity = new School { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_Schools.AddOrUpdate(p => p.Code, (School)entity);
-                            break;
-                        case DEGREE_SET:
-                            entity = new Degree { Code = code, Name = description, IsActive = active };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.CRM_Degrees.AddOrUpdate(p => p.Code, (Degree)entity);
-                            break;                        
-                        case CUSTOM_FIELD_SET:
-                            LoadCustomField(context, code, description, int1, int2, active);
-                            break;
-                        case CUSTOM_FIELD_VALUE_SET1:
-                            LoadCustomFieldOption(context, 1, code, description);
-                            break;
-                        case CUSTOM_FIELD_VALUE_SET2:
-                            LoadCustomFieldOption(context, 2, code, description);
-                            break;
-                        case CUSTOM_FIELD_VALUE_SET3:
-                            LoadCustomFieldOption(context, 3, code, description);
-                            break;
-                        case CUSTOM_FIELD_VALUE_SET4:
-                            LoadCustomFieldOption(context, 4, code, description);
-                            break;
-                        case CUSTOM_FIELD_VALUE_SET5:
-                            LoadCustomFieldOption(context, 5, code, description);
-                            break;
-                        case CUSTOM_FIELD_VALUE_SET6:
-                            LoadCustomFieldOption(context, 6, code, description);
-                            break;
-                        case CUSTOM_FIELD_VALUE_SET7:
-                            LoadCustomFieldOption(context, 7, code, description);
-                            break;
-                        case CUSTOM_FIELD_VALUE_SET8:
-                            LoadCustomFieldOption(context, 8, code, description);
-                            break;
-                        
+                        switch (codeSet)
+                        {
+                            case ADDRESS_TYPE_SET:
+                                entity = new AddressType { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_AddressTypes.AddOrUpdate(prop => prop.Code, (AddressType)entity);
+                                break;
+                            case CLERGY_STATUS_SET:
+                                entity = new ClergyStatus { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_ClergyStatuses.AddOrUpdate(p => p.Code, (ClergyStatus)entity);
+
+                                break;
+                            case CLERGY_TYPE_SET:
+                                entity = new ClergyType { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_ClergyTypes.AddOrUpdate(p => p.Code, (ClergyType)entity);
+                                break;
+                            case DENOMINATION_SET:
+                                Affiliation affiliation;
+                                Religion religion;
+
+                                switch (text1.ToUpper())
+                                {
+                                    case "PROT": religion = Religion.Protestant; break;
+                                    case "ORTH": religion = Religion.Orthodox; break;
+                                    case "BUD": religion = Religion.Buddhist; break;
+                                    case "HIND": religion = Religion.Hindu; break;
+                                    case "ISL": religion = Religion.Islam; break;
+                                    case "JEW": religion = Religion.Jewish; break;
+                                    case "CATH": religion = Religion.Catholic; break;
+                                    default: religion = Religion.None; break;
+                                }
+
+                                switch (text2.ToUpper())
+                                {
+                                    case "AC":
+                                    case "A":
+                                        affiliation = Affiliation.Affiliated; break;
+                                    case "UC":
+                                    case "U":
+                                        affiliation = Affiliation.Unaffiliated; break;
+                                    case "OC":
+                                    case "O":
+                                        affiliation = Affiliation.Other; break;
+                                    default:
+                                        affiliation = Affiliation.None; break;
+                                }
+                                entity = new Denomination { Code = code, Name = description, IsActive = active, Religion = religion, Affiliation = affiliation };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_Denominations.AddOrUpdate(p => p.Code, (Denomination)entity);
+                                break;
+                            case EDUCATION_LEVEL_SET:
+                                entity = new EducationLevel { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_EducationLevels.AddOrUpdate(p => p.Code, (EducationLevel)entity);
+                                break;
+                            case ETHNICITY_SET:
+                                entity = new Ethnicity { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_Ethnicities.AddOrUpdate(p => p.Code, (Ethnicity)entity);
+                                break;
+                            case GENDER_SET:
+                                if (code == "M")
+                                {
+                                    masculine = true;
+                                }
+                                else if (code == "F")
+                                {
+                                    masculine = false;
+                                }
+                                entity = new Gender { Code = code, Name = description, IsMasculine = masculine, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_Genders.AddOrUpdate(p => p.Code, (Gender)entity);
+                                break;
+                            case LANGUAGE_SET:
+                                entity = new Language { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.Languages.AddOrUpdate(p => p.Code, (Language)entity);
+                                break;
+                            case DELETION_SET:
+                                if (code == "AC" || code == "BL" || code == "HO" || code == "DEL")
+                                {
+                                    continue;
+                                }
+                                entity = new ConstituentStatus() { Code = code, Name = description, BaseStatus = ConstituentBaseStatus.Inactive, IsActive = active, IsRequired = false };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_ConstituentStatuses.AddOrUpdate(p => p.Code, (ConstituentStatus)entity);
+                                break;
+                            case PROFESSION_SET:
+                                entity = new Profession { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_Professions.AddOrUpdate(p => p.Code, (Profession)entity);
+                                break;
+                            case EARNINGS_SET:
+                                entity = new IncomeLevel { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_IncomeLevels.AddOrUpdate(p => p.Code, (IncomeLevel)entity);
+                                break;
+                            case MARITAL_STATUS_SET:
+                                entity = new MaritalStatus { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_MaritalStatuses.AddOrUpdate(p => p.Code, (MaritalStatus)entity);
+                                break;
+                            case SCHOOL_SET:
+                                entity = new School { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_Schools.AddOrUpdate(p => p.Code, (School)entity);
+                                break;
+                            case DEGREE_SET:
+                                entity = new Degree { Code = code, Name = description, IsActive = active };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.CRM_Degrees.AddOrUpdate(p => p.Code, (Degree)entity);
+                                break;
+                            case CUSTOM_FIELD_SET:
+                                LoadCustomField(context, code, description, int1, int2, active);
+                                break;
+                            case CUSTOM_FIELD_VALUE_SET1:
+                                LoadCustomFieldOption(context, 1, code, description);
+                                break;
+                            case CUSTOM_FIELD_VALUE_SET2:
+                                LoadCustomFieldOption(context, 2, code, description);
+                                break;
+                            case CUSTOM_FIELD_VALUE_SET3:
+                                LoadCustomFieldOption(context, 3, code, description);
+                                break;
+                            case CUSTOM_FIELD_VALUE_SET4:
+                                LoadCustomFieldOption(context, 4, code, description);
+                                break;
+                            case CUSTOM_FIELD_VALUE_SET5:
+                                LoadCustomFieldOption(context, 5, code, description);
+                                break;
+                            case CUSTOM_FIELD_VALUE_SET6:
+                                LoadCustomFieldOption(context, 6, code, description);
+                                break;
+                            case CUSTOM_FIELD_VALUE_SET7:
+                                LoadCustomFieldOption(context, 7, code, description);
+                                break;
+                            case CUSTOM_FIELD_VALUE_SET8:
+                                LoadCustomFieldOption(context, 8, code, description);
+                                break;
+
+                        }
                     }
                 }
+                context.SaveChanges();
             }
-            context.SaveChanges();
         }
 
         private void LoadCustomField(DomainContext context, string code, string description, int minValue, int maxValue, bool isActive)
@@ -521,142 +523,147 @@ namespace DDI.Conversion.CRM
 
         private void LoadContactTypes(string filename)
         {
-            DomainContext context = new DomainContext();
-            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
-
-                while (importer.GetNextRow())
+                using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string categoryCode = importer.GetString(0);
-                    string typeCode = importer.GetString(1);
+                    int count = 1;
 
-                    if (string.IsNullOrWhiteSpace(typeCode))
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string categoryCode = importer.GetString(0);
+                        string typeCode = importer.GetString(1);
+
+                        if (string.IsNullOrWhiteSpace(typeCode))
+                        {
+                            continue;
+                        }
+
+                        ContactCategory category = context.CRM_ContactCategories.FirstOrDefault(p => p.Code == categoryCode);
+
+                        bool isDefault = (categoryCode == ContactCategory.EMAIL && typeCode == "H") ||
+                                    (categoryCode == ContactCategory.WEB && typeCode == "H") ||
+                                    (categoryCode == ContactCategory.PHONE && typeCode == "H") ||
+                                    (categoryCode == ContactCategory.PERSON && typeCode == "C") ||
+                                    (categoryCode == ContactCategory.SOCIAL && typeCode == "F");
+
+                        var contactType = new ContactType()
+                        {
+                            ContactCategory = category,
+                            Code = typeCode,
+                            Name = importer.GetString(2),
+                            IsAlwaysShown = importer.GetBool(4),
+                            CanDelete = importer.GetBool(6),
+                            IsActive = importer.GetBool(5)
+                        };
+
+                        context.CRM_ContactTypes.AddOrUpdate(p => p.Code, contactType);
+
+                        if (isDefault)
+                        {
+                            category.DefaultContactType = contactType;
+                        }
+
+                        count++;
                     }
-
-                    ContactCategory category = context.CRM_ContactCategories.FirstOrDefault(p => p.Code == categoryCode);
-
-                    bool isDefault = (categoryCode == ContactCategory.EMAIL && typeCode == "H") ||
-                                (categoryCode == ContactCategory.WEB && typeCode == "H") ||
-                                (categoryCode == ContactCategory.PHONE && typeCode == "H") ||
-                                (categoryCode == ContactCategory.PERSON && typeCode == "C") ||
-                                (categoryCode == ContactCategory.SOCIAL && typeCode == "F");
-
-                    var contactType = new ContactType()
-                    {
-                        ContactCategory = category,
-                        Code = typeCode,
-                        Name = importer.GetString(2),
-                        IsAlwaysShown = importer.GetBool(4),
-                        CanDelete = importer.GetBool(6),
-                        IsActive = importer.GetBool(5)
-                    };
-
-                    context.CRM_ContactTypes.AddOrUpdate(p => p.Code, contactType);
-
-                    if (isDefault)
-                    {
-                        category.DefaultContactType = contactType;
-                    }
-
-                    count++;
+                    context.SaveChanges();
                 }
-                context.SaveChanges();
             }
         }
 
         private void LoadRegionLevels(string filename)
         {
-            DomainContext context = new DomainContext();
-
-            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
 
-                while (importer.GetNextRow())
+                using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string levelText = importer.GetString(0);
-                    string regionLabel = importer.GetString(1);
-                    string regionAbbreviation = importer.GetString(2);
-                    bool isRequired = importer.GetBool(3);
-                    bool isChildLevel = importer.GetBool(4);
+                    int count = 1;
 
-                    int level;
-                    if (string.IsNullOrWhiteSpace(levelText) || !int.TryParse(levelText, out level) || level < 1)
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string levelText = importer.GetString(0);
+                        string regionLabel = importer.GetString(1);
+                        string regionAbbreviation = importer.GetString(2);
+                        bool isRequired = importer.GetBool(3);
+                        bool isChildLevel = importer.GetBool(4);
+
+                        int level;
+                        if (string.IsNullOrWhiteSpace(levelText) || !int.TryParse(levelText, out level) || level < 1)
+                        {
+                            continue;
+                        }
+
+                        context.CRM_RegionLevels.AddOrUpdate(p => p.Level,
+                            new RegionLevel()
+                            {
+                                Level = level,
+                                Label = regionLabel,
+                                Abbreviation = regionAbbreviation,
+                                IsRequired = isRequired,
+                                IsChildLevel = isChildLevel
+                            });
+                        count++;
                     }
 
-                    context.CRM_RegionLevels.AddOrUpdate(p => p.Level,
-                        new RegionLevel()
-                        {
-                            Level = level,
-                            Label = regionLabel,
-                            Abbreviation = regionAbbreviation,
-                            IsRequired = isRequired,
-                            IsChildLevel = isChildLevel
-                        });
-                    count++;
+                    context.SaveChanges();
                 }
-
-                context.SaveChanges();
             }
         }
 
         private void LoadRegions(string filename)
         {
-            DomainContext context = new DomainContext();
-
-            Dictionary<int, Region> regionDict = new Dictionary<int, Region>();
-
-            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
 
-                while (importer.GetNextRow())
+                Dictionary<int, Region> regionDict = new Dictionary<int, Region>();
+
+                using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string uniqueId = importer.GetString(0);
-                    int uniqueNum;
-                    if (string.IsNullOrWhiteSpace(uniqueId) || !int.TryParse(uniqueId, out uniqueNum) || uniqueNum < 1)
+                    int count = 1;
+
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string uniqueId = importer.GetString(0);
+                        int uniqueNum;
+                        if (string.IsNullOrWhiteSpace(uniqueId) || !int.TryParse(uniqueId, out uniqueNum) || uniqueNum < 1)
+                        {
+                            continue;
+                        }
+
+                        int level = importer.GetInt(1);
+                        string code = importer.GetString(2);
+                        string name = importer.GetString(3);
+                        int parentNum = importer.GetInt(4);
+
+                        Region reg = context.CRM_Regions.Include(p => p.ParentRegion).FirstOrDefault(p => p.Level == level && p.Code == code);
+                        if (reg == null)
+                        {
+                            reg = context.CRM_Regions.Create();
+                            reg.Level = level;
+                            reg.Code = code;
+                            reg.IsActive = true;
+                            context.CRM_Regions.Add(reg);
+                        }
+                        reg.Name = name;
+                        Region parentRegion = null;
+
+                        if (parentNum > 0 && regionDict.TryGetValue(parentNum, out parentRegion))
+                        {
+                            reg.ParentRegion = parentRegion;
+                        }
+                        else
+                        {
+                            reg.ParentRegion = null;
+                        }
+
+                        regionDict.Add(uniqueNum, reg);
+                        count++;
                     }
 
-                    int level = importer.GetInt(1);
-                    string code = importer.GetString(2);
-                    string name = importer.GetString(3);
-                    int parentNum = importer.GetInt(4);
-
-                    Region reg = context.CRM_Regions.Include(p => p.ParentRegion).FirstOrDefault(p => p.Level == level && p.Code == code);
-                    if (reg == null)
-                    {
-                        reg = context.CRM_Regions.Create();
-                        reg.Level = level;
-                        reg.Code = code;
-                        reg.IsActive = true;
-                        context.CRM_Regions.Add(reg);
-                    }
-                    reg.Name = name;
-                    Region parentRegion = null;
-
-                    if (parentNum > 0 && regionDict.TryGetValue(parentNum, out parentRegion))
-                    {
-                        reg.ParentRegion = parentRegion;
-                    }
-                    else
-                    {
-                        reg.ParentRegion = null;
-                    }
-
-                    regionDict.Add(uniqueNum, reg);
-                    count++;                    
+                    context.SaveChanges();
                 }
-
-                context.SaveChanges();
             }
-
         }
         
         private void LoadRegionAreas(string filename)
@@ -781,215 +788,223 @@ namespace DDI.Conversion.CRM
 
                 context.SaveChanges();
             }
+            commonContext.Dispose();
+            context.Dispose();
         }
 
         private void LoadRelationshipTypes(string filename)
         {
-            DomainContext context = new DomainContext();            
-
-            List<Tuple<string,string,bool>> fixups = new List<Tuple<string, string, bool>>(); // 0:code, 1:reciprocal-code, 2:isMale
-            RelationshipType rtype;
-
-            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
 
-                while (importer.GetNextRow())
+                List<Tuple<string, string, bool>> fixups = new List<Tuple<string, string, bool>>(); // 0:code, 1:reciprocal-code, 2:isMale
+                RelationshipType rtype;
+
+                using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string code = importer.GetString(0);
-                    if (string.IsNullOrWhiteSpace(code) || code == "Code")
+                    int count = 1;
+
+                    while (importer.GetNextRow())
                     {
-                        continue;
-                    }
-
-                    string name = importer.GetString(1);
-                    string reciprocalMale = importer.GetString(2);
-                    string reciprocalFemale = importer.GetString(3);
-                    bool isSpouse = importer.GetBool(4);
-                    bool isForIndividuals = importer.GetBool(5);
-                    string category = importer.GetString(6);
-
-
-                    rtype = new RelationshipType();
-                    rtype.Code = code;
-                    rtype.Name = name;
-                    rtype.IsSpouse = isSpouse;
-                    rtype.ConstituentCategory = (isForIndividuals ? ConstituentCategory.Individual : ConstituentCategory.Both);
-                    rtype.IsActive = true;
-
-                    if (!string.IsNullOrWhiteSpace(reciprocalMale))
-                    {
-                        fixups.Add(new Tuple<string, string, bool>(code, reciprocalMale, true));
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(reciprocalFemale))
-                    {
-                        fixups.Add(new Tuple<string, string, bool>(code, reciprocalFemale, false));
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(category))
-                    {
-                        var relCat = context.CRM_RelationshipCategories.FirstOrDefault(p => p.Code == category);
-                        if (relCat == null)
+                        string code = importer.GetString(0);
+                        if (string.IsNullOrWhiteSpace(code) || code == "Code")
                         {
-                            importer.LogError($"Invalid relationship category {category} for {code}.");
+                            continue;
                         }
-                        else
+
+                        string name = importer.GetString(1);
+                        string reciprocalMale = importer.GetString(2);
+                        string reciprocalFemale = importer.GetString(3);
+                        bool isSpouse = importer.GetBool(4);
+                        bool isForIndividuals = importer.GetBool(5);
+                        string category = importer.GetString(6);
+
+
+                        rtype = new RelationshipType();
+                        rtype.Code = code;
+                        rtype.Name = name;
+                        rtype.IsSpouse = isSpouse;
+                        rtype.ConstituentCategory = (isForIndividuals ? ConstituentCategory.Individual : ConstituentCategory.Both);
+                        rtype.IsActive = true;
+
+                        if (!string.IsNullOrWhiteSpace(reciprocalMale))
                         {
-                            rtype.RelationshipCategoryId = relCat.Id;
-                        } 
+                            fixups.Add(new Tuple<string, string, bool>(code, reciprocalMale, true));
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(reciprocalFemale))
+                        {
+                            fixups.Add(new Tuple<string, string, bool>(code, reciprocalFemale, false));
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(category))
+                        {
+                            var relCat = context.CRM_RelationshipCategories.FirstOrDefault(p => p.Code == category);
+                            if (relCat == null)
+                            {
+                                importer.LogError($"Invalid relationship category {category} for {code}.");
+                            }
+                            else
+                            {
+                                rtype.RelationshipCategoryId = relCat.Id;
+                            }
+                        }
+
+                        context.CRM_RelationshipTypes.AddOrUpdate(p => p.Code, rtype);
+                        count++;
                     }
 
-                    context.CRM_RelationshipTypes.AddOrUpdate(p => p.Code, rtype);
-                    count++;
+                    context.SaveChanges();
+
+                    // Populate reciprocal relationships.
+
+                    foreach (var entry in fixups)
+                    {
+                        rtype = context.CRM_RelationshipTypes.Local.FirstOrDefault(p => p.Code == entry.Item1);
+                        if (rtype != null)
+                        {
+                            RelationshipType other = context.CRM_RelationshipTypes.Local.FirstOrDefault(p => p.Code == entry.Item2);
+                            if (other == null)
+                            {
+                                importer.LogError($"Invalid relationship type reciprocal ${entry.Item2} for ${entry.Item1}.");
+                            }
+                            else if (entry.Item3)
+                            {
+                                rtype.ReciprocalTypeMaleId = other.Id;
+                            }
+                            else
+                            {
+                                rtype.ReciprocalTypeFemaleId = other.Id;
+                            }
+                        }
+                    }
+
+                    context.SaveChanges();
                 }
-
-                context.SaveChanges();
-
-                // Populate reciprocal relationships.
-
-                foreach (var entry in fixups)
-                {
-                    rtype = context.CRM_RelationshipTypes.Local.FirstOrDefault(p => p.Code == entry.Item1);
-                    if (rtype != null)
-                    {
-                        RelationshipType other = context.CRM_RelationshipTypes.Local.FirstOrDefault(p => p.Code == entry.Item2);
-                        if (other == null)
-                        {
-                            importer.LogError($"Invalid relationship type reciprocal ${entry.Item2} for ${entry.Item1}.");
-                        }
-                        else if (entry.Item3)
-                        {
-                            rtype.ReciprocalTypeMaleId = other.Id;
-                        }
-                        else
-                        {
-                            rtype.ReciprocalTypeFemaleId = other.Id;
-                        }                            
-                    }
-                }
-
-                context.SaveChanges();
             }
         }
 
 
         private void LoadTags(string groupFilename, string tagFilename)
         {
-            DomainContext context = new DomainContext();
-            // Need to delete all tag related tables.
-            context.Database.ExecuteSqlCommand($"DELETE FROM TagConstituents"); // Currently no way to retrieve these many-to-many table names.
-            context.Database.ExecuteSqlCommand($"DELETE FROM TagConstituentTypes"); // Currently no way to retrieve these many-to-many table names.
-            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelper.GetTableName<Tag>()}");
-            context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelper.GetTableName<TagGroup>()}");
-
-            Dictionary<int, TagGroup> groupDict = new Dictionary<int, TagGroup>();
-
-            // Load tag groups.
-            using (var importer = CreateFileImporter(_crmDirectory, groupFilename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
+                // Need to delete all tag related tables.
+                context.Database.ExecuteSqlCommand($"DELETE FROM TagConstituents"); // Currently no way to retrieve these many-to-many table names.
+                context.Database.ExecuteSqlCommand($"DELETE FROM TagConstituentTypes"); // Currently no way to retrieve these many-to-many table names.
+                context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelper.GetTableName<Tag>()}");
+                context.Database.ExecuteSqlCommand($"DELETE FROM {EntityFrameworkHelper.GetTableName<TagGroup>()}");
 
-                while (importer.GetNextRow())
+                Dictionary<int, TagGroup> groupDict = new Dictionary<int, TagGroup>();
+
+                // Load tag groups.
+                using (var importer = CreateFileImporter(_crmDirectory, groupFilename, typeof(ConversionMethod)))
                 {
-                    string code = importer.GetString(0);
+                    int count = 1;
 
-                    string groupNumText = importer.GetString(0);
-                    int groupNum = 0;
-                    if (string.IsNullOrWhiteSpace(groupNumText) || !int.TryParse(groupNumText, out groupNum) || groupNum == 0)
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string code = importer.GetString(0);
+
+                        string groupNumText = importer.GetString(0);
+                        int groupNum = 0;
+                        if (string.IsNullOrWhiteSpace(groupNumText) || !int.TryParse(groupNumText, out groupNum) || groupNum == 0)
+                        {
+                            continue;
+                        }
+
+                        TagGroup grp = new TagGroup();
+                        grp.Name = importer.GetString(1);
+                        grp.Order = importer.GetInt(2);
+                        grp.IsActive = true;
+                        grp.TagSelectionType = (importer.GetBool(3) ? TagSelectionType.Single : TagSelectionType.Multiple);
+                        context.CRM_TagGroups.Add(grp);
+                        groupDict.Add(groupNum, grp);
+
+                        count++;
                     }
+                    context.SaveChanges();
 
-                    TagGroup grp = new TagGroup();
-                    grp.Name = importer.GetString(1);
-                    grp.Order = importer.GetInt(2);
-                    grp.IsActive = true;
-                    grp.TagSelectionType = (importer.GetBool(3) ? TagSelectionType.Single : TagSelectionType.Multiple);
-                    context.CRM_TagGroups.Add(grp);
-                    groupDict.Add(groupNum, grp);
-
-                    count++;
                 }
-                context.SaveChanges();
-
-            }
 
 
-            // Load Tags.
-            using (var importer = CreateFileImporter(_crmDirectory, tagFilename, typeof(ConversionMethod)))
-            {
-                while (importer.GetNextRow())
+                // Load Tags.
+                using (var importer = CreateFileImporter(_crmDirectory, tagFilename, typeof(ConversionMethod)))
                 {
-                    string code = importer.GetString(0);
-                    string name = importer.GetString(1);
-                    int order = importer.GetInt(2);
-                    int groupNum = importer.GetInt(3);
-                    bool isActive = importer.GetBool(8);
-
-                    if (string.IsNullOrWhiteSpace(code) || order == 0)
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string code = importer.GetString(0);
+                        string name = importer.GetString(1);
+                        int order = importer.GetInt(2);
+                        int groupNum = importer.GetInt(3);
+                        bool isActive = importer.GetBool(8);
+
+                        if (string.IsNullOrWhiteSpace(code) || order == 0)
+                        {
+                            continue;
+                        }
+
+                        Tag tag = new Tag();
+                        tag.Code = code;
+                        tag.Name = name;
+                        tag.IsActive = isActive;
+                        tag.Order = order;
+                        tag.TagGroup = groupDict.GetValueOrDefault(groupNum);
+
+                        context.CRM_Tags.Add(tag);
                     }
-
-                    Tag tag = new Tag();
-                    tag.Code = code;
-                    tag.Name = name;
-                    tag.IsActive = isActive;
-                    tag.Order = order;
-                    tag.TagGroup = groupDict.GetValueOrDefault(groupNum);
-
-                    context.CRM_Tags.Add(tag);
+                    context.SaveChanges();
                 }
-                context.SaveChanges();
             }
         }
 
         private void LoadPrefixes(string filename)
         {
-            DomainContext context = new DomainContext();
-
-            // Force loading of genders
-            var genders = context.CRM_Genders.ToList();
-
-            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                while (importer.GetNextRow())
+
+                // Force loading of genders
+                var genders = context.CRM_Genders.ToList();
+
+                using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string code = importer.GetString(0);
-                    string name = importer.GetString(1);
-                    string label = importer.GetString(2);
-                    string labelAbbreviation = importer.GetString(3);
-                    string salutation = importer.GetString(4);
-                    string gender = importer.GetString(5);
-                    bool showOnline = importer.GetBool(6);
-                    Gender g1 = null;
-
-                    if (!string.IsNullOrWhiteSpace(gender))
+                    while (importer.GetNextRow())
                     {
-                        g1 = genders.FirstOrDefault(p => p.Code == gender);
+                        string code = importer.GetString(0);
+                        string name = importer.GetString(1);
+                        string label = importer.GetString(2);
+                        string labelAbbreviation = importer.GetString(3);
+                        string salutation = importer.GetString(4);
+                        string gender = importer.GetString(5);
+                        bool showOnline = importer.GetBool(6);
+                        Gender g1 = null;
+
+                        if (!string.IsNullOrWhiteSpace(gender))
+                        {
+                            g1 = genders.FirstOrDefault(p => p.Code == gender);
+                        }
+
+                        Prefix prefix = new Prefix();
+
+                        prefix.Code = code;
+                        prefix.Name = name;
+                        prefix.LabelPrefix = label;
+                        prefix.LabelAbbreviation = labelAbbreviation;
+                        prefix.Salutation = salutation;
+                        prefix.Gender = g1;
+                        prefix.GenderId = g1?.Id;
+                        prefix.ShowOnline = showOnline;
+                        prefix.IsActive = true;
+
+                        context.CRM_Prefixes.AddOrUpdate(
+                            p => p.Code,
+                            prefix);
                     }
-                                        
-                    Prefix prefix = new Prefix();
 
-                    prefix.Code = code;
-                    prefix.Name = name;
-                    prefix.LabelPrefix = label;
-                    prefix.LabelAbbreviation = labelAbbreviation;
-                    prefix.Salutation = salutation;
-                    prefix.Gender = g1;
-                    prefix.GenderId = g1?.Id;
-                    prefix.ShowOnline = showOnline;
-                    prefix.IsActive = true;
-
-                    context.CRM_Prefixes.AddOrUpdate(
-                        p => p.Code,
-                        prefix);
                 }
 
+                context.SaveChanges();
             }
-
-            context.SaveChanges();
         }
 
         private void LoadEntityNumbers(string filename)

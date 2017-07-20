@@ -1,10 +1,15 @@
 ﻿
+using System.ComponentModel;
+
 namespace DDI.Shared.Enums.CRM
 {
     public enum TagSelectionType
-	{
-		Multiple = 0,
-		Single = 1,
+    {
+        [Description("Multiple")]
+        Multiple = 0,
+
+        [Description("Single")]
+        Single = 1,
 	}
 
 }

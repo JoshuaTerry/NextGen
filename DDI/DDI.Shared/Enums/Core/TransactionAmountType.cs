@@ -1,20 +1,34 @@
-﻿namespace DDI.Shared.Enums.Core
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DDI.Shared.Enums.Core
 {
     /// <summary>
     /// For an EntityTransaction, describes how the transaction amount relates to the entity.
     /// </summary>
     public enum TransactionAmountType
     {
+        [Description("None")]
         None = 0,
 
         // Investments: 1 - 199
 
+        [Description("Investment Balance")]
         InvestmentBalance = 1,
+
+        [Description("Investment Interest")]
         InvestmentInterest = 2,
 
         // Loans: 200-499
 
+        [Description("Loan Principal")]
         LoanPrincipal = 200,
+
+        [Description("Loan Interest")]
         LoanInterest = 201,
 
         // Portfolio: 600 - 699
@@ -27,7 +41,10 @@
 
         // Cash Receipts: 40000 - 49999
 
+        [Description("Receipt Processed")]
         ReceiptProcessed = 40000,
+
+        [Description("Receipt Reversed")]
         ReceiptReversed = 40001
 
         // Cash Disbursements: 30000 - 39999

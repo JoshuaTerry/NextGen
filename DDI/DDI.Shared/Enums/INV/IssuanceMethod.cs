@@ -13,7 +13,5 @@ namespace DDI.Shared.Enums.INV
 
         [Description("Safekeep Note")]
         SafekeepNote = 2
-
     }
-
 }

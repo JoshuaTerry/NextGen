@@ -97,7 +97,7 @@ function CreateAddFileUploadLink(container, gridcontainername, entityId, noteId,
                 NoteId: noteId
             }
 
-            MakeServiceCall("Post", 'attachments', JSON.stringify(attachment), function(data){
+            MakeServiceCall("Post", 'attachments', attachment, function(data){
 
                 CloseModal($('.fileuploadmodal'))
                 $(container).empty();

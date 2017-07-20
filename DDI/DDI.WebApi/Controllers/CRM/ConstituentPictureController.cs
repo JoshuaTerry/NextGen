@@ -19,7 +19,7 @@ namespace DDI.WebApi.Controllers.CRM
         {
             try
             {
-                return Ok(Service.GetAllWhereExpression(c => c.ConstituentId == constituentId));
+                return Ok(Service.GetWhereExpression(c => c.ConstituentId == constituentId));
             }
             catch(Exception ex)
             {
@@ -31,7 +31,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPost]
         [Route("api/v1/constituentpicture")]
-        public IHttpActionResult Post([FromBody] ConstituentPicture item)
+        public override IHttpActionResult Post([FromBody] ConstituentPicture item)
         {
             var pics = Service.GetAllWhereExpression(c => c.ConstituentId == item.ConstituentId).Data;
 
@@ -46,7 +46,7 @@ namespace DDI.WebApi.Controllers.CRM
         [Authorize(Roles = Permissions.CRM_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/constituentpicture/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }

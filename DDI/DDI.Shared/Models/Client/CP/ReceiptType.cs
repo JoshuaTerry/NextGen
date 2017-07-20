@@ -22,5 +22,7 @@ namespace DDI.Shared.Models.Client.CP
         public string Name { get; set; }
 
         public ReceiptCategory Category { get; set; }
+
+        public override string DisplayName => Name;
     }
 }

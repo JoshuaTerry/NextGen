@@ -82,6 +82,7 @@ namespace DDI.Shared.Models.Client.CP
 
         public bool IsActive { get; set; }
 
+        public override string DisplayName => $"{Code}: {Name}";
 
     }
 }

@@ -59,7 +59,7 @@ function UploadFiles(callback) {
         resizable: false
     });
 
-    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload', callback);
+    InitializeFileUploader(modal, WEB_API_ADDRESS + 'filestorage/upload', callback);
 
 }
 
@@ -316,9 +316,9 @@ function DisplayConstituentPicture() {
         crossDomain: true,
         success: function (data) {
 
-            if (data.Data && data.Data[0]) {
+            if (data.Data) {
 
-                GetFile(data.Data[0].FileId, function (item) {
+                GetFile(data.Data.FileId, function (item) {
 
                     $(img).attr('src', 'data:image/jpg;base64,' + item.Data).appendTo($('.constituentpic'));
 
@@ -397,6 +397,7 @@ function DisplayConstituentType() {
 
     if (currentEntity.ConstituentType.Category === 0) {
         $('.organizationConstituent').hide();
+        $('.OrganizationSettingsSection').hide();
         $('.individualConstituent').show();
         $('.DBASettingsSection').hide();
     } else {
@@ -422,6 +423,7 @@ function GetConstituentPrimaryAddress() {
 
             currentaddress = data.Data;
 
+            $('.Address').empty();
                   
             var curadd = currentaddress.split('\n');
 
@@ -547,7 +549,7 @@ function LoadPaymentPreferencesTable() {
             }
     ];
 
-    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'constituents/' + currentEntity.Id + '/paymentmethods?fields=Id,Description,RoutingNumber,BankAccount,AccountType', 'paymentmethods')
+    LoadGrid('.paymentpreferencesgridcontainer', 'paymentpreferencesgrid', columns, 'constituents/' + currentEntity.Id + '/paymentmethods?fields=Id,Description,RoutingNumber,BankAccount,AccountType', 'paymentmethods/', null, 'pp-', '.paymentpreferencemodal', '.paymentpreferencemodal', 400, true, false, false, null);
 }
 
 /* End Payment Preference Section */
@@ -650,9 +652,9 @@ function AddressGridComplete() {
 
         });
 
-        $('.saveaddress').unbind('click');
+        $('.savebutton').unbind('click');
 
-        $('.saveaddress').click(function () {
+        $('.savebutton').click(function () {
 
             var item = {
                 ConstituentId: currentEntity.Id,
@@ -687,7 +689,11 @@ function AddressGridComplete() {
 
                 LoadAddressesGrid();
 
-            }, null);
+            }, function () {
+
+                DisplaySuccessMessage('Failure', 'Address not saved.');
+
+            });
 
         });
 
@@ -780,9 +786,9 @@ function EditAddressModal(id) {
 
     });
 
-    $('.saveaddress').unbind('click');
+    $('.savebutton').unbind('click');
 
-    $('.saveaddress').click(function () {
+    $('.savebutton').click(function () {
 
         // Get the changed fields from currentaddress and put into new array.
         var fields = GetEditedAddressFields();
@@ -1024,7 +1030,7 @@ function NewRelationshipModal() {
 
 function PrePopulateNewRelationshipModal(modal) {
     $(modal).find('.rs-Constituent2Id').val(currentEntity.Id);
-    $(modal).find('.rs-Constituent2Name').val(currentEntity.FormattedName);
+    $(modal).find('.rs-Constituent2Information').val(currentEntity.FormattedName);
 }
 
 function LoadRelationshipData(data, modal) {

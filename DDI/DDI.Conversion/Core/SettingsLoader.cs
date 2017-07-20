@@ -47,121 +47,126 @@ namespace DDI.Conversion.Core
 
         private void LoadLegacyCodes(string filename)
         {
-            DomainContext context = new DomainContext();
-            int createdByField = 9;
-            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                while (importer.GetNextRow())
+                int createdByField = 9;
+                using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
                 {
-                    int codeSet = importer.GetInt(0);
-                    string code = importer.GetString(1);
-                    string description = importer.GetString(2);
-                    int int1 = importer.GetInt(3);
-                    int int2 = importer.GetInt(4);
-                    string text1 = importer.GetString(5);
-                    string text2 = importer.GetString(6);
-                    bool isActive = importer.GetBool(8);
-                    IAuditableEntity entity;
-
-                    switch (codeSet)
+                    while (importer.GetNextRow())
                     {
-                        case NOTE_CODE_SET:
-                            entity = new NoteCode { Code = code, Name = description, IsActive = isActive };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.NoteCodes.AddOrUpdate(p => p.Code, (NoteCode)entity);
-                            break;
-                        case NOTE_TOPIC_SET:
-                            entity = new NoteTopic { Code = code, Name = description, IsActive = isActive };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.NoteTopics.AddOrUpdate(p => p.Code, (NoteTopic)entity);
-                            break;
-                        case NOTE_CONTACT_METHOD_SET:
-                            entity = new NoteContactMethod { Code = code, Name = description, IsActive = isActive };
-                            ImportCreatedModifiedInfo(entity, importer, createdByField);
-                            context.NoteContactMethods.AddOrUpdate(prop => prop.Code, (NoteContactMethod)entity);                                
-                            break;
+                        int codeSet = importer.GetInt(0);
+                        string code = importer.GetString(1);
+                        string description = importer.GetString(2);
+                        int int1 = importer.GetInt(3);
+                        int int2 = importer.GetInt(4);
+                        string text1 = importer.GetString(5);
+                        string text2 = importer.GetString(6);
+                        bool isActive = importer.GetBool(8);
+                        IAuditableEntity entity;
+
+                        switch (codeSet)
+                        {
+                            case NOTE_CODE_SET:
+                                entity = new NoteCode { Code = code, Name = description, IsActive = isActive };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.NoteCodes.AddOrUpdate(p => p.Code, (NoteCode)entity);
+                                break;
+                            case NOTE_TOPIC_SET:
+                                entity = new NoteTopic { Code = code, Name = description, IsActive = isActive };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.NoteTopics.AddOrUpdate(p => p.Code, (NoteTopic)entity);
+                                break;
+                            case NOTE_CONTACT_METHOD_SET:
+                                entity = new NoteContactMethod { Code = code, Name = description, IsActive = isActive };
+                                ImportCreatedModifiedInfo(entity, importer, createdByField);
+                                context.NoteContactMethods.AddOrUpdate(prop => prop.Code, (NoteContactMethod)entity);
+                                break;
+                        }
                     }
                 }
+                context.SaveChanges();
             }
-            context.SaveChanges();
         }
 
         private void LoadNoteCategories(string filename)
         {
-            DomainContext context = new DomainContext();
-            using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
-
-                while (importer.GetNextRow())
+                using (var importer = CreateFileImporter(_crmDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string screenLabel = importer.GetString(0);
-                    string description = importer.GetString(1);
+                    int count = 1;
 
-                    if (string.IsNullOrWhiteSpace(screenLabel))
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string screenLabel = importer.GetString(0);
+                        string description = importer.GetString(1);
+
+                        if (string.IsNullOrWhiteSpace(screenLabel))
+                        {
+                            continue;
+                        }
+
+                        var noteCategory = new NoteCategory()
+                        {
+                            Label = screenLabel,
+                            Name = description
+                        };
+
+                        ImportCreatedModifiedInfo(noteCategory, importer, 3);
+                        context.NoteCategories.AddOrUpdate(p => p.Label, noteCategory);
+
+                        count++;
                     }
-
-                    var noteCategory = new NoteCategory()
-                    {
-                        Label = screenLabel,
-                        Name = description
-                    };
-
-                    ImportCreatedModifiedInfo(noteCategory, importer, 3);
-                    context.NoteCategories.AddOrUpdate(p => p.Label, noteCategory);
-
-                    count++;
+                    context.SaveChanges();
                 }
-                context.SaveChanges();
             }
         }
 
         private void LoadUsers(string filename)
         {
-
-            var context = new DomainContext();
-
-            using (var importer = CreateFileImporter(_ddiDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
 
-                while (importer.GetNextRow())
+                using (var importer = CreateFileImporter(_ddiDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string userName = importer.GetString(0);
+                    int count = 1;
 
-                    if (string.IsNullOrWhiteSpace(userName) || userName.StartsWith("#"))
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string userName = importer.GetString(0);
+
+                        if (string.IsNullOrWhiteSpace(userName) || userName.StartsWith("#"))
+                        {
+                            continue;
+                        }
+
+                        string fullName = importer.GetString(1);
+                        bool isActive = importer.GetBool(2);
+                        string createdBy = importer.GetString(3);
+                        DateTime? createdOn = importer.GetDateTime(4);
+                        string modifiedBy = importer.GetString(5);
+                        DateTime? modifiedOn = importer.GetDateTime(6);
+                        DateTime? deletedOn = importer.GetDateTime(7);
+                        string email = importer.GetString(8);
+                        DateTime? lastLogin = importer.GetDateTime(9);
+
+                        User user = new User()
+                        {
+                            UserName = userName,
+                            Email = email,
+                            FullName = fullName,
+                            IsActive = isActive,
+                            LastLogin = lastLogin,
+                            CreatedBy = createdBy,
+                            CreatedOn = createdOn,
+                            LastModifiedBy = modifiedBy
+                        };
+                        context.Users.AddOrUpdate(p => p.UserName, user);
+
+                        count++;
                     }
-
-                    string fullName = importer.GetString(1);
-                    bool isActive = importer.GetBool(2);
-                    string createdBy = importer.GetString(3);
-                    DateTime? createdOn = importer.GetDateTime(4);
-                    string modifiedBy = importer.GetString(5);
-                    DateTime? modifiedOn = importer.GetDateTime(6);
-                    DateTime? deletedOn = importer.GetDateTime(7);
-                    string email = importer.GetString(8);
-                    DateTime? lastLogin = importer.GetDateTime(9);
-
-                    User user = new User()
-                    {
-                        UserName = userName,
-                        Email = email,
-                        FullName = fullName,
-                        IsActive = isActive,
-                        LastLogin = lastLogin,
-                        CreatedBy = createdBy,
-                        CreatedOn = createdOn,
-                        LastModifiedBy = modifiedBy
-                    };
-                    context.Users.AddOrUpdate(p => p.UserName, user);
-                    
-                    count++;
+                    context.SaveChanges();
                 }
-                context.SaveChanges();
             }
         }
 

@@ -26,14 +26,14 @@ namespace DDI.WebApi.Controllers.CP
 
         [HttpGet]
         [Route("api/v1/paymentmethods")]
-        public IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = SearchParameters.LimitMax, int? offset = SearchParameters.OffsetDefault, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
 
         [HttpGet]
         [Route("api/v1/paymentmethods/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
@@ -41,7 +41,7 @@ namespace DDI.WebApi.Controllers.CP
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPost]
         [Route("api/v1/paymentmethods")]
-        public IHttpActionResult Post([FromBody] PaymentMethod entityToSave)
+        public override IHttpActionResult Post([FromBody] PaymentMethod entityToSave)
         {
             return base.Post(entityToSave);
         }
@@ -49,7 +49,7 @@ namespace DDI.WebApi.Controllers.CP
         [Authorize(Roles = Permissions.CRM_Settings_ReadWrite + "," + Permissions.Settings_ReadWrite)]
         [HttpPatch]
         [Route("api/v1/paymentmethods/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

@@ -9,13 +9,14 @@ using System.Web.Http;
 
 namespace DDI.WebApi.Controllers.General
 {
+    [Authorize]
     public class BusinessUnitController : GenericController<BusinessUnit>
     {
         public BusinessUnitController(IService<BusinessUnit> service) : base(service) { }
 
         [HttpGet]
         [Route("api/v1/businessunits")]
-        public IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
+        public override IHttpActionResult GetAll(int? limit = 1000, int? offset = 0, string orderBy = OrderByProperties.DisplayName, string fields = null)
         {
             return base.GetAll(limit, offset, orderBy, fields);
         }
@@ -32,21 +33,21 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpGet]
         [Route("api/v1/businessunits/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
 
         [HttpPost]
         [Route("api/v1/businessunits")]
-        public IHttpActionResult Post([FromBody] BusinessUnit entityToSave)
+        public override IHttpActionResult Post([FromBody] BusinessUnit entityToSave)
         {
             return base.Post(entityToSave);
         }
 
         [HttpPatch]
         [Route("api/v1/businessunits/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject entityChanges)
+        public override IHttpActionResult Patch(Guid id, JObject entityChanges)
         {
             return base.Patch(id, entityChanges);
         }

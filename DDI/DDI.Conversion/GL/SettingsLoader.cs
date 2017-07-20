@@ -52,384 +52,398 @@ namespace DDI.Conversion.GL
 
         private void LoadLegacyCodes(string filename)
         {
-            DomainContext context = new DomainContext();
-            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                while (importer.GetNextRow())
+                using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
                 {
-                    int codeSet = importer.GetInt(0);
-                    string code = importer.GetString(1);
-                    string description = importer.GetString(2);
-                    int int1 = importer.GetInt(3);
-                    int int2 = importer.GetInt(4);
-                    string text1 = importer.GetString(5);
-                    string text2 = importer.GetString(6);
-
-                    /* THIS CODE CAN BE UNCOMMENTED & MODIFIED IF WE NEED TO LOAD ANY LEGACY CODE VALUES...
-                     * 
-                    switch (codeSet)
+                    while (importer.GetNextRow())
                     {
-                        case EFT_FORMAT_SET:
-                            context.CP_EFTFormats.AddOrUpdate(
-                                prop => prop.Code,
-                                new EFTFormat { Code = code, Name = description, IsActive = true });
-                            break;
+                        int codeSet = importer.GetInt(0);
+                        string code = importer.GetString(1);
+                        string description = importer.GetString(2);
+                        int int1 = importer.GetInt(3);
+                        int int2 = importer.GetInt(4);
+                        string text1 = importer.GetString(5);
+                        string text2 = importer.GetString(6);
+
+                        /* THIS CODE CAN BE UNCOMMENTED & MODIFIED IF WE NEED TO LOAD ANY LEGACY CODE VALUES...
+                         * 
+                        switch (codeSet)
+                        {
+                            case EFT_FORMAT_SET:
+                                context.CP_EFTFormats.AddOrUpdate(
+                                    prop => prop.Code,
+                                    new EFTFormat { Code = code, Name = description, IsActive = true });
+                                break;
+                        }
+                        */
                     }
-                    */
                 }
+                context.SaveChanges();
             }
-            context.SaveChanges();
         } // LoadLegacyCodes
 
         private void LoadBusinessUnits(string filename)
         {
-            DomainContext context = new DomainContext();
-
-            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
 
-                while (importer.GetNextRow())
+                using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string code = importer.GetString(0, 16);
-                    if (string.IsNullOrWhiteSpace(code))
+                    int count = 1;
+
+                    while (importer.GetNextRow())
                     {
-                        continue;
-                    }
-                    
-                    string name = importer.GetString(1, 128);
-                    BusinessUnitType type = importer.GetEnum<BusinessUnitType>(2);
-
-                    context.GL_BusinessUnits.AddOrUpdate(p => p.Code,
-                        new BusinessUnit()
+                        string code = importer.GetString(0, 16);
+                        if (string.IsNullOrWhiteSpace(code))
                         {
-                            Code = code,
-                            Name = name,
-                            BusinessUnitType = type
-                        });
-                    count++;
-                }
+                            continue;
+                        }
 
-                context.SaveChanges();
+                        string name = importer.GetString(1, 128);
+                        BusinessUnitType type = importer.GetEnum<BusinessUnitType>(2);
+
+                        context.GL_BusinessUnits.AddOrUpdate(p => p.Code,
+                            new BusinessUnit()
+                            {
+                                Code = code,
+                                Name = name,
+                                BusinessUnitType = type
+                            });
+                        count++;
+                    }
+
+                    context.SaveChanges();
+                }
             }
         }
 
         private void LoadBusinessUnitUsers(string filename)
         {
-            DomainContext context = new DomainContext();
-
-            IList<BusinessUnit> businessUnits = LoadEntities(context.GL_BusinessUnits);
-            IList<User> users = LoadEntities(context.Users, nameof(User.DefaultBusinessUnit));
-
-            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
 
-                while (importer.GetNextRow())
+                IList<BusinessUnit> businessUnits = LoadEntities(context.GL_BusinessUnits);
+                IList<User> users = LoadEntities(context.Users, nameof(User.DefaultBusinessUnit));
+
+                using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string code = importer.GetString(0);
-                    if (string.IsNullOrWhiteSpace(code))
+                    int count = 1;
+
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string code = importer.GetString(0);
+                        if (string.IsNullOrWhiteSpace(code))
+                        {
+                            continue;
+                        }
+
+                        BusinessUnit bu = businessUnits.FirstOrDefault(p => p.Code == code);
+                        if (bu == null)
+                        {
+                            importer.LogError($"Invalid business unit code \"{code}\".");
+                            continue;
+                        }
+
+                        string username = importer.GetString(1);
+                        User user = GetUserByName(users, username);
+                        if (user == null)
+                        {
+                            importer.LogError($"Invalid user name \"{username}\".");
+                            continue;
+                        }
+
+                        bool isDefault = importer.GetBool(2);
+
+                        if (!user.BusinessUnits.Any(p => p.Id == bu.Id))
+                        {
+                            user.BusinessUnits.Add(bu);
+                        }
+
+                        if (isDefault)
+                        {
+                            user.DefaultBusinessUnit = bu;
+                        }
+
+                        count++;
                     }
 
-                    BusinessUnit bu = businessUnits.FirstOrDefault(p => p.Code == code);
-                    if (bu == null)
-                    {
-                        importer.LogError($"Invalid business unit code \"{code}\".");
-                        continue;
-                    }
-                    
-                    string username = importer.GetString(1);
-                    User user = GetUserByName(users, username);
-                    if (user == null)
-                    {
-                        importer.LogError($"Invalid user name \"{username}\".");
-                        continue;
-                    }
-
-                    bool isDefault = importer.GetBool(2);
-
-                    if (!user.BusinessUnits.Any(p => p.Id == bu.Id))
-                    {
-                        user.BusinessUnits.Add(bu);
-                    }
-
-                    if (isDefault)
-                    {
-                        user.DefaultBusinessUnit = bu;
-                    }
-
-                    count++;
+                    context.SaveChanges();
                 }
-
-                context.SaveChanges();
             }
         }
 
         private void LoadLedgers(string filename)
         {
-            DomainContext context = new DomainContext();
-
-            FileExport<LegacyToID> companyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.GL_BusinessUnitIdMappingFile), false, true);
-            FileExport<LegacyToID> ledgerIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.GL_LedgerIdMappingFile), false, true);
-
-            var businessUnits = LoadEntities(context.GL_BusinessUnits);
-
-            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
-                Ledger orgLedger = null;
 
-                while (importer.GetNextRow())
+                FileExport<LegacyToID> companyIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.GL_BusinessUnitIdMappingFile), false, true);
+                FileExport<LegacyToID> ledgerIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.GL_LedgerIdMappingFile), false, true);
+
+                var businessUnits = LoadEntities(context.GL_BusinessUnits);
+
+                using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string code = importer.GetString(0, 16);
-                    if (string.IsNullOrWhiteSpace(code))
+                    int count = 1;
+                    Ledger orgLedger = null;
+
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string code = importer.GetString(0, 16);
+                        if (string.IsNullOrWhiteSpace(code))
+                        {
+                            continue;
+                        }
+
+                        BusinessUnit bu = businessUnits.FirstOrDefault(p => p.Code == code);
+                        if (bu == null)
+                        {
+                            importer.LogError($"Invalid business unit code \"{code}\".");
+                            continue;
+                        }
+
+                        int companyId = importer.GetInt(15);
+                        companyIdFile.AddRow(new LegacyToID(companyId, bu.Id));
+
+                        Ledger ledger = context.GL_Ledgers.Include(p => p.BusinessUnit)
+                                                          .Include(p => p.OrgLedger)
+                                                          .Include(p => p.DefaultFiscalYear)
+                                                          .FirstOrDefault(p => p.Code == code);
+                        if (ledger == null)
+                        {
+                            ledger = new Ledger();
+                            ledger.AssignPrimaryKey();
+                            ledger.BusinessUnit = bu;
+                            ledger.Code = code;
+                            context.GL_Ledgers.Add(ledger);
+                        }
+
+                        ledger.OrgLedger = orgLedger;
+                        ledger.Name = importer.GetString(1, 128);
+                        ledger.Status = importer.GetEnum<LedgerStatus>(2);
+                        ledger.NumberOfSegments = importer.GetInt(3);
+                        ledger.FixedBudgetName = importer.GetString(4, 40);
+                        ledger.WorkingBudgetName = importer.GetString(5, 40);
+                        ledger.WhatIfBudgetName = importer.GetString(6, 40);
+                        ledger.PriorPeriodPostingMode = importer.GetEnum<PriorPeriodPostingMode>(9);
+                        ledger.CapitalizeHeaders = importer.GetBool(10);
+                        ledger.ApproveJournals = importer.GetBool(14);
+                        ledger.AccountGroupLevels = importer.GetInt(16);
+                        ledger.AccountGroup1Title = importer.GetString(17, 40);
+                        ledger.AccountGroup2Title = importer.GetString(18, 40);
+                        ledger.AccountGroup3Title = importer.GetString(19, 40);
+                        ledger.AccountGroup4Title = importer.GetString(20, 40);
+                        ledger.PostAutomatically = importer.GetBool(21);
+                        ledger.CopyCOAChanges = importer.GetBool(22);
+                        ledger.IsParent = importer.GetBool(23);
+                        ledger.FundAccounting = importer.GetBool(24);
+
+                        if (ledger.BusinessUnit.BusinessUnitType == BusinessUnitType.Organization)
+                        {
+                            orgLedger = ledger;
+                        }
+
+                        ledgerIdFile.AddRow(new LegacyToID(companyId, ledger.Id));
+
+                        count++;
                     }
 
-                    BusinessUnit bu = businessUnits.FirstOrDefault(p => p.Code == code);
-                    if (bu == null)
-                    {
-                        importer.LogError($"Invalid business unit code \"{code}\".");
-                        continue;
-                    }
-
-                    int companyId = importer.GetInt(15);
-                    companyIdFile.AddRow(new LegacyToID(companyId, bu.Id));
-
-                    Ledger ledger = context.GL_Ledgers.Include(p => p.BusinessUnit)
-                                                      .Include(p => p.OrgLedger)
-                                                      .Include(p => p.DefaultFiscalYear)
-                                                      .FirstOrDefault(p => p.Code == code);
-                    if (ledger == null)
-                    {
-                        ledger = new Ledger();
-                        ledger.AssignPrimaryKey();
-                        ledger.BusinessUnit = bu;
-                        ledger.Code = code;
-                        context.GL_Ledgers.Add(ledger);
-                    }
-
-                    ledger.OrgLedger = orgLedger;
-                    ledger.Name = importer.GetString(1, 128);
-                    ledger.Status = importer.GetEnum<LedgerStatus>(2);
-                    ledger.NumberOfSegments = importer.GetInt(3);
-                    ledger.FixedBudgetName = importer.GetString(4, 40);
-                    ledger.WorkingBudgetName = importer.GetString(5, 40);
-                    ledger.WhatIfBudgetName = importer.GetString(6, 40);
-                    ledger.PriorPeriodPostingMode = importer.GetEnum<PriorPeriodPostingMode>(9);
-                    ledger.CapitalizeHeaders = importer.GetBool(10);
-                    ledger.ApproveJournals = importer.GetBool(14);
-                    ledger.AccountGroupLevels = importer.GetInt(16);
-                    ledger.AccountGroup1Title = importer.GetString(17, 40);
-                    ledger.AccountGroup2Title = importer.GetString(18, 40);
-                    ledger.AccountGroup3Title = importer.GetString(19, 40);
-                    ledger.AccountGroup4Title = importer.GetString(20, 40);
-                    ledger.PostAutomatically = importer.GetBool(21);
-                    ledger.CopyCOAChanges = importer.GetBool(22);
-                    ledger.IsParent = importer.GetBool(23);
-                    ledger.FundAccounting = importer.GetBool(24);
-
-                    if (ledger.BusinessUnit.BusinessUnitType == BusinessUnitType.Organization)
-                    {
-                        orgLedger = ledger;
-                    }
-
-                    ledgerIdFile.AddRow(new LegacyToID(companyId, ledger.Id));
-
-                    count++;
+                    context.SaveChanges();
                 }
 
-                context.SaveChanges();
+                companyIdFile.Dispose();
+                ledgerIdFile.Dispose();
             }
-
-            companyIdFile.Dispose();
-            ledgerIdFile.Dispose();
         }
 
         private void LoadFiscalYears(string filename)
         {
-            DomainContext context = new DomainContext();
-            FileExport<LegacyToID> yearIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.GL_FiscalYearIdMappingFile), false, true);
-
-            LoadLedgerIds();
-            var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.DefaultFiscalYear));
-
-            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
+                FileExport<LegacyToID> yearIdFile = new FileExport<LegacyToID>(Path.Combine(_outputDirectory, OutputFile.GL_FiscalYearIdMappingFile), false, true);
 
-                while (importer.GetNextRow())
+                LoadLedgerIds();
+                var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.DefaultFiscalYear));
+
+                using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string code = importer.GetString(0);
-                    if (string.IsNullOrWhiteSpace(code))
+                    int count = 1;
+
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string code = importer.GetString(0);
+                        if (string.IsNullOrWhiteSpace(code))
+                        {
+                            continue;
+                        }
+
+                        int cid = 0;
+                        Guid ledgerId;
+
+                        if (!int.TryParse(code, out cid) || !_ledgerIds.TryGetValue(cid, out ledgerId))
+                        {
+                            importer.LogError($"Invalid legacy company ID \"{code}\"");
+                            continue;
+                        }
+
+                        Ledger ledger = ledgers.FirstOrDefault(p => p.Id == ledgerId);
+
+                        string yearName = importer.GetString(1, 16);
+
+                        FiscalYear year = context.GL_FiscalYears.FirstOrDefault(p => p.LedgerId == ledgerId && p.Name == yearName);
+                        if (year == null)
+                        {
+                            year = new FiscalYear();
+                            year.AssignPrimaryKey();
+                            context.GL_FiscalYears.Add(year);
+                            year.LedgerId = ledgerId;
+                            year.Name = yearName;
+                        }
+
+                        year.StartDate = importer.GetDate(2);
+                        year.EndDate = importer.GetDate(3);
+                        year.NumberOfPeriods = importer.GetInt(4);
+                        year.Status = importer.GetEnum<FiscalYearStatus>(5);
+                        year.CurrentPeriodNumber = importer.GetInt(8);
+
+                        if (importer.GetBool(9))
+                        {
+                            ledger.DefaultFiscalYear = year;
+                        }
+
+                        ImportCreatedModifiedInfo(year, importer, 10);
+
+                        yearIdFile.AddRow(new LegacyToID($"{code},{yearName}", year.Id));
+
+                        count++;
                     }
 
-                    int cid = 0;
-                    Guid ledgerId;
-
-                    if (!int.TryParse(code, out cid) || !_ledgerIds.TryGetValue(cid, out ledgerId))
-                    {
-                        importer.LogError($"Invalid legacy company ID \"{code}\"");
-                        continue;
-                    }
-
-                    Ledger ledger = ledgers.FirstOrDefault(p => p.Id == ledgerId);
-
-                    string yearName = importer.GetString(1, 16);
-
-                    FiscalYear year = context.GL_FiscalYears.FirstOrDefault(p => p.LedgerId == ledgerId && p.Name == yearName);
-                    if (year == null)
-                    {
-                        year = new FiscalYear();
-                        year.AssignPrimaryKey();
-                        context.GL_FiscalYears.Add(year);
-                        year.LedgerId = ledgerId;
-                        year.Name = yearName;
-                    }
-
-                    year.StartDate = importer.GetDate(2);
-                    year.EndDate = importer.GetDate(3);
-                    year.NumberOfPeriods = importer.GetInt(4);
-                    year.Status = importer.GetEnum<FiscalYearStatus>(5);
-                    year.CurrentPeriodNumber = importer.GetInt(8);
-
-                    if (importer.GetBool(9))
-                    {
-                        ledger.DefaultFiscalYear = year;
-                    }
-
-                    ImportCreatedModifiedInfo(year, importer, 10);
-
-                    yearIdFile.AddRow(new LegacyToID($"{code},{yearName}", year.Id));
-
-                    count++;        
+                    context.SaveChanges();
                 }
 
-                context.SaveChanges();
+                yearIdFile.Dispose();
             }
-
-            yearIdFile.Dispose();
         }
 
         private void LoadFiscalPeriods(string filename)
         {
-            DomainContext context = new DomainContext();
-
-            LoadLedgerIds();
-            var years = LoadEntities(context.GL_FiscalYears, nameof(FiscalYear.FiscalPeriods));
-            var periods = LoadEntities(context.GL_FiscalPeriods, nameof(FiscalPeriod.FiscalYear));
-
-            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
 
-                while (importer.GetNextRow())
+                LoadLedgerIds();
+                var years = LoadEntities(context.GL_FiscalYears, nameof(FiscalYear.FiscalPeriods));
+                var periods = LoadEntities(context.GL_FiscalPeriods, nameof(FiscalPeriod.FiscalYear));
+
+                using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
                 {
-                    string code = importer.GetString(0);
-                    if (string.IsNullOrWhiteSpace(code))
+                    int count = 1;
+
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        string code = importer.GetString(0);
+                        if (string.IsNullOrWhiteSpace(code))
+                        {
+                            continue;
+                        }
+
+                        int cid = 0;
+                        Guid ledgerId;
+
+                        if (!int.TryParse(code, out cid) || !_ledgerIds.TryGetValue(cid, out ledgerId))
+                        {
+                            importer.LogError($"Invalid legacy company ID \"{code}\"");
+                            continue;
+                        }
+
+                        string yearName = importer.GetString(1);
+
+                        FiscalYear year = years.FirstOrDefault(p => p.LedgerId == ledgerId && p.Name == yearName);
+                        if (year == null)
+                        {
+                            importer.LogError($"No fiscal year \"{yearName}\" found for company ID \"{code}\".");
+                        }
+
+                        int periodNumber = importer.GetInt(2);
+
+                        FiscalPeriod period = periods.FirstOrDefault(p => p.FiscalYearId == year.Id && p.PeriodNumber == periodNumber);
+                        if (period == null)
+                        {
+                            period = new FiscalPeriod();
+                            context.GL_FiscalPeriods.Add(period);
+                            year.FiscalPeriods.Add(period);
+                            period.PeriodNumber = periodNumber;
+                        }
+
+                        period.StartDate = importer.GetDate(3);
+                        period.EndDate = importer.GetDate(4);
+                        period.IsAdjustmentPeriod = importer.GetBool(5);
+                        period.Status = importer.GetEnum<FiscalPeriodStatus>(6);
+
+                        count++;
                     }
 
-                    int cid = 0;
-                    Guid ledgerId;
-
-                    if (!int.TryParse(code, out cid) || !_ledgerIds.TryGetValue(cid, out ledgerId))
-                    {
-                        importer.LogError($"Invalid legacy company ID \"{code}\"");
-                        continue;
-                    }
-
-                    string yearName = importer.GetString(1);
-
-                    FiscalYear year = years.FirstOrDefault(p => p.LedgerId == ledgerId && p.Name == yearName);
-                    if (year == null)
-                    {
-                        importer.LogError($"No fiscal year \"{yearName}\" found for company ID \"{code}\".");
-                    }
-
-                    int periodNumber = importer.GetInt(2);
-
-                    FiscalPeriod period = periods.FirstOrDefault(p => p.FiscalYearId == year.Id && p.PeriodNumber == periodNumber);
-                    if (period == null)
-                    {
-                        period = new FiscalPeriod();
-                        context.GL_FiscalPeriods.Add(period);
-                        year.FiscalPeriods.Add(period);
-                        period.PeriodNumber = periodNumber;
-                    }
-
-                    period.StartDate = importer.GetDate(3);
-                    period.EndDate = importer.GetDate(4);
-                    period.IsAdjustmentPeriod = importer.GetBool(5);
-                    period.Status = importer.GetEnum<FiscalPeriodStatus>(6);
-
-                    count++;
+                    context.SaveChanges();
                 }
-
-                context.SaveChanges();
             }
         }
 
         private void LoadSegmentLevels(string filename)
         {
-            DomainContext context = new DomainContext();
-
-            LoadLedgerIds();
-            var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.DefaultFiscalYear));
-
-            using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
+            using (var context = new DomainContext())
             {
-                int count = 1;
 
-                while (importer.GetNextRow())
+                LoadLedgerIds();
+                var ledgers = LoadEntities(context.GL_Ledgers, nameof(Ledger.DefaultFiscalYear));
+
+                using (var importer = CreateFileImporter(_glDirectory, filename, typeof(ConversionMethod)))
                 {
-                    // Legacy company ID
-                    string code = importer.GetString(0);
-                    if (string.IsNullOrWhiteSpace(code))
+                    int count = 1;
+
+                    while (importer.GetNextRow())
                     {
-                        continue;
+                        // Legacy company ID
+                        string code = importer.GetString(0);
+                        if (string.IsNullOrWhiteSpace(code))
+                        {
+                            continue;
+                        }
+
+                        int cid = 0;
+                        Guid ledgerId;
+
+                        if (!int.TryParse(code, out cid) || !_ledgerIds.TryGetValue(cid, out ledgerId))
+                        {
+                            importer.LogError($"Invalid legacy company ID \"{code}\"");
+                            continue;
+                        }
+
+                        int level = importer.GetInt(1);
+
+                        SegmentLevel segmentLevel = context.GL_SegmentLevels.FirstOrDefault(p => p.LedgerId == ledgerId && p.Level == level);
+                        if (segmentLevel == null)
+                        {
+                            segmentLevel = new SegmentLevel();
+                            context.GL_SegmentLevels.Add(segmentLevel);
+                            segmentLevel.LedgerId = ledgerId;
+                            segmentLevel.Level = level;
+                        }
+
+                        segmentLevel.Type = importer.GetEnum<SegmentType>(2);
+                        segmentLevel.Format = importer.GetEnum<SegmentFormat>(3);
+                        segmentLevel.Length = importer.GetInt(4);
+                        segmentLevel.IsLinked = importer.GetBool(5);
+                        segmentLevel.IsCommon = importer.GetBool(6);
+                        segmentLevel.Name = importer.GetString(7, 40);
+                        segmentLevel.Abbreviation = importer.GetString(8, 16);
+                        segmentLevel.Separator = importer.GetString(9, 1);
+                        segmentLevel.SortOrder = importer.GetInt(10);
+
+                        count++;
                     }
 
-                    int cid = 0;
-                    Guid ledgerId;
-
-                    if (!int.TryParse(code, out cid) || !_ledgerIds.TryGetValue(cid, out ledgerId))
-                    {
-                        importer.LogError($"Invalid legacy company ID \"{code}\"");
-                        continue;
-                    }
-
-                    int level = importer.GetInt(1);
-
-                    SegmentLevel segmentLevel = context.GL_SegmentLevels.FirstOrDefault(p => p.LedgerId == ledgerId && p.Level == level);
-                    if (segmentLevel == null)
-                    {
-                        segmentLevel = new SegmentLevel();
-                        context.GL_SegmentLevels.Add(segmentLevel);
-                        segmentLevel.LedgerId = ledgerId;
-                        segmentLevel.Level = level;
-                    }
-
-                    segmentLevel.Type = importer.GetEnum<SegmentType>(2);
-                    segmentLevel.Format = importer.GetEnum<SegmentFormat>(3);
-                    segmentLevel.Length = importer.GetInt(4);
-                    segmentLevel.IsLinked = importer.GetBool(5);
-                    segmentLevel.IsCommon = importer.GetBool(6);
-                    segmentLevel.Name = importer.GetString(7, 40);
-                    segmentLevel.Abbreviation = importer.GetString(8, 16);
-                    segmentLevel.Separator = importer.GetString(9, 1);
-                    segmentLevel.SortOrder = importer.GetInt(10);
-
-                    count++;
+                    context.SaveChanges();
                 }
-
-                context.SaveChanges();
             }
         }
 

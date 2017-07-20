@@ -12,8 +12,7 @@ namespace DDI.Business.Helpers
     public static class LinkedEntityHelper 
     {
         #region Private Fields
-        private static Dictionary<string, Type> _entityTypes = null;
-        private static string _namespacePrefix;
+        private static Dictionary<string, Type> _entityTypes = null;        
         private static Dictionary<Type, string> _displaynames = new Dictionary<Type, string>();
         #endregion
 

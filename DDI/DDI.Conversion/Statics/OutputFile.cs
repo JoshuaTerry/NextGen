@@ -11,32 +11,6 @@ namespace DDI.Conversion.Statics
     /// </summary>
     internal static class OutputFile
     {
-        #region ID Mapping Files
-
-        public static string CRM_ConstituentIdMappingFile => "ConstituentId.csv";
-        public static string CRM_AddressIdMappingFile => "AddressId.csv";
-
-        public static string CP_PaymentMethodIdMappingFile => "PaymentMethodId.csv";
-
-        public static string Core_NoteIdMappingFile => "NoteId.csv";
-        public static string Core_FileStorageMappingFile => "FileStorageId.csv";
-        public static string Core_AttachmentMappingFile => "AttachmentId.csv";
-
-        public static string GL_BusinessUnitIdMappingFile => "BusinessUnitId.csv";
-        public static string GL_LedgerIdMappingFile => "LedgerId.csv";
-        public static string GL_FiscalYearIdMappingFile => "FiscalYearId.csv";
-        public static string GL_SegmentIdMappingFile => "SegmentId.csv";
-        public static string GL_AccountGroupIdMappingFile => "AccountGroupId.csv";
-        public static string GL_AccountIdMappingFile => "AccountId.csv";
-        public static string GL_LedgerAccountIdMappingFile => "LedgerAccountId.csv";
-        public static string GL_LedgerAccountYearIdMappingFile => "LedgerAccountYearId.csv";
-        public static string GL_FundIdMappingFile => "FundId.csv";
-        public static string GL_PostedTransactionMappingFile => "PostedTransactionId.csv";
-        public static string GL_JournalMappingFile => "JournalId.csv";
-        public static string GL_JournalLineMappingFile => "JournalLineId.csv";
-
-        #endregion
-
         #region Core SSIS Files
 
         public static string Core_NoteFile => "Notes.csv";
@@ -70,6 +44,10 @@ namespace DDI.Conversion.Statics
 
         public static string CP_PaymentMethodFile => "PaymentMethod.csv";
         public static string CP_PaymentMethodConstituentFile => "PaymentMethodConstituents.csv";
+        public static string CP_ReceiptBatchFile => "ReceiptBatch.csv";
+        public static string CP_ReceiptFile => "Receipt.csv";
+        public static string CP_MiscReceiptFile => "MiscReceipt.csv";
+        public static string CP_MiscReceiptLineFile => "MiscReceiptLine.csv";
 
         #endregion
 
@@ -93,6 +71,44 @@ namespace DDI.Conversion.Statics
 
         #endregion
 
+        #region ID Mapping Files
+
+        #region CRM Mapping Files
+        public static string CRM_ConstituentIdMappingFile => "ConstituentId.csv";
+        public static string CRM_AddressIdMappingFile => "AddressId.csv";
+        #endregion
+
+        #region CP Mapping Files
+        public static string CP_PaymentMethodIdMappingFile => "PaymentMethodId.csv";
+        public static string CP_BankAccountIdMappingFile => "BankAccountId.csv";
+        public static string CP_ReceiptBatchIdMappingFile => "ReceiptBatchId.csv";
+        public static string CP_ReceiptMappingFile => "ReceiptId.csv";
+        public static string CP_MiscReceiptMappingFile => "MiscReceiptId.csv";
+        public static string CP_MiscReceiptLineMappingFile => "MiscReceiptLineId.csv";
+        #endregion
+
+        #region Core Mapping Files
+        public static string Core_NoteIdMappingFile => "NoteId.csv";
+        public static string Core_FileStorageMappingFile => "FileStorageId.csv";
+        public static string Core_AttachmentMappingFile => "AttachmentId.csv";
+        #endregion
+
+        #region GL Mapping Files
+        public static string GL_BusinessUnitIdMappingFile => "BusinessUnitId.csv";
+        public static string GL_LedgerIdMappingFile => "LedgerId.csv";
+        public static string GL_FiscalYearIdMappingFile => "FiscalYearId.csv";
+        public static string GL_SegmentIdMappingFile => "SegmentId.csv";
+        public static string GL_AccountGroupIdMappingFile => "AccountGroupId.csv";
+        public static string GL_AccountIdMappingFile => "AccountId.csv";
+        public static string GL_LedgerAccountIdMappingFile => "LedgerAccountId.csv";
+        public static string GL_LedgerAccountYearIdMappingFile => "LedgerAccountYearId.csv";
+        public static string GL_FundIdMappingFile => "FundId.csv";
+        public static string GL_PostedTransactionMappingFile => "PostedTransactionId.csv";
+        public static string GL_JournalMappingFile => "JournalId.csv";
+        public static string GL_JournalLineMappingFile => "JournalLineId.csv";
+        #endregion
+
+        #endregion
 
     }
 }

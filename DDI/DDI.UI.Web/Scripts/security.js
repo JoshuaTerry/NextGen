@@ -188,7 +188,7 @@ function SaveGroup(id) {
 
     if (id) {
 
-        MakeServiceCall('PATCH', 'groups/' + id, JSON.stringify(item), function (data) {
+        MakeServiceCall('PATCH', 'groups/' + id, item, function (data) {
 
             DisplaySuccessMessage("Save successful.");
 
@@ -202,7 +202,7 @@ function SaveGroup(id) {
     }
     else {
 
-        MakeServiceCall('POST', 'groups/', JSON.stringify(item), function (data) {
+        MakeServiceCall('POST', 'groups/', item, function (data) {
 
             DisplaySuccessMessage("Save successful.");
 
@@ -257,7 +257,7 @@ function AddRolesModal() {
             roles: roleIds
         }
 
-        MakeServiceCall('POST', 'groups/' + groupid + '/roles', JSON.stringify(item), function () {
+        MakeServiceCall('POST', 'groups/' + groupid + '/roles', item, function () {
             DisplaySuccessMessage("Save successful.");
 
             CloseModal(modal);
@@ -518,7 +518,7 @@ function LoadUserGroupsModal() {
             groups: groupIds
         }
 
-        MakeServiceCall('PATCH', 'users/' + userid + '/groups', JSON.stringify(item), function () {
+        MakeServiceCall('PATCH', 'users/' + userid + '/groups', item, function () {
             DisplaySuccessMessage("Save successful.");
 
             CloseModal(modal);
@@ -632,7 +632,7 @@ function LoadUserBusinessUnitsModal() {
             businessUnits: buIds
         }
 
-        MakeServiceCall('PATCH', 'users/' + userid + '/businessunits', JSON.stringify(item), function () {
+        MakeServiceCall('PATCH', 'users/' + userid + '/businessunits', item, function () {
             DisplaySuccessMessage("Save successful.");
 
             CloseModal(modal);
@@ -713,7 +713,7 @@ function SaveUser(id) {
 
     if (id) {
 
-        MakeServiceCall('POST', 'users/' + id, JSON.stringify(item), function (data) {
+        MakeServiceCall('PATCH', 'users/' + id, item, function (data) {
 
             DisplaySuccessMessage("Save successful.");
 
@@ -724,7 +724,7 @@ function SaveUser(id) {
     }
     else {
 
-        MakeServiceCall('POST', 'users/', JSON.stringify(item), function (data) {
+        MakeServiceCall('POST', 'users/', item, function (data) {
 
             DisplaySuccessMessage("Save successful.");
 

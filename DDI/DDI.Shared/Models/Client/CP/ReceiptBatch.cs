@@ -54,5 +54,7 @@ namespace DDI.Shared.Models.Client.CP
 
         public ICollection<Receipt> Receipts { get; set; }
 
+        public override string DisplayName => BatchNumber.ToString();
+
     }
 }

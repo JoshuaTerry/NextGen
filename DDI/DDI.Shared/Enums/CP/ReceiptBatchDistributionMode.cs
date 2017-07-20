@@ -1,4 +1,13 @@
-﻿namespace DDI.Shared.Enums.CP
+﻿using System.ComponentModel;
+
+namespace DDI.Shared.Enums.CP
 {
-    public enum ReceiptBatchDistributionMode { Receipt = 0, Batch = 1 }
+    public enum ReceiptBatchDistributionMode
+    {
+        [Description("Receipt")]
+        Receipt = 0,
+
+        [Description("Batch")]
+        Batch = 1
+    }
 }

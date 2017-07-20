@@ -1,5 +1,4 @@
 ﻿using DDI.Shared;
-using DDI.Shared.Statics;
 using System;
 using System.Web;
 using System.Web.Configuration;
@@ -10,7 +9,7 @@ namespace DDI.WebApi.Controllers.General
     [Authorize]
     public class EnvironmentController : ApiController
     {
-        
+
         private string ENVIRONMENTKEY = "Environment";
         [HttpGet]
         [Route("api/v1/environment")]
@@ -33,17 +32,17 @@ namespace DDI.WebApi.Controllers.General
                         response.IsSuccessful = false;
                     }
                 }
-             
+
                 response.Data = (string)HttpContext.Current.Cache[ENVIRONMENTKEY];
-         
+
                 return Ok(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                
+
                 //base.Logger.LogError(ex);
                 return InternalServerError(new Exception(ex.Message));
             }
-}
+        }
     }
 }

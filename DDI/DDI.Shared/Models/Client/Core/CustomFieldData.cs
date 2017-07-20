@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.Core
 {
@@ -17,6 +18,7 @@ namespace DDI.Shared.Models.Client.Core
 
         public Guid? ParentEntityId { get; set; }
 
+        [MaxLength(256)]
         public string Value { get; set; }
 
         public Guid CustomFieldId { get; set; }

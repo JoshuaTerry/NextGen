@@ -1,4 +1,31 @@
-﻿namespace DDI.Shared.Enums.CP
+﻿using System.ComponentModel;
+
+namespace DDI.Shared.Enums.CP
 {
-    public enum DisbursementStatus { None = 0, Unprinted = 1, Printed = 2, Void = 3, Unsent = 4, Sent = 5, Accepted = 6, Denied = 7 }
+    public enum DisbursementStatus
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Unprinted")]
+        Unprinted = 1,
+
+        [Description("Printed")]
+        Printed = 2,
+
+        [Description("Void")]
+        Void = 3,
+
+        [Description("Unsent")]
+        Unsent = 4,
+
+        [Description("Sent")]
+        Sent = 5,
+
+        [Description("Accepted")]
+        Accepted = 6,
+
+        [Description("Denied")]
+        Denied = 7
+    }
 }

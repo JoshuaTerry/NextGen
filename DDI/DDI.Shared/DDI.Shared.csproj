@@ -48,10 +48,6 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
@@ -60,17 +56,14 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin.Security, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -100,6 +93,7 @@
     <Compile Include="Attributes\Logging\IFilterAttribute.cs" />
     <Compile Include="Attributes\Models\EntityNameAttribute.cs" />
     <Compile Include="Attributes\Models\DecimalPrecisionAttribute.cs" />
+    <Compile Include="Attributes\Models\TextAttribute.cs" />
     <Compile Include="Attributes\Transactions\TransactionTypeAttribute.cs" />
     <Compile Include="BatchUnitOfWork.cs" />
     <Compile Include="CachedRepository.cs" />
@@ -135,7 +129,12 @@
     <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
     <Compile Include="Enums\CP\EFTAccountType.cs" />
+    <Compile Include="Models\Client\Core\ImportMappingDefinition.cs" />
+    <Compile Include="Models\Client\Core\LogEntry.cs" />
     <Compile Include="Models\Client\Core\MappableEntityField.cs" />
+    <Compile Include="Models\Client\Core\MappingTypeField.cs" />
+    <Compile Include="Models\Client\Core\UserImportMapping.cs" />
+    <Compile Include="Models\Client\Core\UserImportMappingField.cs" />
     <Compile Include="Models\Client\CP\MiscReceiptLine.cs" />
     <Compile Include="Models\Client\CP\MiscReceipt.cs" />
     <Compile Include="Models\Client\CP\Receipt.cs" />
@@ -180,6 +179,7 @@
     <Compile Include="Enums\INV\MaturityMethod.cs" />
     <Compile Include="Enums\ModuleType.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\IoExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
@@ -288,6 +288,7 @@
     <Compile Include="Models\Client\Security\UserRole.cs" />
     <Compile Include="Models\AuditableEntityBase.cs" />
     <Compile Include="Models\DatabaseConstraintException.cs" />
+    <Compile Include="Models\EnumEntity.cs" />
     <Compile Include="Models\ICanTransmogrify.cs" />
     <Compile Include="Models\ICodeEntity.cs" />
     <Compile Include="Models\IAuditableEntity.cs" />

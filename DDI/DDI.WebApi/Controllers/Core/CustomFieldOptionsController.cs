@@ -55,7 +55,7 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpPost]
         [Route("api/v1/customfieldoptions")]
-        public IHttpActionResult Post([FromBody] CustomFieldOption item)
+        public override IHttpActionResult Post([FromBody] CustomFieldOption item)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpPatch]
         [Route("api/v1/customfieldoptions/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace DDI.WebApi.Controllers.General
 
         [HttpDelete]
         [Route("api/v1/customfieldoptions/{id}")]
-        public override IHttpActionResult  Delete(Guid id)
+        public override IHttpActionResult Delete(Guid id)
         {
             try
             {

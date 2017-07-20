@@ -2662,7 +2662,7 @@ namespace DDI.Data.Migrations.Client
                 "l.AccountGroup3Title + ': ' + ag3.Name as Level3, l.AccountGroup4Title + ': ' + ag4.Name as Level4, " +
                 "acct.AccountNumber, acct.Name as Description,	acct.Id, l.Id as LedgerId, ag1.Sequence as LevelSequence1, ag2.Sequence as LevelSequence2, " +
                 "Ag3.Sequence as LevelSequence3, Ag4.Sequence as LevelSequence4, " +
-                "fy.Id as FiscalYearId, acct.SortKey as SortKey " +
+                "fy.Id as FiscalYearId, lay.LedgerAccountId, acct.SortKey as SortKey " +
                 "FROM Account acct " +
                 "LEFT Outer join AccountGroup ag1 on ag1.Id = acct.Group1Id " +
                 "left outer join AccountGroup ag2 on ag2.Id = acct.Group2Id " +
@@ -2670,11 +2670,16 @@ namespace DDI.Data.Migrations.Client
                 "left outer join AccountGroup ag4 on ag4.Id = acct.Group4Id " +
                 "left outer join FiscalYear fy on fy.Id = acct.FiscalYearId " +
                 "inner join Ledger l on fy.LedgerId = l.Id " +
+                "JOIN	(SELECT		MIN(LedgerAccountId) AS LedgerAccountId, AccountId " +
+                "FROM        LedgerAccountYear lay1 " +
+                "GROUP BY lay1.AccountId) lay " +
+                "ON  lay.AccountId = acct.Id" +
                 "group by ag1.Sequence, ag2.Sequence, Ag3.Sequence, Ag4.Sequence, " +
                 "l.AccountGroup1Title + ': ' + ag1.Name, " +
                 "l.AccountGroup2Title + ': ' + ag2.Name, " +
                 "l.AccountGroup3Title + ': ' + ag3.Name, " +
                 "l.AccountGroup4Title + ': ' + ag4.Name, " +
+                "lay.LedgerAccountId, " +
                 "acct.SortKey, " +
                 "acct.AccountNumber, " +
                 "acct.Id, " +

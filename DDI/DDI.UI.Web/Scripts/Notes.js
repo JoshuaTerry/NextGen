@@ -155,7 +155,7 @@ function LoadNoteDetails(id) {
 
 function GetNoteDetailsToSave(modal, entityType) {
 
-    var rawitem = {
+    var item = {
 
         Title: $(modal).find('.nd-Title').val(),
         AlertStartDate: $(modal).find('.nd-AlertStartDate').val(),
@@ -172,8 +172,6 @@ function GetNoteDetailsToSave(modal, entityType) {
         NoteTopics: GetNoteTopicsToSave()
 
     };
-
-    var item = JSON.stringify(rawitem);
 
     return item;
 

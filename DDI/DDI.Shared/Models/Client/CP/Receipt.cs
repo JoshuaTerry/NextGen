@@ -17,12 +17,15 @@ namespace DDI.Shared.Models.Client.CP
         [DecimalPrecision(14, 2)]
         public decimal Amount { get; set; }
 
+        [MaxLength(128)]
         public string Reference { get; set; }
 
         public bool IsProcessed { get; set; } 
         
         public bool IsReversed { get; set; }
 
+        public Guid? ReceiptTypeId { get; set; }
+        [ForeignKey(nameof(ReceiptTypeId))]
         public ReceiptType ReceiptType { get; set; }
 
         [MaxLength(64)]
@@ -40,5 +43,7 @@ namespace DDI.Shared.Models.Client.CP
         public Guid ReceiptBatchId { get; set; }
         [ForeignKey(nameof(ReceiptBatchId))]
         public ReceiptBatch ReceiptBatch { get; set; }
+
+        public override string DisplayName => ReceiptNumber.ToString();
     }
 }

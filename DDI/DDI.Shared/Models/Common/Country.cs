@@ -16,7 +16,7 @@ namespace DDI.Shared.Models.Common
 
         [MaxLength(4)]
         public string CountryCode { get; set; }
-
+        [MaxLength(128)]
         public string Description { get; set; }
 
         [MaxLength(2)]
@@ -24,14 +24,14 @@ namespace DDI.Shared.Models.Common
 
         [MaxLength(4)]
         public string LegacyCode { get; set; }
-
+        [MaxLength(20)]
         public string StateName { get; set; }
 
         [MaxLength(4)]
         public string StateAbbreviation { get; set; }
-
+        [MaxLength(128)]
         public string PostalCodeFormat { get; set; }
-
+        [MaxLength(128)]
         public string AddressFormat { get; set; }
 
         [MaxLength(4)]

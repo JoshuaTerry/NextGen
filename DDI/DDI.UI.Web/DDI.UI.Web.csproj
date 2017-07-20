@@ -55,13 +55,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin.Security, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -69,9 +70,8 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -89,6 +89,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\journals.css" />
     <Content Include="CSS\accounts.css" />
     <Content Include="CSS\autocomplete.css" />
     <Content Include="CSS\constituents.css" />
@@ -102,6 +103,9 @@
     <Content Include="CSS\search.css" />
     <Content Include="CSS\security.css" />
     <Content Include="CSS\systemsettings.css" />
+    <Content Include="Images\OneTimeJournal.gif" />
+    <Content Include="Images\RecurringJournal.gif" />
+    <Content Include="Images\TemplateJournal.gif" />
     <Content Include="Images\edit-16.png" />
     <Content Include="Images\erase-16.png" />
     <Content Include="Images\Messaging-Note-icon.png" />
@@ -110,6 +114,8 @@
     <Content Include="Pages\Common\Notes.aspx" />
     <Content Include="Pages\GL\Accounting.aspx" />
     <Content Include="Pages\GL\AccountDetails.aspx" />
+    <Content Include="Pages\GL\JournalDetail.aspx" />
+    <Content Include="Pages\GL\JournalEntry.aspx" />
     <Content Include="Pages\GL\AccountSummary.aspx" />
     <Content Include="Pages\GL\AccountTransactions.aspx" />
     <Content Include="Pages\GL\ActivityAndBudget.aspx" />
@@ -153,6 +159,7 @@
     <Content Include="Blank.Master" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <Content Include="Scripts\journaldetail.js" />
     <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\attachments.js" />
     <Content Include="Scripts\dx.all.js" />
@@ -377,6 +384,20 @@
     </Compile>
     <Compile Include="Pages\GL\AccountDetails.aspx.designer.cs">
       <DependentUpon>AccountDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\JournalDetail.aspx.cs">
+      <DependentUpon>JournalDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\JournalDetail.aspx.designer.cs">
+      <DependentUpon>JournalDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GL\JournalEntry.aspx.cs">
+      <DependentUpon>JournalEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\GL\JournalEntry.aspx.designer.cs">
+      <DependentUpon>JournalEntry.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\GL\AccountSummary.aspx.cs">
       <DependentUpon>AccountSummary.aspx</DependentUpon>

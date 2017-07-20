@@ -1,14 +1,17 @@
 ﻿<%@ Page Title="DDI - System Settings" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="SystemSettings.aspx.cs" Inherits="DDI.UI.Web.SystemSettings" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    
+
     <link rel="stylesheet" href="../../CSS/systemsettings.css" />
-    
+
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
     <script type="text/javascript" src="..\..\Scripts\glaccountselection.js"></script>
 
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -108,9 +111,9 @@
                 </ul>
             </div>
         </div>
-        
+
         <div class="contentcontainer">
-            <h1 class="systemsettingsheader"></h1> 
+            <h1 class="systemsettingsheader"></h1>
             <div class="gridcontainer"></div>
         </div>
 
@@ -272,10 +275,10 @@
                             <label>Max Value</label>
                             <input type="text" class="cfmaxvalue" />
                         </div>
-                            
+
                     </div>
                 </div>
-                
+
                 <div class="options">
 
                     <fieldset>
@@ -321,7 +324,7 @@
         </div>
 
     </div>
-    
+
     <div class="degreemodal" title="Degree" style="display: none;">
 
         <div class="modalcontent">
@@ -349,7 +352,7 @@
         </div>
 
     </div>
-    
+
     <div class="denominationmodal" title="Denomination" style="display: none;">
 
         <div class="modalcontent">
@@ -607,7 +610,7 @@
         </div>
 
     </div>
-    
+
     <div class="noteTopicmodal" title="Note Topic" style="display: none;">
 
         <div class="modalcontent">
@@ -635,7 +638,7 @@
         </div>
 
     </div>
-	
+
     <div class="prefixmodal" title="Prefix" style="display: none;">
 
         <div class="modalcontent">
@@ -664,9 +667,9 @@
 
             <div class="fieldblock">
                 <label>Label Prefix Short</label>
-                <input type="text" class="prefix-LabelAbbreviation" maxlength="128"/>
+                <input type="text" class="prefix-LabelAbbreviation" maxlength="128" />
             </div>
-            
+
             <div class="modalbuttons">
                 <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
@@ -704,7 +707,7 @@
 
     </div>
 
-	<div class="regionlevelmodal" title="Region Level" style="display: none;">
+    <div class="regionlevelmodal" title="Region Level" style="display: none;">
 
         <div class="modalcontent">
 
@@ -893,7 +896,7 @@
         </div>
 
     </div>
-    
+
     <div class="taggroupmodal" title="Tag Group" style="display: none;">
 
         <div class="modalcontent">
@@ -912,9 +915,9 @@
 
             <div class="fieldblock">
                 <label>Multi/Single Select</label>
-                <select class="tg-Select">  
-                   <option value="0">Single</option>
-                   <option value="1">Multiple</option>
+                <select class="tg-Select">
+                    <option value="0">Single</option>
+                    <option value="1">Multiple</option>
                 </select>
             </div>
 
@@ -963,7 +966,7 @@
         </div>
 
     </div>
- <div class="addresstypemodal" title="Address Types" style="display: none;">
+    <div class="addresstypemodal" title="Address Types" style="display: none;">
 
         <div class="modalcontent">
 
@@ -1089,6 +1092,16 @@
             </div>
 
             <div class="fieldblock">
+                <label>Start Date</label>
+                <input type="text" class="fy-StartDate datepicker" />
+            </div>
+
+			<div class="fieldblock">
+                <label>End Date</label>
+                <input type="text" class="fy-EndDate datepicker" />
+            </div>
+
+            <div class="fieldblock">
                 <label>Number Of Periods</label>
                 <select class="fy-NumberOfPeriods">
                     <option value="1">1</option>
@@ -1116,12 +1129,11 @@
     <div class="fiscalperiodmodal" title="Fiscal Period" style="display: none;">
         <div class="modalcontent">
 
-            <input type="hidden" class="fp-Id" />
             <input type="hidden" class="fp-FiscalYearId" />
 
             <div class="fieldblock">
                 <label>Period Number</label>
-                <input type="text" maxlength="2" class="fp-PeriodNumber number" maxlength="2" />
+                <input type="text" class="fp-PeriodNumber number" maxlength="2" />
             </div>
 
             <div class="fieldblock">
@@ -1165,19 +1177,19 @@
 
             <div class="fieldblock">
                 <label>Type</label>
-                <select class="glformat-Type">  
-                   <option value="0">None</option>
-                   <option value="1">Fund</option>
-                   <option value="2">Account</option>
+                <select class="glformat-Type">
+                    <option value="0">None</option>
+                    <option value="1">Fund</option>
+                    <option value="2">Account</option>
                 </select>
             </div>
 
             <div class="fieldblock">
                 <label>Format</label>
-                <select class="glformat-Format">  
-                   <option value="0">Both</option>
-                   <option value="1">Numberic</option>
-                   <option value="2">Alpha</option>
+                <select class="glformat-Format">
+                    <option value="0">Both</option>
+                    <option value="1">Numberic</option>
+                    <option value="2">Alpha</option>
                 </select>
             </div>
 
@@ -1200,33 +1212,33 @@
                 <label>Name</label>
                 <input type="text" class="glformat-Name" maxlength="128" />
             </div>
-            
+
             <div class="fieldblock">
                 <label>Abbreviation</label>
                 <input type="text" class="glformat-Abbreviation" maxlength="16" />
             </div>
-            
+
             <div class="fieldblock">
                 <label>Separator</label>
-                <select class="glformat-Separator">  
-                   <option value="">None</option>
-                   <option value=" ">(Space)</option>
-                   <option value="-">-</option>
-                   <option value=".">.</option>
-                   <option value=",">,</option>
-                   <option value="/">/</option>
-                   <option value="(">(</option>
-                   <option value=")">)</option>
-                   <option value="[">[</option>
-                   <option value="]">]</option>
+                <select class="glformat-Separator">
+                    <option value="">None</option>
+                    <option value=" ">(Space)</option>
+                    <option value="-">-</option>
+                    <option value=".">.</option>
+                    <option value=",">,</option>
+                    <option value="/">/</option>
+                    <option value="(">(</option>
+                    <option value=")">)</option>
+                    <option value="[">[</option>
+                    <option value="]">]</option>
                 </select>
             </div>
 
             <div class="fieldblock">
                 <label>Sort Order</label>
-                <select class="glformat-SortOrder">  
-                   <option value="0">Ascending</option>
-                   <option value="1">Descending</option>
+                <select class="glformat-SortOrder">
+                    <option value="0">Ascending</option>
+                    <option value="1">Descending</option>
                 </select>
             </div>
 
@@ -1240,7 +1252,7 @@
 
     </div>
 
-     <div class="businessunitduemodal" title="BusinessUnitFromTo" style="display: none;">
+    <div class="businessunitduemodal" title="BusinessUnitFromTo" style="display: none;">
 
         <div class="modalcontent">
 
@@ -1254,36 +1266,37 @@
                 <div class="bus-ToLedgerAccount"></div>
             </div>
 
-             <div class="modalbuttons">
+            <div class="modalbuttons">
                 <input type="button" class="Savebusinessunitduedetails" value="Save" />
-                 <a href="#" class="cancelbusinessunitduedetailsmodal">Cancel</a>
+                <a href="#" class="cancelbusinessunitduedetailsmodal">Cancel</a>
             </div>
 
-          </div>
+        </div>
 
     </div>
 
-     <div class="fundduemodal" title="Test" style="display: none;">
+    <div class="fundduemodal" title="Test" style="display: none;">
 
         <div class="modalcontent">
 
             <div class="fieldblock">
                 <label>Due From Account</label>
-               <div class="fn-DueFromAccount" ></div>
+                <div class="fn-DueFromAccount"></div>
             </div>
 
             <div class="fieldblock">
                 <label>Due To Account</label>
-                <div class="fn-DueToAccount" ></div>
+                <div class="fn-DueToAccount"></div>
             </div>
-             <div class="modalbuttons">
+            <div class="modalbuttons">
                 <input type="button" class="Savefundduedetails" value="Save" />
                 <a href="#" class="cancelfundduemodal">Cancel</a>
             </div>
 
-          </div>
+        </div>
 
     </div>
+
     <div class="entitymodal" title="Business Units" style="display: none;">
 
         <div class="modalcontent">
@@ -1301,14 +1314,71 @@
             <div class="fieldblock">
                 <label>Entity Type</label>
                 <select class="en-BusinessUnitType">
-                        <option value="1">Common</option>
-                        <option value="2">Separate</option>
+                    <option value="1">Common</option>
+                    <option value="2">Separate</option>
                 </select>
             </div>
 
             <div class="modalbuttons">
                 <input type="button" class="savebutton" value="Save" />
                 <a href="#" class="cancelmodal">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="updatefiscalyearmodal" title="" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label class="selectfiscalyearlabel"></label>
+                <select class="uf-FiscalYear">
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label class="updatefiscalyearnotifylabel notify"></label>
+            </div>
+
+            <div class="updatefiscalyearmodalbuttons modalbuttons">
+                <input type="button" class="okupdatefiscalyearmodalbutton" value="OK" />
+                <a href="#" class="cancelupdatefiscalyearmodal">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="newfiscalyearmodal" title="Create New Fiscal Year" style="display: none;">
+
+        <div class="modalcontent">
+
+            <div class="fieldblock">
+                <label>Copy From Fiscal Year:</label>
+                <select class="fn-FromFiscalYear required">
+                </select>
+            </div>
+
+            <div class="fieldblock">
+                <label>Start Date:</label>
+                <input type="text" class="fn-StartDate editable date datepicker" maxlength="10" />
+            </div>
+
+            <div class="fieldblock">
+                <label>New Fiscal Year:</label>
+                <input type="text" class="fn-NewFiscalYear editable required" />
+            </div>
+
+            <div class="fieldblock">
+                <label>Copy all inactive accounts to the new fiscal year.</label>
+                <input type="checkbox" class="fn-CopyInactiveAccounts" />
+            </div>
+
+            <div class="fieldblock">
+                <label class="newfiscalyearnotifylabel notify"></label>
+            </div>
+
+            <div class="newfiscalyearmodalbuttons modalbuttons">
+                <input type="button" class="oknewfiscalyearmodalbutton" value="OK" />
+                <a href="#" class="cancelnewfiscalyearmodal">Cancel</a>
             </div>
         </div>
     </div>

@@ -1,14 +1,14 @@
 ﻿
-function InitializeFileUploader(url, callback) {
+function InitializeFileUploader(container, url, callback) {
 
     var filecounter = 0;
     var totalfiles = 0;
 
-    $('#file_upload').fileupload({
+    $(container).find('.file_upload').fileupload({
         url: url,
         headers: GetApiHeaders(),
         sequentialUploads: true,
-        dropZone: $('.fileuploadcontainer'),
+        dropZone: $(container).find('.fileuploadcontainer'),
         disableImageResize: true,
         done: function (e, data) {
 
@@ -20,14 +20,14 @@ function InitializeFileUploader(url, callback) {
             $.each(data.files, function (index, file) {
                 filecounter++;
 
-                $('.filemessage').text('File upload in progress, please do not close this window...').show();
-                $('.totalfiles').text(filecounter + ' upload completed').show();
+                $(container).find('.filemessage').text('File upload in progress, please do not close this window...').show();
+                $(container).find('.totalfiles').text(filecounter + ' upload completed').show();
 
                 var progress = Math.floor(filecounter / totalfiles * 100);
-                $('.progress-bar').css('width', progress + '%');
+                $(container).find('.progress-bar').css('width', progress + '%');
 
                 if (totalfiles == filecounter) {
-                    $('.filemessage').text('File upload complete.');
+                    $(container).find('.filemessage').text('File upload complete.');
                     filecounter = 0;
                     totalfiles = 0;
                 }
@@ -40,8 +40,8 @@ function InitializeFileUploader(url, callback) {
     }).bind('fileuploadadd', function (e, data) {
         totalfiles++;
 
-        $('.filemessage').text('');
-        $('.totalfiles').text('');
+        $(container).find('.filemessage').text('');
+        $(container).find('.totalfiles').text('');
     });
 
 }

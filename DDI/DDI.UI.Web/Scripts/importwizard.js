@@ -72,7 +72,7 @@ function DisplayImportWizardModal() {
         resizable: false
     });
 
-    InitializeFileUploader(WEB_API_ADDRESS + 'filestorage/upload', function (file) {
+    InitializeFileUploader(modal, WEB_API_ADDRESS + 'filestorage/upload', function (file) {
 
         if (file) {
             $('.hiddenimportfileid').val(file.Id);

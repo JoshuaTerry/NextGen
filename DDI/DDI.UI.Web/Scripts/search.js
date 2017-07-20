@@ -4,6 +4,8 @@ $(document).ready(function () {
     Resize();
 
     PopulateDropDowns();
+
+    LoadRegions('.searchregions', 'search');
     
     $('.clearsearch').click(function () {
         $('.searchcriteria div.fieldblock input').each(function () {
@@ -154,7 +156,7 @@ function GetSearchParameters() {
     });
 
     $('.searchcriteria div.fieldblock select').each(function () {
-        var property = $(this).attr('class').split(' ')[0].replace('search', '');
+        var property = $(this).attr('class').split(' ')[0].replace('search', '').replace('Id', '');
         var value = $(this).val();
 
         if (value && value !== 'null') {
