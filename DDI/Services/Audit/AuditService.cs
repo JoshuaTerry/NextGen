@@ -64,24 +64,20 @@ namespace DDI.Services
                                          pc => pc.ObjectChangeId,
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
                                  .SelectMany(x => x.pc.DefaultIfEmpty(),
-                                         (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
-                                 .Join(_uow.GetRepository<User>().Entities,
-                                         outer => outer.cs.UserName,
-                                         u => u.UserName,
-                                         (outer, u) => new
+                                         (outer, pc) => new
                                          {
                                              ChangeSetId = outer.cs.Id,
                                              Timestamp = outer.cs.Timestamp,
-                                             User = u.UserName,
+                                             User = outer.cs.UserName,
                                              ChangeType = outer.oc.ChangeType,
                                              EntityType = outer.oc.TypeName,
                                              EntityValue = outer.oc.DisplayName,
-                                             Property = outer.pc.PropertyName,
-                                             PropertyChangeType = outer.pc.ChangeType,
-                                             OldDisplayName = outer.pc.OriginalDisplayName,
-                                             OldValue = outer.pc.OriginalValue,
-                                             NewDisplayName = outer.pc.NewDisplayName,
-                                             NewValue = outer.pc.NewValue
+                                             Property = pc.PropertyName,
+                                             PropertyChangeType = pc.ChangeType,
+                                             OldDisplayName = pc.OriginalDisplayName,
+                                             OldValue = pc.OriginalValue,
+                                             NewDisplayName = pc.NewDisplayName,
+                                             NewValue = pc.NewValue
                                          }).Distinct().OrderBy(c => c.EntityType).OrderByDescending(c => c.Timestamp).ToList<dynamic>();
 
                 response.Data = results;
@@ -111,26 +107,22 @@ namespace DDI.Services
                                          pc => pc.ObjectChangeId,
                                          (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
                                  .SelectMany(x => x.pc.DefaultIfEmpty(),
-                                         (outer, pc) => new { cs = outer.cs, oc = outer.oc, pc })
-                                 .Join(_uow.GetRepository<User>().Entities,
-                                         outer => outer.cs.UserName,
-                                         u => u.UserName,
-                                         (outer, u) => new
+                                         (outer, pc) => new
                                          {
                                              ChangeSetId = outer.cs.Id,
                                              Timestamp = outer.cs.Timestamp,
-                                             User = u.UserName,
+                                             User = outer.cs.UserName,
                                              ChangeType = outer.oc.ChangeType,
                                              EntityType = outer.oc.TypeName,
                                              EntityValue = outer.oc.DisplayName,
-                                             Property = outer.pc.PropertyName,
-                                             PropertyChangeType = outer.pc.ChangeType,
-                                             OldDisplayName = outer.pc.OriginalDisplayName,
-                                             OldValue = outer.pc.OriginalValue,
-                                             NewDisplayName = outer.pc.NewDisplayName,
-                                             NewValue = outer.pc.NewValue
+                                             Property = pc.PropertyName,
+                                             PropertyChangeType = pc.ChangeType,
+                                             OldDisplayName = pc.OriginalDisplayName,
+                                             OldValue = pc.OriginalValue,
+                                             NewDisplayName = pc.NewDisplayName,
+                                             NewValue = pc.NewValue
                                          }).Distinct().OrderBy(c => c.EntityType).OrderByDescending(c => c.Timestamp).ToList<dynamic>();
-
+               
                 response.Data = results;
             }
             catch (Exception ex)

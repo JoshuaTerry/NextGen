@@ -82,9 +82,16 @@ namespace DDI.Data
             _isUOW = false;
         }
 
+        public static void LogQuery(string message)
+        {
+            System.Diagnostics.Debug.Write(message);
+        }
         public Repository(DbContext context)
         {
             _context = context;
+#if DEBUG
+            _context.Database.Log = s => System.Diagnostics.Debug.Write(s);
+#endif
             _isUOW = (context != null);
         }
         #endregion Public Constructors
