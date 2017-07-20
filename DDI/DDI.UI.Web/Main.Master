@@ -51,6 +51,7 @@
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
     <script type="text/javascript" src="..\..\Scripts\globalScripts.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\audit.js"></script>
     <script type="text/javascript" src="..\..\Scripts\autocomplete.js"></script>
     <script type="text/javascript" src="..\..\Scripts\additional-methods.min.js"></script>
     <script type="text/javascript" src="..\..\Scripts\importwizard.js"></script>

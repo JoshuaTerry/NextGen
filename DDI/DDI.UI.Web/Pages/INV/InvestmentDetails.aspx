@@ -2,7 +2,12 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
-    <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
+     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\commonSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\cpSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\crmSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\customFieldSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\glSystemSettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\InvestmentDetails.js"></script>
     <script type="text/javascript" src="..\..\Scripts\PaymentPreferencesModal.js"></script>
     <script type="text/javascript" src="..\..\Scripts\search.js"></script>

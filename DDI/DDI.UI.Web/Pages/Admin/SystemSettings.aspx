@@ -5,6 +5,12 @@
     <link rel="stylesheet" href="../../CSS/systemsettings.css" />
 
     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\commonSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\cpSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\crmSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\customFieldSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\glSystemSettings.js"></script>
+
     <script type="text/javascript" src="..\..\Scripts\customfields.js"></script>
     <script type="text/javascript" src="..\..\Scripts\data.js"></script>
     <script type="text/javascript" src="..\..\Scripts\glaccountselection.js"></script>

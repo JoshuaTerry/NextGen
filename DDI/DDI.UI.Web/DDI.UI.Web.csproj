@@ -159,6 +159,12 @@
     <Content Include="Blank.Master" />
     <None Include="Properties\PublishProfiles\DevEnv.pubxml" />
     <None Include="Properties\PublishProfiles\LocalEnv.pubxml" />
+    <Content Include="Scripts\audit.js" />
+    <Content Include="Scripts\commonSystemSettings.js" />
+    <Content Include="Scripts\cpSystemSettings.js" />
+    <Content Include="Scripts\crmSystemSettings.js" />
+    <Content Include="Scripts\customFieldSystemSettings.js" />
+    <Content Include="Scripts\glSystemSettings.js" />
     <Content Include="Scripts\journaldetail.js" />
     <Content Include="Scripts\accounts.js" />
     <Content Include="Scripts\attachments.js" />
@@ -170,6 +176,7 @@
     <Content Include="Scripts\InvestmentDetails.js" />
     <Content Include="Scripts\PaymentPreferencesModal.js" />
     <Content Include="Scripts\accounttransaction.js" />
+    <Content Include="Scripts\relationships.js" />
     <Content Include="TabbedContent.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

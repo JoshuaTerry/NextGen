@@ -4,8 +4,14 @@
     
     <script type="text/javascript" src="..\..\Scripts\region.js"></script>
     <script type="text/javascript" src="..\..\Scripts\Notes.js"></script>
-    <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
+     <script type="text/javascript" src="..\..\Scripts\systemsettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\commonSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\cpSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\crmSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\customFieldSystemSettings.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\glSystemSettings.js"></script>
     <script type="text/javascript" src="..\..\Scripts\constituents.js"></script>
+    <script type="text/javascript" src="..\..\Scripts\relationships.js"></script>
     <script type="text/javascript" src="..\..\Scripts\attachments.js"></script>
     <script type="text/javascript" src="..\..\Scripts\gridManager.js"></script>
     <link rel="stylesheet" href="..\..\CSS\constituents.css" />
