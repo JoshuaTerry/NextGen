@@ -397,11 +397,9 @@ function LoadClergySectionSettings() {
 
 function LoadConstituentTypesSectionSettings() {
 
-    var accordion = $('<div>').addClass('accordions');
-    var types = $('<div>').addClass('constituenttypescontainer');
+    var header = $('<div>').attr('style', 'text-align: right;').appendTo($('.gridcontainer'));
+    var types = $('<div>').addClass('constituenttypescontainer').appendTo($('.gridcontainer'));
 
-
-    var header = $('<h1>').text('Constituent Types').appendTo($(accordion));
     $('<a>').attr('href', '#').addClass('newconstituenttypemodallink modallink newbutton').text('New Item')
         .click(function (e) {
             e.preventDefault();
@@ -462,13 +460,7 @@ function LoadConstituentTypesSectionSettings() {
         })
         .appendTo($(header));
 
-    $(types).appendTo($(accordion));
-
     LoadConstituentTypeSettingsGrid();
-
-    $(accordion).appendTo($('.gridcontainer'));
-
-    LoadAccordions();
 
 }
 
@@ -670,7 +662,6 @@ function EditConstituentType(id) {
 
             }, null);
         });
-
     });
 
 }
@@ -1156,8 +1147,6 @@ function DeleteContactCategory(id) {
         }
 
     });
-
-
 }
 
 function LoadContactCategory(id) {
@@ -3462,7 +3451,6 @@ function LoadFundAccountingSectionSettings() {
         MakeServiceCall('PATCH', 'fund/' + $('.selectfund').val(), item, function () {
             LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.fundLedgerId').val(), $('.selectfund').val())
             DisplaySuccessMessage('Success', 'Setting saved successfully.');
-            LoadFundGLAccountSelector($('.selectfiscalyear').val(), $('.fundLedgerId').val(), $('.selectfund').val())
         }, null);
     },
 
@@ -3490,7 +3478,6 @@ function LoadFundAccountingSectionSettings() {
 
     $(accordions).hide();
     $('.accordion-buttons').hide();
-   
 }
 
 function PopulateFiscalYears() {

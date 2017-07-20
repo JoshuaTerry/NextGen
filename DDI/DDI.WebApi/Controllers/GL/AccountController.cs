@@ -2,6 +2,7 @@
 using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
 using DDI.Shared;
+using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using DevExtreme.AspNet.Data;
@@ -21,7 +22,7 @@ namespace DDI.WebApi.Controllers.GL
     {
         protected new IAccountService Service => (IAccountService)base.Service;
         public AccountController(IAccountService service) : base(service) { }
-        
+
         private string _fieldsForAll = null;
 
         protected override string FieldsForList => $"{nameof(Account.Id)},{nameof(Account.AccountNumber)},{nameof(Account.Name)}";
@@ -74,7 +75,7 @@ namespace DDI.WebApi.Controllers.GL
 
             var glAccountSelectionService = Factory.CreateService<GLAccountSelectionService>();
 
-            return FinalizeResponse(glAccountSelectionService.GetAllWhereExpression((a=> a.FiscalYearId == fiscalYearId && a.AccountNumber.Contains(name)), search), search, null);
+            return FinalizeResponse(glAccountSelectionService.GetAllWhereExpression((a => a.FiscalYearId == fiscalYearId && a.AccountNumber.Contains(name)), search), search, null);
         }
 
         [HttpGet]
@@ -94,7 +95,7 @@ namespace DDI.WebApi.Controllers.GL
         [HttpGet]
         [Route("api/v1/accounts/activity/{id}")]
         public IHttpActionResult GetAccountActivity(Guid id)
-        {   
+        {
             return base.CustomAction(() => Service.GetAccountActivity(id));
         }
 
@@ -133,7 +134,7 @@ namespace DDI.WebApi.Controllers.GL
             {
                 var glAccountSelectionService = Factory.CreateService<GLAccountSelectionService>();
                 var accounts = glAccountSelectionService.GetGLAccountsForFiscalYearId(Id);
-               
+
                 return Request.CreateResponse(HttpStatusCode.OK, DataSourceLoader.Load(accounts, loadOptions));
             }
             catch (Exception ex)
@@ -169,6 +170,14 @@ namespace DDI.WebApi.Controllers.GL
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpPost]
+        [Route("api/v1/accounts/budget/import")]
+        public IHttpActionResult Import([FromBody] Guid fileId, [FromBody] Guid fiscalYearId, [FromBody] MappableEntityField[] fields)
+        {
+            var import = new BudgetImportService();
+            return Ok(import.ImportBudgets(fileId, fiscalYearId, fields));
         }
     }
 }

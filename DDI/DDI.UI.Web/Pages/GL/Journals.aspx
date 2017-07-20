@@ -6,13 +6,16 @@
     <script type="text/javascript" src="../../Scripts/data.js"></script>
     <link rel="stylesheet" href="../../CSS/Journals.css" />
 
+
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">
 
     <li><a href="#" class="addnewjournal">New Journal</a></li>
+    <div class="searchcriteria">
 
-</asp:Content>
+        <div >
+
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
@@ -28,7 +31,9 @@
                             <option value="0">One-Time</option>
                             <option value="1">Recurring</option>
                             <option value="2">Template</option>
+                            
                         </select>
+                        <br />
                     </div>
                    
                     <div class="fieldblock">
@@ -123,7 +128,6 @@
                 </div>
 
             </div>
-
         </div>
         
     </div>

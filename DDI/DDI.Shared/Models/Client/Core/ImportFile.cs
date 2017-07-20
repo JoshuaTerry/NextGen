@@ -11,7 +11,7 @@ namespace DDI.Shared.Models.Client.Core
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
 
-        public bool ContainsHeaders { get; set; } = true;
+        public bool ContainsHeaders { get; set; } = true;                
 
         public Guid FileId { get; set; }
 

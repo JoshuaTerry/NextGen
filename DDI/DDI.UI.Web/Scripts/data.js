@@ -380,7 +380,7 @@ function LoadGridWithData(grid, container, columns, route, selected, editMethod,
     $(container).html('');
 
     var datagrid = $('<div>').addClass(grid);
-
+     
     if (editMethod || deleteMethod) {
 
         columns.push({

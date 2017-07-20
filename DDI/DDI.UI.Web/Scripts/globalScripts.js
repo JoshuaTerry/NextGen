@@ -650,7 +650,6 @@ function ConfirmModal(message, yes, no) {
         if (yes) {
             yes();
         }
-
         CloseModal(modal);
     });
     $('.confirmno').unbind('click');
@@ -658,7 +657,6 @@ function ConfirmModal(message, yes, no) {
         if (no) {
             no();
         }
-
         CloseModal(modal);
     });
 }

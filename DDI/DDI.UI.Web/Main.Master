@@ -309,7 +309,7 @@
                         <i class="glyphicon glyphicon-plus"></i>
                         <span>Select files...</span>
 
-                        <input id="file_upload" type="file" name="files[]" multiple="multiple" />
+                        <input class="file_upload" type="file" name="files[]" multiple="multiple" />
                     </span>
         
                     <div id="progress" class="progress">
@@ -382,12 +382,7 @@
                         <!-- Custom Step -->
                         <div class="step customstep">
 
-                            <div class="customstepcontent">
-                                <div class="fieldblock">
-                                    <label>Fiscal Year</label>
-                                    <select class="importfiscalyear"></select>
-                                </div>
-                            </div>
+                            <div class="customstepcontent"></div>
 
                             <div class="modalbuttons">
                                 <input type="button" value="Next" class="nextstep" />
@@ -408,7 +403,7 @@
                                     <i class="glyphicon glyphicon-plus"></i>
                                     <span>Select files...</span>
 
-                                    <input id="file_upload2" type="file" name="files[]" multiple="multiple" />
+                                    <input class="file_upload" type="file" name="files[]" multiple="multiple" />
                                 </span>
         
                                 <div id="progress2" class="progress">
@@ -490,6 +485,7 @@
                     </div>
                 </div>
             </div>
+        </div>
 
 
     <div class="notesdetailmodal" title="Notes Detail" style="display: none;">

@@ -19,7 +19,7 @@ namespace DDI.WebApi.Controllers.CRM
         {
             try
             {
-                return Ok(Service.GetAllWhereExpression(c => c.ConstituentId == constituentId));
+                return Ok(Service.GetWhereExpression(c => c.ConstituentId == constituentId));
             }
             catch(Exception ex)
             {

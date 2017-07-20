@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
-using System.Data.SqlClient;
-using System.Threading;
-using System.Threading.Tasks;
 using DDI.Data.Conventions;
 using DDI.EFAudit;
 using DDI.EFAudit.Contexts;
@@ -18,6 +10,14 @@ using DDI.Shared.Models;
 using DDI.Shared.Models.Client.Audit;
 using DDI.Shared.Models.Client.Core;
 using DDI.Shared.Models.Client.Security;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Data.SqlClient;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DDI.Data
 {
@@ -36,9 +36,10 @@ namespace DDI.Data
         public DbSet<CustomFieldData> CustomFieldData { get; set; }
         public DbSet<CustomFieldOption> CustomFieldOption { get; set; }
         public DbSet<EntityMapping> EntityMapping { get; set; }
+        public DbSet<ImportFile> ImportFile { get; set; }
         public DbSet<SavedEntityMapping> SavedEntityMapping { get; set; }
         public DbSet<SavedEntityMappingField> SavedEntityMappingField { get; set; }
-        public DbSet<Language> Languages { get; set; } 
+        public DbSet<Language> Languages { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<NoteCategory> NoteCategories { get; set; }
         public DbSet<NoteCode> NoteCodes { get; set; }
@@ -67,7 +68,7 @@ namespace DDI.Data
         public DbSet<Shared.Models.Client.CRM.ClergyStatus> CRM_ClergyStatuses { get; set; }
         public DbSet<Shared.Models.Client.CRM.ClergyType> CRM_ClergyTypes { get; set; }
         public DbSet<Shared.Models.Client.CRM.Constituent> CRM_Constituents { get; set; }
-        public DbSet<Shared.Models.Client.CRM.ConstituentAddress> CRM_ConstituentAddresses { get; set; }         
+        public DbSet<Shared.Models.Client.CRM.ConstituentAddress> CRM_ConstituentAddresses { get; set; }
         public DbSet<Shared.Models.Client.CRM.ConstituentStatus> CRM_ConstituentStatuses { get; set; }
         public DbSet<Shared.Models.Client.CRM.ConstituentType> CRM_ConstituentTypes { get; set; }
         public DbSet<Shared.Models.Client.CRM.ConstituentPicture> CRM_ConstituentPictures { get; set; }
@@ -78,7 +79,7 @@ namespace DDI.Data
         public DbSet<Shared.Models.Client.CRM.Denomination> CRM_Denominations { get; set; }
         public DbSet<Shared.Models.Client.CRM.DoingBusinessAs> CRM_DoingBusinessAs { get; set; }
         public DbSet<Shared.Models.Client.CRM.Education> CRM_Educations { get; set; }
-        public DbSet<Shared.Models.Client.CRM.EducationLevel> CRM_EducationLevels { get; set; }         
+        public DbSet<Shared.Models.Client.CRM.EducationLevel> CRM_EducationLevels { get; set; }
         public DbSet<Shared.Models.Client.CRM.Ethnicity> CRM_Ethnicities { get; set; }
         public DbSet<Shared.Models.Client.CRM.Gender> CRM_Genders { get; set; }
         public DbSet<Shared.Models.Client.CRM.IncomeLevel> CRM_IncomeLevels { get; set; }
@@ -87,7 +88,7 @@ namespace DDI.Data
         public DbSet<Shared.Models.Client.CRM.Profession> CRM_Professions { get; set; }
         public DbSet<Shared.Models.Client.CRM.Region> CRM_Regions { get; set; }
         public DbSet<Shared.Models.Client.CRM.RegionArea> CRM_RegionAreas { get; set; }
-        public DbSet<Shared.Models.Client.CRM.RegionLevel> CRM_RegionLevels { get; set; }        
+        public DbSet<Shared.Models.Client.CRM.RegionLevel> CRM_RegionLevels { get; set; }
         public DbSet<Shared.Models.Client.CRM.Relationship> CRM_Relationships { get; set; }
         public DbSet<Shared.Models.Client.CRM.RelationshipCategory> CRM_RelationshipCategories { get; set; }
         public DbSet<Shared.Models.Client.CRM.RelationshipType> CRM_RelationshipTypes { get; set; }
@@ -173,7 +174,7 @@ namespace DDI.Data
 
         public Action<DbContext> CustomSaveChangesLogic { get; set; }
         #endregion
-          
+
         #region Public Constructors
         public DomainContext() : this(null, null)
         {
@@ -186,8 +187,8 @@ namespace DDI.Data
             CustomSaveChangesLogic = customSaveChangesLogic;
             this.Configuration.LazyLoadingEnabled = false;
             // Why is this false?
-            this.Configuration.ProxyCreationEnabled = false;            
-        }       
+            this.Configuration.ProxyCreationEnabled = false;
+        }
         #endregion Public Constructors
 
         #region Method Overrides  
@@ -200,7 +201,7 @@ namespace DDI.Data
                 if (entityEntry.State == System.Data.Entity.EntityState.Added && entity.Id == default(Guid))
                 {
                     entity.AssignPrimaryKey();
-                }  
+                }
             }
 
             return base.ValidateEntity(entityEntry, items);
@@ -224,7 +225,7 @@ namespace DDI.Data
                 {
                     var sqlException = ex.InnerException.InnerException as SqlException;
                     if (sqlException.Number == 2627 || sqlException.Number == 2601)
-                    {                     
+                    {
                         _logger.LogInformation(ex);
                         throw new DatabaseConstraintException();
                     }
@@ -272,7 +273,7 @@ namespace DDI.Data
             }
 
         }
-      
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(new DecimalPrecisionAttributeConvention());
@@ -291,7 +292,7 @@ namespace DDI.Data
                 string a = ex.Message;
                 throw ex;
             }
-        } 
+        }
         #endregion
     }
 }

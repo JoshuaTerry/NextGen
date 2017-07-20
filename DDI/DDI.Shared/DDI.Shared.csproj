@@ -129,6 +129,12 @@
     <Compile Include="Enums\CP\PaymentMethodCategory.cs" />
     <Compile Include="Enums\CP\PaymentMethodStatus.cs" />
     <Compile Include="Enums\CP\EFTAccountType.cs" />
+    <Compile Include="Models\Client\Core\ImportMappingDefinition.cs" />
+    <Compile Include="Models\Client\Core\LogEntry.cs" />
+    <Compile Include="Models\Client\Core\MappableEntityField.cs" />
+    <Compile Include="Models\Client\Core\MappingTypeField.cs" />
+    <Compile Include="Models\Client\Core\UserImportMapping.cs" />
+    <Compile Include="Models\Client\Core\UserImportMappingField.cs" />
     <Compile Include="Models\Client\CP\MiscReceiptLine.cs" />
     <Compile Include="Models\Client\CP\MiscReceipt.cs" />
     <Compile Include="Models\Client\CP\Receipt.cs" />

@@ -12,8 +12,7 @@ namespace DDI.Shared.Models.Client.Core
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override Guid Id { get; set; }
         public EntityMappingType MappingType { get; set; }
-
         [MaxLength(128)]
-        public string PropertyName { get; set; } 
+        public string PropertyName { get; set; }
     }
 }

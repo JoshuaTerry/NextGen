@@ -1096,7 +1096,7 @@
                 <input type="text" class="fy-StartDate datepicker" />
             </div>
 
-            <div class="fieldblock">
+			<div class="fieldblock">
                 <label>End Date</label>
                 <input type="text" class="fy-EndDate datepicker" />
             </div>
