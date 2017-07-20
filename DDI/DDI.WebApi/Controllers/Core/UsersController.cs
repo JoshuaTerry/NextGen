@@ -274,19 +274,13 @@ namespace DDI.WebApi.Controllers.General
 
         }
 
-        [HttpPost]
+        [HttpPatch]
         [Route("api/v1/users/{id}")]
-        public IHttpActionResult Update(Guid id, User user)
+        public IHttpActionResult Update(Guid id, JObject changes)
         {
             try
             {
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                var response = Service.Update(user);
-                return Ok(response);
+                return base.Patch(id, changes);
             }
             catch (Exception ex)
             {
