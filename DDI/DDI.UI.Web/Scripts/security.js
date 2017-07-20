@@ -713,7 +713,7 @@ function SaveUser(id) {
 
     if (id) {
 
-        MakeServiceCall('POST', 'users/' + id, item, function (data) {
+        MakeServiceCall('PATCH', 'users/' + id, item, function (data) {
 
             DisplaySuccessMessage("Save successful.");
 
