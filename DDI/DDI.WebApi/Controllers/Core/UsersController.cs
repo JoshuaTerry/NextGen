@@ -280,8 +280,6 @@ namespace DDI.WebApi.Controllers.General
         {
             try
             {
-
-
                 var response = base.Patch(id, changes);
                 return Ok(response);
             }
