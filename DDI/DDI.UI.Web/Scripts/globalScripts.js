@@ -1798,21 +1798,76 @@ function FormatDateTimeStrings(str) {
 
 /* Audit Section */
 
-function ShowAuditData(id) {
+function InitIdAuditData(id) {
+
+    var route = 'audit/flat/' + id;
 
     $('.newauditmodal').click(function (e) {
-
         e.preventDefault();
-        var modal = $('.auditmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 800,
-            height: 600,
-            resizable: true
-        });
+        LoadAuditTable(route);
 
-        LoadAuditTable(id);
     });
+
+    //$('.queryAudit').unbind('click');
+
+    //$('.queryAudit').click(function () {
+
+    //    MakeServiceCall('GET', 'audit/flat/' + id, null, function (data) {
+    //        LoadAuditTable(id);
+    //    }
+    //)});
+}
+
+// used for system settings accordions
+function LoadEntityAuditData(entity) {
+
+    var route = 'audit/entityType/' + entity;
+    LoadAuditTable(route);
+
+}
+
+// used for system settings without accordions
+function InitEntityAuditData(entity) {
+
+    var route = 'audit/entityType/' + entity;
+    $('.newauditmodal').click(function (e) {
+        e.preventDefault();
+        LoadAuditTable(route);
+
+    });
+
+}
+
+function LoadAuditTable(route) {
+    //var start = $(modal).find('.na-StartDate').val();
+    //var end = $(modal).find('.na-EndDate').val();
+    var columns = [
+        { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0 },
+        { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
+        { dataField: 'User' },
+        { dataField: 'ChangeType', width: '100px' },
+        { dataField: 'Property' },
+        { dataField: 'OldValue', caption: 'Old Value' },
+        { dataField: 'OldDisplayName', caption: 'Old Display Name' },
+        { dataField: 'NewValue', caption: 'New Value' },
+        { dataField: 'NewDisplayName', caption: 'New Display Name' }
+    ];
+
+    CustomLoadGrid('auditgrid', '.auditgridcontainer', columns, route, '', '', '', function () {
+        DisplayAuditModal()
+    });
+
+}
+
+function DisplayAuditModal(){
+    var modal = $('.auditmodal').dialog({
+        closeOnEscape: false,
+        modal: true,
+        width: 800,
+        height: 600,
+        resizable: true
+    });
+
     $('.cancelauditmodal').click(function (e) {
 
         e.preventDefault();
@@ -1820,78 +1875,6 @@ function ShowAuditData(id) {
         CloseModal(modal);
 
     });
-
-    $('.queryAudit').unbind('click');
-
-    $('.queryAudit').click(function () {
-
-        MakeServiceCall('GET', 'audit/flat/' + id, null, function (data) {
-            LoadAuditTable(id);
-        }
-    )});
-
 }
 
-function LoadAuditTable(id) {
-    var start = $(modal).find('.na-StartDate').val();
-    var end = $(modal).find('.na-EndDate').val();
-    var route = 'audit/flat/' + id;
-    var columns = [
-        { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0 },
-        { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
-        { dataField: 'User' },
-        { dataField: 'ChangeType', width: '100px' },
-        { dataField: 'Property' },
-        { dataField: 'OldValue', caption: 'Old Value' },
-        { dataField: 'OldDisplayName', caption: 'Old Display Name' },
-        { dataField: 'NewValue', caption: 'New Value' },
-        { dataField: 'NewDisplayName', caption: 'New Display Name' }
-    ];
-
-    CustomLoadGrid('auditgrid', '.auditgridcontainer', columns, route, '', '', '', null);
-
-}
-function ShowEntityAuditData(entity) {
-
-    $('.newauditmodal').click(function (e) {
-
-        e.preventDefault();
-        var modal = $('.auditmodal').dialog({
-            closeOnEscape: false,
-            modal: true,
-            width: 800,
-            height: 600,
-            resizable: true
-        });
-
-        $('.cancelauditmodal').click(function (e) {
-
-            e.preventDefault();
-
-            CloseModal(modal);
-
-        });
-    });
-
-    LoadEntityAuditTable(entity);
-
-}
-
-function LoadEntityAuditTable(entity) {
-    var route = 'audit/entityType/' + entity;
-    var columns = [
-        { dataField: 'ChangeSetId', groupIndex: 0, sortOrder: 'desc', sortIndex: 0 },
-        { dataField: 'Timestamp', caption: 'Date', dataType: 'date', width: '10%' },
-        { dataField: 'User' },
-        { dataField: 'ChangeType', width: '100px' },
-        { dataField: 'Property' },
-        { dataField: 'OldValue', caption: 'Old Value' },
-        { dataField: 'OldDisplayName', caption: 'Old Display Name' },
-        { dataField: 'NewValue', caption: 'New Value' },
-        { dataField: 'NewDisplayName', caption: 'New Display Name' }
-    ];
-
-    CustomLoadGrid('auditgrid', '.auditgridcontainer', columns, route, '', '', '', null);
-
-}
 /* End Audit Section */

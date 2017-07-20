@@ -282,7 +282,7 @@ function DisplayConstituentData() {
 
         DisplaySelectedTags($('.constituenttagselect'));
 
-		ShowAuditData(currentEntity.Id);
+		InitIdAuditData(currentEntity.Id);
 
         FormatFields();
 

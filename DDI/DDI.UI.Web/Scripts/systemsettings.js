@@ -284,9 +284,6 @@ function LoadMergeFormSystemSectionSettings() {
 
 function LoadNoteSectionSettings() {
 
-    var initialmenu = ''
-    CreateNavMenu(initialmenu)
-
     var accordion = $('<div>').addClass('accordions');
     var noteCodes = $('<div>').addClass('noteCodecontainer');
     var noteCategories = $('<div>').addClass('noteCategorycontainer');
@@ -354,6 +351,7 @@ function LoadAlternateIDSectionSettings() {
 
     var initialmenu = ''
     CreateNavMenu(initialmenu)
+    InitEntityAuditData(32);
 
     LoadSectionSettings(SettingsCategories.CRM, 'Alternate ID', 'sectionpreferences', SystemSettings.AlternateId);
 
@@ -361,16 +359,20 @@ function LoadAlternateIDSectionSettings() {
 
 function LoadClergySectionSettings() {
 
-    var initialmenu = ''
-    CreateNavMenu(initialmenu)
-
     LoadSectionSettings(SettingsCategories.CRM, 'Clergy', 'sectionpreferences', SystemSettings.Clergy);
 
     var accordion = $('<div>').addClass('accordions');
     var status = $('<div>').addClass('clergystatuscontainer');
     var types = $('<div>').addClass('clergytypecontainer');
 
-    var header = $('<h1>').text('Clergy Status').appendTo($(accordion));
+    var header = $('<h1>').text('Clergy Status');
+    $('<a>').attr('href', '#').addClass('clergystatusaudit newbutton').text('Edit History')
+        .click(function (e) {
+            e.preventDefault();
+            LoadEntityAuditData(30)
+        })
+        .appendTo($(header));
+    $(header).appendTo($(accordion));
     $(status).appendTo($(accordion));
 
     var statuscolumns = [
@@ -382,7 +384,14 @@ function LoadClergySectionSettings() {
     LoadGrid('.clergystatuscontainer', 'clergystatusgrid', statuscolumns, 'clergystatuses?fields=all', 'clergystatuses', null, 'cstat-',
         '.clergystatusmodal', '.clergystatusmodal', 250, true, false, false, null);
 
-    header = $('<h1>').text('Clergy Type').appendTo($(accordion));
+    header = $('<h1>').text('Clergy Type');
+    $('<a>').attr('href', '#').addClass('clergytypeaudit newbutton').text('Edit History')
+        .click(function (e) {
+            e.preventDefault();
+            LoadEntityAuditData(49)
+        })
+        .appendTo($(header));
+    $(header).appendTo($(accordion));
     $(types).appendTo($(accordion));
 
     var typecolumns = [
@@ -739,6 +748,9 @@ function LoadConstituentType(id) {
 
 
 function LoadContactInformationSectionSettings() {
+
+    var initialmenu = ''
+    CreateNavMenu(initialmenu)
 
     LoadSectionSettings(SettingsCategories.CRM, 'Contact Information', 'sectionpreferences', SystemSettings.ContactInformation);
 
@@ -2621,8 +2633,7 @@ function LoadAccountingSettingsSectionSettings() {
     PopulateDropDown('.as-ledgerselect', 'ledgers/businessunit/' + currentBusinessUnitId, '<Please Select>', null, '', function () {
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
-        //ShowAuditData($('.hidLedgerId').val());
-        ShowEntityAuditData(34);
+        InitEntityAuditData(34);
         LoadAccountingSettings($('.hidLedgerId').val());
 
 
@@ -2635,8 +2646,7 @@ function LoadAccountingSettingsSectionSettings() {
         }
 
         $('.hidLedgerId').val($('.as-ledgerselect').val());
-        //ShowAuditData($('.hidLedgerId').val());
-        ShowEntityAuditData(34);
+        InitEntityAuditData(34);
         LoadAccountingSettings($('.hidLedgerId').val());
 
     });
@@ -3138,7 +3148,7 @@ function PopulateFiscalYearNavMenu() {
     initialmenu += '<li class="newfiscalyear"><a href="#">Create New Fiscal Year</a></li>';
     CreateNavMenu(initialmenu)
 
-    ShowAuditData($('.hidLedgerId').val());
+    InitEntityAuditData(36);
 
     $('.closefiscalyear').unbind('click');
     $('.closefiscalyear').click(function (e) {
@@ -4285,14 +4295,17 @@ function SendCustomField(method, route, data, modal) {
 
 function CreateNavMenu(initialmenu){
 
-    var um = $('.utilitymenu');
-    um.append(initialmenu);
-    um.append('<li class="newauditmodal"><a href="#">Edit History</a></li>');
+    var utilityMenu = $('.utilitymenu');
+    utilityMenu.append(initialmenu);
+    if (initialmenu != '') {
+        utilityMenu.append('<li class="menu-break"></li>');
+    }
+    utilityMenu.append('<li class="newauditmodal"><a href="#">Edit History</a></li>');
 
-    var un = $('.utilitynav');
-    un.show();
-    un.unbind('click');
-    un.click(function (e) {
+    var utilityNav = $('.utilitynav');
+    utilityNav.show();
+    utilityNav.unbind('click');
+    utilityNav.click(function (e) {
 
         e.preventDefault();
         e.stopPropagation();
@@ -4304,5 +4317,4 @@ function CreateNavMenu(initialmenu){
 
 
 }
-
 
