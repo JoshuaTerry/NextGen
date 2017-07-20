@@ -37,46 +37,48 @@ namespace DDI.Conversion.CRM
 
         private void LoadInitialData()
         {
-            DomainContext context = new DomainContext();
+            using (var context = new DomainContext())
+            {
 
-            //ConstituentStatuses
-            context.CRM_ConstituentStatuses.AddOrUpdate(
-                p => p.Code,
-                new ConstituentStatus { Code = CONSTITUENT_STATUS_ACTIVE, Name = "Active", IsActive = true, BaseStatus = ConstituentBaseStatus.Active, IsRequired = true },
-                new ConstituentStatus { Code = CONSTITUENT_STATUS_INACTIVE, Name = "Inactive", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true },
-                new ConstituentStatus { Code = CONSTITUENT_STATUS_BLOCKED, Name = "Blocked", IsActive = true, BaseStatus = ConstituentBaseStatus.Blocked, IsRequired = true },
-                new ConstituentStatus { Code = CONSTITUENT_STATUS_DELETED, Name = "Deleted", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true }
+                //ConstituentStatuses
+                context.CRM_ConstituentStatuses.AddOrUpdate(
+                    p => p.Code,
+                    new ConstituentStatus { Code = CONSTITUENT_STATUS_ACTIVE, Name = "Active", IsActive = true, BaseStatus = ConstituentBaseStatus.Active, IsRequired = true },
+                    new ConstituentStatus { Code = CONSTITUENT_STATUS_INACTIVE, Name = "Inactive", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true },
+                    new ConstituentStatus { Code = CONSTITUENT_STATUS_BLOCKED, Name = "Blocked", IsActive = true, BaseStatus = ConstituentBaseStatus.Blocked, IsRequired = true },
+                    new ConstituentStatus { Code = CONSTITUENT_STATUS_DELETED, Name = "Deleted", IsActive = true, BaseStatus = ConstituentBaseStatus.Inactive, IsRequired = true }
+                    );
+
+                //Constituent Types
+                context.CRM_ConstituentTypes.AddOrUpdate(
+                    p => p.Code,
+                    new ConstituentType { Category = ConstituentCategory.Individual, Code = "I", Name = "Individual", IsActive = true, IsRequired = true, NameFormat = "{PREFIX}{FIRST}{MI}{LAST}{SUFFIX}", SalutationFormal = "Dear {PREFIX}{LAST}", SalutationInformal = "Dear {NICKNAME}" },
+                    new ConstituentType { Category = ConstituentCategory.Organization, Code = "O", Name = "Organization", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
+                    new ConstituentType { Category = ConstituentCategory.Organization, Code = "C", Name = "Church", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
+                    new ConstituentType { Category = ConstituentCategory.Individual, Code = "F", Name = "Family", IsActive = true, IsRequired = true, NameFormat = "The {FIRST}{MI}{LAST} Family", SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" }
                 );
 
-            //Constituent Types
-            context.CRM_ConstituentTypes.AddOrUpdate(
-                p => p.Code,
-                new ConstituentType { Category = ConstituentCategory.Individual, Code = "I", Name = "Individual", IsActive = true, IsRequired = true, NameFormat = "{PREFIX}{FIRST}{MI}{LAST}{SUFFIX}", SalutationFormal = "Dear {PREFIX}{LAST}", SalutationInformal = "Dear {NICKNAME}" },
-                new ConstituentType { Category = ConstituentCategory.Organization, Code = "O", Name = "Organization", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
-                new ConstituentType { Category = ConstituentCategory.Organization, Code = "C", Name = "Church", IsActive = true, IsRequired = true, SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" },
-                new ConstituentType { Category = ConstituentCategory.Individual, Code = "F", Name = "Family", IsActive = true, IsRequired = true, NameFormat = "The {FIRST}{MI}{LAST} Family", SalutationFormal = "Dear Friends", SalutationInformal = "Dear Friends" }
-            );
+                //Genders
+                context.CRM_Genders.AddOrUpdate(
+                    p => p.Code,
+                    new Gender { Code = "M", IsMasculine = true, Name = "Male", IsActive = true },
+                    new Gender { Code = "F", IsMasculine = false, Name = "Female", IsActive = true }
+                );
 
-            //Genders
-            context.CRM_Genders.AddOrUpdate(
-                p => p.Code,
-                new Gender { Code = "M", IsMasculine = true, Name = "Male", IsActive = true },
-                new Gender { Code = "F", IsMasculine = false, Name = "Female", IsActive = true }
-            );
+                // Contact categories
+                AddContactCategory(context, ContactCategory.EMAIL, "Email", "Emails", "Email");
+                AddContactCategory(context, ContactCategory.PERSON, "Person", "Point of Contact", "Name");
+                AddContactCategory(context, ContactCategory.PHONE, "Phone", "Phone Numbers", "Phone");
+                AddContactCategory(context, ContactCategory.WEB, "Web", "Web sites", "URL");
+                AddContactCategory(context, ContactCategory.SOCIAL, "Social", "Social Media", "URL");
+                AddContactCategory(context, ContactCategory.OTHER, "Other", "Other Contacts", "Info");
 
-            // Contact categories
-            AddContactCategory(context, ContactCategory.EMAIL, "Email", "Emails", "Email");
-            AddContactCategory(context, ContactCategory.PERSON, "Person", "Point of Contact", "Name");
-            AddContactCategory(context, ContactCategory.PHONE, "Phone", "Phone Numbers", "Phone");
-            AddContactCategory(context, ContactCategory.WEB, "Web", "Web sites", "URL");
-            AddContactCategory(context, ContactCategory.SOCIAL, "Social", "Social Media", "URL");
-            AddContactCategory(context, ContactCategory.OTHER, "Other", "Other Contacts", "Info");
+                // Relationship categories
+                AddRelationshipCategory(context, "G", "General Relationships", true);
+                AddRelationshipCategory(context, "M", "Membership", false);
 
-            // Relationship categories
-            AddRelationshipCategory(context, "G", "General Relationships", true);
-            AddRelationshipCategory(context, "M", "Membership", false);
-
-            context.SaveChanges();
+                context.SaveChanges();
+            }
         }
 
         private void AddContactCategory(DomainContext context, string code, string description, string title, string infoLabel)

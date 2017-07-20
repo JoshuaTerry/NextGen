@@ -381,6 +381,7 @@ function SetupNewConstituent(constituenttypeid) {
 
             if (data && data.Data && data.IsSuccessful) {
 
+                currentEntity = data.Data;
                 $('.nc-ConstituentNumber').val(data.Data.ConstituentNumber);
                 $('.nc-ConstituentTypeId').val(data.Data.ConstituentType.Id);
             }
@@ -581,16 +582,27 @@ function LoadEnvironment() {
 }
 
 function LoadNewConstituentModalDropDowns() {
+    var countries;
 
     PopulateDropDown('.nc-PrefixId', 'prefixes', '', '');
     PopulateDropDown('.nc-GenderId', 'genders', '', '');
 
-    PopulateDropDown('.nca-Country', 'countries', '', '');
+    PopulateDropDown('.nca-Country', 'countries', '', '', '', '', function (element, data) {
+        //default states to USA
+        PopulateDropDown('.nca-State', 'states/?countryid=' + data.Data[0].Id, '', '');
+    });
     PopulateDropDown('.nca-AddressType', 'addresstypes', '', '');
 
     $('.nca-Country').change(function () {
 
         PopulateDropDown('.nca-State', 'states/?countryid=' + $('.nca-Country').val(), '', '');
+        ClearElement($('.nca-County'));
+
+    });
+
+    $('.nca-State').change(function () {
+
+        PopulateDropDown('.nca-County', 'states/' + $('.nca-State').val() + '/counties', '', '');
 
     });
 
@@ -866,7 +878,7 @@ function LoadTagSelector(container) {
 
                     });
 
-                    MakeServiceCall('POST', path1 + '/' + currentEntity.Id + '/' + path2, JSON.stringify({ tags: tagIds }), function (data) {
+                    MakeServiceCall('POST', 'constituents/' + currentEntity.Id + '/constituenttags', { tags: tagIds }, function (data) {
 
                         if (data.Data) {
 
@@ -1143,13 +1155,19 @@ function SetupEditControls() {
     $('.savebutton').click(function (e) {
 
         e.preventDefault();
-        if ($('#form1').valid()) {
-            var editcontainer = $(this).closest('.editcontainer');
+
+        var editcontainer = $(this).closest('.editcontainer');
+
+        if (!ValidateFields(editcontainer, function () {
+
             StopEdit(editcontainer);
             SaveEdit(editcontainer);
-        } else {
-            DisplayErrorMessage('Error', 'There are invalid fields. Please fix those and then try saving again.');
+
+        }))
+        {
+            return;
         }
+
     });
 
     $('.cancelbutton').click(function (e) {
@@ -1159,7 +1177,7 @@ function SetupEditControls() {
         var editcontainer = $(this).closest('.editcontainer');
 
         StopEdit(editcontainer);
-        $('#form1').validate().resetForm();
+        // $('#form1').validate().resetForm();
         CancelEdit();
 
     });
@@ -1231,7 +1249,7 @@ function SaveEdit(editcontainer) {
 
             if (data.Data) {
                 // Display success
-                DisplaySuccessMessage('Success', 'Constituent saved successfully.');
+                DisplaySuccessMessage('Success', 'Save successful.');
 
                 // Display updated entity data
                 currentEntity = data.Data;
@@ -1253,7 +1271,7 @@ function GetEditedFields(editcontainer) {
 
     $(editcontainer).find('input.editable').each(function () {
 
-        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var property = $(this).prop('class').replace('editable ', '').split(' ');
         var propertyName = property[0]
         var value = '';
 
@@ -1277,8 +1295,27 @@ function GetEditedFields(editcontainer) {
 
     });
 
+    $(editcontainer).find('textarea').each(function () {
+
+        var property = $(this).prop('class').replace('editable', '').split(' ');
+        var propertyName = property[0];
+        var value = $(this).val();
+
+        for (var key in currentEntity) {
+            if (key == propertyName && currentEntity[key] != value) {
+                if (value == 'null') {
+                    p.push('"' + propertyName + '": ' + null);
+                }
+                else {
+                    p.push('"' + propertyName + '": "' + value + '"');
+                }
+            }
+        }
+
+    });
+
     $(editcontainer).find('select').each(function () {
-        var property = $(this).attr('class').replace('editable ', '').split(' ');
+        var property = $(this).prop('class').replace('editable ', '').split(' ');
         var propertyName = property[0]
         var value = $(this).val();
 
@@ -1315,22 +1352,17 @@ function SaveTagBoxes(editcontainer) {
 
         });
 
-        SaveChildCollection(idCollection, WEB_API_ADDRESS + 'constituents/' + currentEntity.Id + '/' + route);
+        if (idCollection.length > 0) {
+            SaveChildCollection(idCollection, 'constituents/' + currentEntity.Id + '/' + route);
+        }
+
 
     });
 
 }
 
 function SaveChildCollection(children, route) {
-    MakeServiceCall('POST', SAVE_ROUTE + currentEntity.Id, JSON.stringify({ ChildIds: children }), function (data) {
-
-        if (data.Data) {
-            // Display success
-            DisplaySuccessMessage('Success', 'Constituent saved successfully.');
-
-        }
-
-    }, null);
+     MakeServiceCall('POST', route, { ChildIds: children }, null, null);
 }
 
 function CancelEdit() {
@@ -1735,7 +1767,13 @@ function CreateSaveAndCancelButtons(saveClass, saveFunction, cancelClass, cancel
 //
 
 function MaskFields() {
-    $('.date').mask('00/00/0000');
+    $('.date.editable').each(function () {
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($.datepicker.formatDate('mm/dd/yy', new Date($(this).val())));
+        }
+    })
+    $('.date.editable').mask('00/00/0000');
+
     $('.time').mask('00:00:00');
     $('.datetime').mask('00/00/0000 00:00:00');
     $('.money').mask("#0.00", { reverse: true });
@@ -1755,14 +1793,29 @@ function MaskFields() {
 
 function FormatFields() {
     $(".decimal").each(function () {
-        $(this).val(parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val(parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        }
     });
     $(".money").each(function () {
-        $(this).val('$' + parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val('$' + parseFloat($(this).val(), 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        }
     });
-    $(".date").val($.datepicker.formatDate('D M dd, yy', new Date()));
+    $("input.date").each(function () {
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($.datepicker.formatDate('D M dd, yy', new Date($(this).val())));
+        }
+    });
+    $("label.date").each(function () {
+        if ($(this).html() != null && $(this).html() != '') {
+            $(this).html($.datepicker.formatDate('D M dd, yy', new Date($(this).html())));
+        }
+    });
     $(".percent").each(function () {
-        $(this).val($(this).val() + '%');
+        if ($(this).val() != null && $(this).val() != '') {
+            $(this).val($(this).val() + '%');
+        }
     });
 }
 
@@ -1785,6 +1838,13 @@ function FormatDateTimeStrings(str) {
 
     return str;
 
+}
+
+function FormatDateTime(dt) {
+    if (dt) {
+        return new Date(dt).toLocaleString();
+    }
+    return '';
 }
 
 //

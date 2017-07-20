@@ -1,4 +1,17 @@
-﻿namespace DDI.Shared.Enums.GL
+﻿
+using System.ComponentModel;
+
+namespace DDI.Shared.Enums.GL
 {
-    public enum SegmentFormat { Both = 0, Numeric = 1, Alpha = 2 }
+    public enum SegmentFormat
+    {
+        [Description("Both")]
+        Both = 0,
+
+        [Description("Numeric")]
+        Numeric = 1,
+
+        [Description("Alpha")]
+        Alpha = 2
+    }
 }

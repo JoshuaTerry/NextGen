@@ -1,4 +1,16 @@
-﻿namespace DDI.Shared.Enums.CP
+﻿using System.ComponentModel;
+
+namespace DDI.Shared.Enums.CP
 {
-    public enum DisbursementLineType { None = 0, Amount = 1, Memo = 2 }
+    public enum DisbursementLineType
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Amount")]
+        Amount = 1,
+
+        [Description("Memo")]
+        Memo = 2
+    }
 }

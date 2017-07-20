@@ -46,6 +46,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                 if (result.Data.length == 1) {
                     var item = {
                         description: result.Data[0].Description,
+                        ledgeraccount: result.Data[0].LedgerAccountId,
                         label: result.Data[0].AccountNumber,
                         value: result.Data[0].Id
                     };
@@ -56,6 +57,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                     var results = $.ui.autocomplete.filter($.map(result.Data, function (item) {
                         return {
                             description: item.Description,
+                            ledgeraccount: item.LedgerAccountId,
                             label: item.AccountNumber,
                             value: item.Id
                         };
@@ -83,6 +85,7 @@ function GLAccountSelector(container, ledgerId, fiscalYearId) {
                     $(container).find(".accountnumber").val(d.AccountNumber);
                     $(container).find(".hidaccountnumber").val(d.AccountNumber);
                     $(container).find(".hidaccountid").val(d.Id);
+                    $(container).find('.hidledgeraccountid').val(d.LedgerAccountId);
                     $(container).find(".accountdescription").text(d.Description);
                     $(container).find(".accountnumber").focus();
                 }
@@ -113,6 +116,7 @@ function SelectAccountNumberLookup(item, container) {
     $(container).find(".accountdescription").html(item.description);
     $(container).find(".accountnumber").val(item.label);
     $(container).find(".hidaccountid").val(item.value);
+    $(container).find('.hidledgeraccountid').val(item.ledgeraccount);
     $(container).find(".hidaccountnumber").val(item.label);
     $(container).find(".gridContainer").hide();
 }
@@ -129,6 +133,7 @@ function CreateGLAccountSelector(container)
     $('<div>').addClass("gridContainer").addClass("accountselectiongrid").appendTo($(container));
     $('<input>').attr("type", "hidden").addClass("hidaccountid").addClass("inline").appendTo($(container));
     $('<input>').attr("type", "hidden").addClass("hidaccountnumber").addClass("inline").appendTo($(container));
+    $('<input>').attr('type', 'hidden').addClass('hidledgeraccountid').addClass('inline').appendTo($(container));
 }
 
 function Descend(data) {
@@ -276,12 +281,21 @@ function LoadGLAccountGrid(container, fiscalYearId, columns, onSelect)
 function LoadSelectedAccount(container, value)
 {
     $(container).find(".gridContainer").hide();
-    MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
+    if (value != undefined) {
+        MakeServiceCall('GET', 'accounts/' + value, null, function (data) {
             $(container).find(".accountnumber").val(data.Data.AccountNumber);
             $(container).find(".hidaccountid").val(data.Data.Id);
+            $(container).find('.hidledgeraccountid').val(data.Data.LedgerAccountId);
             $(container).find(".hidaccountnumber").val(data.Data.AccountNumber);
-            $(container).find(".accountdescription").text(data.Data.Name);          
-    }, null);
+            $(container).find(".accountdescription").text(data.Data.Name);
+        }, null);
+    }
+    else {
+        $(container).find(".accountnumber").val("");
+        $(container).find(".hidaccountid").val("");
+        $(container).find(".hidaccountnumber").val("");
+        $(container).find(".accountdescription").text("");
+    }
 }
 
 function LoadNewAccountNumber(container, accountNumber,fiscalYearId)
@@ -292,6 +306,7 @@ function LoadNewAccountNumber(container, accountNumber,fiscalYearId)
             $.map(data.Data, function (item) {
                 $(container).find(".accountnumber").val(item.AccountNumber);
                 $(container).find(".hidaccountid").val(item.Id);
+                $(container).find('.hidledgeraccountid').val(item.LedgerAccountId);
                 $(container).find(".hidaccountnumber").val(item.AccountNumber);
                 $(container).find(".accountdescription").text(item.Description);
                 $(container).find(".accountnumber").focus();

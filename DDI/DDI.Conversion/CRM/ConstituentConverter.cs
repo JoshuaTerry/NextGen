@@ -274,6 +274,8 @@ namespace DDI.Conversion.CRM
 
             addressFile.Dispose();
             legacyIdFile.Dispose();
+            context.Dispose();
+            commonContext.Dispose();
         }
 
         private void ConvertIndividuals(string filename, bool append)
@@ -669,6 +671,8 @@ namespace DDI.Conversion.CRM
                 ethnicityFile.Dispose();
                 legacyIdFile.Dispose();
             }
+
+            context.Dispose();
            
         }
 
@@ -872,6 +876,7 @@ namespace DDI.Conversion.CRM
                 legacyIdFile.Dispose();
             }
 
+            context.Dispose();
         }
 
         private void ConvertConstituentAddress(string filename, bool append)
@@ -963,12 +968,12 @@ namespace DDI.Conversion.CRM
 
                 outputFile.Dispose();
             }
+
+            context.Dispose();
         }
 
         private void ConvertDoingBusinessAs(string filename, bool append)
         {
-            DomainContext context = new DomainContext();
-
             // Load the constituent Ids
             LoadConstituentIds();
             
@@ -1094,12 +1099,11 @@ namespace DDI.Conversion.CRM
 
                 outputFile.Dispose();
             }
+            context.Dispose();
         }
 
         private void ConvertAlternateIds(string filename, bool append)
         {
-            DomainContext context = new DomainContext();
-
             // Load the constituent Ids
             LoadConstituentIds();
 
@@ -1289,6 +1293,7 @@ namespace DDI.Conversion.CRM
 
                 outputFile.Dispose();
             }
+            context.Dispose();
         }
 
         private void ConvertRelationships(string filename, bool append)
@@ -1368,6 +1373,8 @@ namespace DDI.Conversion.CRM
 
                 outputFile.Dispose();
             }
+
+            context.Dispose();
         }
 
 
@@ -1440,6 +1447,8 @@ namespace DDI.Conversion.CRM
 
                 outputFile.Dispose();
             }
+
+            context.Dispose();
         }
 
         private void ConvertCustomData(string filename, bool append)
@@ -1520,6 +1529,8 @@ namespace DDI.Conversion.CRM
 
                 outputFile.Dispose();
             }
+
+            context.Dispose();
         }
 
 

@@ -68,7 +68,7 @@ namespace DDI.Business.Tests.GL
                 Amount = 100.0m,
                 BusinessUnit = year.Ledger.BusinessUnit,
                 JournalNumber = 4,
-                JournalType = JournalType.Normal,
+                JournalType = JournalType.OneTime,
                 TransactionDate = DateTime.Parse("12/31/" + FiscalYearDataSource.OPEN_YEAR),
                 JournalLines = journalLines                
             };

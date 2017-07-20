@@ -12,7 +12,7 @@ namespace DDI.Conversion
 	/// </summary>
 	public class FileImport : IDisposable
 	{
-		#region Private fields
+        #region Private fields
 
 		private Microsoft.VisualBasic.FileIO.TextFieldParser _csvReader = null;
 		private string[] _data = null;
@@ -66,6 +66,11 @@ namespace DDI.Conversion
 		{
 			get
 			{
+                if (_data == null)
+                {
+                    return string.Empty;
+                }
+
 				StringBuilder sb = new StringBuilder();
 				bool isFirst = true;
 				int len = 0;

@@ -1,12 +1,20 @@
 ﻿
+using System.ComponentModel;
+
 namespace DDI.Shared.Enums.CRM
 {
     public enum CorrespondencePreference
-	{
-		None = 0,
-		Paper = 1,
-		Email = 2,
-		Both = 3
-	}
+    {
+        [Description("None")]
+        None = 0,
 
+        [Description("Paper")]
+        Paper = 1,
+
+        [Description("Email")]
+        Email = 2,
+
+        [Description("Both")]
+        Both = 3
+	}
 }

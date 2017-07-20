@@ -22,7 +22,5 @@ namespace DDI.Shared.Enums.INV
 
         [Description("Maturity Only")]
         Maturity = 5
-
     }
-
 }

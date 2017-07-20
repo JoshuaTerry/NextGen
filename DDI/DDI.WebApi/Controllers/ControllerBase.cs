@@ -75,7 +75,7 @@ namespace DDI.WebApi.Controllers
             return fields;
         }
              
-        protected IHttpActionResult GetById(Guid id, string fields = null)
+        public virtual IHttpActionResult GetById(Guid id, string fields = null)
         {
             try
             {                                
@@ -155,7 +155,7 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        protected IHttpActionResult Post(T entity)
+        public virtual IHttpActionResult Post(T entity)
         {
             try
             {
@@ -179,7 +179,7 @@ namespace DDI.WebApi.Controllers
             }
         }
 
-        protected IHttpActionResult Patch(Guid id, JObject changes)
+        public virtual IHttpActionResult Patch(Guid id, JObject changes)
         {
             try
             {

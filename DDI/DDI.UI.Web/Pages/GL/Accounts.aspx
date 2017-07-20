@@ -96,8 +96,6 @@
 
     </script>
 
-    <link rel="stylesheet" href="../../CSS/accounts.css" />
-
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="UtilityMenuContainer" runat="server">

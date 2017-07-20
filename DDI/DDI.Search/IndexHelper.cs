@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DDI.Search.Models;
 using DDI.Search.Statics;
 using DDI.Shared.Models;
@@ -44,7 +42,8 @@ namespace DDI.Search
                 { typeof(AddressDocument), IndexSuffixes.CRM },
                 { typeof(ContactInfoDocument), IndexSuffixes.CRM },
                 { typeof(JournalDocument), IndexSuffixes.GL },
-                { typeof(NoteDocument), IndexSuffixes.CORE }
+                { typeof(NoteDocument), IndexSuffixes.CORE },
+                { typeof(MiscReceiptDocument), IndexSuffixes.CP },
             };
 
             // Mapping of index suffixes to their most recent versions.  
@@ -54,7 +53,8 @@ namespace DDI.Search
             {
                 { IndexSuffixes.CRM, "2.4" },
                 { IndexSuffixes.GL, "1.1" },
-                { IndexSuffixes.CORE, "1.0" }
+                { IndexSuffixes.CORE, "1.0" },
+                { IndexSuffixes.CP, "1.0" }
             };
         }
 

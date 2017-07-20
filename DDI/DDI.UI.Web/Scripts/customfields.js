@@ -308,7 +308,7 @@ function SaveCustomFields(container) {
             $.ajax({
                 url: WEB_API_ADDRESS + cfDataRoute,
                 method: method,
-                data: JSON.stringify(data),
+                data: data,
                 headers: GetApiHeaders(),
                 contentType: 'application/json; charset-utf-8',
                 crossDomain: true,

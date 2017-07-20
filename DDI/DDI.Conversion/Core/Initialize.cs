@@ -30,19 +30,21 @@ namespace DDI.Conversion.Core
 
         private void LoadInitialData()
         {
-            DomainContext context = new DomainContext();
+            using (var context = new DomainContext())
+            {
 
-            // Languages
-            AddLanguageCode(context, "en", "English");
-            AddLanguageCode(context, "fr", "French");
-            AddLanguageCode(context, "es", "Spanish");
-            AddLanguageCode(context, "de", "German");
-            AddLanguageCode(context, "ko", "Korean");
-            AddLanguageCode(context, "ja", "Japanese");
-            AddLanguageCode(context, "zh", "Chinese");
-            AddLanguageCode(context, "pt", "Portuguese");
+                // Languages
+                AddLanguageCode(context, "en", "English");
+                AddLanguageCode(context, "fr", "French");
+                AddLanguageCode(context, "es", "Spanish");
+                AddLanguageCode(context, "de", "German");
+                AddLanguageCode(context, "ko", "Korean");
+                AddLanguageCode(context, "ja", "Japanese");
+                AddLanguageCode(context, "zh", "Chinese");
+                AddLanguageCode(context, "pt", "Portuguese");
 
-            context.SaveChanges();
+                context.SaveChanges();
+            }
 
         }
 

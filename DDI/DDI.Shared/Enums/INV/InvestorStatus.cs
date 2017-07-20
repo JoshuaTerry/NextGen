@@ -21,6 +21,5 @@ namespace DDI.Shared.Enums.INV
         FormerInvestor = 4,
         
     }
-
 }
     

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DDI.Shared.Attributes.Models;
 
 namespace DDI.Shared.Models.Client.CRM
 {
@@ -54,6 +55,7 @@ namespace DDI.Shared.Models.Client.CRM
 
         public Guid? EducationLevelId { get; set; }
 
+        [MaxLength(128)]
         public string Employer { get; set; }
 
         [Column(TypeName = "date")]
@@ -144,7 +146,7 @@ namespace DDI.Shared.Models.Client.CRM
         public string TaxId { get; set; }
 
         public int? YearEstablished { get; set; }
-
+                
         #region Navigation Properties
         [ForeignKey("ClergyStatusId")]
         public ClergyStatus ClergyStatus { get; set; }

@@ -1,10 +1,15 @@
 ﻿using DDI.Services.Search;
 using DDI.Services.ServiceInterfaces;
+using DDI.Shared;
+using DDI.Shared.Models;
+using DDI.Shared.Extensions;
+using DDI.Shared.Enums.Core;
 using DDI.Shared.Enums.GL;
 using DDI.Shared.Helpers;
 using DDI.Shared.Models.Client.GL;
 using DDI.Shared.Statics;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -46,23 +51,21 @@ namespace DDI.WebApi.Controllers.GL
         {
             return new Expression<Func<Journal, object>>[]
             {
-                c => c.JournalLines, c => c.ParentJournal
+                c => c.FiscalYear, c => c.JournalLines, c => c.JournalLines.First().LedgerAccount, c => c.ParentJournal
             };
         }
 
         protected override string FieldsForSingle => new PathHelper.FieldListBuilder<Journal>().Exclude(p => p.BusinessUnit)
-                                                                                               .Exclude(p => p.FiscalYear)
                                                                                                .Exclude(p => p.JournalLines.First().Journal)
                                                                                                .Exclude(p => p.ChildJournals)
                                                                                                .Exclude(p => p.ParentJournal.BusinessUnit)
-                                                                                               .Exclude(p => p.ParentJournal.FiscalYear)
                                                                                                .Exclude(p => p.ParentJournal.JournalLines)
                                                                                                .Exclude(p => p.ParentJournal.ChildJournals)
                                                                                                .Exclude(p => p.ParentJournal.ParentJournal);
 
         [HttpGet]
         [Route("api/v1/journals/{id}")]
-        public IHttpActionResult GetById(Guid id, string fields = null)
+        public override IHttpActionResult GetById(Guid id, string fields = null)
         {
             return base.GetById(id, fields);
         }
@@ -141,14 +144,14 @@ namespace DDI.WebApi.Controllers.GL
 
         [HttpPost]
         [Route("api/v1/journals")]
-        public IHttpActionResult Post([FromBody] Journal item)
+        public override IHttpActionResult Post([FromBody] Journal item)
         {
             return base.Post(item);
         }
 
         [HttpPatch]
         [Route("api/v1/journals/{id}")]
-        public IHttpActionResult Patch(Guid id, JObject changes)
+        public override IHttpActionResult Patch(Guid id, JObject changes)
         {
             return base.Patch(id, changes);
         }
@@ -158,6 +161,37 @@ namespace DDI.WebApi.Controllers.GL
         public override IHttpActionResult Delete(Guid id)
         {
             return base.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("api/v1/journals/recurringtypes")]
+        public IHttpActionResult GetRecurringTypes()
+        {
+            try
+            {
+                return Ok(Enum<RecurringType>.GetDataResponse());
+            }
+            catch (Exception ex)
+            {
+                
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/journals/duetomodes")]
+        public IHttpActionResult GetDueToModes()
+        {
+            try
+            {
+                return Ok(Enum<DueToMode>.GetDataResponse());
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex);
+                return InternalServerError(new Exception(ex.Message));
+            }
         }
     }
 }

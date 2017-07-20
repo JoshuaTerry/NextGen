@@ -9,9 +9,6 @@ namespace DDI.Shared.Enums.INV
         Percent = 0,
 
         [Description("Amount")]
-        Amount = 1
-
-        
+        Amount = 1   
     }
-
 }
