@@ -416,9 +416,6 @@ function LoadClergySectionSettings() {
 
 function LoadConstituentTypesSectionSettings() {
 
-    var initialmenu = ''
-    CreateNavMenu(initialmenu)
-
     var accordion = $('<div>').addClass('accordions');
     var types = $('<div>').addClass('constituenttypescontainer');
 
